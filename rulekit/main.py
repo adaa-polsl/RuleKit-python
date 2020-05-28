@@ -12,8 +12,7 @@ import re
 class RuleKit:
 
     version: str
-
-    logger = None
+    _logger = None
     _jar_dir_path: str
     _class_path: str
     _rulekit_jar_file_path: str
@@ -27,9 +26,8 @@ class RuleKit:
             jars_paths: List[str] = glob.glob(f"{RuleKit._jar_dir_path}\\*.jar")
             RuleKit._class_path = f'{str.join(";", jars_paths)}'
             RuleKit._rulekit_jar_file_path = list(filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
-            print(RuleKit._rulekit_jar_file_path)
         except IndexError as error:
-            RuleKit.logger.error('Failed to load jar files')
+            RuleKit._logger.error('Failed to load jar files')
             raise error
         RuleKit._read_versions()
         RuleKit._launch_jvm()
@@ -37,7 +35,7 @@ class RuleKit:
     @staticmethod
     def _setup_logger():
         logging.basicConfig()
-        RuleKit.logger = logging.getLogger('RuleKit')
+        RuleKit._logger = logging.getLogger('RuleKit')
 
     @staticmethod
     def _read_versions():
@@ -46,25 +44,14 @@ class RuleKit:
             manifest_file_content: str = jar_archive.read('META-INF/MANIFEST.MF').decode('utf-8')
             RuleKit.version = re.findall(r'Implementation-Version: \S+\r', manifest_file_content)[0].split(' ')[1]
         except Exception as error:
-            RuleKit.logger.error('Failed to read RuleKit versions from jar file')
-            RuleKit.logger.error(error)
+            RuleKit._logger.error('Failed to read RuleKit versions from jar file')
+            RuleKit._logger.error(error)
             raise error
 
     @staticmethod
     def _launch_jvm():
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.class.path=%s" % f'{RuleKit._class_path}', convertStrings=False)
+        if jpype.isJVMStarted():
+            RuleKit._logger.info('JVM already running')
+        else:
+            jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.class.path=%s" % f'{RuleKit._class_path}', convertStrings=False)
 
-
-if __name__ == "__main__":
-    # Launch the JVM
-    RuleKit.init()
-
-    from tree.decision_tree_classifier import DecisionTreeClassifier
-
-    clf = DecisionTreeClassifier()
-
-    X = [['0', '1'], ['1', '0'], ['1', '1'], ['0', '0']]
-    Y = ['0', '0', '1', '0']
-    clf = clf.fit(X, Y)
-    res = clf.predict([['1', '1'], ['1', '1'], ['0', '0']])
-    print(res)
