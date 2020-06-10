@@ -1,5 +1,6 @@
 from jpype import JClass, JString, JObject, JArray
 import numpy as np
+import pandas as pd
 
 
 def get_rule_generator() -> object:
@@ -18,6 +19,10 @@ def get_rule_generator() -> object:
 def create_example_set(values, labels=None, numeric_labels=False) -> object:
     if labels is None:
         labels = ['' if not numeric_labels else 0] * len(values)
+    if isinstance(values, pd.DataFrame):
+        values = values.to_numpy()
+    if isinstance(labels, pd.DataFrame):
+        labels = labels.to_numpy()
     values = JObject(values, JArray('java.lang.Object', 2))
     labels = JObject(labels, JArray('java.lang.Object', 1))
     ExampleSetFactory = JClass('com.rapidminer.example.ExampleSetFactory')
@@ -37,7 +42,6 @@ class PredictionResultMapper:
             value = attribute.getMapping().mapIndex(round(value_index))
             prediction.append(value)
         prediction = list(map(str, prediction))
-        prediction = list(map(int, prediction))
         return np.array(prediction)
 
     @staticmethod
