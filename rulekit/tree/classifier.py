@@ -1,14 +1,25 @@
-from typing import Iterable
+from typing import Iterable, Union
 from numbers import Number
 import numpy as np
 
-from .helpers import get_rule_generator, create_example_set, PredictionResultMapper
+from .helpers import get_rule_generator, configure_rule_generator, create_example_set, PredictionResultMapper
+from .params import Measures
 
 
 class DecisionTreeClassifier:
 
-    def __init__(self):
+    def __init__(self,
+                 min_rule_covered: int = None,
+                 induction_measure: Measures = None,
+                 pruning_measure: Union[Measures, str] = None,
+                 voting_measure: Measures = None):
         self.rule_generator = get_rule_generator()
+        configure_rule_generator(
+            self.rule_generator,
+            min_rule_covered,
+            induction_measure,
+            pruning_measure,
+            voting_measure)
         self.model = None
         self._remap_to_numeric = False
 

@@ -1,6 +1,7 @@
 from jpype import JClass, JString, JObject, JArray
 import numpy as np
 import pandas as pd
+from .params import Measures
 
 
 def get_rule_generator() -> object:
@@ -14,6 +15,34 @@ def get_rule_generator() -> object:
     Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
     Mockito.when(description.getOperatorDocumentation()).thenReturn(documentation, None)
     return RuleGenerator(description)
+
+
+def configure_rule_generator(
+        rule_generator,
+        min_rule_covered: int,
+        induction_measure: Measures,
+        pruning_measure: Measures,
+        voting_measure: Measures):
+    if min_rule_covered is not None:
+        rule_generator.setParameter('min_rule_covered', str(min_rule_covered))
+    if induction_measure is not None:
+        if isinstance(induction_measure, Measures):
+            rule_generator.setParameter('induction_measure', induction_measure.value)
+        if isinstance(induction_measure, str):
+            rule_generator.setParameter('induction_measure', 'UserDefined')
+            rule_generator.setParameter('induction_measure', induction_measure)
+    if pruning_measure is not None:
+        if isinstance(pruning_measure, Measures):
+            rule_generator.setParameter('pruning_measure', pruning_measure.value)
+        if isinstance(pruning_measure, str):
+            rule_generator.setParameter('pruning_measure', 'UserDefined')
+            rule_generator.setParameter('user_pruning_equation', pruning_measure)
+    if voting_measure is not None:
+        if isinstance(voting_measure, Measures):
+            rule_generator.setParameter('voting_measure', voting_measure.value)
+        if isinstance(voting_measure, str):
+            rule_generator.setParameter('voting_measure', 'UserDefined')
+            rule_generator.setParameter('voting_measure', voting_measure)
 
 
 def create_example_set(values, labels=None, numeric_labels=False) -> object:

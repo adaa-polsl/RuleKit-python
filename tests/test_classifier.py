@@ -2,6 +2,7 @@ import unittest
 
 from rulekit.main import RuleKit
 import rulekit.tree.classifier as rulekit
+from rulekit.tree.params import Measures
 import sklearn.tree as scikit
 from sklearn.datasets import load_iris
 from sklearn import metrics
@@ -42,7 +43,12 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         test_x = test_df[['Age', 'Gender', 'Payment Method']]
         test_y = test_df['Future Customer'].to_numpy(dtype=str)
 
-        tree = rulekit.DecisionTreeClassifier()
+        tree = rulekit.DecisionTreeClassifier(
+            min_rule_covered=8,
+            induction_measure=Measures.BinaryEntropy,
+            pruning_measure='2 * p / n',
+            voting_measure=Measures.C2
+        )
         tree.fit(train_x, train_y)
         prediction = tree.predict(test_x)
 
