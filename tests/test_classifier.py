@@ -2,14 +2,11 @@ import unittest
 
 from rulekit.main import RuleKit
 import rulekit.tree.classifier as rulekit
-from rulekit.tree.params import Measures
 import sklearn.tree as scikit
 from sklearn.datasets import load_iris
 from sklearn import metrics
-from scipy.io import arff
-import pandas as pd
 
-from .utils import get_dataset_path
+from .utils import get_test_cases, assert_rules_are_equals
 
 
 class TestDecisionTreeClassifier(unittest.TestCase):
@@ -31,29 +28,20 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         scikit_accuracy = metrics.accuracy_score(y, scikit_prediction)
         rulekit_accuracy = metrics.accuracy_score(y, rulekit_prediction)
 
-        assert(abs(scikit_accuracy - rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model')
+        assert abs(scikit_accuracy - rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
 
-    def test_classification_rules_on_deals(self):
-        train_data = arff.loadarff(get_dataset_path('deals/deals-train.arff'))
-        test_data = arff.loadarff(get_dataset_path('deals/deals-test.arff'))
-        train_df = pd.DataFrame(train_data[0])
-        train_x = train_df[['Age', 'Gender', 'Payment Method']]
-        train_y = train_df['Future Customer']
-        test_df = pd.DataFrame(test_data[0])
-        test_x = test_df[['Age', 'Gender', 'Payment Method']]
-        test_y = test_df['Future Customer'].to_numpy(dtype=str)
+    def test_compare_with_java_results(self):
+        test_cases = get_test_cases('ClassificationSnCTest')
 
-        tree = rulekit.DecisionTreeClassifier(
-            min_rule_covered=8,
-            induction_measure=Measures.BinaryEntropy,
-            pruning_measure='2 * p / n',
-            voting_measure=Measures.C2
-        )
-        tree.fit(train_x, train_y)
-        prediction = tree.predict(test_x)
-
-        accuracy = metrics.accuracy_score(test_y, prediction)
-        print(accuracy)
+        for test_case in test_cases:
+            params = test_case.induction_params
+            tree = rulekit.DecisionTreeClassifier(**params)
+            example_set = test_case.example_set
+            tree.fit(example_set.values, example_set.labels)
+            model = tree.model
+            expected = test_case.reference_report.rules
+            actual = list(map(lambda e: str(e), model.rules))
+            assert_rules_are_equals(expected, actual)
 
 
 if __name__ == '__main__':

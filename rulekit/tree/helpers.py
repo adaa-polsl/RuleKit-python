@@ -1,3 +1,4 @@
+from typing import Iterable, List
 from jpype import JClass, JString, JObject, JArray
 import numpy as np
 import pandas as pd
@@ -22,7 +23,10 @@ def configure_rule_generator(
         min_rule_covered: int,
         induction_measure: Measures,
         pruning_measure: Measures,
-        voting_measure: Measures):
+        voting_measure: Measures,
+        max_growing: int = 0,
+        enable_pruning: bool = True,
+        ignore_missing: bool = False):
     if min_rule_covered is not None:
         rule_generator.setParameter('min_rule_covered', str(min_rule_covered))
     if induction_measure is not None:
@@ -43,19 +47,39 @@ def configure_rule_generator(
         if isinstance(voting_measure, str):
             rule_generator.setParameter('voting_measure', 'UserDefined')
             rule_generator.setParameter('voting_measure', voting_measure)
+    if max_growing is not None:
+        rule_generator.setParameter('max_growing', max_growing)
+    if enable_pruning is not None:
+        rule_generator.setParameter('enable_pruning', enable_pruning)
+    if ignore_missing is not None:
+        rule_generator.setParameter('ignore_missing', ignore_missing)
+
+
+def map_attributes_names(example_set, attributes_names: List[str]):
+    for index, name in enumerate(attributes_names):
+        example_set.getAttributes().get(f'att{index + 1}').setName(name)
 
 
 def create_example_set(values, labels=None, numeric_labels=False) -> object:
     if labels is None:
         labels = ['' if not numeric_labels else 0] * len(values)
+    attributes_names = None
+    label_name = None
     if isinstance(values, pd.DataFrame):
+        attributes_names = values.columns.values
         values = values.to_numpy()
-    if isinstance(labels, pd.DataFrame):
+    if isinstance(labels, pd.Series):
+        label_name = labels.name
         labels = labels.to_numpy()
     values = JObject(values, JArray('java.lang.Object', 2))
     labels = JObject(labels, JArray('java.lang.Object', 1))
     ExampleSetFactory = JClass('com.rapidminer.example.ExampleSetFactory')
-    return ExampleSetFactory.createExampleSet(values, labels)
+    example_set = ExampleSetFactory.createExampleSet(values, labels)
+    if attributes_names is not None:
+        map_attributes_names(example_set, attributes_names)
+    if label_name is not None:
+        example_set.getAttributes().get('label').setName(label_name)
+    return example_set
 
 
 class PredictionResultMapper:
