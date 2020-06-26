@@ -18,7 +18,7 @@ class RuleKit:
     _rulekit_jar_file_path: str
 
     @staticmethod
-    def init():
+    def init(initial_heap_size: int = 256, max_heap_size: int = 1000):
         RuleKit._setup_logger()
         current_path: str = os.path.dirname(os.path.realpath(__file__))
         RuleKit._jar_dir_path = f"{current_path}/jar"
@@ -30,7 +30,7 @@ class RuleKit:
             RuleKit._logger.error('Failed to load jar files')
             raise error
         RuleKit._read_versions()
-        RuleKit._launch_jvm()
+        RuleKit._launch_jvm(initial_heap_size, max_heap_size)
 
     @staticmethod
     def _setup_logger():
@@ -49,9 +49,14 @@ class RuleKit:
             raise error
 
     @staticmethod
-    def _launch_jvm():
+    def _launch_jvm(initial_heap_size: int, max_heap_size: int):
         if jpype.isJVMStarted():
             RuleKit._logger.info('JVM already running')
         else:
-            jpype.startJVM(jpype.getDefaultJVMPath(), "-Djava.class.path=%s" % f'{RuleKit._class_path}', convertStrings=False)
+            params = [
+                f'-Djava.class.path={RuleKit._class_path}',
+                f'-Xms{initial_heap_size}m',
+                f'-Xmx{max_heap_size}m',
+            ]
+            jpype.startJVM(jpype.getDefaultJVMPath(), *params, convertStrings=False)
 
