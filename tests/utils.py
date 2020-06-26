@@ -7,8 +7,12 @@ import os
 import sys
 import re
 
-# TODO zmienić
-REPORTS_IN_DIRECTORY_PATH = '../test_out'
+from rulekit.tree.helpers import create_example_set
+from rulekit.tree.rules import Rule
+
+TEST_CONFIG_PATH = '../adaa.analytics.rules/test/resources/config'
+REPORTS_IN_DIRECTORY_PATH = '../adaa.analytics.rules/test/resources/reports'
+DATA_IN_DIRECTORY_PATH = '../adaa.analytics.rules/test/resources/'
 REPORTS_OUT_DIRECTORY_PATH = '../test_out'
 
 REPORTS_SECTIONS_HEADERS = {
@@ -19,7 +23,18 @@ DATASETS_PATH = '../data'
 EXPERIMENTS_PATH = '../adaa.analytics.rules/test/resources/config'
 
 
-def load_arff_to_example_set(path: str, label_attribute: str) -> object:
+class ExampleSetWrapper:
+
+    def __init__(self, values, labels):
+        self.values = values
+        self.labels = labels
+        self.example_set = create_example_set(values, labels)
+
+    def get_data(self) -> Tuple:
+        return self.values, self.labels
+
+
+def load_arff_to_example_set(path: str, label_attribute: str) -> ExampleSetWrapper:
     arff_data_frame = pd.DataFrame(loadarff(path)[0])
 
     attributes_names = []
@@ -27,13 +42,13 @@ def load_arff_to_example_set(path: str, label_attribute: str) -> object:
         if column_name != label_attribute:
             attributes_names.append(column_name)
 
-    values = arff_data_frame[attributes_names].to_numpy()
-    labels = arff_data_frame[[label_attribute]].to_numpy()
+    values = arff_data_frame[attributes_names]
+    labels = arff_data_frame[label_attribute]
+    return ExampleSetWrapper(values, labels)
 
-    values = JObject(values, JArray('java.lang.Object', len(attributes_names)))
-    labels = JObject(labels, JArray('java.lang.Object', 1))
-    ExampleSetFactory = JClass('com.rapidminer.example.ExampleSetFactory')
-    return ExampleSetFactory.createExampleSet(values, labels)
+
+def get_data_from_example_set(example_set) -> Tuple[List[List], List]:
+    pass
 
 
 def get_dataset_path(name: str) -> str:
@@ -164,12 +179,19 @@ class KnowledgeFactory:
         return knowledge
 
 
+class TestReport:
+
+    def __init__(self, file_name: str):
+        self.file_name = file_name
+        self.rules = None
+
+
 class TestCase:
 
     def __init__(self):
         self.param_config: Dict[str, object] = None
-        self.reference_report = None
-        self._example_set = None
+        self._reference_report: TestReport = None
+        self._example_set: ExampleSetWrapper = None
         self.induction_params = None
         self.knowledge = None
 
@@ -178,12 +200,13 @@ class TestCase:
         self.label_attribute: str = None
         self.survival_time: str = None
         self.report_file_path: str = None
+        self.using_existing_report_file: bool = False
 
     @property
-    def example_set(self):
+    def example_set(self) -> object:
         if self._example_set is None:
             self._example_set = load_arff_to_example_set(self.data_set_file_path, self.label_attribute)
-            if self.survival_time is None:
+            if self.survival_time is not None:
                 OperatorDocumentation = JClass('com.rapidminer.tools.documentation.OperatorDocumentation')
                 OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
                 Mockito = JClass('org.mockito.Mockito')
@@ -198,9 +221,18 @@ class TestCase:
                 roles = JObject([self.survival_time, 'survival_time'], JArray('java.lang.String', 2))
                 roles = [roles]
                 role_setter.setListParameter(ChangeAttributeRole.PARAMETER_CHANGE_ATTRIBUTES, roles)
-                self._example_set = role_setter.apply(self._example_set)
+                self._example_set.example_set = role_setter.apply(self._example_set)
 
         return self._example_set
+
+    @property
+    def reference_report(self) -> TestReport:
+        if self._reference_report is None:
+            ExampleSetMetaData = JClass('com.rapidminer.operator.ports.metadata.ExampleSetMetaData')
+            reader = TestReportReader(f'{self.report_file_path}.txt', ExampleSetMetaData(self._example_set.example_set))
+            self._reference_report = reader.read()
+            reader.close()
+        return self._reference_report
 
 
 class DataSetConfig:
@@ -245,7 +277,11 @@ class TestConfigParser:
         self.root: ElementTree = None
 
     def _parse_survival_time(self, element) -> str:
-        return element.find(TestConfigParser.SURVIVAL_TIME_ROLE).text
+        survival_time_element = element.find(TestConfigParser.SURVIVAL_TIME_ROLE)
+        if element.find(TestConfigParser.SURVIVAL_TIME_ROLE) is not None:
+            return survival_time_element.text
+        else:
+            return None
 
     def _parse_experts_rules_parameters(self, elements) -> List[Tuple]:
         expert_rules = []
@@ -268,7 +304,7 @@ class TestConfigParser:
         train_element = element.find(TestConfigParser.TRAINING_KEY)
         train_element = train_element.find(TestConfigParser.TRAIN_KEY)
         data_set_config.train_file_name = train_element.find(TestConfigParser.IN_FILE_KEY).text
-        data_set_config.name = element.attrib['name']
+        data_set_config.name = element.attrib.get('name', None)
         if data_set_config.name is None:
             file_name = os.path.basename(data_set_config.train_file_name)
             data_set_config.name = file_name.split('.')[0]
@@ -288,7 +324,7 @@ class TestConfigParser:
             if name in TestConfigParser.EXPERTS_RULES_PARAMETERS_NAMES:
                 value = self._parse_experts_rules_parameters(element.findall(TestConfigParser.ENTRY_KEY))
             else:
-                value = element.text
+                value = param_node.text
             params[name] = value
         return params
 
@@ -311,21 +347,56 @@ class TestConfigParser:
     def parse(self, file_path: str) -> Dict[str, TestConfig]:
         self.tests_configs = {}
         self.root = ElementTree.parse(file_path).getroot()
-        for test_element in self.root.findall(TestConfigParser.TEST_KEY):
+        if self.root.tag == 'test':
+            test_elements = [self.root]
+        else:
+            test_elements = self.root.findall(TestConfigParser.TEST_KEY)
+        for test_element in test_elements:
             test_config = self._parse_test(test_element)
             self.tests_configs[test_config.name] = test_config
         return self.tests_configs
 
 
+class TestCaseFactory:
+
+    def _make_test_case(
+            self,
+            test_config:
+            TestConfig,
+            test_case_name: str,
+            params: Dict[str, object],
+            data_set_config: DataSetConfig) -> TestCase:
+        test_case = TestCase()
+        test_case.induction_params = params
+        test_case.data_set_file_path = f'{DATA_IN_DIRECTORY_PATH}/{data_set_config.train_file_name}'
+        test_case.label_attribute = data_set_config.label_attribute
+        test_case.name = test_case_name
+        test_case.param_config = params
+        return test_case
+
+    def make(self, tests_configs: Dict[str, TestConfig], report_dir_path: str) -> List[TestCase]:
+        test_cases = []
+        for key in tests_configs.keys():
+            test_config = tests_configs[key]
+            for config_name in test_config.parameter_configs.keys():
+                for data_set_config in test_config.datasets:
+                    params = test_config.parameter_configs[config_name]
+                    test_case_name = f'{key}.{config_name}.{data_set_config.name}'
+                    test_case = self._make_test_case(test_config, test_case_name, test_config.parameter_configs[config_name], data_set_config)
+                    if 'use_report' in params:
+                        report_file_name = params['use_report']
+                        test_case.using_existing_report_file = True
+                    else:
+                        report_file_name = test_case_name
+                    report_path = f'{report_dir_path}/{report_file_name}'
+                    test_case.report_file_path = report_path
+                    test_case.survival_time = test_config.survival_time
+                    test_cases.append(test_case)
+        return test_cases
+
+
 def get_rule_string(rule) -> str:
-    return re.sub(r'(\\[[^\\]]*\\]$)|(\\([^\\)]*\\)$)', '', rule.toString())
-
-
-class TestReport:
-
-    def __init__(self, file_name: str):
-        self.file_name = file_name
-        self.rules = None
+    return re.sub(r'(\\[[^\\]]*\\]$)|(\\([^\\)]*\\)$)', '', str(rule))
 
 
 class TestReportReader:
@@ -336,19 +407,20 @@ class TestReportReader:
         self._file = f = open(file_name, "r")
 
     def _read_rules(self, test_report: TestReport):
-        RuleParser = JClass('adaa.analytics.rules.logic.representation.RuleParser')
         rules = []
         for line in self._file:
             if len(line) == 0:
                 break
             else:
-                rules.append(RuleParser.parseRule(re.sub(r'\t', '', line), self.example_set_meta_data))
+                rules.append(line)
         test_report.rules = rules
 
     def read(self) -> TestReport:
         test_report = TestReport(self.file_name)
         for line in self._file:
+            line = line.upper()
             line = re.sub(r'\t', '', line)
+            line = line.replace('\n', '')
             if line == REPORTS_SECTIONS_HEADERS['RULES']:
                 self._read_rules(test_report)
             elif line == '':
@@ -371,8 +443,39 @@ class TestReportWriter:
     def write(self, rule_set):
         self._file.write('\n')
         self._file.write(f'{REPORTS_SECTIONS_HEADERS["RULES"]}\n')
-        for rule in rule_set.getRules():
+        for rule in rule_set.rules:
             self._file.write(f'\t{get_rule_string(rule)}')
 
     def close(self):
         self._file.close()
+
+
+def get_test_cases(class_name: str) -> List[TestCase]:
+    configs = TestConfigParser().parse(f'{TEST_CONFIG_PATH}/{class_name}.xml')
+    return TestCaseFactory().make(configs, f'{REPORTS_IN_DIRECTORY_PATH}/{class_name}/')
+
+
+def _get_rule_string(rule: Rule) -> str:
+    return re.sub(r'(\\[[^\\]]*\\]$)|(\\([^\\)]*\\)$)', '', str(rule))
+
+
+def assert_rules_are_equals(expected: List[str], actual: List[str]):
+    def sanitize_rule_string(rule_string: str) -> str:
+        return re.sub(r'(\t)|(\n)', '', rule_string)
+
+    if len(expected) != len(actual):
+        raise AssertionError(f'Rulesets have different number of rules, actual: {len(actual)}, expected: {len(expected)}')
+    dictionary = {}
+    for rule in expected:
+        dictionary[sanitize_rule_string(rule)] = 0
+    for rule in actual:
+        key = sanitize_rule_string(rule)
+        if key in dictionary:
+            dictionary[key] = dictionary[key] + 1
+        else:
+            raise AssertionError('Actual ruleset contains rules not present in expected ruleset')
+    for key in dictionary.keys():
+        if dictionary[key] == 0:
+            raise AssertionError('Ruleset are not equal, some rules are missing')
+        elif dictionary[key] > 1:
+            raise AssertionError('Somes rules were duplicated')
