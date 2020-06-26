@@ -1,7 +1,7 @@
 import unittest
 
 from rulekit.main import RuleKit
-import rulekit.tree.classifier as rulekit
+from rulekit import classification
 import sklearn.tree as scikit
 from sklearn.datasets import load_iris
 from sklearn import metrics
@@ -17,7 +17,7 @@ class TestDecisionTreeClassifier(unittest.TestCase):
 
     def test_classification_accuracy_on_iris(self):
         scikit_clf = scikit.DecisionTreeClassifier()
-        rulekit_clf = rulekit.DecisionTreeClassifier()
+        rulekit_clf = classification.DecisionTreeClassifier()
         x, y = load_iris(return_X_y=True)
 
         scikit_clf.fit(x, y)
@@ -35,7 +35,7 @@ class TestDecisionTreeClassifier(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = rulekit.DecisionTreeClassifier(**params)
+            tree = classification.DecisionTreeClassifier(**params)
             example_set = test_case.example_set
             tree.fit(example_set.values, example_set.labels)
             model = tree.model
