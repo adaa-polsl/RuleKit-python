@@ -7,7 +7,7 @@ import os
 import sys
 import re
 
-from rulekit.tree.helpers import create_example_set
+from rulekit.tree.helpers import create_example_set, set_survival_time
 from rulekit.tree.rules import Rule
 
 TEST_CONFIG_PATH = '../adaa.analytics.rules/test/resources/config'
@@ -45,10 +45,6 @@ def load_arff_to_example_set(path: str, label_attribute: str) -> ExampleSetWrapp
     values = arff_data_frame[attributes_names]
     labels = arff_data_frame[label_attribute]
     return ExampleSetWrapper(values, labels)
-
-
-def get_data_from_example_set(example_set) -> Tuple[List[List], List]:
-    pass
 
 
 def get_dataset_path(name: str) -> str:
@@ -206,23 +202,6 @@ class TestCase:
     def example_set(self) -> object:
         if self._example_set is None:
             self._example_set = load_arff_to_example_set(self.data_set_file_path, self.label_attribute)
-            if self.survival_time is not None:
-                OperatorDocumentation = JClass('com.rapidminer.tools.documentation.OperatorDocumentation')
-                OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
-                Mockito = JClass('org.mockito.Mockito')
-                ChangeAttributeRole = JClass('com.rapidminer.operator.preprocessing.filter.ChangeAttributeRole')
-
-                documentation = Mockito.mock(OperatorDocumentation.class_)
-                description = Mockito.mock(OperatorDescription.class_)
-                Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
-                Mockito.when(description.getOperatorDocumentation()).thenReturn(documentation, None)
-                role_setter = ChangeAttributeRole(description)
-
-                roles = JObject([self.survival_time, 'survival_time'], JArray('java.lang.String', 2))
-                roles = [roles]
-                role_setter.setListParameter(ChangeAttributeRole.PARAMETER_CHANGE_ATTRIBUTES, roles)
-                self._example_set.example_set = role_setter.apply(self._example_set)
-
         return self._example_set
 
     @property
@@ -241,6 +220,7 @@ class DataSetConfig:
         self.name: str = None
         self.label_attribute: str = None
         self.train_file_name: str = None
+        self.survival_time: str = None
 
 
 class TestConfig:
@@ -308,6 +288,7 @@ class TestConfigParser:
         if data_set_config.name is None:
             file_name = os.path.basename(data_set_config.train_file_name)
             data_set_config.name = file_name.split('.')[0]
+        data_set_config.survival_time = self._parse_survival_time(element)
         return data_set_config
 
     def _parse_data_sets(self, element) -> List[DataSetConfig]:
@@ -341,7 +322,6 @@ class TestConfigParser:
         test_config.parameter_configs = self._parse_test_parameters_sets(element)
         test_config.datasets = self._parse_data_sets(element)
         test_config.name = element.attrib['name']
-        test_config.survival_time = self._parse_survival_time(element)
         return test_config
 
     def parse(self, file_path: str) -> Dict[str, TestConfig]:
@@ -390,7 +370,7 @@ class TestCaseFactory:
                         report_file_name = test_case_name
                     report_path = f'{report_dir_path}/{report_file_name}'
                     test_case.report_file_path = report_path
-                    test_case.survival_time = test_config.survival_time
+                    test_case.survival_time = data_set_config.survival_time
                     test_cases.append(test_case)
         return test_cases
 
@@ -461,7 +441,7 @@ def _get_rule_string(rule: Rule) -> str:
 
 def assert_rules_are_equals(expected: List[str], actual: List[str]):
     def sanitize_rule_string(rule_string: str) -> str:
-        return re.sub(r'(\t)|(\n)', '', rule_string)
+        return re.sub(r'(\t)|(\n)|(\[.*\])', '', rule_string)
 
     if len(expected) != len(actual):
         raise AssertionError(f'Rulesets have different number of rules, actual: {len(actual)}, expected: {len(expected)}')
