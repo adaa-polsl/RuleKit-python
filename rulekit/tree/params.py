@@ -41,3 +41,4 @@ class Measures(Enum):
     WeightedLaplace = 'WeightedLaplace'
     WeightedRelativeAccuracy = 'WeightedRelativeAccuracy'
     YAILS = 'YAILS'
+    LogRank = 'LogRank'

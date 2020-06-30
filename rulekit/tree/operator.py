@@ -29,8 +29,8 @@ class BaseOperator:
         self.model: RuleSet = None
         self._real_model = None
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable) -> object:
-        example_set = create_example_set(values, labels)
+    def fit(self, values: Iterable[Iterable], labels: Iterable, survival_time_attribute: str = None) -> object:
+        example_set = create_example_set(values, labels, survival_time_attribute=survival_time_attribute)
         self._real_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(self._real_model)
         return self
