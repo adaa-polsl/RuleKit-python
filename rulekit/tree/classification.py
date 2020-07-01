@@ -1,11 +1,10 @@
-from typing import Iterable, Union, Any, List
+from typing import Iterable, Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
 
 from .helpers import PredictionResultMapper
 from .params import Measures
 from .operator import BaseOperator, ExpertKnowledgeOperator
-from .rules import Rule
 
 
 class DecisionTreeClassifier(BaseOperator):
@@ -89,9 +88,9 @@ class ExpertDecisionTreeClassifier(DecisionTreeClassifier, ExpertKnowledgeOperat
             labels: Iterable,
             survival_time_attribute: str = None,
 
-            expert_rules: List[Union[str, Rule]] = None,
-            expert_preferred_conditions: List[Union[str, Rule]] = None,
-            expert_forbidden_conditions: List[Union[str, Rule]] = None) -> Any:
+            expert_rules: List[Union[str, Tuple[str, str]]] = None,
+            expert_preferred_conditions: List[Union[str, Tuple[str, str]]] = None,
+            expert_forbidden_conditions: List[Union[str, Tuple[str, str]]] = None) -> Any:
         if isinstance(labels[0], Number):
             self._remap_to_numeric = True
             labels = list(map(str, labels))

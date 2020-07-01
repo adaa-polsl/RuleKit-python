@@ -458,7 +458,7 @@ def _get_rule_string(rule: Rule) -> str:
 
 def assert_rules_are_equals(expected: List[str], actual: List[str]):
     def sanitize_rule_string(rule_string: str) -> str:
-        return re.sub(r'(\t)|(\n)|(\[.*\])', '', rule_string)
+        return re.sub(r'(\t)|(\n)|(\[[^\]]*\]$)', '', rule_string)
 
     if len(expected) != len(actual):
         raise AssertionError(
