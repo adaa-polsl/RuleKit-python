@@ -1,16 +1,21 @@
-from typing import Iterable, List
+from typing import Union, List, Any
 from jpype import JClass, JString, JObject, JArray, java
 import numpy as np
 import pandas as pd
 from .params import Measures
+from .rules import Rule
 
 
-def get_rule_generator() -> object:
+def get_rule_generator(expert: bool = False) -> Any:
     OperatorDocumentation = JClass('com.rapidminer.tools.documentation.OperatorDocumentation')
     OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
     Mockito = JClass('org.mockito.Mockito')
-    RuleGenerator = JClass('adaa.analytics.rules.operator.RuleGenerator')
-
+    path = 'adaa.analytics.rules.operator.'
+    if expert:
+        path += 'ExpertRuleGenerator'
+    else:
+        path += 'RuleGenerator'
+    RuleGenerator = JClass(path)
     documentation = Mockito.mock(OperatorDocumentation.class_)
     description = Mockito.mock(OperatorDescription.class_)
     Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
@@ -18,53 +23,118 @@ def get_rule_generator() -> object:
     return RuleGenerator(description)
 
 
-def configure_rule_generator(
-        rule_generator,
-        min_rule_covered: int,
-        induction_measure: Measures,
-        pruning_measure: Measures,
-        voting_measure: Measures,
-        max_growing: int = 0,
-        enable_pruning: bool = True,
-        ignore_missing: bool = False):
-    # TODO przerobić te metode
-    if induction_measure == Measures.LogRank or pruning_measure == Measures.LogRank or voting_measure == Measures.LogRank:
-        LogRank = JClass('adaa.analytics.rules.logic.quality.LogRank')
-    if min_rule_covered is not None:
-        rule_generator.setParameter('min_rule_covered', str(min_rule_covered))
-    if induction_measure is not None:
-        if isinstance(induction_measure, Measures):
-            if induction_measure == Measures.LogRank:
-                rule_generator.setInductionMeasure(LogRank())
-            else:
-                rule_generator.setParameter('induction_measure', induction_measure.value)
-        if isinstance(induction_measure, str):
-            rule_generator.setParameter('induction_measure', 'UserDefined')
-            rule_generator.setParameter('induction_measure', induction_measure)
-    if pruning_measure is not None:
-        if isinstance(pruning_measure, Measures):
-            if pruning_measure == Measures.LogRank:
-                rule_generator.setPruningMeasure(LogRank())
-            else:
-                rule_generator.setParameter('pruning_measure', pruning_measure.value)
-        if isinstance(pruning_measure, str):
-            rule_generator.setParameter('pruning_measure', 'UserDefined')
-            rule_generator.setParameter('user_pruning_equation', pruning_measure)
-    if voting_measure is not None:
-        if isinstance(voting_measure, Measures):
-            if voting_measure == Measures.LogRank:
-                rule_generator.setVotingMeasure(LogRank())
-            else:
-                rule_generator.setParameter('voting_measure', voting_measure.value)
-        if isinstance(voting_measure, str):
-            rule_generator.setParameter('voting_measure', 'UserDefined')
-            rule_generator.setParameter('voting_measure', voting_measure)
-    if max_growing is not None:
-        rule_generator.setParameter('max_growing', max_growing)
-    if enable_pruning is not None:
-        rule_generator.setParameter('enable_pruning', enable_pruning)
-    if ignore_missing is not None:
-        rule_generator.setParameter('ignore_missing', ignore_missing)
+class RuleGeneratorConfigurator:
+
+    def __init__(self, rule_generator):
+        self.rule_generator = rule_generator
+        self.LogRank = None
+
+    def configure(self,
+                  min_rule_covered: int = None,
+                  induction_measure: Measures = None,
+                  pruning_measure: Union[Measures, str] = None,
+                  voting_measure: Measures = None,
+                  max_growing: int = None,
+                  enable_pruning: bool = None,
+                  ignore_missing: bool = None,
+
+                  extend_using_preferred: bool = None,
+                  extend_using_automatic: bool = None,
+                  induce_using_preferred: bool = None,
+                  induce_using_automatic: bool = None,
+                  consider_other_classes: bool = None,
+                  preferred_attributes_per_rule: int = None,
+                  preferred_conditions_per_rule: int = None) -> Any:
+        self._configure_rule_generator(
+            min_rule_covered=min_rule_covered,
+            induction_measure=induction_measure,
+            pruning_measure=pruning_measure,
+            voting_measure=voting_measure,
+            max_growing=max_growing,
+            enable_pruning=enable_pruning,
+            ignore_missing=ignore_missing,
+            extend_using_preferred=extend_using_preferred,
+            extend_using_automatic=extend_using_automatic,
+            induce_using_preferred=induce_using_preferred,
+            induce_using_automatic=induce_using_automatic,
+            consider_other_classes=consider_other_classes,
+            preferred_conditions_per_rule=preferred_conditions_per_rule,
+            preferred_attributes_per_rule=preferred_attributes_per_rule
+        )
+        return self.rule_generator
+
+    def configure_expert_parameter(self, param_name: str, param_value: Any):
+        if param_value is None:
+            return
+        rules_list = java.util.ArrayList()
+        if isinstance(param_value, list) and len(param_value) > 0:
+            if isinstance(param_value[0], str):
+                for index, rule in enumerate(param_value):
+                    rule_name = f'{param_name[:-1]}-{index}'
+                    rules_list.add(JObject([rule_name, rule], JArray('java.lang.String', 1)))
+            elif isinstance(param_value[0], Rule):
+                for index, rule in enumerate(param_value):
+                    rule_name = f'{param_name[:-1]}-{index}'
+                    rules_list.add(JObject([rule_name, str(rule)], JArray('java.lang.String', 1)))
+            elif isinstance(param_value[0], tuple):
+                for index, rule in enumerate(param_value):
+                    rules_list.add(JObject([rule[0], rule[1]], JArray('java.lang.String', 1)))
+        self.rule_generator.setListParameter(param_name, rules_list)
+
+    def _configure_simple_parameter(self, param_name: str, param_value: Any):
+        if param_value is not None:
+            if isinstance(param_value, bool):
+                param_value = (str(param_value)).lower()
+            elif not isinstance(param_value, str):
+                param_value = str(param_value)
+            self.rule_generator.setParameter(param_name, param_value)
+
+    def _configure_measure_parameter(self, param_name: str, param_value: Union[str, Measures]):
+        if param_value is not None:
+            if isinstance(param_value, Measures):
+                if param_value == Measures.LogRank:
+                    self.rule_generator.setInductionMeasure(self.LogRank())
+                else:
+                    self.rule_generator.setParameter(param_name, param_value.value)
+            if isinstance(param_value, str):
+                self.rule_generator.setParameter(param_name, 'UserDefined')
+                self.rule_generator.setParameter(param_name, param_value)
+
+    def _configure_rule_generator(
+            self,
+            min_rule_covered: int,
+            induction_measure: Measures,
+            pruning_measure: Measures,
+            voting_measure: Measures,
+            max_growing: int = None,
+            enable_pruning: bool = None,
+            ignore_missing: bool = None,
+
+            extend_using_preferred: bool = None,
+            extend_using_automatic: bool = None,
+            induce_using_preferred: bool = None,
+            induce_using_automatic: bool = None,
+            consider_other_classes: bool = None,
+            preferred_conditions_per_rule: int = None,
+            preferred_attributes_per_rule: int = None):
+        if induction_measure == Measures.LogRank or pruning_measure == Measures.LogRank or voting_measure == Measures.LogRank:
+            self.LogRank = JClass('adaa.analytics.rules.logic.quality.LogRank')
+        self._configure_simple_parameter('min_rule_covered', min_rule_covered)
+        self._configure_simple_parameter('max_growing', max_growing)
+        self._configure_simple_parameter('enable_pruning', enable_pruning)
+        self._configure_simple_parameter('ignore_missing', ignore_missing)
+
+        self._configure_simple_parameter('extend_using_preferred', extend_using_preferred)
+        self._configure_simple_parameter('extend_using_automatic', extend_using_automatic)
+        self._configure_simple_parameter('induce_using_preferred', induce_using_preferred)
+        self._configure_simple_parameter('induce_using_automatic', induce_using_automatic)
+        self._configure_simple_parameter('consider_other_classes', consider_other_classes)
+        self._configure_simple_parameter('preferred_conditions_per_rule', preferred_conditions_per_rule)
+        self._configure_simple_parameter('preferred_attributes_per_rule', preferred_attributes_per_rule)
+
+        self._configure_measure_parameter('induction_measure', induction_measure)
+        self._configure_measure_parameter('pruning_measure', pruning_measure)
+        self._configure_measure_parameter('voting_measure', voting_measure)
 
 
 def map_attributes_names(example_set, attributes_names: List[str]):
@@ -81,7 +151,6 @@ def set_survival_time(example_set, survival_time_attribute: str) -> object:
     documentation = Mockito.mock(OperatorDocumentation.class_)
     description = Mockito.mock(OperatorDescription.class_)
     Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
-    # Mockito.when(documentation.getHTMLMessage()).thenReturn(JString(''), None)
     Mockito.when(description.getOperatorDocumentation()).thenReturn(documentation, None)
     role_setter = ChangeAttributeRole(description)
     role_setter.setParameter(ChangeAttributeRole.PARAMETER_NAME, survival_time_attribute);

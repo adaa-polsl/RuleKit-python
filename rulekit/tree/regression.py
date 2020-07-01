@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable, Union, Any
 from numbers import Number
 import numpy as np
 
@@ -25,7 +25,7 @@ class DecisionTreeRegressor(BaseOperator):
             enable_pruning,
             ignore_missing)
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable) -> object:
+    def fit(self, values: Iterable[Iterable], labels: Iterable) -> Any:
         if not isinstance(labels[0], Number):
             raise ValueError('DecisionTreeRegressor requires lables values to be numeric')
         super().fit(values, labels)

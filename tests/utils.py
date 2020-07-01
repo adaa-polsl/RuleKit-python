@@ -73,7 +73,6 @@ class KnowledgeConfigurator:
 
 
 class KnowledgeFactory:
-
     PARAMETER_EXPERT_RULES = 'expert_rules'
     PARAMETER_EXPERT_PREFERRED_CONDITIONS = 'expert_preferred_conditions'
     PARAMETER_EXPERT_FORBIDDEN_CONDITIONS = 'expert_forbidden_conditions'
@@ -175,6 +174,14 @@ class KnowledgeFactory:
         return knowledge
 
 
+class Knowledge:
+
+    def __init__(self):
+        self.expert_rules = None
+        self.expert_preferred_conditions = None
+        self.expert_forbidden_conditions = None
+
+
 class TestReport:
 
     def __init__(self, file_name: str):
@@ -269,7 +276,7 @@ class TestConfigParser:
             rule_name = element.attrib['name']
             rule_content = element.text
             expert_rules.append((rule_name, rule_content))
-        return expert_rules
+        return expert_rules if len(expert_rules) > 0 else None
 
     def _check_ambigous_data_sets_names(self, data_sets_configs: List[DataSetConfig]):
         dict = {}
@@ -303,7 +310,7 @@ class TestConfigParser:
         for param_node in element.findall(TestConfigParser.PARAM_KEY):
             name: str = param_node.attrib['name']
             if name in TestConfigParser.EXPERTS_RULES_PARAMETERS_NAMES:
-                value = self._parse_experts_rules_parameters(element.findall(TestConfigParser.ENTRY_KEY))
+                value = self._parse_experts_rules_parameters(param_node.findall(TestConfigParser.ENTRY_KEY))
             else:
                 value = param_node.text
             params[name] = value
@@ -362,7 +369,12 @@ class TestCaseFactory:
                 for data_set_config in test_config.datasets:
                     params = test_config.parameter_configs[config_name]
                     test_case_name = f'{key}.{config_name}.{data_set_config.name}'
-                    test_case = self._make_test_case(test_config, test_case_name, test_config.parameter_configs[config_name], data_set_config)
+                    test_config.parameter_configs[config_name].pop('use_expert', None)
+                    rules = test_config.parameter_configs[config_name].pop('expert_rules', None)
+                    preferred_conditions = test_config.parameter_configs[config_name].pop('expert_preferred_conditions', None)
+                    forbidden_conditions = test_config.parameter_configs[config_name].pop('expert_forbidden_conditions', None)
+                    test_case = self._make_test_case(test_config, test_case_name,
+                                                     test_config.parameter_configs[config_name], data_set_config)
                     if 'use_report' in params:
                         report_file_name = params['use_report']
                         test_case.using_existing_report_file = True
@@ -371,6 +383,11 @@ class TestCaseFactory:
                     report_path = f'{report_dir_path}/{report_file_name}'
                     test_case.report_file_path = report_path
                     test_case.survival_time = data_set_config.survival_time
+                    if preferred_conditions is not None or forbidden_conditions is not None:
+                        test_case.knowledge = Knowledge()
+                        test_case.knowledge.rules = rules
+                        test_case.knowledge.expert_forbidden_conditions = forbidden_conditions
+                        test_case.knowledge.expert_preferred_conditions = preferred_conditions
                     test_cases.append(test_case)
         return test_cases
 
@@ -444,7 +461,8 @@ def assert_rules_are_equals(expected: List[str], actual: List[str]):
         return re.sub(r'(\t)|(\n)|(\[.*\])', '', rule_string)
 
     if len(expected) != len(actual):
-        raise AssertionError(f'Rulesets have different number of rules, actual: {len(actual)}, expected: {len(expected)}')
+        raise AssertionError(
+            f'Rulesets have different number of rules, actual: {len(actual)}, expected: {len(expected)}')
     dictionary = {}
     for rule in expected:
         dictionary[sanitize_rule_string(rule)] = 0

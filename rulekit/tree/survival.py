@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, Any
 import numpy as np
 import pandas as pd
 
@@ -40,11 +40,10 @@ class SurvivalLogRankTree(BaseOperator):
             raise ValueError('Data values must be instance of either pandas DataFrame, numpy array or list')
         return ''
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable, survival_time: Iterable = None) -> object:
+    def fit(self, values: Iterable[Iterable], labels: Iterable, survival_time: Iterable = None) -> Any:
         if self.survival_time_attr is None and survival_time is None:
             raise ValueError('No "survival_time" attribute name was specified. '
                              'Specify it or pass its values by "survival_time" parameter.')
-        survival_time_attribute = None
         if survival_time is not None:
             survival_time_attribute = SurvivalLogRankTree._append_survival_time_columns(values, survival_time)
         else:
