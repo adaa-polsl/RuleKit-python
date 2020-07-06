@@ -65,6 +65,7 @@ class ExpertDecisionTreeClassifier(DecisionTreeClassifier, ExpertKnowledgeOperat
                  consider_other_classes: bool = None,
                  preferred_conditions_per_rule: int = None,
                  preferred_attributes_per_rule: int = None):
+        self._remap_to_numeric = False
         ExpertKnowledgeOperator.__init__(
             self,
             min_rule_covered=min_rule_covered,

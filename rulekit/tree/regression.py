@@ -32,7 +32,7 @@ class DecisionTreeRegressor(BaseOperator):
         return self
 
     def predict(self, values: Iterable) -> np.ndarray:
-        return super().predict(values)
+        return self._map_result(super().predict(values))
 
 
 class ExpertDecisionTreeRegressor(DecisionTreeRegressor, ExpertKnowledgeOperator):
@@ -91,4 +91,4 @@ class ExpertDecisionTreeRegressor(DecisionTreeRegressor, ExpertKnowledgeOperator
         )
 
     def predict(self, values: Iterable) -> np.ndarray:
-        return ExpertKnowledgeOperator.predict(self, values)
+        return self._map_result(ExpertKnowledgeOperator.predict(self, values))

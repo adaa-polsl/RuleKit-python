@@ -187,6 +187,14 @@ def create_example_set(values, labels=None, numeric_labels=False, survival_time_
 class PredictionResultMapper:
 
     @staticmethod
+    def map(predicted_example_set) -> np.ndarray:
+        attribute = predicted_example_set.getAttributes().get('prediction')
+        if attribute.isNominal():
+            return PredictionResultMapper.map_to_nominal(predicted_example_set)
+        else:
+            return PredictionResultMapper.map_to_numerical(predicted_example_set)
+
+    @staticmethod
     def map_to_nominal(predicted_example_set) -> np.ndarray:
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()

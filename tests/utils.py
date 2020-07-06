@@ -1,7 +1,8 @@
 from xml.etree import ElementTree
 import pandas as pd
 from scipy.io.arff import loadarff
-from jpype import JClass, JString, JObject, JArray, JInt
+from sklearn import metrics
+from jpype import JClass, JObject, JInt
 from typing import List, Dict, Tuple
 import os
 import sys
@@ -477,3 +478,22 @@ def assert_rules_are_equals(expected: List[str], actual: List[str]):
             raise AssertionError('Ruleset are not equal, some rules are missing')
         elif dictionary[key] > 1:
             raise AssertionError('Somes rules were duplicated')
+
+
+def assert_accuracy_is_greater(prediction, expected, threshold: float):
+    labels = expected.to_numpy().astype(str)
+    acc = metrics.accuracy_score(labels, prediction)
+    print(acc)
+    if acc <= threshold:
+        raise AssertionError(f'Accuracy should be greater than {threshold}')
+
+
+def assert_score_is_greater(prediction, expected, threshold: float):
+    if isinstance(prediction[0], int):
+        labels = expected.to_numpy().astype(int)
+    if isinstance(prediction[0], float):
+        labels = expected.to_numpy().astype(float)
+    explained_variance_score = metrics.explained_variance_score(labels, prediction)
+
+    if explained_variance_score <= threshold:
+        raise AssertionError(f'Score should be greater than {threshold}')

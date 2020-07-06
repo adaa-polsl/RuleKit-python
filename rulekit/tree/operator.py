@@ -1,4 +1,4 @@
-from .helpers import RuleGeneratorConfigurator, create_example_set, get_rule_generator
+from .helpers import RuleGeneratorConfigurator, PredictionResultMapper, create_example_set, get_rule_generator
 from .params import Measures
 from .rules import RuleSet, Rule
 import numpy as np
@@ -28,6 +28,9 @@ class BaseOperator:
         )
         self.model: RuleSet = None
         self._real_model = None
+
+    def _map_result(self, predicted_example_set) -> np.ndarray:
+        return PredictionResultMapper.map(predicted_example_set)
 
     def fit(self, values: Iterable[Iterable], labels: Iterable, survival_time_attribute: str = None) -> Any:
         example_set = create_example_set(values, labels, survival_time_attribute=survival_time_attribute)
