@@ -7,6 +7,7 @@ from typing import List, Dict, Tuple
 import os
 import sys
 import re
+from arff2pandas import a2p
 
 from rulekit.tree.helpers import create_example_set, set_survival_time
 from rulekit.tree.rules import Rule
@@ -178,9 +179,9 @@ class KnowledgeFactory:
 class Knowledge:
 
     def __init__(self):
-        self.expert_rules = None
-        self.expert_preferred_conditions = None
-        self.expert_forbidden_conditions = None
+        self.expert_rules = []
+        self.expert_preferred_conditions = []
+        self.expert_forbidden_conditions = []
 
 
 class TestReport:
@@ -371,7 +372,7 @@ class TestCaseFactory:
                     params = test_config.parameter_configs[config_name]
                     test_case_name = f'{key}.{config_name}.{data_set_config.name}'
                     test_config.parameter_configs[config_name].pop('use_expert', None)
-                    rules = test_config.parameter_configs[config_name].pop('expert_rules', None)
+                    expert_rules = test_config.parameter_configs[config_name].pop('expert_rules', None)
                     preferred_conditions = test_config.parameter_configs[config_name].pop('expert_preferred_conditions', None)
                     forbidden_conditions = test_config.parameter_configs[config_name].pop('expert_forbidden_conditions', None)
                     test_case = self._make_test_case(test_config, test_case_name,
@@ -384,9 +385,9 @@ class TestCaseFactory:
                     report_path = f'{report_dir_path}/{report_file_name}'
                     test_case.report_file_path = report_path
                     test_case.survival_time = data_set_config.survival_time
-                    if preferred_conditions is not None or forbidden_conditions is not None:
+                    if expert_rules is not None or preferred_conditions is not None or forbidden_conditions is not None:
                         test_case.knowledge = Knowledge()
-                        test_case.knowledge.rules = rules
+                        test_case.knowledge.rules = expert_rules
                         test_case.knowledge.expert_forbidden_conditions = forbidden_conditions
                         test_case.knowledge.expert_preferred_conditions = preferred_conditions
                     test_cases.append(test_case)
@@ -472,6 +473,7 @@ def assert_rules_are_equals(expected: List[str], actual: List[str]):
         if key in dictionary:
             dictionary[key] = dictionary[key] + 1
         else:
+            pass
             raise AssertionError('Actual ruleset contains rules not present in expected ruleset')
     for key in dictionary.keys():
         if dictionary[key] == 0:
