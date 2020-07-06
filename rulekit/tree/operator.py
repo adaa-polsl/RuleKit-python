@@ -2,9 +2,11 @@ from .helpers import RuleGeneratorConfigurator, PredictionResultMapper, create_e
 from .params import Measures
 from .rules import RuleSet, Rule
 import numpy as np
+import pandas as pd
 from typing import Union, Iterable, Any, List
 
-from jpype import JClass
+Data = Union[np.ndarray, pd.DataFrame, List]
+
 
 class BaseOperator:
 
@@ -33,13 +35,13 @@ class BaseOperator:
     def _map_result(self, predicted_example_set) -> np.ndarray:
         return PredictionResultMapper.map(predicted_example_set)
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable, survival_time_attribute: str = None) -> Any:
+    def fit(self, values: Data, labels: Data, survival_time_attribute: str = None) -> Any:
         example_set = create_example_set(values, labels, survival_time_attribute=survival_time_attribute)
         self._real_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(self._real_model)
-        return self
+        return self.model
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         example_set = create_example_set(values)
         return self._real_model.apply(example_set)
 
@@ -84,8 +86,8 @@ class ExpertKnowledgeOperator:
         self._real_model = None
 
     def fit(self,
-            values: Iterable[Iterable],
-            labels: Iterable,
+            values: Data,
+            labels: Data,
             survival_time_attribute: str = None,
 
             expert_rules: List[Union[str, Rule]] = None,
@@ -105,8 +107,8 @@ class ExpertKnowledgeOperator:
 
         self._real_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(self._real_model)
-        return self
+        return self.model
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         example_set = create_example_set(values)
         return self._real_model.apply(example_set)
