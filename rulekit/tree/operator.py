@@ -3,7 +3,7 @@ from .params import Measures
 from .rules import RuleSet, Rule
 import numpy as np
 import pandas as pd
-from typing import Union, Iterable, Any, List
+from typing import Union, Any, List
 
 Data = Union[np.ndarray, pd.DataFrame, List]
 
@@ -93,17 +93,11 @@ class ExpertKnowledgeOperator:
             expert_rules: List[Union[str, Rule]] = None,
             expert_preferred_conditions: List[Union[str, Rule]] = None,
             expert_forbidden_conditions: List[Union[str, Rule]] = None) -> Any:
-        self._configurator._configure_simple_parameter('use_expert', True)
+        self._configurator.configure_simple_parameter('use_expert', True)
         self._configurator.configure_expert_parameter('expert_preferred_conditions', expert_preferred_conditions)
         self._configurator.configure_expert_parameter('expert_forbidden_conditions', expert_forbidden_conditions)
         self._configurator.configure_expert_parameter('expert_rules', expert_rules)
         example_set = create_example_set(values, labels, survival_time_attribute=survival_time_attribute)
-
-        # FileOutputStream = JClass('java.io.FileOutputStream')
-        # ObjectOutputStream = JClass('java.io.ObjectOutputStream')
-        # fout = FileOutputStream("./example_set")
-        # oos = ObjectOutputStream(fout)
-        # oos.writeObject(example_set)
 
         self._real_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(self._real_model)

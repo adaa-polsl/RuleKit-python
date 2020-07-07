@@ -1,10 +1,9 @@
-from typing import Iterable, Any, Union, Tuple, List
+from typing import Any, Union, Tuple, List
 import numpy as np
 import pandas as pd
 
 from .helpers import PredictionResultMapper
-from .operator import BaseOperator, ExpertKnowledgeOperator
-from .params import Measures
+from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
 class SurvivalLogRankTree(BaseOperator):
@@ -41,10 +40,10 @@ class SurvivalLogRankTree(BaseOperator):
             raise ValueError('Data values must be instance of either pandas DataFrame, numpy array or list')
         return ''
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable, survival_time: Iterable = None) -> Any:
+    def fit(self, values: Data, labels: Data, survival_time: Data = None) -> Any:
         if self.survival_time_attr is None and survival_time is None:
             raise ValueError('No "survival_time" attribute name was specified. '
-                             'Specify it or pass its values by "survival_time" parameter.')
+                             'Specify it or pass its values by "survival_time_attr" parameter.')
         if survival_time is not None:
             survival_time_attribute = SurvivalLogRankTree._append_survival_time_columns(values, survival_time)
         else:
@@ -52,7 +51,7 @@ class SurvivalLogRankTree(BaseOperator):
         super().fit(values, labels, survival_time_attribute)
         return self
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         return PredictionResultMapper.map(super().predict(values))
 
 
@@ -92,9 +91,9 @@ class ExpertSurvivalLogRankTree(SurvivalLogRankTree, ExpertKnowledgeOperator):
         self.survival_time_attr: str = survival_time_attr
 
     def fit(self,
-            values: Iterable[Iterable],
-            labels: Iterable,
-            survival_time: Iterable = None,
+            values: Data,
+            labels: Data,
+            survival_time: Data = None,
 
             expert_rules: List[Union[str, Tuple[str, str]]] = None,
             expert_preferred_conditions: List[Union[str, Tuple[str, str]]] = None,
@@ -108,13 +107,13 @@ class ExpertSurvivalLogRankTree(SurvivalLogRankTree, ExpertKnowledgeOperator):
             survival_time_attribute = self.survival_time_attr
         return ExpertKnowledgeOperator.fit(
             self,
-            values,
-            labels,
+            values=values,
+            labels=labels,
             survival_time_attribute=survival_time_attribute,
             expert_rules=expert_rules,
             expert_preferred_conditions=expert_preferred_conditions,
             expert_forbidden_conditions=expert_forbidden_conditions
         )
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         return PredictionResultMapper.map(ExpertKnowledgeOperator.predict(self, values))

@@ -1,10 +1,10 @@
-from typing import Iterable, Union, Any, List, Tuple
+from typing import Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
 
 from .helpers import PredictionResultMapper
 from .params import Measures
-from .operator import BaseOperator, ExpertKnowledgeOperator
+from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
 class DecisionTreeClassifier(BaseOperator):
@@ -36,14 +36,14 @@ class DecisionTreeClassifier(BaseOperator):
             prediction = PredictionResultMapper.map_to_nominal(predicted_example_set)
         return prediction
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable) -> Any:
+    def fit(self, values: Data, labels: Data) -> Any:
         if isinstance(labels[0], Number):
             self._remap_to_numeric = True
             labels = list(map(str, labels))
         super().fit(values, labels)
         return self
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         return self._map_result(super().predict(values))
 
 
@@ -85,8 +85,8 @@ class ExpertDecisionTreeClassifier(DecisionTreeClassifier, ExpertKnowledgeOperat
         )
 
     def fit(self,
-            values: Iterable[Iterable],
-            labels: Iterable,
+            values: Data,
+            labels: Data,
             survival_time_attribute: str = None,
 
             expert_rules: List[Union[str, Tuple[str, str]]] = None,
@@ -104,5 +104,5 @@ class ExpertDecisionTreeClassifier(DecisionTreeClassifier, ExpertKnowledgeOperat
             expert_forbidden_conditions=expert_forbidden_conditions
         )
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         return DecisionTreeClassifier.predict(self, values)

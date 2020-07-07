@@ -18,7 +18,7 @@ class RuleKit:
     _rulekit_jar_file_path: str
 
     @staticmethod
-    def init(initial_heap_size: int = 256, max_heap_size: int = 1000):
+    def init(initial_heap_size: int = None, max_heap_size: int = None):
         RuleKit._setup_logger()
         current_path: str = os.path.dirname(os.path.realpath(__file__))
         RuleKit._jar_dir_path = f"{current_path}/jar"
@@ -55,8 +55,10 @@ class RuleKit:
         else:
             params = [
                 f'-Djava.class.path={RuleKit._class_path}',
-                f'-Xms{initial_heap_size}m',
-                f'-Xmx{max_heap_size}m',
             ]
+            if initial_heap_size is not None:
+                params.append(f'-Xms{initial_heap_size}m')
+            if max_heap_size is not None:
+                params.append(f'-Xmx{max_heap_size}m')
             jpype.startJVM(jpype.getDefaultJVMPath(), *params, convertStrings=False)
 

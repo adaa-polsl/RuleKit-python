@@ -1,8 +1,8 @@
-from typing import Iterable, Union, Any, List, Tuple
+from typing import Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
 
-from .operator import BaseOperator, ExpertKnowledgeOperator
+from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .params import Measures
 
 
@@ -25,13 +25,13 @@ class DecisionTreeRegressor(BaseOperator):
             enable_pruning,
             ignore_missing)
 
-    def fit(self, values: Iterable[Iterable], labels: Iterable) -> Any:
+    def fit(self, values: Data, labels: Data) -> Any:
         if not isinstance(labels[0], Number):
             raise ValueError('DecisionTreeRegressor requires lables values to be numeric')
         super().fit(values, labels)
         return self
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         return self._map_result(super().predict(values))
 
 
@@ -72,8 +72,8 @@ class ExpertDecisionTreeRegressor(DecisionTreeRegressor, ExpertKnowledgeOperator
         )
 
     def fit(self,
-            values: Iterable[Iterable],
-            labels: Iterable,
+            values: Data,
+            labels: Data,
             survival_time_attribute: str = None,
 
             expert_rules: List[Union[str, Tuple[str, str]]] = None,
@@ -90,5 +90,5 @@ class ExpertDecisionTreeRegressor(DecisionTreeRegressor, ExpertKnowledgeOperator
             expert_forbidden_conditions=expert_forbidden_conditions
         )
 
-    def predict(self, values: Iterable) -> np.ndarray:
+    def predict(self, values: Data) -> np.ndarray:
         return self._map_result(ExpertKnowledgeOperator.predict(self, values))

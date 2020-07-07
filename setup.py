@@ -1,11 +1,13 @@
 import setuptools
+import os
+import io
 
-with open("../README.md", "r") as fh:
+with io.open(f"{os.path.dirname(os.path.realpath(__file__))}\\..\\README.md", mode="r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="rulekit-adaa", # Replace with your own username
-    version="0.0.1",
+    name="rulekit-adaa",
+    version="1.0.0",
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
@@ -18,4 +20,5 @@ setuptools.setup(
         "License :: OSI Approved :: GNU License",
     ],
     python_requires='>=3.6',
+    test_suite="tests",
 )

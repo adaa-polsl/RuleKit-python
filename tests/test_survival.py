@@ -3,7 +3,7 @@ import unittest
 from rulekit.main import RuleKit
 from rulekit import survival
 
-from .utils import get_test_cases, assert_rules_are_equals, assert_accuracy_is_greater
+from .utils import get_test_cases, assert_rules_are_equals
 
 
 class TestSurvivalLogRankTree(unittest.TestCase):
