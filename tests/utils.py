@@ -10,10 +10,10 @@ import re
 from rulekit.tree.helpers import create_example_set, _fix_missing_values
 from rulekit.tree.rules import Rule
 
-TEST_CONFIG_PATH = '../adaa.analytics.rules/test/resources/config'
-REPORTS_IN_DIRECTORY_PATH = '../adaa.analytics.rules/test/resources/reports'
-DATA_IN_DIRECTORY_PATH = '../adaa.analytics.rules/test/resources/'
-REPORTS_OUT_DIRECTORY_PATH = '../test_out'
+TEST_CONFIG_PATH = '../../adaa.analytics.rules/test/resources/config'
+REPORTS_IN_DIRECTORY_PATH = '../../adaa.analytics.rules/test/resources/reports'
+DATA_IN_DIRECTORY_PATH = '../../adaa.analytics.rules/test/resources/'
+REPORTS_OUT_DIRECTORY_PATH = '../../test_out'
 
 REPORTS_SECTIONS_HEADERS = {
     'RULES': 'RULES'

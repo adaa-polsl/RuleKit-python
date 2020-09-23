@@ -3,7 +3,7 @@ import unittest
 from rulekit.main import RuleKit
 from rulekit import survival
 
-from .utils import get_test_cases, assert_rules_are_equals
+from tests.utils import get_test_cases, assert_rules_are_equals
 
 
 class TestSurvivalLogRankTree(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestSurvivalLogRankTree(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = survival.SurvivalLogRankTree(**params, survival_time_attr=test_case.survival_time)
+            tree = survival.SurvivalRules(**params, survival_time_attr=test_case.survival_time)
             example_set = test_case.example_set
             tree.fit(example_set.values, example_set.labels)
             model = tree.model
@@ -37,7 +37,7 @@ class TestExpertSurvivalLogRankTree(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = survival.ExpertSurvivalLogRankTree(**params, ignore_missing=True, survival_time_attr=test_case.survival_time)
+            tree = survival.ExpertSurvivalRules(**params, ignore_missing=True, survival_time_attr=test_case.survival_time)
             example_set = test_case.example_set
             tree.fit(example_set.values,
                      example_set.labels,

@@ -3,7 +3,7 @@ import unittest
 from rulekit.main import RuleKit
 from rulekit import regression
 
-from .utils import get_test_cases, assert_rules_are_equals, assert_score_is_greater
+from tests.utils import get_test_cases, assert_rules_are_equals, assert_score_is_greater
 
 
 class TestDecisionTreeRegressor(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestDecisionTreeRegressor(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = regression.DecisionTreeRegressor(**params)
+            tree = regression.RuleRegressor(**params)
             example_set = test_case.example_set
             tree.fit(example_set.values, example_set.labels)
             model = tree.model
@@ -38,7 +38,7 @@ class TestExpertDecisionTreeRegressor(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = regression.ExpertDecisionTreeRegressor(**params)
+            tree = regression.ExpertRuleRegressor(**params)
             example_set = test_case.example_set
             tree.fit(example_set.values,
                      example_set.labels,

@@ -6,7 +6,7 @@ from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .params import Measures
 
 
-class DecisionTreeRegressor(BaseOperator):
+class RuleRegressor(BaseOperator):
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -35,7 +35,7 @@ class DecisionTreeRegressor(BaseOperator):
         return self._map_result(super().predict(values))
 
 
-class ExpertDecisionTreeRegressor(DecisionTreeRegressor, ExpertKnowledgeOperator):
+class ExpertRuleRegressor(RuleRegressor, ExpertKnowledgeOperator):
 
     def __init__(self,
                  min_rule_covered: int = None,

@@ -26,7 +26,7 @@ Model oczkuje danych w formacie analogicznym do tego z scikit. Można przekazywa
 x = np.array([0, 0], [1, 0], [1, 1], [0, 1])
 y = np.array([0, 0, 1, 0])
 
-clf = rulekit.DecisionTreeClassifier()
+clf = rulekit.RuleClassifier()
 clf.fit(x, y)
 
 prediction = tree.predict(test_x)
@@ -38,7 +38,7 @@ prediction = tree.predict(test_x)
 train_x = data_frame[['Age', 'Gender', 'Payment Method']]
 test_x = test_data_frame[['Age', 'Gender', 'Payment Method']]
 
-tree = rulekit.DecisionTreeClassifier()
+tree = rulekit.RuleClassifier()
 tree.fit(train_x, train_y)
 
 prediction = tree.predict(test_x)
@@ -58,12 +58,12 @@ accuracy = metrics.accuracy_score(y, prediction)
 ## Operatory
 
 Dostępne są następujące operatory odpowiadające klasą z javy:
-* `classification.DecisionTreeClassifier` - ClassificationSnC
-* `classification.ExpertDecisionTreeClassifier` - ClassificationExpertSnC
-* `regression.DecisionTreeRegressor` - RegressionSnC
-* `regression.ExpertDecisionTreeRegressor` - RegressionExpertSnC
-* `survival.SurvivalLogRankTree` - SurvivalLogRankSnC
-* `survival.ExpertSurvivalLogRankTree` - SurvivalLogRankExpertSnC
+* `classification.RuleClassifier` - ClassificationSnC
+* `classification.ExpertRuleClassifier` - ClassificationExpertSnC
+* `regression.RuleRegressor` - RegressionSnC
+* `regression.ExpertRuleRegressor` - RegressionExpertSnC
+* `survival.SurvivalRules` - SurvivalLogRankSnC
+* `survival.ExpertSurvivalRules` - SurvivalLogRankExpertSnC
 
 ## Konfigurowanie operatora
 

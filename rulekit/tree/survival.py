@@ -6,7 +6,7 @@ from .helpers import PredictionResultMapper
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
-class SurvivalLogRankTree(BaseOperator):
+class SurvivalRules(BaseOperator):
 
     def __init__(self,
                  survival_time_attr: str = None,
@@ -45,7 +45,7 @@ class SurvivalLogRankTree(BaseOperator):
             raise ValueError('No "survival_time" attribute name was specified. '
                              'Specify it or pass its values by "survival_time_attr" parameter.')
         if survival_time is not None:
-            survival_time_attribute = SurvivalLogRankTree._append_survival_time_columns(values, survival_time)
+            survival_time_attribute = SurvivalRules._append_survival_time_columns(values, survival_time)
         else:
             survival_time_attribute = self.survival_time_attr
         super().fit(values, labels, survival_time_attribute)
@@ -55,7 +55,7 @@ class SurvivalLogRankTree(BaseOperator):
         return PredictionResultMapper.map(super().predict(values))
 
 
-class ExpertSurvivalLogRankTree(SurvivalLogRankTree, ExpertKnowledgeOperator):
+class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
 
     def __init__(self,
                  survival_time_attr: str = None,
@@ -102,7 +102,7 @@ class ExpertSurvivalLogRankTree(SurvivalLogRankTree, ExpertKnowledgeOperator):
             raise ValueError('No "survival_time" attribute name was specified. '
                              'Specify it or pass its values by "survival_time" parameter.')
         if survival_time is not None:
-            survival_time_attribute = SurvivalLogRankTree._append_survival_time_columns(values, survival_time)
+            survival_time_attribute = SurvivalRules._append_survival_time_columns(values, survival_time)
         else:
             survival_time_attribute = self.survival_time_attr
         return ExpertKnowledgeOperator.fit(

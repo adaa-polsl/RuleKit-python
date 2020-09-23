@@ -7,7 +7,7 @@ from .params import Measures
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
-class DecisionTreeClassifier(BaseOperator):
+class RuleClassifier(BaseOperator):
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -47,7 +47,7 @@ class DecisionTreeClassifier(BaseOperator):
         return self._map_result(super().predict(values))
 
 
-class ExpertDecisionTreeClassifier(DecisionTreeClassifier, ExpertKnowledgeOperator):
+class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator):
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -105,4 +105,4 @@ class ExpertDecisionTreeClassifier(DecisionTreeClassifier, ExpertKnowledgeOperat
         )
 
     def predict(self, values: Data) -> np.ndarray:
-        return DecisionTreeClassifier.predict(self, values)
+        return RuleClassifier.predict(self, values)
