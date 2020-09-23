@@ -1,7 +1,9 @@
 import os
+import sys
 import jpype
 import jpype.imports
 
+from rulekit.experiment import ExperimentRunner
 from typing import List
 import glob
 import logging
@@ -62,3 +64,8 @@ class RuleKit:
                 params.append(f'-Xmx{max_heap_size}m')
             jpype.startJVM(jpype.getDefaultJVMPath(), *params, convertStrings=False)
 
+
+if __name__ == '__main__':
+    rulekit = RuleKit()
+    rulekit.init()
+    ExperimentRunner.run(sys.argv[1:])
