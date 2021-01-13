@@ -1,3 +1,9 @@
+## Uruchamianie testów
+
+```bash
+python -m unittest discover ./tests
+```
+
 ## Inicjalizacja
 
 Przed użyciem bilbioteki trzeba ją zainicjalizować (uruchomić JVM):
