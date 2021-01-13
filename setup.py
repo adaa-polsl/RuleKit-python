@@ -2,8 +2,12 @@ import setuptools
 import os
 import io
 
-with io.open(f"{os.path.dirname(os.path.realpath(__file__))}\\..\\README.md", mode="r", encoding="utf-8") as fh:
+with io.open(f"{os.path.dirname(os.path.realpath(__file__))}\\README.md", mode="r", encoding="utf-8") as fh:
     long_description = fh.read()
+
+with open(f"{os.path.dirname(os.path.realpath(__file__))}/requirements.txt", mode="r", encoding="utf-8") as f:
+    required = f.read().splitlines()
+print(required)
 
 setuptools.setup(
     name="rulekit-adaa",
@@ -19,6 +23,12 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU License",
     ],
+    include_package_data = True,
+    package_data = {
+        # And include any *.msg files found in the 'hello' package, too:
+        'jar': ['*.jar'],
+    },
     python_requires='>=3.6',
+    install_requires=required,
     test_suite="tests",
 )
