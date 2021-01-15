@@ -7,8 +7,8 @@ from typing import List, Dict, Tuple, Union
 import os
 import re
 
-from rulekit.tree.helpers import create_example_set, _fix_missing_values
-from rulekit.tree.rules import Rule
+from rulekit.helpers import create_example_set, _fix_missing_values
+from rulekit.rules import Rule
 
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))
