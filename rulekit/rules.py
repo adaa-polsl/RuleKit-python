@@ -1,11 +1,13 @@
 from typing import Union, List
 from .params import Measures
+from .stats import RuleStatistics, RuleSetStatistics
 
 
 class Rule:
 
     def __init__(self, java_object):
         self._java_object = java_object
+        self._stats: RuleStatistics = None
 
     @property
     def weight(self) -> float:
@@ -27,6 +29,16 @@ class Rule:
     def weighted_N(self) -> float:
         return self._java_object.getWeighted_N()
 
+    @property
+    def pvalue(self) -> float:
+        return self._java_object.getPValue()
+
+    @property
+    def stats(self) -> RuleStatistics:
+        if self._stats is None:
+            self._stats = RuleStatistics(self)
+        return self._stats
+
     def get_covering_information(self) -> dict:
         return {
             'weighted_n': self.weighted_n,
@@ -35,8 +47,8 @@ class Rule:
             'weighted_P': self.weighted_P,
         }
 
-    def print_stats(self) -> str:
-        return self._java_object.printStats()
+    def print_stats(self):
+        print(self.stats)
 
     def __str__(self):
         return str(self._java_object.toString())
@@ -81,6 +93,7 @@ class RuleSet:
 
     def __init__(self, java_object):
         self._java_object = java_object
+        self._stats: RuleSetStatistics = None
 
     @property
     def total_time(self) -> float:
@@ -103,6 +116,12 @@ class RuleSet:
         return InductionParameters(self._java_object.getParams())
 
     @property
+    def stats(self) -> RuleSetStatistics:
+        if self._stats is None:
+            self._stats = RuleSetStatistics(self)
+        return self._stats
+
+    @property
     def rules(self) -> List[Rule]:
         rules = self._java_object.getRules()
         return list(map(lambda rule: Rule(rule), rules))
@@ -119,22 +138,25 @@ class RuleSet:
     def calculate_avg_rule_precision(self) -> float:
         return self._java_object.calculateAvgRulePrecision()
 
-    def calculate_significance(self) -> dict:
-        significance = self._java_object.calculateSignificance()
+    def calculate_avg_rule_quality(self) -> float:
+        return self._java_object.calculateAvgRuleQuality()
+
+    def calculate_significance(self, alpha: float) -> dict:
+        significance = self._java_object.calculateSignificance(alpha)
         return {
             'p': significance.p,
             'fraction': significance.fraction
         }
 
-    def calculate_significance_fdr(self) -> dict:
-        significance = self._java_object.calculateSignificanceFDR()
+    def calculate_significance_fdr(self, alpha: float) -> dict:
+        significance = self._java_object.calculateSignificanceFDR(alpha)
         return {
             'p': significance.p,
             'fraction': significance.fraction
         }
 
-    def calculate_significance_fwer(self) -> dict:
-        significance = self._java_object.calculateSignificanceFWER()
+    def calculate_significance_fwer(self, alpha: float) -> dict:
+        significance = self._java_object.calculateSignificanceFWER(alpha)
         return {
             'p': significance.p,
             'fraction': significance.fraction
@@ -142,4 +164,3 @@ class RuleSet:
 
     def __str__(self):
         return str(self._java_object.toString())
-
