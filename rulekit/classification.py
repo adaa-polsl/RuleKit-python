@@ -1,13 +1,38 @@
-from typing import Union, Any, List, Tuple
+from typing import Union, Any, List, Tuple, Dict
 from numbers import Number
 import numpy as np
+from enum import Enum
+from jpype import JClass
 
 from .helpers import PredictionResultMapper
 from .params import Measures
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
-class RuleClassifier(BaseOperator):
+class BaseClassifier:
+
+    def __init__(self):
+        self.ClassificationRulesPerformance = JClass('adaa.analytics.rules.logic.quality.ClassificationRulesPerformance')
+
+    class MetricTypes(Enum):
+        RulesPerExample = 1
+        VotingConflicts = 2
+        NegativeVotingConflicts = 3
+
+    def _calculate_metric(self, example_set, metric_type) -> float:
+        classificationRulesPerformance = self.ClassificationRulesPerformance(metric_type.value)
+        classificationRulesPerformance.startCounting(example_set, True)
+        return classificationRulesPerformance.getMikroAverage()
+
+    def _calculate_prediction_metrics(self, example_set) -> Dict[str, float]:
+        return {
+            'rules_per_example': self._calculate_metric(example_set, BaseClassifier.MetricTypes.RulesPerExample),
+            'voting_conflicts': self._calculate_metric(example_set, BaseClassifier.MetricTypes.VotingConflicts),
+            'negative_voting_conflicts': self._calculate_metric(example_set, BaseClassifier.MetricTypes.NegativeVotingConflicts),
+        }
+
+
+class RuleClassifier(BaseOperator, BaseClassifier):
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -17,7 +42,8 @@ class RuleClassifier(BaseOperator):
                  max_growing: int = None,
                  enable_pruning: bool = None,
                  ignore_missing: bool = None):
-        super().__init__(
+        BaseOperator.__init__(
+            self,
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
@@ -25,6 +51,7 @@ class RuleClassifier(BaseOperator):
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing)
+        BaseClassifier.__init__(self)
         self._remap_to_numeric = False
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
@@ -40,14 +67,20 @@ class RuleClassifier(BaseOperator):
         if isinstance(labels[0], Number):
             self._remap_to_numeric = True
             labels = list(map(str, labels))
-        super().fit(values, labels)
+        BaseOperator.fit(self, values, labels)
         return self
 
-    def predict(self, values: Data) -> np.ndarray:
-        return self._map_result(super().predict(values))
+    def predict(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
+        result_example_set = BaseOperator.predict(self, values)
+        mapped_result_example_set = self._map_result(result_example_set)
+        if return_metrics:
+            metrics = BaseClassifier._calculate_prediction_metrics(self, result_example_set)
+            return (mapped_result_example_set, metrics)
+        else:
+            return mapped_result_example_set
 
 
-class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator):
+class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifier):
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -104,5 +137,5 @@ class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator):
             expert_forbidden_conditions=expert_forbidden_conditions
         )
 
-    def predict(self, values: Data) -> np.ndarray:
-        return RuleClassifier.predict(self, values)
+    def predict(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
+        return RuleClassifier.predict(self, values, return_metrics)

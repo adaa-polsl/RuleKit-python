@@ -30,6 +30,16 @@ class TestDecisionTreeClassifier(unittest.TestCase):
 
         assert abs(scikit_accuracy - rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
 
+    def test_classification_metrics(self):
+        clf = classification.RuleClassifier()
+        x, y = load_iris(return_X_y=True)
+
+        clf.fit(x, y)
+        rulekit_prediction, m = clf.predict(x, return_metrics=True)
+        self.assertIsNotNone(m['rules_per_example'], 'rules_per_example should be calculated')
+        self.assertIsNotNone(m['voting_conflicts'], 'rules_per_example should be calculated')
+        self.assertIsNotNone(m['negative_voting_conflicts'], 'rules_per_example should be calculated')
+
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('ClassificationSnCTest')
 
