@@ -193,6 +193,22 @@ def create_example_set(values, labels=None, numeric_labels=False, survival_time_
 class PredictionResultMapper:
 
     @staticmethod
+    def map_confidence(predicted_example_set, label_unique_values: list) -> np.ndarray:
+        confidence_attributes_names = list(map(lambda val: f'confidence_{val}', label_unique_values))
+        prediction = []
+        row_reader = predicted_example_set.getExampleTable().getDataRowReader()
+        confidence_attributes = []
+        for name in confidence_attributes_names:
+            confidence_attributes.append(predicted_example_set.getAttributes().get(name))
+        while row_reader.hasNext():
+            row = row_reader.next()
+            value = []
+            for attribute in confidence_attributes:
+                value.append(attribute.getValue(row))
+            prediction.append(np.array(value))
+        return np.array(prediction)
+
+    @staticmethod
     def map(predicted_example_set) -> np.ndarray:
         attribute = predicted_example_set.getAttributes().get('prediction')
         if attribute.isNominal():

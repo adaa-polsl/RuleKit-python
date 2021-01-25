@@ -1,6 +1,7 @@
 from typing import Union, Any, List, Tuple, Dict
 from numbers import Number
 import numpy as np
+import pandas as pd
 from enum import Enum
 from jpype import JClass
 
@@ -53,6 +54,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             ignore_missing=ignore_missing)
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
+        self.label_unique_values = []
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
         prediction: np.ndarray
@@ -63,8 +65,23 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             prediction = PredictionResultMapper.map_to_nominal(predicted_example_set)
         return prediction
 
+    def _map_confidence(self, predicted_example_set) -> np.ndarray:
+        return PredictionResultMapper.map_confidence(predicted_example_set, self.label_unique_values)
+
+    def _get_unique_label_values(self, labels: Data):
+        tmp = {}
+        for label_value in labels:
+            tmp[label_value] = None
+        self.label_unique_values = list(tmp.keys())
+
     def fit(self, values: Data, labels: Data) -> Any:
-        if isinstance(labels[0], Number):
+        self._get_unique_label_values(labels)
+        
+        if isinstance(labels, pd.DataFrame):
+            first_label = labels.iloc[0]
+        else:
+            first_label = labels[0]
+        if isinstance(first_label, Number):
             self._remap_to_numeric = True
             labels = list(map(str, labels))
         BaseOperator.fit(self, values, labels)
@@ -73,6 +90,15 @@ class RuleClassifier(BaseOperator, BaseClassifier):
     def predict(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_result(result_example_set)
+        if return_metrics:
+            metrics = BaseClassifier._calculate_prediction_metrics(self, result_example_set)
+            return (mapped_result_example_set, metrics)
+        else:
+            return mapped_result_example_set
+
+    def predict_proba(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
+        result_example_set = BaseOperator.predict(self, values)
+        mapped_result_example_set = self._map_confidence(result_example_set)
         if return_metrics:
             metrics = BaseClassifier._calculate_prediction_metrics(self, result_example_set)
             return (mapped_result_example_set, metrics)
