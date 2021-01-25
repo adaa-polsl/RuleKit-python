@@ -77,7 +77,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
     def fit(self, values: Data, labels: Data) -> Any:
         self._get_unique_label_values(labels)
         
-        if isinstance(labels, pd.DataFrame):
+        if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
             first_label = labels.iloc[0]
         else:
             first_label = labels[0]
