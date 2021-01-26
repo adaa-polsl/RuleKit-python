@@ -19,8 +19,8 @@ class BaseOperator:
                  enable_pruning: bool = None,
                  ignore_missing: bool = None):
         self._params = None
-        self._rule_generator = get_rule_generator()
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._rule_generator = None
+        self._configurator = None
         self.set_params(
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
@@ -56,7 +56,7 @@ class BaseOperator:
                    voting_measure: Measures = None,
                    max_growing: int = None,
                    enable_pruning: bool = None,
-                   ignore_missing: bool = None):
+                   ignore_missing: bool = None) -> object:
         self._rule_generator = get_rule_generator()
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._params = dict(
@@ -69,6 +69,7 @@ class BaseOperator:
             ignore_missing=ignore_missing,
         )
         self._rule_generator = self._configurator.configure(**self._params)
+        return self
 
 
 class ExpertKnowledgeOperator:
@@ -90,8 +91,8 @@ class ExpertKnowledgeOperator:
                  preferred_conditions_per_rule: int = None,
                  preferred_attributes_per_rule: int = None):
         self._params = None
-        self._rule_generator = get_rule_generator(expert=True)
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._rule_generator = None
+        self._configurator = None
         ExpertKnowledgeOperator.set_params(
             self,
             min_rule_covered=min_rule_covered,
@@ -151,7 +152,7 @@ class ExpertKnowledgeOperator:
                    induce_using_automatic: bool = None,
                    consider_other_classes: bool = None,
                    preferred_conditions_per_rule: int = None,
-                   preferred_attributes_per_rule: int = None):
+                   preferred_attributes_per_rule: int = None) -> object:
         self._params = dict(
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
@@ -171,3 +172,4 @@ class ExpertKnowledgeOperator:
         self._rule_generator = get_rule_generator(expert=True)
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = self._configurator.configure(**self._params)
+        return self
