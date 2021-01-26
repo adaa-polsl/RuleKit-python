@@ -10,7 +10,8 @@ import re
 from rulekit.helpers import create_example_set, _fix_missing_values
 from rulekit.rules import Rule
 
-import os 
+import os
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 TEST_CONFIG_PATH = f'{dir_path}/../../adaa.analytics.rules/test/resources/config'
@@ -236,12 +237,24 @@ class TestCaseFactory:
             params: Dict[str, object],
             data_set_config: DataSetConfig) -> TestCase:
         test_case = TestCase()
+        self.fix_params_typing(params)
         test_case.induction_params = params
         test_case.data_set_file_path = f'{DATA_IN_DIRECTORY_PATH}/{data_set_config.train_file_name}'
         test_case.label_attribute = data_set_config.label_attribute
         test_case.name = test_case_name
         test_case.param_config = params
         return test_case
+
+    def fix_params_typing(self, params: dict):
+        for key, value in params.items():
+            if value == 'false':
+                params[key] = False
+                continue
+            if value == 'true':
+                params[key] = True
+                continue
+            if not 'measure' in key:
+                params[key] = int(float(value))
 
     def make(self, tests_configs: Dict[str, TestConfig], report_dir_path: str) -> List[TestCase]:
         test_cases = []
@@ -253,8 +266,10 @@ class TestCaseFactory:
                     test_case_name = f'{key}.{config_name}.{data_set_config.name}'
                     test_config.parameter_configs[config_name].pop('use_expert', None)
                     expert_rules = test_config.parameter_configs[config_name].pop('expert_rules', None)
-                    preferred_conditions = test_config.parameter_configs[config_name].pop('expert_preferred_conditions', None)
-                    forbidden_conditions = test_config.parameter_configs[config_name].pop('expert_forbidden_conditions', None)
+                    preferred_conditions = test_config.parameter_configs[config_name].pop('expert_preferred_conditions',
+                                                                                          None)
+                    forbidden_conditions = test_config.parameter_configs[config_name].pop('expert_forbidden_conditions',
+                                                                                          None)
                     test_case = self._make_test_case(test_case_name,
                                                      test_config.parameter_configs[config_name], data_set_config)
                     if 'use_report' in params:
