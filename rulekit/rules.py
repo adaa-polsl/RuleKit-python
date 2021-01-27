@@ -126,7 +126,7 @@ class RuleSet:
         res = []
         for rule in self.rules:
             covering_info = rule._java_object.covers(example_set)
-            covered_examples_indexes = []
+            covered_examples_indexes = None
             if len(covering_info.positives) > 0:
                 covered_examples_indexes = covering_info.positives
             elif len(covering_info.negatives) > 0:

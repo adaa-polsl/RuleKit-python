@@ -11,7 +11,7 @@ print(required)
 
 setuptools.setup(
     name="rulekit-adaa",
-    version="1.2.2",
+    version="1.2.3",
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",

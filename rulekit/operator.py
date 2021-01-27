@@ -85,6 +85,7 @@ class BaseOperator:
         for row in values:
             row_result = []
             for item in covering_info:
+                1 if item is not None and item.contains(JInt(i)) else 0
                 row_result.append(1 if item.contains(JInt(i)) else 0)
             result.append(np.array(row_result))
             i += 1
