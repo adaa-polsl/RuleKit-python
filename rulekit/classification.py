@@ -60,7 +60,6 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         prediction: np.ndarray
         if self._remap_to_numeric:
             prediction = PredictionResultMapper.map_to_numerical(predicted_example_set)
-            self._remap_to_numeric = False
         else:
             prediction = PredictionResultMapper.map_to_nominal(predicted_example_set)
         return prediction
