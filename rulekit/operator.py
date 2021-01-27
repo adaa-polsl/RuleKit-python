@@ -4,6 +4,7 @@ from .rules import RuleSet, Rule
 import numpy as np
 import pandas as pd
 from typing import Union, Any, List
+from jpype import JInt
 
 Data = Union[np.ndarray, pd.DataFrame, List]
 
@@ -43,6 +44,8 @@ class BaseOperator:
         return self.model
 
     def predict(self, values: Data) -> np.ndarray:
+        if self._real_model is None:
+            raise ValueError('"fit" method must be called before calling this method')
         example_set = create_example_set(values)
         return self._real_model.apply(example_set)
 
@@ -70,6 +73,22 @@ class BaseOperator:
         )
         self._rule_generator = self._configurator.configure(**self._params)
         return self
+
+    def get_coverage_matrix(self, values: Data) -> np.ndarray:
+        if self._real_model is None:
+            raise ValueError('"fit" method must be called before calling this method')
+        covering_info = self.model.covers(create_example_set(values))
+        if isinstance(values, pd.Series) or isinstance(values, pd.DataFrame):
+            values = values.to_numpy()
+        result = []
+        i = 0
+        for row in values:
+            row_result = []
+            for item in covering_info:
+                row_result.append(1 if item.contains(JInt(i)) else 0)
+            result.append(np.array(row_result))
+            i += 1
+        return np.array(result)
 
 
 class ExpertKnowledgeOperator:
@@ -132,11 +151,10 @@ class ExpertKnowledgeOperator:
         return self.model
 
     def predict(self, values: Data) -> np.ndarray:
+        if self._real_model is None:
+            raise ValueError('"fit" method must be called before calling this method')
         example_set = create_example_set(values)
         return self._real_model.apply(example_set)
-
-    def get_params(self, deep=True) -> dict:
-        return self._params
 
     def set_params(self,
                    min_rule_covered: int = None,

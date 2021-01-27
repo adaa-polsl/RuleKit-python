@@ -1,5 +1,6 @@
 from typing import Union, List
 from .params import Measures
+import numpy as np
 from .stats import RuleStatistics, RuleSetStatistics
 
 
@@ -120,6 +121,18 @@ class RuleSet:
         if self._stats is None:
             self._stats = RuleSetStatistics(self)
         return self._stats
+
+    def covers(self, example_set) -> list:
+        res = []
+        for rule in self.rules:
+            covering_info = rule._java_object.covers(example_set)
+            covered_examples_indexes = []
+            if len(covering_info.positives) > 0:
+                covered_examples_indexes = covering_info.positives
+            elif len(covering_info.negatives) > 0:
+                covered_examples_indexes = covering_info.negatives
+            res.append(covered_examples_indexes)
+        return np.array(res)
 
     @property
     def rules(self) -> List[Rule]:

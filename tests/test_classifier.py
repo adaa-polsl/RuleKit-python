@@ -24,11 +24,22 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         rulekit_clf.fit(x, y)
         scikit_prediction = scikit_clf.predict(x)
         rulekit_prediction = rulekit_clf.predict(x)
-
         scikit_accuracy = metrics.accuracy_score(y, scikit_prediction)
         rulekit_accuracy = metrics.accuracy_score(y, rulekit_prediction)
 
         assert abs(scikit_accuracy - rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
+
+    def test_getting_examples_coverage(self):
+        clf = classification.RuleClassifier()
+        x, y = load_iris(return_X_y=True)
+
+        clf.fit(x, y)
+
+        coverage_matrix = clf.get_coverage_matrix(x)
+        num_rows, num_cols = coverage_matrix.shape
+
+        self.assertEqual(num_rows, len(x), 'Coverage matrix should have as many rows as examples in dataset')
+        self.assertEqual(num_cols, len(clf.model.rules), 'Coverage matrix should have as many cols as rules in ruleset')
 
     def test_classification_metrics(self):
         clf = classification.RuleClassifier()
