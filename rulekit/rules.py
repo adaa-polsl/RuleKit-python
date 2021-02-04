@@ -122,15 +122,15 @@ class RuleSet:
             self._stats = RuleSetStatistics(self)
         return self._stats
 
-    def covers(self, example_set) -> list:
+    def covering(self, example_set) -> np.ndarray:
         res = []
         for rule in self.rules:
             covering_info = rule._java_object.covers(example_set)
-            covered_examples_indexes = None
+            covered_examples_indexes = []
             if len(covering_info.positives) > 0:
-                covered_examples_indexes = covering_info.positives
+                covered_examples_indexes += covering_info.positives
             elif len(covering_info.negatives) > 0:
-                covered_examples_indexes = covering_info.negatives
+                covered_examples_indexes += covering_info.negatives
             res.append(covered_examples_indexes)
         return np.array(res)
 

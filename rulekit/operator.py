@@ -4,7 +4,6 @@ from .rules import RuleSet, Rule
 import numpy as np
 import pandas as pd
 from typing import Union, Any, List
-from jpype import JInt
 
 Data = Union[np.ndarray, pd.DataFrame, List]
 
@@ -77,7 +76,7 @@ class BaseOperator:
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
         if self._real_model is None:
             raise ValueError('"fit" method must be called before calling this method')
-        covering_info = self.model.covers(create_example_set(values))
+        covering_info = self.model.covering(create_example_set(values))
         if isinstance(values, pd.Series) or isinstance(values, pd.DataFrame):
             values = values.to_numpy()
         result = []
@@ -85,7 +84,7 @@ class BaseOperator:
         for row in values:
             row_result = []
             for item in covering_info:
-                value = 0 if item is None or not item.contains(JInt(i)) else 1
+                value = 0 if item is None or not i in item else 1
                 row_result.append(value)
             result.append(np.array(row_result))
             i += 1

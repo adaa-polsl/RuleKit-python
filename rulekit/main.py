@@ -62,6 +62,7 @@ class RuleKit:
                 params.append(f'-Xms{initial_heap_size}m')
             if max_heap_size is not None:
                 params.append(f'-Xmx{max_heap_size}m')
+            params.append('-Xlog:disable')
             jpype.startJVM(jpype.getDefaultJVMPath(), *params, convertStrings=False)
 
 
