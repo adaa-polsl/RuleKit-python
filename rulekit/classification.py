@@ -72,6 +72,8 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         for label_value in labels:
             tmp[label_value] = None
         self.label_unique_values = list(tmp.keys())
+        if len(self.label_unique_values) > 0 and isinstance(self.label_unique_values[0], bytes):
+            self.label_unique_values = [item.decode('utf-8') for item in self.label_unique_values]
 
     def fit(self, values: Data, labels: Data) -> Any:
         self._get_unique_label_values(labels)

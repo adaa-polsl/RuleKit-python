@@ -56,10 +56,12 @@ class TestDecisionTreeClassifier(unittest.TestCase):
         x, y = load_iris(return_X_y=True)
 
         clf.fit(x, y)
-        rulekit_prediction, m = clf.predict_proba(x, return_metrics=True)
-        self.assertIsNotNone(m['rules_per_example'], 'rules_per_example should be calculated')
-        self.assertIsNotNone(m['voting_conflicts'], 'rules_per_example should be calculated')
-        self.assertIsNotNone(m['negative_voting_conflicts'], 'rules_per_example should be calculated')
+        confidence_matrix, m = clf.predict_proba(x, return_metrics=True)
+        for row in confidence_matrix:
+            sum = 0
+            for col in row:
+                sum += col
+            self.assertAlmostEquals(sum, 1, 3, 'Confidence matrix rows should sum to 1')
 
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('ClassificationSnCTest')
