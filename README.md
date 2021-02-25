@@ -9,7 +9,7 @@ python -m unittest discover ./tests
 Przed użyciem bilbioteki trzeba ją zainicjalizować (uruchomić JVM):
 
 ```python
-from rulekit.main import RuleKit
+from rulekit import RuleKit
 
 RuleKit.init()
 ```
@@ -28,11 +28,12 @@ Model oczkuje danych w formacie analogicznym do tego z scikit. Można przekazywa
 ### Używanie numpy
 
 ```python
+from rulekit.classification import RuleClassifier
 
-x = np.array([0, 0], [1, 0], [1, 1], [0, 1])
+x = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
 y = np.array([0, 0, 1, 0])
 
-clf = rulekit.RuleClassifier()
+clf = RuleClassifier()
 clf.fit(x, y)
 
 prediction = tree.predict(test_x)
@@ -44,7 +45,7 @@ prediction = tree.predict(test_x)
 train_x = data_frame[['Age', 'Gender', 'Payment Method']]
 test_x = test_data_frame[['Age', 'Gender', 'Payment Method']]
 
-tree = rulekit.RuleClassifier()
+tree = RuleClassifier()
 tree.fit(train_x, train_y)
 
 prediction = tree.predict(test_x)
