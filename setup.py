@@ -11,7 +11,7 @@ with open(f"{os.path.dirname(os.path.realpath(__file__))}/requirements.txt", mod
 
 setuptools.setup(
     name="rulekit-adaa",
-    version="1.2.6",
+    version="1.2.7",
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
