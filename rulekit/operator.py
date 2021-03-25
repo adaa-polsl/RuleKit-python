@@ -49,6 +49,12 @@ class BaseOperator:
         return self._real_model.apply(example_set)
 
     def get_params(self, deep=True) -> dict:
+        """
+        Returns
+        -------
+        hyperparameters : np.ndarray
+            Dictionary containing model hyperparameters.
+        """
         return self._params
 
     def set_params(self,
@@ -59,6 +65,7 @@ class BaseOperator:
                    max_growing: int = None,
                    enable_pruning: bool = None,
                    ignore_missing: bool = None) -> object:
+        """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._params = dict(
@@ -74,6 +81,20 @@ class BaseOperator:
         return self
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
+        """Calculates coverage matrix for ruleset.
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            dataset 
+
+        Returns
+        -------
+        coverage_matrix : np.ndarray
+             Each row of the matrix represent single example from dataset and every column represent
+            on rule from rule set. Value 1 in the matrix cell means that rule covered certain example, value 0
+            means that it doesn't. 
+        """
         if self._real_model is None:
             raise ValueError('"fit" method must be called before calling this method')
         covering_info = self.model.covering(create_example_set(values))

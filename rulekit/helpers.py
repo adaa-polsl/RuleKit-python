@@ -5,7 +5,6 @@ import pandas as pd
 from .params import Measures
 from .rules import Rule
 
-
 def get_rule_generator(expert: bool = False) -> Any:
     OperatorDocumentation = JClass('com.rapidminer.tools.documentation.OperatorDocumentation')
     OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')

@@ -2,6 +2,10 @@ from enum import Enum
 
 
 class Measures(Enum):
+    """Enum for different measures used during induction, pruning and voting.
+    
+    You can ream more about each measure and its implementation `here <https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation#41-rule-quality>`_ . 
+    """
     Accuracy = 'Accuracy'
     BinaryEntropy = 'BinaryEntropy'
     C1 = 'C1'

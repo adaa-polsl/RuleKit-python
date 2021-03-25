@@ -13,12 +13,21 @@ from subprocess import Popen,PIPE,STDOUT
 
 
 class JRE_Type(Enum):
+    """:meta private:"""
     open_jdk = 'open_jdk'
     oracle = 'oracle'
 
 
 class RuleKit:
+    """Class used for initializing RuleKit
+    
+    It starts JVM underhood and setups it with jars. 
 
+    Attributes
+    ----------
+    version : str
+        version of RuleKit jar used by wrapper (not equal to python package version).
+    """
     version: str
     _logger = None
     _jar_dir_path: str
@@ -42,6 +51,23 @@ class RuleKit:
 
     @staticmethod
     def init(initial_heap_size: int = None, max_heap_size: int = None):
+        """Initialize package.
+
+        This method must by called before using any operators in this package.
+        It configure and starts JVM and load RuleKit jar file.
+
+        Parameters
+        ----------
+        initial_heap_size : int
+            JVM initial heap size in mb
+        max_heap_size : int
+            JVM max heap size in mb
+
+        Raises
+        ------
+        Exception
+            If failed to load RuleKit jar file.
+        """
         RuleKit._setup_logger()
 
         RuleKit._detect_jre_type()
@@ -54,7 +80,7 @@ class RuleKit:
             RuleKit._rulekit_jar_file_path = list(filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
         except IndexError as error:
             RuleKit._logger.error('Failed to load jar files')
-            raise error
+            raise Exception('Failed to load RuleKit jar file. Check if valid rulekit jar file is present in rulekit/jar directory.')
         RuleKit._read_versions()
         RuleKit._launch_jvm(initial_heap_size, max_heap_size)
 
@@ -86,5 +112,4 @@ class RuleKit:
                 params.append(f'-Xms{initial_heap_size}m')
             if max_heap_size is not None:
                 params.append(f'-Xmx{max_heap_size}m')
-            print(jpype.getDefaultJVMPath())
             jpype.startJVM(jpype.getDefaultJVMPath(), *params, convertStrings=False)

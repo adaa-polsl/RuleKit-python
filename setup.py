@@ -2,16 +2,21 @@ import setuptools
 import os
 import io
 
-with io.open(f"{os.path.dirname(os.path.realpath(__file__))}/README.md", mode="r", encoding="utf-8") as fh:
+current_path = os.path.dirname(os.path.realpath(__file__))
+
+with io.open(f"{current_path}/README.md", mode="r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-with open(f"{os.path.dirname(os.path.realpath(__file__))}/requirements.txt", mode="r", encoding="utf-8") as f:
+with open(f"{current_path}/requirements.txt", mode="r", encoding="utf-8") as f:
     required = f.read().splitlines()
 
+version = None
+with open(f"{current_path}/rulekit/VERSION.txt", mode="r", encoding="utf-8") as f:
+    version = version
 
 setuptools.setup(
     name="rulekit-adaa",
-    version="1.2.7",
+    version=version,
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",

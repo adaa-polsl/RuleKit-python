@@ -1,1 +1,2 @@
 recursive-include rulekit/jar *
+recursive-include rulekit *.txt

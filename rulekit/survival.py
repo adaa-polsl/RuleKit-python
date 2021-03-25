@@ -7,6 +7,7 @@ from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
 class SurvivalRules(BaseOperator):
+    """Regression model."""
 
     def __init__(self,
                  survival_time_attr: str = None,
@@ -14,6 +15,23 @@ class SurvivalRules(BaseOperator):
                  max_growing: int = None,
                  enable_pruning: bool = None,
                  ignore_missing: bool = None):
+        """
+        Parameters
+        ----------
+        survival_time_attr : str
+            name of column containing survival time data (use when data passed to model is padnas dataframe).
+        min_rule_covered : int = None
+            positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
+            (positive examples for classification problems); default: 5
+        max_growing : int = None
+            non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
+            (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
+        enable_pruning : bool = None
+            enable or disable pruning, default is True.
+        ignore_missing : bool = None
+            boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
+            considered as not fulfilling the condition build upon that attribute); default: False.
+        """
         super().__init__(
             min_rule_covered=min_rule_covered,
             induction_measure=None,
@@ -41,9 +59,23 @@ class SurvivalRules(BaseOperator):
         return ''
 
     def fit(self, values: Data, labels: Data, survival_time: Data = None) -> Any:
+        """Train model on given dataset.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            labels
+        survival_time: :class:`rulekit.operator.Data`
+            data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
+        
+        Returns
+        -------
+        self : SurvivalRules
+        """
         if self.survival_time_attr is None and survival_time is None:
-            raise ValueError('No "survival_time" attribute name was specified. '
-                             'Specify it or pass its values by "survival_time_attr" parameter.')
+            raise ValueError('No "survival_time" attribute name was specified. Specify it using method set_params')
         if survival_time is not None:
             survival_time_attribute = SurvivalRules._append_survival_time_columns(values, survival_time)
         else:
@@ -52,6 +84,18 @@ class SurvivalRules(BaseOperator):
         return self
 
     def predict(self, values: Data) -> np.ndarray:
+        """Perform prediction and returns predicted values.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+
+        Returns
+        -------
+        result : np.ndarray
+            predicted values
+        """
         return PredictionResultMapper.map(super().predict(values))
 
 
@@ -68,9 +112,38 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
                  extend_using_automatic: bool = None,
                  induce_using_preferred: bool = None,
                  induce_using_automatic: bool = None,
-                 consider_other_classes: bool = None,
                  preferred_conditions_per_rule: int = None,
                  preferred_attributes_per_rule: int = None):
+        """
+        Parameters
+        ----------
+        survival_time_attr : str
+            name of column containing survival time data (use when data passed to model is padnas dataframe).
+        min_rule_covered : int = None
+            positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
+            (positive examples for classification problems); default: 5
+        max_growing : int = None
+            non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
+            (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
+        enable_pruning : bool = None
+            enable or disable pruning, default is True.
+        ignore_missing : bool = None
+            boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
+            considered as not fulfilling the condition build upon that attribute); default: False.
+        
+        extend_using_preferred : bool = None
+            boolean indicating whether initial rules should be extended with a use of preferred conditions and attributes; default is False
+        extend_using_automatic : bool = None
+            boolean indicating whether initial rules should be extended with a use of automatic conditions and attributes; default is False
+        induce_using_preferred : bool = None
+            boolean indicating whether new rules should be induced with a use of preferred conditions and attributes; default is False
+        induce_using_automatic : bool = None
+            boolean indicating whether new rules should be induced with a use of automatic conditions and attributes; default is False
+        preferred_conditions_per_rule : int = None
+            maximum number of preferred conditions per rule,
+        preferred_attributes_per_rule : int = None
+            maximum number of preferred attributes per rule,
+        """
         ExpertKnowledgeOperator.__init__(
             self,
             min_rule_covered=min_rule_covered,
@@ -84,7 +157,6 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
             extend_using_automatic=extend_using_automatic,
             induce_using_preferred=induce_using_preferred,
             induce_using_automatic=induce_using_automatic,
-            consider_other_classes=consider_other_classes,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
             preferred_attributes_per_rule=preferred_attributes_per_rule
         )
@@ -98,6 +170,31 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
             expert_rules: List[Union[str, Tuple[str, str]]] = None,
             expert_preferred_conditions: List[Union[str, Tuple[str, str]]] = None,
             expert_forbidden_conditions: List[Union[str, Tuple[str, str]]] = None) -> Any:
+        """Train model on given dataset.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : Data
+            labels
+        survival_time: :class:`rulekit.operator.Data`
+            data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
+        
+        expert_rules : List[Union[str, Tuple[str, str]]]
+             set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
+             element is name of the rule and second one is rule string.
+        expert_preferred_conditions : List[Union[str, Tuple[str, str]]]
+             multiset of preferred conditions (used also for specifying preferred attributes by using special value Any). Either passed as a list of strings representing rules or as list of tuples where first
+             element is name of the rule and second one is rule string.
+        expert_forbidden_conditions : List[Union[str, Tuple[str, str]]]
+             set of forbidden conditions (used also for specifying forbidden attributes by using special valye Any). Either passed as a list of strings representing rules or as list of tuples where first
+             element is name of the rule and second one is rule string.
+        
+        Returns
+        -------
+        self : ExpertSurvivalRules
+        """
         if self.survival_time_attr is None and survival_time is None:
             raise ValueError('No "survival_time" attribute name was specified. '
                              'Specify it or pass its values by "survival_time" parameter.')

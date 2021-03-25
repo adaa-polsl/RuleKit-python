@@ -1,5 +1,23 @@
 
+
 class RuleStatistics:
+    """Statistics for single rule.
+    
+    Attributes
+    ----------
+    p : float
+        Number of positives covered by the rule (accounting weights).
+    n : float
+        Number of negatives covered by the rule (accounting weights).
+    P : float
+        Number of positives in the training set (accounting weights).
+    N : float
+        Number of negatives in the training set (accounting weights).
+    weight : float
+        Rule weight.
+    pvalue : float
+        Rule significance.
+    """
 
     def __init__(self, rule):
         self.p = rule.weighted_p
@@ -10,11 +28,51 @@ class RuleStatistics:
         self.pvalue = rule.pvalue
 
     def __str__(self):
+        """Returns string representation of the object."""
         return f'(p = {self.p}, n = {self.n}, P = {self.P}, ' + \
                f'N = {self.N}, weight = {self.weight}, pvalue = {self.pvalue})'
 
 
 class RuleSetStatistics:
+    """Statistics for ruleset.
+    
+    Attributes
+    ----------
+    SIGNIFICANCE_LEVEL : float
+        Significance level, default value is *0.05*
+
+
+    time_total_s : float
+        Time of constructing the rule set in seconds.
+    time_growing_s : float
+        Time of growing in seconds.
+    time_pruning_s : float
+        Time of pruning in seconds.
+    rules_count : int
+        Number of rules in ruleset.
+    conditions_per_rule : float
+        Average number of conditions per rule.
+    induced_conditions_per_rule : float
+        Average number of induced conditions.
+    avg_rule_coverage : float
+        Average rule coverage.
+    avg_rule_precision : float
+        Average rule precision.
+    avg_rule_quality : float
+        Average rule quality.
+    pvalue : float
+        rule set significance.
+    FDR_pvalue : float
+        Significance of the rule set with false discovery rate correction.
+    FWER_pvalue : float
+        Significance of the rule set with familiy-wise error rate correction.
+    fraction_significant : float
+        Fraction of rules significant at assumed level
+    fraction_FDR_significant : float
+        Fraction of rules significant, set with false discovery rate correction, at assumed level.
+    fraction_FWER_significant : float
+        Fraction of rules significant, set with familiy-wise error rate correction, at assumed level.
+    """
     SIGNIFICANCE_LEVEL = 0.05
 
     def __init__(self, ruleset):
@@ -30,9 +88,9 @@ class RuleSetStatistics:
         self.avg_rule_precision = ruleset.calculate_avg_rule_precision()
         self.avg_rule_quality = ruleset.calculate_avg_rule_quality()
 
-        self.avg_pvalue = ruleset.calculate_significance(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
-        self.avg_FDR_pvalue = ruleset.calculate_significance_fdr(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
-        self.avg_FWER_pvalue = ruleset.calculate_significance_fwer(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
+        self.pvalue = ruleset.calculate_significance(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
+        self.FDR_pvalue = ruleset.calculate_significance_fdr(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
+        self.FWER_pvalue = ruleset.calculate_significance_fwer(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
 
         self.fraction_significant = ruleset.calculate_significance(RuleSetStatistics.SIGNIFICANCE_LEVEL)['fraction']
         self.fraction_FDR_significant = ruleset.calculate_significance_fdr(RuleSetStatistics.SIGNIFICANCE_LEVEL)[
@@ -53,9 +111,9 @@ class RuleSetStatistics:
                f'Average rule precision: {self.avg_rule_precision}\n' + \
                f'Average rule quality: {self.avg_rule_quality}\n' + \
                '\n' + \
-               f'Average pvalue: {self.avg_pvalue}\n' + \
-               f'Average FDR pvalue: {self.avg_FDR_pvalue}\n' + \
-               f'Average FWER pvalue: {self.avg_FWER_pvalue}\n' + \
+               f'pvalue: {self.pvalue}\n' + \
+               f'FDR pvalue: {self.FDR_pvalue}\n' + \
+               f'FWER pvalue: {self.FWER_pvalue}\n' + \
                '\n' + \
                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} significant: {self.fraction_significant}\n' + \
                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} FDR significant: {self.fraction_FDR_significant}\n' + \

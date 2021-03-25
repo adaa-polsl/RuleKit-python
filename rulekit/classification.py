@@ -11,11 +11,13 @@ from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 
 
 class BaseClassifier:
+    """:meta private:"""
 
     def __init__(self):
         self.ClassificationRulesPerformance = JClass('adaa.analytics.rules.logic.quality.ClassificationRulesPerformance')
 
     class MetricTypes(Enum):
+        """:meta private:"""
         RulesPerExample = 1
         VotingConflicts = 2
         NegativeVotingConflicts = 3
@@ -34,6 +36,7 @@ class BaseClassifier:
 
 
 class RuleClassifier(BaseOperator, BaseClassifier):
+    """Classification model."""
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -43,6 +46,28 @@ class RuleClassifier(BaseOperator, BaseClassifier):
                  max_growing: int = None,
                  enable_pruning: bool = None,
                  ignore_missing: bool = None):
+        """
+        Parameters
+        ----------
+        min_rule_covered : int = None
+            positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
+            (positive examples for classification problems); default: 5
+        induction_measure : :class:`rulekit.params.Measures` = None
+            measure used during induction; default measure is correlation
+        pruning_measure : Union[:class:`rulekit.params.Measures`, str] = None
+            measure used during pruning. Could be user defined (string), for example  :code:`2 * p / n`; 
+            default measure is correlation
+        voting_measure : :class:`rulekit.params.Measures` = None
+            measure used during voting; default measure is correlation
+        max_growing : int = None
+            non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
+            (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
+        enable_pruning : bool = None
+            enable or disable pruning, default is True.
+        ignore_missing : bool = None
+            boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
+            considered as not fulfilling the condition build upon that attribute); default: False.
+        """
         BaseOperator.__init__(
             self,
             min_rule_covered=min_rule_covered,
@@ -76,6 +101,18 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             self.label_unique_values = [item.decode('utf-8') for item in self.label_unique_values]
 
     def fit(self, values: Data, labels: Data) -> Any:
+        """Train model on given dataset.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            labels
+        Returns
+        -------
+        self : RuleClassifier
+        """
         self._get_unique_label_values(labels)
         
         if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
@@ -89,6 +126,23 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         return self
 
     def predict(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
+        """Perform prediction and returns predicted labels.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+
+        return_metrics: bool = False
+            Optional flag. If set to *True* method will calculate some additional model metrics. 
+            Method will then return tuple instead of just predicted labels.
+ 
+        Returns
+        -------
+        result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
+            If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple will be returned with first
+            element being prediction and second one being metrics.
+        """
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_result(result_example_set)
         if return_metrics:
@@ -98,6 +152,23 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             return mapped_result_example_set
 
     def predict_proba(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
+        """Perform prediction and returns class probabilities for each example.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+
+        return_metrics: bool = False
+            Optional flag. If set to *True* method will calculate some additional model metrics. 
+            Method will then return tuple instead of just probabilities.
+ 
+        Returns
+        -------
+        result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
+            If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise a tuple will be returned with first
+            element being prediction and second one being metrics.
+        """
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_confidence(result_example_set)
         if return_metrics:
@@ -108,6 +179,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
 
 class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifier):
+    """Classification model using expert knowledge."""
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -125,6 +197,43 @@ class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifi
                  consider_other_classes: bool = None,
                  preferred_conditions_per_rule: int = None,
                  preferred_attributes_per_rule: int = None):
+        """
+        Parameters
+        ----------
+        min_rule_covered : int = None
+            positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
+            (positive examples for classification problems); default: 5
+        induction_measure : :class:`rulekit.params.Measures` = None
+            measure used during induction; default measure is correlation
+        pruning_measure : Union[:class:`rulekit.params.Measures`, str] = None
+            measure used during pruning. Could be user defined (string), for example  :code:`2 * p / n`; 
+            default measure is correlation
+        voting_measure : :class:`rulekit.params.Measures` = None
+            measure used during voting; default measure is correlation
+        max_growing : int = None
+            non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
+            (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
+        enable_pruning : bool = None
+            enable or disable pruning, default is True.
+        ignore_missing : bool = None
+            boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
+            considered as not fulfilling the condition build upon that attribute); default: False.
+
+        extend_using_preferred : bool = None
+            boolean indicating whether initial rules should be extended with a use of preferred conditions and attributes; default is False
+        extend_using_automatic : bool = None
+            boolean indicating whether initial rules should be extended with a use of automatic conditions and attributes; default is False
+        induce_using_preferred : bool = None
+            boolean indicating whether new rules should be induced with a use of preferred conditions and attributes; default is False
+        induce_using_automatic : bool = None
+            boolean indicating whether new rules should be induced with a use of automatic conditions and attributes; default is False
+        consider_other_classes : bool = None
+            boolean indicating whether automatic induction should be performed for classes for which no user's knowledge has been defined (classification only); default is False.
+        preferred_conditions_per_rule : int = None
+            maximum number of preferred conditions per rule,
+        preferred_attributes_per_rule : int = None
+            maximum number of preferred attributes per rule,
+        """
         self._remap_to_numeric = False
         ExpertKnowledgeOperator.__init__(
             self,
@@ -147,11 +256,32 @@ class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifi
     def fit(self,
             values: Data,
             labels: Data,
-            survival_time_attribute: str = None,
 
             expert_rules: List[Union[str, Tuple[str, str]]] = None,
             expert_preferred_conditions: List[Union[str, Tuple[str, str]]] = None,
             expert_forbidden_conditions: List[Union[str, Tuple[str, str]]] = None) -> Any:
+        """Train model on given dataset.
+    
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            labels
+        
+        expert_rules : List[Union[str, Tuple[str, str]]]
+             set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
+             element is name of the rule and second one is rule string.
+        expert_preferred_conditions : List[Union[str, Tuple[str, str]]]
+             multiset of preferred conditions (used also for specifying preferred attributes by using special value Any). Either passed as a list of strings representing rules or as list of tuples where first
+             element is name of the rule and second one is rule string.
+        expert_forbidden_conditions : List[Union[str, Tuple[str, str]]]
+             set of forbidden conditions (used also for specifying forbidden attributes by using special valye Any). Either passed as a list of strings representing rules or as list of tuples where first
+             element is name of the rule and second one is rule string.
+        Returns
+        -------
+        self : ExpertRuleClassifier
+        """
         if isinstance(labels[0], Number):
             self._remap_to_numeric = True
             labels = list(map(str, labels))
