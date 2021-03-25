@@ -19,7 +19,7 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 
 # -- Project information -----------------------------------------------------
 
-project = 'rulekit-adaa'
+project = 'rulekit'
 copyright = '2021, ADAA'
 
 release = open(f'{current_path}/../../rulekit/VERSION.txt', mode='r').read().strip()

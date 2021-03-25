@@ -15,7 +15,7 @@ with open(f"{current_path}/rulekit/VERSION.txt", mode="r", encoding="utf-8") as 
     version = version
 
 setuptools.setup(
-    name="rulekit-adaa",
+    name="rulekit",
     version=version,
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
