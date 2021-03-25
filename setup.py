@@ -16,7 +16,7 @@ with open(f"{current_path}/rulekit/VERSION.txt", mode="r", encoding="utf-8") as 
 
 setuptools.setup(
     name="rulekit",
-    version=version,
+    version='1.3.0',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
@@ -25,13 +25,18 @@ setuptools.setup(
     url="https://github.com/adaa-polsl/RuleKit",
     packages=setuptools.find_packages(),
     classifiers=[
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU License",
+        "Programming Language :: Java",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: Unix",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
     ],
     include_package_data = True,
-    package_data = {
-        'jar': ['*.jar'],
-    },
     python_requires='>=3.6',
     install_requires=required,
     test_suite="tests",

@@ -1,87 +1,49 @@
-## Uruchamianie testów
+# Rulekit
+
+This package is python wrapper for [RuleKit](https://github.com/adaa-polsl/RuleKit) library - a versatile tool for rule learning. 
+
+Based on a sequential covering induction algorithm, it is suitable for classification, regression, and survival problems.
+
+## Installation
+
+> **NOTE**: 
+This package is a wrapper for Java library, it requires Java (version 1.8.0 tested) to be installed on the computer. Both Open JDK and Oracle implementations are supported.
+## 
 
 ```bash
+pip install rulekit
+
+# after installation
+python -m rulekit download_jar
+```
+
+Second command will fetch latest RuleKit library jar file from its github releases page. It is required to use this package.
+
+## Running tests
+
+In directory where `setup.py` file exists.
+```
 python -m unittest discover ./tests
 ```
 
-## Inicjalizacja
-
-Przed użyciem bilbioteki trzeba ją zainicjalizować (uruchomić JVM):
+## Sample usage
 
 ```python
 from rulekit import RuleKit
+from rulekit.classification import RuleClassifier
+from sklearn.datasets import load_iris
 
 RuleKit.init()
-```
 
-możliwe jest także odczytanie wersji jar'ki RuleKit'a:
-
-```python
->> RuleKit.version
->> 2.0.2
-```
-
-## Przekazywanie danych do modelu
-
-Model oczkuje danych w formacie analogicznym do tego z scikit. Można przekazywać tablice numpy, zwykłe listy, lub dataframy pandasa. 
-
-### Używanie numpy
-
-```python
-from rulekit.classification import RuleClassifier
-
-x = np.array([[0, 0], [1, 0], [1, 1], [0, 1]])
-y = np.array([0, 0, 1, 0])
+x, y = load_iris(return_X_y=True)
 
 clf = RuleClassifier()
 clf.fit(x, y)
+prediction = clf.predict(x)
 
-prediction = tree.predict(test_x)
+print(prediction)
 ```
 
-### Używanie pandas
+## Documentation
 
-```python
-train_x = data_frame[['Age', 'Gender', 'Payment Method']]
-test_x = test_data_frame[['Age', 'Gender', 'Payment Method']]
-
-tree = RuleClassifier()
-tree.fit(train_x, train_y)
-
-prediction = tree.predict(test_x)
-```
-
-> Biblioteka dla nominalnych labeli zwraca tablice typu `str` a nie byte tak jak ma to miejsce w pandasie
-
-np.
-```python
-test_y = data_frame['Future Customer'].to_numpy(dtype=str)
-
-prediction = tree.predict(test_y)
-
-accuracy = metrics.accuracy_score(y, prediction)
-```
-
-## Operatory
-
-Dostępne są następujące operatory odpowiadające klasą z javy:
-* `classification.RuleClassifier` - ClassificationSnC
-* `classification.ExpertRuleClassifier` - ClassificationExpertSnC
-* `regression.RuleRegressor` - RegressionSnC
-* `regression.ExpertRuleRegressor` - RegressionExpertSnC
-* `survival.SurvivalRules` - SurvivalLogRankSnC
-* `survival.ExpertSurvivalRules` - SurvivalLogRankExpertSnC
-
-## Konfigurowanie operatora
-
-Wszystkie parametry operatora (z wyjątkiem reguł eksperckich) przekazywane są poprzez analogicznie nazwane parametry konstruktora.
-
-## Nauczony model
-
-Metoda `fit` zwraca obiekt `RuleSet`, można się też do niego dostać poprzez pole `model` operatora. Posiada on analogiczne pola do tych z bibliotki Java:
-* `growing_time`: float
-* `is_voting`: bool
-* `pruning_time`: float
-* `total_time`: float
-* `parameters`: InductionParameters
-* `rules`: List[Rule]
+Full documentation is available [here](TODO)

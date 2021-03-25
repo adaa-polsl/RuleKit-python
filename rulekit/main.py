@@ -80,7 +80,12 @@ class RuleKit:
             RuleKit._rulekit_jar_file_path = list(filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
         except IndexError as error:
             RuleKit._logger.error('Failed to load jar files')
-            raise Exception('Failed to load RuleKit jar file. Check if valid rulekit jar file is present in rulekit/jar directory.')
+            raise Exception('''\n
+Failed to load RuleKit jar file. Check if valid rulekit jar file is present in "rulekit/jar" directory.
+
+If you're running this packae for the first time you need to download RuleKit jar file by running:
+    python -m rulekit download_jar
+        ''')
         RuleKit._read_versions()
         RuleKit._launch_jvm(initial_heap_size, max_heap_size)
 
