@@ -1,6 +1,7 @@
 from typing import Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
+import pandas as pd
 
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .params import Measures
@@ -61,7 +62,11 @@ class RuleRegressor(BaseOperator):
         -------
         self : RuleRegressor
         """
-        if not isinstance(labels[0], Number):
+        if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
+            first_label = labels.iloc[0]
+        else:
+            first_label = labels[0]
+        if not isinstance(first_label, Number):
             raise ValueError('DecisionTreeRegressor requires lables values to be numeric')
         super().fit(values, labels)
         return self
@@ -181,7 +186,11 @@ class ExpertRuleRegressor(RuleRegressor, ExpertKnowledgeOperator):
         -------
         self : ExpertRuleRegressor
         """
-        if not isinstance(labels[0], Number):
+        if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
+            first_label = labels.iloc[0]
+        else:
+            first_label = labels[0]
+        if not isinstance(first_label, Number):
             raise ValueError('ExpertRuleRegressor requires lables values to be numeric')
         return ExpertKnowledgeOperator.fit(
             self,

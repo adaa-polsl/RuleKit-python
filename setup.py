@@ -10,13 +10,9 @@ with io.open(f"{current_path}/README.md", mode="r", encoding="utf-8") as fh:
 with open(f"{current_path}/requirements.txt", mode="r", encoding="utf-8") as f:
     required = f.read().splitlines()
 
-version = None
-with open(f"{current_path}/rulekit/VERSION.txt", mode="r", encoding="utf-8") as f:
-    version = version
-
 setuptools.setup(
     name="rulekit",
-    version='1.3.0',
+    version='1.3.2',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
