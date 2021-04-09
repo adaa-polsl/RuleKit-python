@@ -189,6 +189,15 @@ def create_example_set(values, labels=None, numeric_labels=False, survival_time_
     return example_set
 
 
+def create_sorted_example_set(values, labels=None, numeric_labels=False, survival_time_attribute: str = None) -> object:
+    example_set = create_example_set(values, labels, numeric_labels, survival_time_attribute)
+    SortedExampleSet = JClass("com.rapidminer.example.set.SortedExampleSet")
+    sorted_example_set = SortedExampleSet(
+        example_set, example_set.getAttributes().getLabel(), SortedExampleSet.INCREASING
+    )
+    return sorted_example_set
+
+
 class PredictionResultMapper:
 
     @staticmethod
