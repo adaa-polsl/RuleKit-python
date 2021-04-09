@@ -2,8 +2,9 @@ from typing import Any, Union, Tuple, List
 import numpy as np
 import pandas as pd
 
-from .helpers import PredictionResultMapper
+from .helpers import PredictionResultMapper, RuleGeneratorConfigurator, get_rule_generator
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
+from .rules import RuleSet
 
 
 class SurvivalRules(BaseOperator):
@@ -32,15 +33,40 @@ class SurvivalRules(BaseOperator):
             boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
             considered as not fulfilling the condition build upon that attribute); default: False.
         """
-        super().__init__(
+        self._params = None
+        self._rule_generator = None
+        self._configurator = None
+        self.set_params(
+            survival_time_attr=survival_time_attr,
             min_rule_covered=min_rule_covered,
-            induction_measure=None,
-            pruning_measure=None,
-            voting_measure=None,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing)
-        self.survival_time_attr: str = survival_time_attr
+        self.model: RuleSet = None
+        self._real_model = None
+
+    def set_params(self,
+                   survival_time_attr: str = None,
+                   min_rule_covered: int = None,
+                   max_growing: int = None,
+                   enable_pruning: bool = None,
+                   ignore_missing: bool = None) -> object:
+
+        self.survival_time_attr = survival_time_attr
+
+        """Set models hyperparameters. Parameters are the same as in constructor."""
+        self._rule_generator = get_rule_generator()
+        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._params = dict(
+            survival_time_attr=survival_time_attr,
+            min_rule_covered=min_rule_covered,
+            max_growing=max_growing,
+            enable_pruning=enable_pruning,
+            ignore_missing=ignore_missing,
+        )
+        self._rule_generator = self._configurator.configure(**self._params)
+        return self
+
 
     @staticmethod
     def _append_survival_time_columns(values, survival_time) -> str:
@@ -144,12 +170,12 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule,
         """
-        ExpertKnowledgeOperator.__init__(
-            self,
+        self._params = None
+        self._rule_generator = None
+        self._configurator = None
+        self.set_params(
+            survival_time_attr=survival_time_attr,
             min_rule_covered=min_rule_covered,
-            induction_measure=None,
-            pruning_measure=None,
-            voting_measure=None,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
@@ -160,7 +186,43 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
             preferred_conditions_per_rule=preferred_conditions_per_rule,
             preferred_attributes_per_rule=preferred_attributes_per_rule
         )
-        self.survival_time_attr: str = survival_time_attr
+        self.model: RuleSet = None
+        self._real_model = None
+
+
+    def set_params(self,
+                   survival_time_attr: str = None,
+                   min_rule_covered: int = None,
+                   max_growing: int = None,
+                   enable_pruning: bool = None,
+                   ignore_missing: bool = None,
+                   extend_using_preferred: bool = None,
+                   extend_using_automatic: bool = None,
+                   induce_using_preferred: bool = None,
+                   induce_using_automatic: bool = None,
+                   preferred_conditions_per_rule: int = None,
+                   preferred_attributes_per_rule: int = None) -> object:
+
+        self.survival_time_attr = survival_time_attr
+        
+        self._params = dict(
+            survival_time_attr=survival_time_attr,
+            min_rule_covered=min_rule_covered,
+            max_growing=max_growing,
+            enable_pruning=enable_pruning,
+            ignore_missing=ignore_missing,
+            extend_using_preferred=extend_using_preferred,
+            extend_using_automatic=extend_using_automatic,
+            induce_using_preferred=induce_using_preferred,
+            induce_using_automatic=induce_using_automatic,
+            preferred_conditions_per_rule=preferred_conditions_per_rule,
+            preferred_attributes_per_rule=preferred_attributes_per_rule,
+        )
+        self._rule_generator = get_rule_generator(expert=True)
+        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._rule_generator = self._configurator.configure(**self._params)
+        return self
+
 
     def fit(self,
             values: Data,

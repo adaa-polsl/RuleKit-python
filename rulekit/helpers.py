@@ -36,6 +36,7 @@ class RuleGeneratorConfigurator:
                   max_growing: int = None,
                   enable_pruning: bool = None,
                   ignore_missing: bool = None,
+                  survival_time_attr: str = None,
 
                   extend_using_preferred: bool = None,
                   extend_using_automatic: bool = None,
