@@ -275,4 +275,4 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
         )
 
     def predict(self, values: Data) -> np.ndarray:
-        return PredictionResultMapper.map(ExpertKnowledgeOperator.predict(self, values))
+        return PredictionResultMapper.map_survival(ExpertKnowledgeOperator.predict(self, values))
