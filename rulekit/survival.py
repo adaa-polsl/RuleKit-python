@@ -110,7 +110,7 @@ class SurvivalRules(BaseOperator):
         return self
 
     def predict(self, values: Data) -> np.ndarray:
-        """Perform prediction and returns predicted values.
+        """Perform prediction and return estimated survival function for each example.
     
         Parameters
         ----------
@@ -120,9 +120,9 @@ class SurvivalRules(BaseOperator):
         Returns
         -------
         result : np.ndarray
-            predicted values
+            Each row represent single example from dataset and contains estimated survival function for that example. Estimated survival function is returned as a dictionary containing times and corresponding probabilities.
         """
-        return PredictionResultMapper.map(super().predict(values))
+        return PredictionResultMapper.map_survival(super().predict(values))
 
 
 class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):

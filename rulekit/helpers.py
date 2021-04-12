@@ -249,3 +249,19 @@ class PredictionResultMapper:
             prediction.append(value)
         prediction = list(map(float, prediction))
         return np.array(prediction)
+
+    @staticmethod
+    def map_survival(predicted_example_set) -> np.ndarray:
+        estimators = []
+        attribute = predicted_example_set.getAttributes().get("estimator")
+        example_set_iterator = predicted_example_set.iterator()
+        while example_set_iterator.hasNext():
+            example = example_set_iterator.next()
+            example_estimator = str(example.getValueAsString(attribute))
+            example_estimator = example_estimator.split(" ")
+            number_of_points, example_estimator[0] = example_estimator[0].split(":") 
+            times = [float(example_estimator[i]) for i in range(len(example_estimator) - 1) if i%2 == 0]
+            probabilities = [float(example_estimator[i]) for i in range(len(example_estimator)) if i % 2 != 0]
+            estimator = {'times': times, 'probabilities': probabilities}
+            estimators.append(estimator)
+        return np.array(estimators)
