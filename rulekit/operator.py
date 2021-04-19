@@ -97,7 +97,7 @@ class BaseOperator:
         """
         if self._real_model is None:
             raise ValueError('"fit" method must be called before calling this method')
-        covering_info = self.model.covering(create_sorted_example_set(values))
+        covering_info = self.model.covering(create_example_set(values))
         if isinstance(values, pd.Series) or isinstance(values, pd.DataFrame):
             values = values.to_numpy()
         result = []
