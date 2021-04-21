@@ -61,7 +61,7 @@ class TestDecisionTreeClassifier(unittest.TestCase):
             sum = 0
             for col in row:
                 sum += col
-            self.assertAlmostEquals(sum, 1, 3, 'Confidence matrix rows should sum to 1')
+            self.assertAlmostEqual(sum, 1, 3, 'Confidence matrix rows should sum to 1')
 
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('ClassificationSnCTest')
