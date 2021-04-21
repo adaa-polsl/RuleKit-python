@@ -14,7 +14,8 @@ class BaseClassifier:
     """:meta private:"""
 
     def __init__(self):
-        self.ClassificationRulesPerformance = JClass('adaa.analytics.rules.logic.quality.ClassificationRulesPerformance')
+        self.ClassificationRulesPerformance = JClass(
+            'adaa.analytics.rules.logic.quality.ClassificationRulesPerformance')
 
     class MetricTypes(Enum):
         """:meta private:"""
@@ -23,7 +24,8 @@ class BaseClassifier:
         NegativeVotingConflicts = 3
 
     def _calculate_metric(self, example_set, metric_type) -> float:
-        classificationRulesPerformance = self.ClassificationRulesPerformance(metric_type.value)
+        classificationRulesPerformance = self.ClassificationRulesPerformance(
+            metric_type.value)
         classificationRulesPerformance.startCounting(example_set, True)
         return classificationRulesPerformance.getMikroAverage()
 
@@ -84,9 +86,11 @@ class RuleClassifier(BaseOperator, BaseClassifier):
     def _map_result(self, predicted_example_set) -> np.ndarray:
         prediction: np.ndarray
         if self._remap_to_numeric:
-            prediction = PredictionResultMapper.map_to_numerical(predicted_example_set)
+            prediction = PredictionResultMapper.map_to_numerical(
+                predicted_example_set)
         else:
-            prediction = PredictionResultMapper.map_to_nominal(predicted_example_set)
+            prediction = PredictionResultMapper.map_to_nominal(
+                predicted_example_set)
         return prediction
 
     def _map_confidence(self, predicted_example_set) -> np.ndarray:
@@ -98,11 +102,12 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             tmp[label_value] = None
         self.label_unique_values = list(tmp.keys())
         if len(self.label_unique_values) > 0 and isinstance(self.label_unique_values[0], bytes):
-            self.label_unique_values = [item.decode('utf-8') for item in self.label_unique_values]
+            self.label_unique_values = [item.decode(
+                'utf-8') for item in self.label_unique_values]
 
     def fit(self, values: Data, labels: Data) -> Any:
         """Train model on given dataset.
-    
+
         Parameters
         ----------
         values : :class:`rulekit.operator.Data`
@@ -114,7 +119,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         self : RuleClassifier
         """
         self._get_unique_label_values(labels)
-        
+
         if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
             first_label = labels.iloc[0]
         else:
@@ -127,7 +132,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
     def predict(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
         """Perform prediction and returns predicted labels.
-    
+
         Parameters
         ----------
         values : :class:`rulekit.operator.Data`
@@ -136,7 +141,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         return_metrics: bool = False
             Optional flag. If set to *True* method will calculate some additional model metrics. 
             Method will then return tuple instead of just predicted labels.
- 
+
         Returns
         -------
         result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
@@ -146,14 +151,15 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_result(result_example_set)
         if return_metrics:
-            metrics = BaseClassifier._calculate_prediction_metrics(self, result_example_set)
+            metrics = BaseClassifier._calculate_prediction_metrics(
+                self, result_example_set)
             return (mapped_result_example_set, metrics)
         else:
             return mapped_result_example_set
 
     def predict_proba(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
         """Perform prediction and returns class probabilities for each example.
-    
+
         Parameters
         ----------
         values : :class:`rulekit.operator.Data`
@@ -162,7 +168,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         return_metrics: bool = False
             Optional flag. If set to *True* method will calculate some additional model metrics. 
             Method will then return tuple instead of just probabilities.
- 
+
         Returns
         -------
         result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
@@ -172,13 +178,25 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_confidence(result_example_set)
         if return_metrics:
-            metrics = BaseClassifier._calculate_prediction_metrics(self, result_example_set)
+            metrics = BaseClassifier._calculate_prediction_metrics(
+                self, result_example_set)
             return (mapped_result_example_set, metrics)
         else:
             return mapped_result_example_set
 
+    def __getstate__(self) -> dict:
+        return {**BaseOperator.__getstate__(self), **{
+            'label_unique_values': self.label_unique_values,
+            '_remap_to_numeric': self._remap_to_numeric
+        }}
 
-class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifier):
+    def __setstate__(self, state: dict):
+        BaseOperator.__setstate__(self, state)
+        self.label_unique_values = state['label_unique_values']
+        self._remap_to_numeric = state['_remap_to_numeric']
+
+
+class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifier):
     """Classification model using expert knowledge."""
 
     def __init__(self,
@@ -258,17 +276,18 @@ class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifi
             labels: Data,
 
             expert_rules: List[Union[str, Tuple[str, str]]] = None,
-            expert_preferred_conditions: List[Union[str, Tuple[str, str]]] = None,
+            expert_preferred_conditions: List[Union[str,
+                                                    Tuple[str, str]]] = None,
             expert_forbidden_conditions: List[Union[str, Tuple[str, str]]] = None) -> Any:
         """Train model on given dataset.
-    
+
         Parameters
         ----------
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
             labels
-        
+
         expert_rules : List[Union[str, Tuple[str, str]]]
              set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
              element is name of the rule and second one is rule string.
@@ -296,3 +315,12 @@ class ExpertRuleClassifier(RuleClassifier, ExpertKnowledgeOperator, BaseClassifi
 
     def predict(self, values: Data, return_metrics: bool = False) -> Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]:
         return RuleClassifier.predict(self, values, return_metrics)
+
+    def __getstate__(self) -> dict:
+        return {**BaseOperator.__getstate__(self), **{
+            '_remap_to_numeric': self._remap_to_numeric
+        }}
+
+    def __setstate__(self, state: dict):
+        BaseOperator.__setstate__(self, state)
+        self._remap_to_numeric = state['_remap_to_numeric']

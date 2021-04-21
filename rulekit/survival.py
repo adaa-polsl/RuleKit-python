@@ -125,7 +125,7 @@ class SurvivalRules(BaseOperator):
         return PredictionResultMapper.map_survival(super().predict(values))
 
 
-class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
+class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     def __init__(self,
                  survival_time_attr: str = None,
