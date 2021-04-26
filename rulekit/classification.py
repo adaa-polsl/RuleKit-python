@@ -301,7 +301,11 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifi
         -------
         self : ExpertRuleClassifier
         """
-        if isinstance(labels[0], Number):
+        if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
+            first_label = labels.iloc[0]
+        else:
+            first_label = labels[0]
+        if isinstance(first_label, Number):
             self._remap_to_numeric = True
             labels = list(map(str, labels))
         return ExpertKnowledgeOperator.fit(
