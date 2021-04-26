@@ -2,7 +2,7 @@
 RuleKit
 ========================================
 
-This package is python wrapper for `RuleKit <https://github.com/adaa-polsl/RuleKit/>`_ library (a versatile tool for rule learning). 
+This package is python wrapper for `RuleKit <https://github.com/adaa-polsl/RuleKit/>`__ library (a versatile tool for rule learning). 
 Based on a sequential covering induction algorithm, it is suitable for:
 
 - classification, 

@@ -10,19 +10,21 @@ Quick start
 Installation
 -------------
 
-.. warning::
-    TODO add package to pip repository
-    
 .. code-block:: bash
 
     pip install rulekit
+    python -m rulekit download_jar
+
+.. note::
+   Second command will download `RuleKit <https://github.com/adaa-polsl/RuleKit/>`__ jar
+   file from github releases. This step is required to use this package.
 
 To check if everything was installed correctly call:
 
 .. code-block:: python
 
-    >> import rulekit
-    >> rulekit.__version__
+    import rulekit
+    rulekit.__version__
 
 It should run without errors and print package version.
 
@@ -30,7 +32,7 @@ Initializing package
 --------------------
 
 Before you start using any of rulelkit package functionality you need to initialize it first. This step should be done only
-once in the beginning, no need to initialize before every usage.
+once at the beginning of the program, no need to initialize before every usage.
 
 .. code-block:: python
 
@@ -80,4 +82,4 @@ As you may noticed, training and using rulekit models is the same as in scikit l
 mean you can use scikit: metrics, cross-validation, hyper-parameters tuning etc. with ease. 
 
 
-For more examples head to **Tutorials** section.
+For more examples head to :doc:`Tutorials <./tutorials>` section.

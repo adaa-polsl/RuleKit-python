@@ -87,7 +87,7 @@ class RuleRegressor(BaseOperator):
         return self._map_result(super().predict(values))
 
 
-class ExpertRuleRegressor(RuleRegressor, ExpertKnowledgeOperator):
+class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 
     def __init__(self,
                  min_rule_covered: int = None,

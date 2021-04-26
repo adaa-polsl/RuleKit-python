@@ -275,3 +275,5 @@ static
 .idea/
 .vscode/
 doc/env
+doc/build/doctrees/
+doc/build/html.zip
