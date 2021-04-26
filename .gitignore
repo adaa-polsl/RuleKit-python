@@ -277,3 +277,5 @@ static
 doc/env
 doc/build/doctrees/
 doc/build/html.zip
+
+tests/resources
