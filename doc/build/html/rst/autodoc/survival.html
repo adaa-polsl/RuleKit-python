@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Survival &mdash; rulekit 1.4.0 documentation</title>
+  <title>Survival &mdash; rulekit 1.4.1 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -194,7 +195,7 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="survival">
+<section id="survival">
 <h1>Survival<a class="headerlink" href="#survival" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="rulekit.survival.SurvivalRules">
@@ -222,7 +223,7 @@ considered as not fulfilling the condition build upon that attribute); default: 
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
-<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – labels</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – survival status</p></li>
 <li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was specified.</p></li>
 </ul>
 </dd>
@@ -323,7 +324,7 @@ considered as not fulfilling the condition build upon that attribute); default: 
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
-<li><p><strong>labels</strong> (<em>Data</em>) – labels</p></li>
+<li><p><strong>labels</strong> (<em>Data</em>) – survival status</p></li>
 <li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was specified.</p></li>
 <li><p><strong>expert_rules</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
 element is name of the rule and second one is rule string.</p></li>
@@ -399,7 +400,7 @@ means that it doesn’t.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

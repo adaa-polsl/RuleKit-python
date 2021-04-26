@@ -57,7 +57,7 @@ class RuleRegressor(BaseOperator):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
-            labels
+            target values
         Returns
         -------
         self : RuleRegressor
@@ -171,7 +171,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
-            labels
+            target values
         
         expert_rules : List[Union[str, Tuple[str, str]]]
              set of initial rules, either passed as a list of strings representing rules or as list of tuples where first

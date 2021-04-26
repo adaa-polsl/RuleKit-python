@@ -92,7 +92,7 @@ class SurvivalRules(BaseOperator):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
-            labels
+            survival status
         survival_time: :class:`rulekit.operator.Data`
             data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
         
@@ -239,7 +239,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : Data
-            labels
+            survival status
         survival_time: :class:`rulekit.operator.Data`
             data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
         

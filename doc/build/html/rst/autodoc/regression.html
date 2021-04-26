@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Regression &mdash; rulekit 1.4.0 documentation</title>
+  <title>Regression &mdash; rulekit 1.4.1 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -194,7 +195,7 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="regression">
+<section id="regression">
 <h1>Regression<a class="headerlink" href="#regression" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="rulekit.regression.RuleRegressor">
@@ -225,7 +226,7 @@ considered as not fulfilling the condition build upon that attribute); default: 
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
-<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – labels</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – target values</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -328,7 +329,7 @@ considered as not fulfilling the condition build upon that attribute); default: 
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
-<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – labels</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – target values</p></li>
 <li><p><strong>expert_rules</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
 element is name of the rule and second one is rule string.</p></li>
 <li><p><strong>expert_preferred_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – multiset of preferred conditions (used also for specifying preferred attributes by using special value Any). Either passed as a list of strings representing rules or as list of tuples where first
@@ -397,7 +398,7 @@ means that it doesn’t.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

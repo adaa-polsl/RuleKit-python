@@ -7,7 +7,7 @@ Based on a sequential covering induction algorithm, it is suitable for:
 
 - classification, 
 
-- regression 
+- regression, 
 
 - survival problems.
 

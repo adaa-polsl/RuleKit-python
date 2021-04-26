@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Classification &mdash; rulekit 1.4.0 documentation</title>
+  <title>Classification &mdash; rulekit 1.4.1 documentation</title>
   
 
   
@@ -42,7 +43,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Code documentation" href="../autodoc.html" />
+    <link rel="next" title="Regression" href="regression.html" />
     <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
 </head>
 
@@ -88,27 +89,34 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Classification</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Summary-of-the-dataset.">Summary of the dataset.</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Decision-class-distribution">Decision class distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Summary-of-the-dataset">Summary of the dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Decision-class-distribution">Decision class distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Import-and-init-RuleKit">Import and init RuleKit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Helper-function-for-calculating-metrics">Helper function for calculating metrics</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Rule-induction-on-full-dataset">Rule induction on full dataset</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Stratified-K-Folds-cross-validation">Stratified K-Folds cross-validation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#C2-Measure-generated-rules">C2 Measure generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Correlation-Measure-generated-rules">Correlation Measure generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#RSS-Measure-generated-rules">RSS Measure generated rules</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#C2-Measure">C2 Measure</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Hyperparameters-tuning">Hyperparameters tuning</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Building-model-with-tuned-hyperparameters">Building model with tuned hyperparameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Stratified-K-Folds-cross-validation">Stratified K-Folds cross-validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Hyperparameters-tuning">Hyperparameters tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Building-model-with-tuned-hyperparameters">Building model with tuned hyperparameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Split-dataset-to-train-and-test-(80%/20%).">Split dataset to train and test (80%/20%).</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Validate-model-on-test-dataset">Validate model on test dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#Rules-evaluation">Rules evaluation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Validate-model-on-test-dataset">Validate model on test dataset</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="survival.html">Survival</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
@@ -451,12 +459,19 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="section" id="Classification">
+<section id="Classification">
 <h1>Classification<a class="headerlink" href="#Classification" title="Permalink to this headline">¶</a></h1>
 <p>This notebook presents example usage of package for solving classification problem on <code class="docutils literal notranslate"><span class="pre">seismic-bumps</span></code> dataset. You can download dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/seismic-bumps/seismic-bumps.arff">here</a>.</p>
-<p>This tutorial will cover topics such as: * training model * changing model hyperparameters * hyperparameters tuning * calculating metrics for model * getting RuleKit inbuil</p>
-<div class="section" id="Summary-of-the-dataset.">
-<h2>Summary of the dataset.<a class="headerlink" href="#Summary-of-the-dataset." title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">This tutorial will cover topics such as:</div>
+<div class="line">- training model</div>
+<div class="line">- changing model hyperparameters</div>
+<div class="line">- hyperparameters tuning</div>
+<div class="line">- calculating metrics for model</div>
+<div class="line">- getting RuleKit inbuilt</div>
+</div>
+<section id="Summary-of-the-dataset">
+<h2>Summary of the dataset<a class="headerlink" href="#Summary-of-the-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
@@ -660,9 +675,8 @@ div.rendered_html tbody tr:hover {
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Decision-class-distribution">
-<h2>Decision class distribution<a class="headerlink" href="#Decision-class-distribution" title="Permalink to this headline">¶</a></h2>
+<section id="Decision-class-distribution">
+<h3>Decision class distribution<a class="headerlink" href="#Decision-class-distribution" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
@@ -688,17 +702,33 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <img alt="../../_images/rst_tutorials_classification_5_0.svg" src="../../_images/rst_tutorials_classification_5_0.svg" /></div>
 </div>
+</section>
+</section>
+<section id="Import-and-init-RuleKit">
+<h2>Import and init RuleKit<a class="headerlink" href="#Import-and-init-RuleKit" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
 </div>
-<div class="section" id="Helper-function-for-calculating-metrics">
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">rulekit</span> <span class="kn">import</span> <span class="n">RuleKit</span>
+<span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+
+
+<span class="n">RuleKit</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Helper-function-for-calculating-metrics">
 <h2>Helper function for calculating metrics<a class="headerlink" href="#Helper-function-for-calculating-metrics" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">rulekit</span> <span class="kn">import</span> <span class="n">RuleKit</span>
-<span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
-<span class="kn">import</span> <span class="nn">sklearn.tree</span> <span class="k">as</span> <span class="nn">scikit</span>
+<span></span><span class="kn">import</span> <span class="nn">sklearn.tree</span> <span class="k">as</span> <span class="nn">scikit</span>
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MultiLabelBinarizer</span>
@@ -707,8 +737,6 @@ div.rendered_html tbody tr:hover {
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
-
-<span class="n">RuleKit</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">df_full</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;class&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
@@ -756,8 +784,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Rule-induction-on-full-dataset">
+</section>
+<section id="Rule-induction-on-full-dataset">
 <h2>Rule induction on full dataset<a class="headerlink" href="#Rule-induction-on-full-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
@@ -1231,7 +1259,8 @@ Confusion matrix - RSS
 </table>
 </div></div>
 </div>
-<p>C2 Measure generated rules</p>
+<section id="C2-Measure-generated-rules">
+<h3>C2 Measure generated rules<a class="headerlink" href="#C2-Measure-generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -1427,7 +1456,9 @@ IF gimpuls = &lt;240, 324.50) AND genergy = &lt;18585, 25665) AND goimpuls = &lt
 IF ghazard = {a} AND goenergy = &lt;-59.50, -10.50) AND gimpuls = &lt;88, 269.50) AND maxenergy = (-inf, 4500) AND goimpuls = &lt;-42.50, 4.50) AND genergy = &lt;4565, 21365) THEN label = {1}
 </pre></div></div>
 </div>
-<p>Correlation Measure generated rules</p>
+</section>
+<section id="Correlation-Measure-generated-rules">
+<h3>Correlation Measure generated rules<a class="headerlink" href="#Correlation-Measure-generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
@@ -1503,7 +1534,9 @@ IF goenergy = &lt;-55.50, 297.50) AND gimpuls = &lt;217.50, 796) AND genergy = &
 IF goenergy = (-inf, -1.50) AND gimpuls = &lt;54.50, 195.50) AND genergy = &lt;1510, 12565) AND goimpuls = &lt;-72.50, 28.50) AND shift = {N} AND seismoacoustic = {a} AND seismic = {a} AND senergy = (-inf, 3200) THEN label = {1}
 </pre></div></div>
 </div>
-<p>RSS Measure generated rules</p>
+</section>
+<section id="RSS-Measure-generated-rules">
+<h3>RSS Measure generated rules<a class="headerlink" href="#RSS-Measure-generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
@@ -1581,8 +1614,10 @@ IF ghazard = {a} AND goenergy = &lt;-37.50, inf) AND gimpuls = &lt;240, 473.50) 
 IF goenergy = &lt;-55.50, 124.50) AND gimpuls = &lt;194.50, inf) AND genergy = &lt;9060, inf) AND goimpuls = &lt;-60.50, inf) AND nbumps2 = (-inf, 4.50) THEN label = {1}
 </pre></div></div>
 </div>
-<div class="section" id="Stratified-K-Folds-cross-validation">
-<h3>Stratified K-Folds cross-validation<a class="headerlink" href="#Stratified-K-Folds-cross-validation" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="Stratified-K-Folds-cross-validation">
+<h2>Stratified K-Folds cross-validation<a class="headerlink" href="#Stratified-K-Folds-cross-validation" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
@@ -1599,10 +1634,6 @@ IF goenergy = &lt;-55.50, 124.50) AND gimpuls = &lt;194.50, inf) AND genergy = &
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="C2-Measure">
-<h2>C2 Measure<a class="headerlink" href="#C2-Measure" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
@@ -1760,8 +1791,9 @@ dtype: float64
 </table>
 </div></div>
 </div>
-<div class="section" id="Hyperparameters-tuning">
-<h3>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="Hyperparameters-tuning">
+<h2>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Permalink to this headline">¶</a></h2>
 <p>This one gonna take a while…</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
@@ -1806,10 +1838,11 @@ dtype: float64
 Best BAC: 0.522949 using {&#39;induction_measure&#39;: &lt;Measures.WeightedLaplace: &#39;WeightedLaplace&#39;&gt;, &#39;min_rule_covered&#39;: 7, &#39;pruning_measure&#39;: &lt;Measures.Correlation: &#39;Correlation&#39;&gt;, &#39;voting_measure&#39;: &lt;Measures.WeightedLaplace: &#39;WeightedLaplace&#39;&gt;}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Building-model-with-tuned-hyperparameters">
-<h3>Building model with tuned hyperparameters<a class="headerlink" href="#Building-model-with-tuned-hyperparameters" title="Permalink to this headline">¶</a></h3>
-<p>Split dataset to train and test (80%/20%).</p>
+</section>
+<section id="Building-model-with-tuned-hyperparameters">
+<h2>Building model with tuned hyperparameters<a class="headerlink" href="#Building-model-with-tuned-hyperparameters" title="Permalink to this headline">¶</a></h2>
+<section id="Split-dataset-to-train-and-test-(80%/20%).">
+<h3>Split dataset to train and test (80%/20%).<a class="headerlink" href="#Split-dataset-to-train-and-test-(80%/20%)." title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
@@ -1836,10 +1869,7 @@ Best BAC: 0.522949 using {&#39;induction_measure&#39;: &lt;Measures.WeightedLapl
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="Rules-evaluation">
-<h2>Rules evaluation<a class="headerlink" href="#Rules-evaluation" title="Permalink to this headline">¶</a></h2>
+<p>Rules evaluation</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
@@ -1872,9 +1902,9 @@ fraction_FWER_significant       0.868421
 dtype: float64
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Validate-model-on-test-dataset">
-<h2>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="Validate-model-on-test-dataset">
+<h3>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
@@ -1961,8 +1991,9 @@ dtype: float64
 </table>
 </div></div>
 </div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
@@ -1970,7 +2001,7 @@ dtype: float64
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../autodoc.html" class="btn btn-neutral float-right" title="Code documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="regression.html" class="btn btn-neutral float-right" title="Regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
