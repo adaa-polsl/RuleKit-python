@@ -121,12 +121,13 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         self._get_unique_label_values(labels)
 
         if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
-            first_label = labels.iloc[0]
+            if isinstance(labels.iloc[0], Number):
+                self._remap_to_numeric = True
+                labels = labels.astype(str)
         else:
-            first_label = labels[0]
-        if isinstance(first_label, Number):
-            self._remap_to_numeric = True
-            labels = list(map(str, labels))
+            if isinstance(labels[0], Number):
+                self._remap_to_numeric = True
+                labels = list(map(str, labels))   
         BaseOperator.fit(self, values, labels)
         return self
 
@@ -302,12 +303,13 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifi
         self : ExpertRuleClassifier
         """
         if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
-            first_label = labels.iloc[0]
+            if isinstance(labels.iloc[0], Number):
+                self._remap_to_numeric = True
+                labels = labels.astype(str)
         else:
-            first_label = labels[0]
-        if isinstance(first_label, Number):
-            self._remap_to_numeric = True
-            labels = list(map(str, labels))
+            if isinstance(labels[0], Number):
+                self._remap_to_numeric = True
+                labels = list(map(str, labels))  
         return ExpertKnowledgeOperator.fit(
             self,
             values,
