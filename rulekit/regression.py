@@ -2,6 +2,7 @@ from typing import Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
 import pandas as pd
+from sklearn import metrics
 
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .params import Measures
@@ -85,6 +86,24 @@ class RuleRegressor(BaseOperator):
             predicted values
         """
         return self._map_result(super().predict(values))
+
+    def score(self, values: Data, labels: Data) -> float:
+        """Return the coefficient of determination R2 of the prediction
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            true target values
+
+        Returns
+        -------
+        score : float
+            R2 of self.predict(values) wrt. labels.
+        """
+        predicted_labels = self.predict(values)
+        return metrics.r2_score(labels, predicted_labels)
 
 
 class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
