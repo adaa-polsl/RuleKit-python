@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Survival &mdash; rulekit 1.4.3 documentation</title>
+  <title>Survival &mdash; rulekit 1.5.1 documentation</title>
   
 
   
@@ -286,6 +286,29 @@ means that it doesn’t.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="rulekit.survival.SurvivalRules.score">
+<code class="sig-name descname"><span class="pre">score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.survival.SurvivalRules.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Integrated Brier Score on the given dataset and labels(event status indicator).</p>
+<p>Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference between true event status at time T and predicted event status at that time;
+the Integrated Brier score summarizes the prediction error over all observations and over all times in a test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – survival status</p></li>
+<li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was specified</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>score</strong> – Integrated Brier Score of self.predict(values) wrt. labels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="rulekit.survival.SurvivalRules.set_params">
 <code class="sig-name descname"><span class="pre">set_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survival_time_attr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rule_covered</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_growing</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_pruning</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">object</span><a class="headerlink" href="#rulekit.survival.SurvivalRules.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set models hyperparameters. Parameters are the same as in constructor.</p>
@@ -388,6 +411,29 @@ means that it doesn’t.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rulekit.survival.ExpertSurvivalRules.score">
+<code class="sig-name descname"><span class="pre">score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Integrated Brier Score on the given dataset and labels(event status indicator).</p>
+<p>Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference between true event status at time T and predicted event status at that time;
+the Integrated Brier score summarizes the prediction error over all observations and over all times in a test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – survival status</p></li>
+<li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was specified</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>score</strong> – Integrated Brier Score of self.predict(values) wrt. labels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
