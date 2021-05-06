@@ -44,7 +44,6 @@ class SurvivalRules(BaseOperator):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing)
         self.model: RuleSet = None
-        self._real_model = None
 
     def set_params(self,
                    survival_time_attr: str = None,
@@ -125,7 +124,7 @@ class SurvivalRules(BaseOperator):
         """
         return PredictionResultMapper.map_survival(super().predict(values))
 
-  def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
+    def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
         """Return the Integrated Brier Score on the given dataset and labels(event status indicator).
 
         Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference between true event status at time T and predicted event status at that time; 
@@ -155,7 +154,7 @@ class SurvivalRules(BaseOperator):
 
         example_set = create_example_set(values, labels,  survival_time_attribute = survival_time_attribute)
 
-        predicted_example_set = self._real_model.apply(example_set)
+        predicted_example_set = self.model._java_object.apply(example_set)
 
         IntegratedBrierScore = JClass('adaa.analytics.rules.logic.quality.IntegratedBrierScore')
         integratedBrierScore = IntegratedBrierScore()
@@ -225,7 +224,6 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             preferred_attributes_per_rule=preferred_attributes_per_rule
         )
         self.model: RuleSet = None
-        self._real_model = None
 
 
     def set_params(self,
