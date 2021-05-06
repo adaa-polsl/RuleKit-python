@@ -2,6 +2,7 @@ from typing import Union, Any, List, Tuple, Dict
 from numbers import Number
 import numpy as np
 import pandas as pd
+from sklearn import metrics
 from enum import Enum
 from jpype import JClass
 
@@ -183,6 +184,24 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             return (mapped_result_example_set, metrics)
         else:
             return mapped_result_example_set
+
+    def score(self, values: Data, labels: Data) -> float:
+        """Return the accuracy on the given test data and labels.
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            true labels
+
+        Returns
+        -------
+        score : float
+            Accuracy of self.predict(values) wrt. labels.
+        """
+        predicted_labels = self.predict(values)
+        return metrics.accuracy_score(labels, predicted_labels)
 
     def __getstate__(self) -> dict:
         return {**BaseOperator.__getstate__(self), **{
