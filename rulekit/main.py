@@ -73,7 +73,7 @@ class RuleKit:
         RuleKit._detect_jre_type()
         current_path: str = os.path.dirname(os.path.realpath(__file__))
         RuleKit._jar_dir_path = f"{current_path}/jar"
-        class_path_separator = ':' if RuleKit._jre_type == JRE_Type.open_jdk else ';'
+        class_path_separator = os.pathsep
         try:
             jars_paths: List[str] = glob.glob(f"{RuleKit._jar_dir_path}/*.jar")
             RuleKit._class_path = f'{str.join(class_path_separator, jars_paths)}'
