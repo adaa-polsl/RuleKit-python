@@ -9,3 +9,4 @@ Tutorials
     Classification <./tutorials/classification.ipynb>
     Regression <./tutorials/regression.ipynb>
     Survival <./tutorials/survival.ipynb>
+    Expert Rules <./tutorials/expert_rules.ipynb>
