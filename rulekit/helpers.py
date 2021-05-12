@@ -1,12 +1,16 @@
 from typing import Union, List, Any
-from jpype import JClass, JString, JObject, JArray, java
+from jpype import JClass, JString, JObject, JArray, java, addClassPath
+from jpype.pickle import JPickler, JUnpickler
+import io
 import numpy as np
 import pandas as pd
 from .params import Measures
 from .rules import Rule
 
+
 def get_rule_generator(expert: bool = False) -> Any:
-    OperatorDocumentation = JClass('com.rapidminer.tools.documentation.OperatorDocumentation')
+    OperatorDocumentation = JClass(
+        'com.rapidminer.tools.documentation.OperatorDocumentation')
     OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
     Mockito = JClass('org.mockito.Mockito')
     path = 'adaa.analytics.rules.operator.'
@@ -18,7 +22,8 @@ def get_rule_generator(expert: bool = False) -> Any:
     documentation = Mockito.mock(OperatorDocumentation.class_)
     description = Mockito.mock(OperatorDescription.class_)
     Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
-    Mockito.when(description.getOperatorDocumentation()).thenReturn(documentation, None)
+    Mockito.when(description.getOperatorDocumentation()
+                 ).thenReturn(documentation, None)
     return RuleGenerator(description)
 
 
@@ -71,14 +76,17 @@ class RuleGeneratorConfigurator:
             if isinstance(param_value[0], str):
                 for index, rule in enumerate(param_value):
                     rule_name = f'{param_name[:-1]}-{index}'
-                    rules_list.add(JObject([rule_name, rule], JArray('java.lang.String', 1)))
+                    rules_list.add(
+                        JObject([rule_name, rule], JArray('java.lang.String', 1)))
             elif isinstance(param_value[0], Rule):
                 for index, rule in enumerate(param_value):
                     rule_name = f'{param_name[:-1]}-{index}'
-                    rules_list.add(JObject([rule_name, str(rule)], JArray('java.lang.String', 1)))
+                    rules_list.add(
+                        JObject([rule_name, str(rule)], JArray('java.lang.String', 1)))
             elif isinstance(param_value[0], tuple):
                 for index, rule in enumerate(param_value):
-                    rules_list.add(JObject([rule[0], rule[1]], JArray('java.lang.String', 1)))
+                    rules_list.add(
+                        JObject([rule[0], rule[1]], JArray('java.lang.String', 1)))
         self.rule_generator.setListParameter(param_name, rules_list)
 
     def configure_simple_parameter(self, param_name: str, param_value: Any):
@@ -95,7 +103,8 @@ class RuleGeneratorConfigurator:
                 if param_value == Measures.LogRank:
                     self.rule_generator.setInductionMeasure(self.LogRank())
                 else:
-                    self.rule_generator.setParameter(param_name, param_value.value)
+                    self.rule_generator.setParameter(
+                        param_name, param_value.value)
             if isinstance(param_value, str):
                 self.rule_generator.setParameter(param_name, 'UserDefined')
                 self.rule_generator.setParameter(param_name, param_value)
@@ -124,15 +133,23 @@ class RuleGeneratorConfigurator:
         self.configure_simple_parameter('enable_pruning', enable_pruning)
         self.configure_simple_parameter('ignore_missing', ignore_missing)
 
-        self.configure_simple_parameter('extend_using_preferred', extend_using_preferred)
-        self.configure_simple_parameter('extend_using_automatic', extend_using_automatic)
-        self.configure_simple_parameter('induce_using_preferred', induce_using_preferred)
-        self.configure_simple_parameter('induce_using_automatic', induce_using_automatic)
-        self.configure_simple_parameter('consider_other_classes', consider_other_classes)
-        self.configure_simple_parameter('preferred_conditions_per_rule', preferred_conditions_per_rule)
-        self.configure_simple_parameter('preferred_attributes_per_rule', preferred_attributes_per_rule)
+        self.configure_simple_parameter(
+            'extend_using_preferred', extend_using_preferred)
+        self.configure_simple_parameter(
+            'extend_using_automatic', extend_using_automatic)
+        self.configure_simple_parameter(
+            'induce_using_preferred', induce_using_preferred)
+        self.configure_simple_parameter(
+            'induce_using_automatic', induce_using_automatic)
+        self.configure_simple_parameter(
+            'consider_other_classes', consider_other_classes)
+        self.configure_simple_parameter(
+            'preferred_conditions_per_rule', preferred_conditions_per_rule)
+        self.configure_simple_parameter(
+            'preferred_attributes_per_rule', preferred_attributes_per_rule)
 
-        self._configure_measure_parameter('induction_measure', induction_measure)
+        self._configure_measure_parameter(
+            'induction_measure', induction_measure)
         self._configure_measure_parameter('pruning_measure', pruning_measure)
         self._configure_measure_parameter('voting_measure', voting_measure)
 
@@ -143,18 +160,23 @@ def map_attributes_names(example_set, attributes_names: List[str]):
 
 
 def set_survival_time(example_set, survival_time_attribute: str) -> object:
-    OperatorDocumentation = JClass('com.rapidminer.tools.documentation.OperatorDocumentation')
+    OperatorDocumentation = JClass(
+        'com.rapidminer.tools.documentation.OperatorDocumentation')
     OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
     Mockito = JClass('org.mockito.Mockito')
-    ChangeAttributeRole = JClass('com.rapidminer.operator.preprocessing.filter.ChangeAttributeRole')
+    ChangeAttributeRole = JClass(
+        'com.rapidminer.operator.preprocessing.filter.ChangeAttributeRole')
 
     documentation = Mockito.mock(OperatorDocumentation.class_)
     description = Mockito.mock(OperatorDescription.class_)
     Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
-    Mockito.when(description.getOperatorDocumentation()).thenReturn(documentation, None)
+    Mockito.when(description.getOperatorDocumentation()
+                 ).thenReturn(documentation, None)
     role_setter = ChangeAttributeRole(description)
-    role_setter.setParameter(ChangeAttributeRole.PARAMETER_NAME, survival_time_attribute)
-    role_setter.setParameter(ChangeAttributeRole.PARAMETER_TARGET_ROLE, "survival_time")
+    role_setter.setParameter(
+        ChangeAttributeRole.PARAMETER_NAME, survival_time_attribute)
+    role_setter.setParameter(
+        ChangeAttributeRole.PARAMETER_TARGET_ROLE, "survival_time")
     return role_setter.apply(example_set)
 
 
@@ -191,7 +213,8 @@ def create_example_set(values, labels=None, numeric_labels=False, survival_time_
 
 
 def create_sorted_example_set(values, labels=None, numeric_labels=False, survival_time_attribute: str = None) -> object:
-    example_set = create_example_set(values, labels, numeric_labels, survival_time_attribute)
+    example_set = create_example_set(
+        values, labels, numeric_labels, survival_time_attribute)
     SortedExampleSet = JClass("com.rapidminer.example.set.SortedExampleSet")
     sorted_example_set = SortedExampleSet(
         example_set, example_set.getAttributes().getLabel(), SortedExampleSet.INCREASING
@@ -203,12 +226,14 @@ class PredictionResultMapper:
 
     @staticmethod
     def map_confidence(predicted_example_set, label_unique_values: list) -> np.ndarray:
-        confidence_attributes_names = list(map(lambda val: f'confidence_{val}', label_unique_values))
+        confidence_attributes_names = list(
+            map(lambda val: f'confidence_{val}', label_unique_values))
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()
         confidence_attributes = []
         for name in confidence_attributes_names:
-            confidence_attributes.append(predicted_example_set.getAttributes().get(name))
+            confidence_attributes.append(
+                predicted_example_set.getAttributes().get(name))
         while row_reader.hasNext():
             row = row_reader.next()
             value = []
@@ -230,24 +255,27 @@ class PredictionResultMapper:
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()
         attribute = predicted_example_set.getAttributes().get('prediction')
+        label_mapping = attribute.getMapping()
         while row_reader.hasNext():
             row = row_reader.next()
             value_index = row.get(attribute)
-            value = attribute.getMapping().mapIndex(round(value_index))
+            value = label_mapping.mapIndex(round(value_index))
             prediction.append(value)
         prediction = list(map(str, prediction))
-        return np.array(prediction)
+        return np.array(prediction).astype(np.unicode_)
 
     @staticmethod
-    def map_to_numerical(predicted_example_set) -> np.ndarray:
+    def map_to_numerical(predicted_example_set, remap: bool=True) -> np.ndarray:
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()
         attribute = predicted_example_set.getAttributes().get('prediction')
+        label_mapping = predicted_example_set.getAttributes().getLabel().getMapping()
         while row_reader.hasNext():
             row = row_reader.next()
-            value = attribute.getValue(row)
+            value = int(attribute.getValue(row))
+            if remap:
+                value = float(str(label_mapping.mapIndex(value)))
             prediction.append(value)
-        prediction = list(map(float, prediction))
         return np.array(prediction)
 
     @staticmethod
@@ -259,9 +287,30 @@ class PredictionResultMapper:
             example = example_set_iterator.next()
             example_estimator = str(example.getValueAsString(attribute))
             example_estimator = example_estimator.split(" ")
-            number_of_points, example_estimator[0] = example_estimator[0].split(":") 
-            times = [float(example_estimator[i]) for i in range(len(example_estimator) - 1) if i%2 == 0]
-            probabilities = [float(example_estimator[i]) for i in range(len(example_estimator)) if i % 2 != 0]
+            number_of_points, example_estimator[0] = example_estimator[0].split(
+                ":")
+            times = [float(example_estimator[i])
+                     for i in range(len(example_estimator) - 1) if i % 2 == 0]
+            probabilities = [float(example_estimator[i])
+                             for i in range(len(example_estimator)) if i % 2 != 0]
             estimator = {'times': times, 'probabilities': probabilities}
             estimators.append(estimator)
         return np.array(estimators)
+
+
+class ModelSerializer:
+
+    @staticmethod
+    def serialize(real_model: object) -> bytes:
+        in_memory_file = io.BytesIO()
+        JPickler(in_memory_file).dump(real_model)
+        serialized_bytes = in_memory_file.getvalue()
+        in_memory_file.close()
+        return serialized_bytes
+
+    @staticmethod
+    def deserialize(serialized_bytes: bytes) -> object:
+        in_memory_file = io.BytesIO(serialized_bytes)
+        model = JUnpickler(in_memory_file).load()
+        in_memory_file.close()
+        return model

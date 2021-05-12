@@ -14,17 +14,17 @@ import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-TEST_CONFIG_PATH = f'{dir_path}/../../adaa.analytics.rules/test/resources/config'
-REPORTS_IN_DIRECTORY_PATH = f'{dir_path}/../../adaa.analytics.rules/test/resources/reports'
-DATA_IN_DIRECTORY_PATH = f'{dir_path}/../../adaa.analytics.rules/test/resources/'
-REPORTS_OUT_DIRECTORY_PATH = f'{dir_path}/../../test_out'
+TEST_CONFIG_PATH = f'{dir_path}/resources/config'
+REPORTS_IN_DIRECTORY_PATH = f'{dir_path}/resources/reports'
+DATA_IN_DIRECTORY_PATH = f'{dir_path}/resources/'
+REPORTS_OUT_DIRECTORY_PATH = f'{dir_path}/test_out'
 
 REPORTS_SECTIONS_HEADERS = {
     'RULES': 'RULES'
 }
 
-DATASETS_PATH = '../data'
-EXPERIMENTS_PATH = '../adaa.analytics.rules/test/resources/config'
+DATASETS_PATH = '/resources/data'
+EXPERIMENTS_PATH = '/resources/config'
 
 
 class ExampleSetWrapper:
@@ -345,6 +345,13 @@ class TestReportWriter:
 
 
 def get_test_cases(class_name: str) -> List[TestCase]:
+    if not os.path.exists(DATA_IN_DIRECTORY_PATH):
+        raise Exception('''\n
+Test resources directory dosen't exist. Check if 'tests/resources/' directory exist.
+
+If you're running tests for the first time you need to download resources folder from RuleKit repository by running:
+    python tests/resources.py download
+        ''')
     configs = TestConfigParser().parse(f'{TEST_CONFIG_PATH}/{class_name}.xml')
     return TestCaseFactory().make(configs, f'{REPORTS_IN_DIRECTORY_PATH}/{class_name}/')
 

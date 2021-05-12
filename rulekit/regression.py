@@ -2,7 +2,8 @@ from typing import Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
 import pandas as pd
-
+from sklearn import metrics
+from .helpers import PredictionResultMapper
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .params import Measures
 
@@ -57,7 +58,7 @@ class RuleRegressor(BaseOperator):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
-            labels
+            target values
         Returns
         -------
         self : RuleRegressor
@@ -86,8 +87,29 @@ class RuleRegressor(BaseOperator):
         """
         return self._map_result(super().predict(values))
 
+    def score(self, values: Data, labels: Data) -> float:
+        """Return the coefficient of determination R2 of the prediction
 
-class ExpertRuleRegressor(RuleRegressor, ExpertKnowledgeOperator):
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            true target values
+
+        Returns
+        -------
+        score : float
+            R2 of self.predict(values) wrt. labels.
+        """
+        predicted_labels = self.predict(values)
+        return metrics.r2_score(labels, predicted_labels)
+
+    def _map_result(self, predicted_example_set) -> np.ndarray:
+        return PredictionResultMapper.map_to_numerical(predicted_example_set, remap=False)
+
+
+class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 
     def __init__(self,
                  min_rule_covered: int = None,
@@ -171,7 +193,7 @@ class ExpertRuleRegressor(RuleRegressor, ExpertKnowledgeOperator):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
-            labels
+            target values
         
         expert_rules : List[Union[str, Tuple[str, str]]]
              set of initial rules, either passed as a list of strings representing rules or as list of tuples where first

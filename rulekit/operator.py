@@ -1,4 +1,9 @@
-from .helpers import RuleGeneratorConfigurator, PredictionResultMapper, create_example_set, get_rule_generator, create_sorted_example_set
+from .helpers import RuleGeneratorConfigurator, \
+    PredictionResultMapper, \
+    create_example_set, \
+    get_rule_generator, \
+    create_sorted_example_set, \
+    ModelSerializer
 from .params import Measures
 from .rules import RuleSet, Rule
 import numpy as np
@@ -20,7 +25,6 @@ class BaseOperator:
                  ignore_missing: bool = None):
         self._params = None
         self._rule_generator = None
-        self._configurator = None
         self.set_params(
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
@@ -31,22 +35,23 @@ class BaseOperator:
             ignore_missing=ignore_missing
         )
         self.model: RuleSet = None
-        self._real_model = None
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
         return PredictionResultMapper.map(predicted_example_set)
 
     def fit(self, values: Data, labels: Data, survival_time_attribute: str = None) -> Any:
-        example_set = create_example_set(values, labels, survival_time_attribute=survival_time_attribute)
-        self._real_model = self._rule_generator.learn(example_set)
-        self.model = RuleSet(self._real_model)
+        example_set = create_example_set(
+            values, labels, survival_time_attribute=survival_time_attribute)
+        java_model = self._rule_generator.learn(example_set)
+        self.model = RuleSet(java_model)
         return self.model
 
     def predict(self, values: Data) -> np.ndarray:
-        if self._real_model is None:
-            raise ValueError('"fit" method must be called before calling this method')
+        if self.model is None:
+            raise ValueError(
+                '"fit" method must be called before calling this method')
         example_set = create_example_set(values)
-        return self._real_model.apply(example_set)
+        return self.model._java_object.apply(example_set)
 
     def get_params(self, deep=True) -> dict:
         """
@@ -67,7 +72,6 @@ class BaseOperator:
                    ignore_missing: bool = None) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._params = dict(
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
@@ -77,7 +81,8 @@ class BaseOperator:
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
         )
-        self._rule_generator = self._configurator.configure(**self._params)
+        configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._rule_generator = configurator.configure(**self._params)
         return self
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
@@ -86,18 +91,19 @@ class BaseOperator:
         Parameters
         ----------
         values : :class:`rulekit.operator.Data`
-            dataset 
+            dataset
 
         Returns
         -------
         coverage_matrix : np.ndarray
              Each row of the matrix represent single example from dataset and every column represent
             on rule from rule set. Value 1 in the matrix cell means that rule covered certain example, value 0
-            means that it doesn't. 
+            means that it doesn't.
         """
-        if self._real_model is None:
-            raise ValueError('"fit" method must be called before calling this method')
-        covering_info = self.model.covering(create_sorted_example_set(values))
+        if self.model is None:
+            raise ValueError(
+                '"fit" method must be called before calling this method')
+        covering_info = self.model.covering(create_example_set(values))
         if isinstance(values, pd.Series) or isinstance(values, pd.DataFrame):
             values = values.to_numpy()
         result = []
@@ -110,6 +116,19 @@ class BaseOperator:
             result.append(np.array(row_result))
             i += 1
         return np.array(result)
+
+    def __getstate__(self) -> dict:
+        state = self.__dict__
+        state.pop('_rule_generator')
+        return {
+            '_params': self._params,
+            'model': ModelSerializer.serialize(self.model)
+        }
+
+    def __setstate__(self, state: dict):
+        self.model = ModelSerializer.deserialize(state['model'])
+        self._rule_generator = get_rule_generator()
+        self.set_params(**state['_params'])
 
 
 class ExpertKnowledgeOperator:
@@ -151,7 +170,6 @@ class ExpertKnowledgeOperator:
             preferred_attributes_per_rule=preferred_attributes_per_rule
         )
         self.model: RuleSet = None
-        self._real_model = None
 
     def fit(self,
             values: Data,
@@ -162,20 +180,25 @@ class ExpertKnowledgeOperator:
             expert_preferred_conditions: List[Union[str, Rule]] = None,
             expert_forbidden_conditions: List[Union[str, Rule]] = None) -> Any:
         self._configurator.configure_simple_parameter('use_expert', True)
-        self._configurator.configure_expert_parameter('expert_preferred_conditions', expert_preferred_conditions)
-        self._configurator.configure_expert_parameter('expert_forbidden_conditions', expert_forbidden_conditions)
-        self._configurator.configure_expert_parameter('expert_rules', expert_rules)
-        example_set = create_example_set(values, labels, survival_time_attribute=survival_time_attribute)
+        self._configurator.configure_expert_parameter(
+            'expert_preferred_conditions', expert_preferred_conditions)
+        self._configurator.configure_expert_parameter(
+            'expert_forbidden_conditions', expert_forbidden_conditions)
+        self._configurator.configure_expert_parameter(
+            'expert_rules', expert_rules)
+        example_set = create_example_set(
+            values, labels, survival_time_attribute=survival_time_attribute)
 
-        self._real_model = self._rule_generator.learn(example_set)
-        self.model = RuleSet(self._real_model)
+        java_model = self._rule_generator.learn(example_set)
+        self.model = RuleSet(java_model)
         return self.model
 
     def predict(self, values: Data) -> np.ndarray:
-        if self._real_model is None:
-            raise ValueError('"fit" method must be called before calling this method')
+        if self.model is None:
+            raise ValueError(
+                '"fit" method must be called before calling this method')
         example_set = create_example_set(values)
-        return self._real_model.apply(example_set)
+        return self.model._java_object.apply(example_set)
 
     def set_params(self,
                    min_rule_covered: int = None,

@@ -2,9 +2,10 @@ from typing import Any, Union, Tuple, List
 import numpy as np
 import pandas as pd
 
-from .helpers import PredictionResultMapper, RuleGeneratorConfigurator, get_rule_generator
+from .helpers import PredictionResultMapper, RuleGeneratorConfigurator, get_rule_generator, create_example_set
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .rules import RuleSet
+from jpype import JClass
 
 
 class SurvivalRules(BaseOperator):
@@ -43,7 +44,6 @@ class SurvivalRules(BaseOperator):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing)
         self.model: RuleSet = None
-        self._real_model = None
 
     def set_params(self,
                    survival_time_attr: str = None,
@@ -92,7 +92,7 @@ class SurvivalRules(BaseOperator):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : :class:`rulekit.operator.Data`
-            labels
+            survival status
         survival_time: :class:`rulekit.operator.Data`
             data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
         
@@ -124,8 +124,45 @@ class SurvivalRules(BaseOperator):
         """
         return PredictionResultMapper.map_survival(super().predict(values))
 
+    def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
+        """Return the Integrated Brier Score on the given dataset and labels(event status indicator).
 
-class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
+        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference between true event status at time T and predicted event status at that time; 
+        the Integrated Brier score summarizes the prediction error over all observations and over all times in a test set.
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            survival status
+        survival_time: :class:`rulekit.operator.Data`
+            data about survival time. Could be omitted when *survival_time_attr* parameter was specified
+
+        Returns
+        -------
+        score : float
+            Integrated Brier Score of self.predict(values) wrt. labels.
+        """
+
+        if self.survival_time_attr is None and survival_time is None:
+            raise ValueError('No "survival_time" attribute name was specified. Specify it using method set_params')
+        if survival_time is not None:
+            survival_time_attribute = SurvivalRules._append_survival_time_columns(values, survival_time)
+        else:
+            survival_time_attribute = self.survival_time_attr
+
+        example_set = create_example_set(values, labels,  survival_time_attribute = survival_time_attribute)
+
+        predicted_example_set = self.model._java_object.apply(example_set)
+
+        IntegratedBrierScore = JClass('adaa.analytics.rules.logic.quality.IntegratedBrierScore')
+        integratedBrierScore = IntegratedBrierScore()
+        integratedBrierScore.startCounting(predicted_example_set, True)
+        return integratedBrierScore.getMikroAverage()
+
+
+class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     def __init__(self,
                  survival_time_attr: str = None,
@@ -187,7 +224,6 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
             preferred_attributes_per_rule=preferred_attributes_per_rule
         )
         self.model: RuleSet = None
-        self._real_model = None
 
 
     def set_params(self,
@@ -239,7 +275,7 @@ class ExpertSurvivalRules(SurvivalRules, ExpertKnowledgeOperator):
         values : :class:`rulekit.operator.Data`
             attributes
         labels : Data
-            labels
+            survival status
         survival_time: :class:`rulekit.operator.Data`
             data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
         

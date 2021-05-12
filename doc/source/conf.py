@@ -12,6 +12,7 @@
 #
 import os
 import sys
+import re
 sys.path.insert(0, os.path.abspath('../..'))
 
 current_path = os.path.dirname(os.path.realpath(__file__))
@@ -22,7 +23,9 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 project = 'rulekit'
 copyright = '2021, ADAA'
 
-release = open(f'{current_path}/../../rulekit/VERSION.txt', mode='r').read().strip()
+release = open(f'{current_path}/../../rulekit/__init__.py', mode='r').read().strip()
+version_regex = r'__version__\s*=\s*\'{0,1}"{0,1}([^\'"]+)\'{0,1}"{0,1}'
+release = re.search(version_regex, release)[1]
 master_doc = 'index'
 
 source_suffix = [".rst", ".md"]
@@ -38,7 +41,8 @@ extensions = [
     'sphinx.ext.coverage', 
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
-    'nbsphinx'
+    'nbsphinx',
+    'sphinx_copybutton'
 ]
 autoclass_content = 'both'
 # Add any paths that contain templates here, relative to this directory.
@@ -60,4 +64,4 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']

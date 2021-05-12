@@ -152,14 +152,11 @@ class RuleSet:
         """:meta private:"""
         res = []
         for rule in self.rules:
-            covering_info = rule._java_object.covers(example_set)
+            covering_info = rule._java_object.coversUnlabelled(example_set)
             covered_examples_indexes = []
-            if len(covering_info.positives) > 0:
-                covered_examples_indexes += covering_info.positives
-            elif len(covering_info.negatives) > 0:
-                covered_examples_indexes += covering_info.negatives
+            covered_examples_indexes += covering_info
             res.append(covered_examples_indexes)
-        return np.array(res)
+        return np.array(res, dtype=object)
 
     @property
     def rules(self) -> List[Rule]:
