@@ -7,7 +7,7 @@ from sklearn.datasets import load_iris
 from sklearn import metrics
 
 
-class TestDecisionTreeClassifier(unittest.TestCase):
+class TestMetrics(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

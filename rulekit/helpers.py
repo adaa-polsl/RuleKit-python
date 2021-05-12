@@ -255,24 +255,27 @@ class PredictionResultMapper:
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()
         attribute = predicted_example_set.getAttributes().get('prediction')
+        label_mapping = attribute.getMapping()
         while row_reader.hasNext():
             row = row_reader.next()
             value_index = row.get(attribute)
-            value = attribute.getMapping().mapIndex(round(value_index))
+            value = label_mapping.mapIndex(round(value_index))
             prediction.append(value)
         prediction = list(map(str, prediction))
-        return np.array(prediction)
+        return np.array(prediction).astype(np.unicode_)
 
     @staticmethod
-    def map_to_numerical(predicted_example_set) -> np.ndarray:
+    def map_to_numerical(predicted_example_set, remap: bool=True) -> np.ndarray:
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()
         attribute = predicted_example_set.getAttributes().get('prediction')
+        label_mapping = predicted_example_set.getAttributes().getLabel().getMapping()
         while row_reader.hasNext():
             row = row_reader.next()
-            value = attribute.getValue(row)
+            value = int(attribute.getValue(row))
+            if remap:
+                value = float(str(label_mapping.mapIndex(value)))
             prediction.append(value)
-        prediction = list(map(float, prediction))
         return np.array(prediction)
 
     @staticmethod

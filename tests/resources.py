@@ -66,5 +66,6 @@ def download_resources():
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'download':
         download_resources()
+        print('Resources downloaded successfuly')
     else:
         print('Please add paremeter: python resources.py download')  

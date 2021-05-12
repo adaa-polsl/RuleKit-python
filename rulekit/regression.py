@@ -3,7 +3,7 @@ from numbers import Number
 import numpy as np
 import pandas as pd
 from sklearn import metrics
-
+from .helpers import PredictionResultMapper
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data
 from .params import Measures
 
@@ -104,6 +104,9 @@ class RuleRegressor(BaseOperator):
         """
         predicted_labels = self.predict(values)
         return metrics.r2_score(labels, predicted_labels)
+
+    def _map_result(self, predicted_example_set) -> np.ndarray:
+        return PredictionResultMapper.map_to_numerical(predicted_example_set, remap=False)
 
 
 class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):

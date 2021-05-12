@@ -12,7 +12,7 @@ with open(f"{current_path}/requirements.txt", mode="r", encoding="utf-8") as f:
 
 setuptools.setup(
     name="rulekit",
-    version='1.5.1',
+    version='1.5.2',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",

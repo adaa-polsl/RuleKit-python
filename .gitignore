@@ -279,3 +279,7 @@ doc/build/doctrees/
 doc/build/html.zip
 
 tests/resources
+
+*.pickle
+doc/build/html/.buildinfo
+doc/build/html/.buildinfo
