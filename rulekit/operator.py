@@ -118,7 +118,7 @@ class BaseOperator:
         return np.array(result)
 
     def __getstate__(self) -> dict:
-        state = self.__dict__
+        state = self.__dict__.copy()
         state.pop('_rule_generator')
         return {
             '_params': self._params,

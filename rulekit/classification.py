@@ -15,14 +15,17 @@ class BaseClassifier:
     """:meta private:"""
 
     def __init__(self):
-        self.ClassificationRulesPerformance = JClass(
-            'adaa.analytics.rules.logic.quality.ClassificationRulesPerformance')
+        self._init_classification_rule_performance()
 
     class MetricTypes(Enum):
         """:meta private:"""
         RulesPerExample = 1
         VotingConflicts = 2
         NegativeVotingConflicts = 3
+
+    def _init_classification_rule_performance(self):
+        self.ClassificationRulesPerformance = JClass(
+            'adaa.analytics.rules.logic.quality.ClassificationRulesPerformance')
 
     def _calculate_metric(self, example_set, metric_type) -> float:
         classificationRulesPerformance = self.ClassificationRulesPerformance(
@@ -212,6 +215,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
     def __setstate__(self, state: dict):
         BaseOperator.__setstate__(self, state)
+        self._init_classification_rule_performance()
         self.label_unique_values = state['label_unique_values']
         self._remap_to_numeric = state['_remap_to_numeric']
 
