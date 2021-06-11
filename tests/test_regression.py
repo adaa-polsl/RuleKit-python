@@ -12,7 +12,6 @@ class TestRegressor(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("Won't work with current RuleKit github relase 1.1.0")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionSnCTest')
 
@@ -34,7 +33,6 @@ class TestExpertRegressor(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("Won't work with current RuleKit github relase 1.1.0")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionExpertSnCTest')
 

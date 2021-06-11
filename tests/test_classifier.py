@@ -31,7 +31,6 @@ class TestClassifier(unittest.TestCase):
         assert abs(scikit_accuracy -
                    rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
 
-    @unittest.skip("Won't work with current RuleKit github relase 1.1.0")
     def test_getting_examples_coverage(self):
         clf = classification.RuleClassifier()
         x, y = load_iris(return_X_y=True)
@@ -59,7 +58,6 @@ class TestClassifier(unittest.TestCase):
         self.assertIsNotNone(m['negative_voting_conflicts'],
                              'rules_per_example should be calculated')
 
-    @unittest.skip("Won't work with current RuleKit github relase 1.1.0")
     def test_classification_predict_proba(self):
         clf = classification.RuleClassifier()
         x, y = load_iris(return_X_y=True)
@@ -102,7 +100,6 @@ class TestClassifier(unittest.TestCase):
 
         self.assertTrue(np.array_equal(y, prediction))
 
-    @unittest.skip("Won't work with current RuleKit github relase 1.1.0")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('ClassificationSnCTest')
 
@@ -125,7 +122,6 @@ class TestExperClassifier(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("Won't work with current RuleKit github relase 1.1.0")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('ClassificationExpertSnCTest')
 
