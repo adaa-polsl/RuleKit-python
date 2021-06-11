@@ -47,14 +47,27 @@ class TestModelSerialization(unittest.TestCase):
 
         model = RuleClassifier(min_rule_covered=1)
         model.fit(x, y)
-        prediction = model.predict(x)
+        prediction, metrics = model.predict(x, return_metrics=True)
 
         self.serialize_model(model)
         deserialized_model = self.deserialize_model()
-        deserialized_model_prediction = deserialized_model.predict(x)
+        deserialized_model_prediction, deserialized_model_metrics = deserialized_model.predict(x, return_metrics=True)
 
         self.assertEqual(prediction.all(), deserialized_model_prediction.all(),
                          'Deserialized model should predict same as original one')
+        self.assertEqual(metrics, deserialized_model_metrics,
+                         'Deserialized model should return the same prediction metrics as original one')
+
+        self.serialize_model(deserialized_model)
+
+        deserialized_model = self.deserialize_model()
+        deserialized_model_prediction, deserialized_model_metrics = deserialized_model.predict(x, return_metrics=True)
+
+        self.assertEqual(prediction.all(), deserialized_model_prediction.all(),
+                         'Model deserialized multiple time should predict same as original one')
+        self.assertEqual(metrics, deserialized_model_metrics,
+                         'Model deserialized multiple time should return the same prediction metrics as original one')
+
 
     def test_expert_classifier_serialization(self):
         x, y = load_iris(return_X_y=True)
@@ -127,3 +140,12 @@ class TestModelSerialization(unittest.TestCase):
         self.assertEqual(prediction.all(), deserialized_model_prediction.all(),
                          'Deserialized model should predict same as original one')
 
+    def test_multiple_serialization(self):
+        x, y = load_iris(return_X_y=True)
+
+        model = RuleClassifier(min_rule_covered=1)
+        model.fit(x, y)
+        prediction, metrics = model.predict(x, return_metrics=True)
+
+        self.serialize_model(model)
+        self.serialize_model(model)

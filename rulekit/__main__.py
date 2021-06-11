@@ -52,4 +52,5 @@ def main():
         rulekit.init()
         ExperimentRunner.run(sys.argv[1:])
 
-main()
+if __name__ == "__main__":
+    main()

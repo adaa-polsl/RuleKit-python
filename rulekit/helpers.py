@@ -272,9 +272,11 @@ class PredictionResultMapper:
         label_mapping = predicted_example_set.getAttributes().getLabel().getMapping()
         while row_reader.hasNext():
             row = row_reader.next()
-            value = int(attribute.getValue(row))
             if remap:
+                value = int(attribute.getValue(row))
                 value = float(str(label_mapping.mapIndex(value)))
+            else:
+                value = float(attribute.getValue(row))
             prediction.append(value)
         return np.array(prediction)
 

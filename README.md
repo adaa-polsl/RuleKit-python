@@ -21,7 +21,7 @@ Second command will fetch latest RuleKit library jar file from its github releas
 
 ## Running tests
 
-If you're running tests first time (or you want to update existing tests resources) you need to download tests resources from RuleKit repository. You can do it by by running:
+If you're running tests first time (or you want to update existing tests resources) you need to download tests resources from RuleKit repository. You can do it by running:
 ```
 python tests/resources.py download
 ```
