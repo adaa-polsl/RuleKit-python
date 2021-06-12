@@ -36,4 +36,5 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=required,
     test_suite="tests",
+    download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.5.4.tar.gz',
 )
