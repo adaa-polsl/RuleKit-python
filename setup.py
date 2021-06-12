@@ -4,10 +4,10 @@ import io
 
 current_path = os.path.dirname(os.path.realpath(__file__))
 
-with io.open(f"{current_path}/README.md", mode="r", encoding="utf-8") as fh:
+with io.open("README.md", mode="r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-with open(f"{current_path}/requirements.txt", mode="r", encoding="utf-8") as f:
+with open("requirements.txt", mode="r", encoding="utf-8") as f:
     required = f.read().splitlines()
 
 setuptools.setup(
