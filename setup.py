@@ -40,7 +40,7 @@ setuptools.setup(
         "JPype1 ~= 1.2.1",
     ],
     test_suite="tests",
-    download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.5.6.tar.gz',
+    download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.5.7.tar.gz',
     project_urls={
         'Bug Tracker': 'https://github.com/adaa-polsl/RuleKit-python/issues',
         'Documentation': 'https://adaa-polsl.github.io/RuleKit-python/',
