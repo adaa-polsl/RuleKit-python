@@ -9,7 +9,7 @@ with io.open("README.md", mode="r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rulekit",
-    version='1.5.6',
+    version='1.5.7',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
@@ -36,7 +36,8 @@ setuptools.setup(
         "scikit-learn ~= 0.24.1",
         "requests ~= 2.25.1",
         "scipy ~= 1.6.0",
-        "joblib ~= 1.0.0"
+        "joblib ~= 1.0.0",
+        "JPype1 ~= 1.2.1",
     ],
     test_suite="tests",
     download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.5.6.tar.gz',
