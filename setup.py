@@ -37,4 +37,9 @@ setuptools.setup(
     install_requires=required,
     test_suite="tests",
     download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.5.4.tar.gz',
+    project_urls={
+        'Bug Tracker': 'https://github.com/adaa-polsl/RuleKit-python/issues',
+        'Documentation': 'https://adaa-polsl.github.io/RuleKit-python/',
+        'Source Code': 'https://github.com/adaa-polsl/RuleKit-python'
+    }
 )
