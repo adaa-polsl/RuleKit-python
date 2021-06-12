@@ -1,0 +1,11 @@
+
+Classification
+========================================
+
+.. autoclass:: rulekit.classification.RuleClassifier
+   :members:
+   :inherited-members:
+
+.. autoclass:: rulekit.classification.ExpertRuleClassifier
+   :members:
+   :inherited-members: 
