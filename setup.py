@@ -9,7 +9,7 @@ with io.open("README.md", mode="r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rulekit",
-    version='1.5.7',
+    version='1.6.0',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
@@ -40,7 +40,7 @@ setuptools.setup(
         "JPype1 ~= 1.2.1",
     ],
     test_suite="tests",
-    download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.5.7.tar.gz',
+    download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.6.0.tar.gz',
     project_urls={
         'Bug Tracker': 'https://github.com/adaa-polsl/RuleKit-python/issues',
         'Documentation': 'https://adaa-polsl.github.io/RuleKit-python/',

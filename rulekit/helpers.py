@@ -41,6 +41,8 @@ class RuleGeneratorConfigurator:
                   max_growing: int = None,
                   enable_pruning: bool = None,
                   ignore_missing: bool = None,
+                  max_uncovered_fraction: float = None,
+                  select_best_candidate: bool = None,
                   survival_time_attr: str = None,
 
                   extend_using_preferred: bool = None,
@@ -58,6 +60,8 @@ class RuleGeneratorConfigurator:
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
+            max_uncovered_fraction=max_uncovered_fraction,
+            select_best_candidate=select_best_candidate,
             extend_using_preferred=extend_using_preferred,
             extend_using_automatic=extend_using_automatic,
             induce_using_preferred=induce_using_preferred,
@@ -100,11 +104,8 @@ class RuleGeneratorConfigurator:
     def _configure_measure_parameter(self, param_name: str, param_value: Union[str, Measures]):
         if param_value is not None:
             if isinstance(param_value, Measures):
-                if param_value == Measures.LogRank:
-                    self.rule_generator.setInductionMeasure(self.LogRank())
-                else:
-                    self.rule_generator.setParameter(
-                        param_name, param_value.value)
+                self.rule_generator.setParameter(
+                    param_name, param_value.value)
             if isinstance(param_value, str):
                 self.rule_generator.setParameter(param_name, 'UserDefined')
                 self.rule_generator.setParameter(param_name, param_value)
@@ -118,6 +119,8 @@ class RuleGeneratorConfigurator:
             max_growing: int = None,
             enable_pruning: bool = None,
             ignore_missing: bool = None,
+            max_uncovered_fraction: float = None,
+            select_best_candidate: bool = None,
 
             extend_using_preferred: bool = None,
             extend_using_automatic: bool = None,
@@ -131,7 +134,10 @@ class RuleGeneratorConfigurator:
         self.configure_simple_parameter('min_rule_covered', min_rule_covered)
         self.configure_simple_parameter('max_growing', max_growing)
         self.configure_simple_parameter('enable_pruning', enable_pruning)
-        self.configure_simple_parameter('ignore_missing', ignore_missing)
+        self.configure_simple_parameter(
+            'max_uncovered_fraction', max_uncovered_fraction)
+        self.configure_simple_parameter(
+            'select_best_candidate', select_best_candidate)
 
         self.configure_simple_parameter(
             'extend_using_preferred', extend_using_preferred)
@@ -265,7 +271,7 @@ class PredictionResultMapper:
         return np.array(prediction).astype(np.unicode_)
 
     @staticmethod
-    def map_to_numerical(predicted_example_set, remap: bool=True) -> np.ndarray:
+    def map_to_numerical(predicted_example_set, remap: bool = True) -> np.ndarray:
         prediction = []
         row_reader = predicted_example_set.getExampleTable().getDataRowReader()
         attribute = predicted_example_set.getAttributes().get('prediction')

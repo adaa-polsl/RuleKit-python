@@ -2,7 +2,7 @@
 
 class RuleStatistics:
     """Statistics for single rule.
-    
+
     Attributes
     ----------
     p : float
@@ -35,7 +35,7 @@ class RuleStatistics:
 
 class RuleSetStatistics:
     """Statistics for ruleset.
-    
+
     Attributes
     ----------
     SIGNIFICANCE_LEVEL : float
@@ -88,11 +88,15 @@ class RuleSetStatistics:
         self.avg_rule_precision = ruleset.calculate_avg_rule_precision()
         self.avg_rule_quality = ruleset.calculate_avg_rule_quality()
 
-        self.pvalue = ruleset.calculate_significance(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
-        self.FDR_pvalue = ruleset.calculate_significance_fdr(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
-        self.FWER_pvalue = ruleset.calculate_significance_fwer(RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
+        self.pvalue = ruleset.calculate_significance(
+            RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
+        self.FDR_pvalue = ruleset.calculate_significance_fdr(
+            RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
+        self.FWER_pvalue = ruleset.calculate_significance_fwer(
+            RuleSetStatistics.SIGNIFICANCE_LEVEL)['p']
 
-        self.fraction_significant = ruleset.calculate_significance(RuleSetStatistics.SIGNIFICANCE_LEVEL)['fraction']
+        self.fraction_significant = ruleset.calculate_significance(
+            RuleSetStatistics.SIGNIFICANCE_LEVEL)['fraction']
         self.fraction_FDR_significant = ruleset.calculate_significance_fdr(RuleSetStatistics.SIGNIFICANCE_LEVEL)[
             'fraction']
         self.fraction_FWER_significant = ruleset.calculate_significance_fwer(RuleSetStatistics.SIGNIFICANCE_LEVEL)[

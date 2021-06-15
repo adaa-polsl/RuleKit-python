@@ -1,6 +1,6 @@
 from typing import Union, List
-from .params import Measures
 import numpy as np
+from .params import Measures
 from .stats import RuleStatistics, RuleSetStatistics
 
 
@@ -101,8 +101,7 @@ class InductionParameters:
         name: str = measure.getName()
         if name == 'UserDefined':
             return 'UserDefined'
-        else:
-            return Measures[name]
+        return Measures[name]
 
     def __str__(self):
         return str(self._java_object.toString())

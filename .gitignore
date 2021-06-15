@@ -281,5 +281,9 @@ doc/build/html.zip
 tests/resources
 
 *.pickle
+
+doc/build/html
 doc/build/html/.buildinfo
 doc/build/html/.buildinfo
+
+RELEASE_INSTRUCTION.md
