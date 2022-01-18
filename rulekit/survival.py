@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 from jpype import JClass
 
-from .helpers import PredictionResultMapper, RuleGeneratorConfigurator, get_rule_generator, create_example_set
+from .rule_generator import RuleGeneratorConfigurator
+from .helpers import PredictionResultMapper, get_rule_generator, create_example_set
 from .operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
 from .rules import RuleSet
 

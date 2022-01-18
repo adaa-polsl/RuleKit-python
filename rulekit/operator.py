@@ -1,4 +1,5 @@
-from .helpers import RuleGeneratorConfigurator, \
+from .rule_generator import RuleGeneratorConfigurator
+from .helpers import \
     PredictionResultMapper, \
     create_example_set, \
     get_rule_generator, \

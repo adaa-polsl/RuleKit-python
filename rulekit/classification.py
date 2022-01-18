@@ -371,4 +371,5 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifi
 
     def __setstate__(self, state: dict):
         BaseOperator.__setstate__(self, state)
+        self._init_classification_rule_performance()
         self._remap_to_numeric = state['_remap_to_numeric']

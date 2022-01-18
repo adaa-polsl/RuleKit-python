@@ -2,7 +2,7 @@ from typing import Union, List
 import numpy as np
 from .params import Measures
 from .stats import RuleStatistics, RuleSetStatistics
-
+from .conditions import CompoundCondition, ElementaryCondition
 
 class Rule:
     """Class representing single rule."""
@@ -11,6 +11,24 @@ class Rule:
         """:meta private:"""
         self._java_object = java_object
         self._stats: RuleStatistics = None
+
+    @property
+    def premise(self) -> CompoundCondition:
+        """Rule premise."""
+        return CompoundCondition(self._java_object.getPremise())
+
+    @premise.setter
+    def premise(self, value: CompoundCondition):
+        self._java_object.setPremise(value._java_object)
+
+    @property
+    def consequence(self) -> ElementaryCondition:
+        """Rule consequence."""
+        return ElementaryCondition(self._java_object.getConsequence())
+
+    @consequence.setter
+    def consequence(self, value: ElementaryCondition):
+        self._java_object.setConsequence(value._java_object)
 
     @property
     def weight(self) -> float:
@@ -67,6 +85,12 @@ class Rule:
     def print_stats(self):
         """Prints rule statistics as formatted text."""
         print(self.stats)
+
+    def __eq__(self, other): 
+        return str(self) == str(other)
+
+    def __ne__(self, other): 
+        return not str(self) == str(other)
 
     def __str__(self):
         """Returns string representation of the rule."""

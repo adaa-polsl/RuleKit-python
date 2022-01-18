@@ -27,7 +27,6 @@ class TestClassifier(unittest.TestCase):
         rulekit_prediction = rulekit_clf.predict(x)
         scikit_accuracy = metrics.accuracy_score(y, scikit_prediction)
         rulekit_accuracy = metrics.accuracy_score(y, rulekit_prediction)
-
         assert abs(scikit_accuracy -
                    rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
 
