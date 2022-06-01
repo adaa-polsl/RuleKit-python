@@ -51,7 +51,13 @@ class RuleGeneratorConfigurator:
                   induce_using_automatic: bool = None,
                   consider_other_classes: bool = None,
                   preferred_attributes_per_rule: int = None,
-                  preferred_conditions_per_rule: int = None) -> Any:
+                  preferred_conditions_per_rule: int = None,
+
+                  discrete_set_conditions_enabled: bool = None,
+                  negated_conditions_enabled: bool = None,
+                  intervals_conditions_enabled: bool = None,
+                  numerical_attributes_conditions_enabled: bool = None,
+                  nominal_attributes_conditions_enabled: bool = None) -> Any:
         self._configure_rule_generator(
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
@@ -68,7 +74,13 @@ class RuleGeneratorConfigurator:
             induce_using_automatic=induce_using_automatic,
             consider_other_classes=consider_other_classes,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule
+            preferred_attributes_per_rule=preferred_attributes_per_rule,
+
+            discrete_set_conditions_enabled=discrete_set_conditions_enabled,
+            negated_conditions_enabled=negated_conditions_enabled,
+            intervals_conditions_enabled=intervals_conditions_enabled,
+            numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
+            nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled
         )
         return self.rule_generator
 
@@ -128,7 +140,13 @@ class RuleGeneratorConfigurator:
             induce_using_automatic: bool = None,
             consider_other_classes: bool = None,
             preferred_conditions_per_rule: int = None,
-            preferred_attributes_per_rule: int = None):
+            preferred_attributes_per_rule: int = None,
+
+            discrete_set_conditions_enabled: bool = None,
+            negated_conditions_enabled: bool = None,
+            intervals_conditions_enabled: bool = None,
+            numerical_attributes_conditions_enabled: bool = None,
+            nominal_attributes_conditions_enabled: bool = None):
         if induction_measure == Measures.LogRank or pruning_measure == Measures.LogRank or voting_measure == Measures.LogRank:
             self.LogRank = JClass('adaa.analytics.rules.logic.quality.LogRank')
         self.configure_simple_parameter('min_rule_covered', min_rule_covered)
@@ -158,6 +176,17 @@ class RuleGeneratorConfigurator:
             'induction_measure', induction_measure)
         self._configure_measure_parameter('pruning_measure', pruning_measure)
         self._configure_measure_parameter('voting_measure', voting_measure)
+
+        self.configure_simple_parameter(
+            'discrete_set_conditions_enabled', discrete_set_conditions_enabled)
+        self.configure_simple_parameter(
+            'negated_conditions_enabled', negated_conditions_enabled)
+        self.configure_simple_parameter(
+            'intervals_conditions_enabled', intervals_conditions_enabled)
+        self.configure_simple_parameter(
+            'numerical_attributes_conditions_enabled', numerical_attributes_conditions_enabled)
+        self.configure_simple_parameter(
+            'nominal_attributes_conditions_enabled', nominal_attributes_conditions_enabled)
 
 
 def map_attributes_names(example_set, attributes_names: List[str]):

@@ -1,5 +1,4 @@
 import os
-import sys
 import jpype
 import jpype.imports
 
@@ -29,7 +28,8 @@ class RuleKit:
         version of RuleKit jar used by wrapper (not equal to python package version).
     """
     version: str
-    _logger = None
+    initialized: bool = False
+    _logger: logging.Logger = None
     _jar_dir_path: str
     _class_path: str
     _rulekit_jar_file_path: str
@@ -50,7 +50,7 @@ class RuleKit:
 
 
     @staticmethod
-    def init(initial_heap_size: int = None, max_heap_size: int = None):
+    def init(jar_file_path: str = None, initial_heap_size: int = None, max_heap_size: int = None):
         """Initialize package.
 
         This method must by called before using any operators in this package.
@@ -58,6 +58,8 @@ class RuleKit:
 
         Parameters
         ----------
+        jar_file_path : str
+            path to RuleKit jar file
         initial_heap_size : int
             JVM initial heap size in mb
         max_heap_size : int
@@ -69,6 +71,13 @@ class RuleKit:
             If failed to load RuleKit jar file.
         """
         RuleKit._setup_logger()
+        if RuleKit.initialized and jar_file_path:
+            if  jar_file_path == RuleKit._rulekit_jar_file_path:
+                RuleKit._logger.warn('Tried to call RuleKit.init() multiple times, RuleKit already initialized with the same jar file')
+                return
+            else:
+                RuleKit._logger.info('Initializing Rulekit again with new jar file path')
+                jpype.shutdownJVM()
 
         RuleKit._detect_jre_type()
         current_path: str = os.path.dirname(os.path.realpath(__file__))
@@ -77,7 +86,16 @@ class RuleKit:
         try:
             jars_paths: List[str] = glob.glob(f"{RuleKit._jar_dir_path}/*.jar")
             RuleKit._class_path = f'{str.join(class_path_separator, jars_paths)}'
-            RuleKit._rulekit_jar_file_path = list(filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
+            if jar_file_path is not None:
+                jars_paths = glob.glob(f"{RuleKit._jar_dir_path}/*.jar")
+                jars_paths.append(jar_file_path)
+                RuleKit._class_path = f'{str.join(class_path_separator, jars_paths)}'
+                RuleKit._rulekit_jar_file_path = jar_file_path
+            else:
+                RuleKit._rulekit_jar_file_path = list(filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
+            RuleKit._read_versions()
+            RuleKit._launch_jvm(initial_heap_size, max_heap_size)
+            RuleKit.initialized = True
         except IndexError as error:
             RuleKit._logger.error('Failed to load jar files')
             raise Exception('''\n
@@ -86,8 +104,7 @@ Failed to load RuleKit jar file. Check if valid rulekit jar file is present in "
 If you're running this packae for the first time you need to download RuleKit jar file by running:
     python -m rulekit download_jar
         ''')
-        RuleKit._read_versions()
-        RuleKit._launch_jvm(initial_heap_size, max_heap_size)
+
 
     @staticmethod
     def _setup_logger():

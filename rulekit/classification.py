@@ -54,7 +54,18 @@ class RuleClassifier(BaseOperator, BaseClassifier):
                  enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                  ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
                  max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
+                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+
+                 discrete_set_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'discrete_set_conditions_enabled'],
+                 negated_conditions_enabled: bool = DEFAULT_PARAMS_VALUE['negated_conditions_enabled'],
+                 intervals_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'intervals_conditions_enabled'],
+                 numerical_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'numerical_attributes_conditions_enabled'],
+                 nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'nominal_attributes_conditions_enabled'],
+                 ):
         """
         Parameters
         ----------
@@ -80,6 +91,16 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; default: False.
+        discrete_set_conditions_enabled: bool = False
+            If set to true RuleKit will try to induce conditions like: attr = {value_1, value_2, ... value_N}
+        negated_conditions_enabled: bool = False
+            If set to true RuleKit will try to induce negated elementary conditions
+        intervals_conditions_enabled: bool = False
+            If set to true RuleKit will try to induce conditions like: attr = <value_1, value_2)
+        numerical_attributes_conditions_enabled: bool = False
+            If set to true RuleKit will try to induce conditions like: attr_1 < attr_2 or attr_1 > attr_2 or attr_1 = attr_2 for numerical attributes
+        nominal_attributes_conditions_enabled: bool = False
+            If set to true RuleKit will try to induce conditions like: attr_1 = attr_2 for nominal attributes
         """
         BaseOperator.__init__(
             self,
@@ -91,7 +112,14 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate)
+            select_best_candidate=select_best_candidate,
+
+            discrete_set_conditions_enabled=discrete_set_conditions_enabled,
+            negated_conditions_enabled=negated_conditions_enabled,
+            intervals_conditions_enabled=intervals_conditions_enabled,
+            numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
+            nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
+        )
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
         self.label_unique_values = []

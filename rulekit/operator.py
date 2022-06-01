@@ -29,6 +29,12 @@ DEFAULT_PARAMS_VALUE = {
     'consider_other_classes': None,
     'preferred_conditions_per_rule': None,
     'preferred_attributes_per_rule': None,
+
+    'discrete_set_conditions_enabled': False,
+    'negated_conditions_enabled': False,
+    'intervals_conditions_enabled': False,
+    'numerical_attributes_conditions_enabled': False,
+    'nominal_attributes_conditions_enabled': False,
 }
 
 
@@ -44,7 +50,16 @@ class BaseOperator:
                  enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                  ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
                  max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
+                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+
+                 discrete_set_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'discrete_set_conditions_enabled'],
+                 negated_conditions_enabled: bool = DEFAULT_PARAMS_VALUE['negated_conditions_enabled'],
+                 intervals_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'intervals_conditions_enabled'],
+                 numerical_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'numerical_attributes_conditions_enabled'],
+                 nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE['nominal_attributes_conditions_enabled']):
         self._params = None
         self._rule_generator = None
         self.set_params(
@@ -56,7 +71,13 @@ class BaseOperator:
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
+            select_best_candidate=select_best_candidate,
+
+            discrete_set_conditions_enabled=discrete_set_conditions_enabled,
+            negated_conditions_enabled=negated_conditions_enabled,
+            intervals_conditions_enabled=intervals_conditions_enabled,
+            numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
+            nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
         )
         self.model: RuleSet = None
 
@@ -96,7 +117,16 @@ class BaseOperator:
                    enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                    ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
                    max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                   select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']) -> object:
+                   select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+                   discrete_set_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                       'discrete_set_conditions_enabled'],
+                   negated_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                       'negated_conditions_enabled'],
+                   intervals_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                       'intervals_conditions_enabled'],
+                   numerical_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                       'numerical_attributes_conditions_enabled'],
+                   nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE['nominal_attributes_conditions_enabled']) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
         self._params = dict(
@@ -108,7 +138,13 @@ class BaseOperator:
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
+            select_best_candidate=select_best_candidate,
+
+            discrete_set_conditions_enabled=discrete_set_conditions_enabled,
+            negated_conditions_enabled=negated_conditions_enabled,
+            intervals_conditions_enabled=intervals_conditions_enabled,
+            numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
+            nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
         )
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = configurator.configure(**self._params)

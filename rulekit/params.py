@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Measures(Enum):
+class Measures(str, Enum):
     """Enum for different measures used during induction, pruning and voting.
 
     You can ream more about each measure and its implementation
