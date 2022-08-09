@@ -35,6 +35,10 @@ DEFAULT_PARAMS_VALUE = {
     'intervals_conditions_enabled': False,
     'numerical_attributes_conditions_enabled': False,
     'nominal_attributes_conditions_enabled': False,
+
+    'inner_alternatives_enabled': False,
+    'inner_alternatives_search_beam_size': 3,
+    'inner_alternatives_max_search_iterations': 5,
 }
 
 
@@ -59,7 +63,14 @@ class BaseOperator:
                      'intervals_conditions_enabled'],
                  numerical_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
                      'numerical_attributes_conditions_enabled'],
-                 nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE['nominal_attributes_conditions_enabled']):
+                 nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                     'nominal_attributes_conditions_enabled'],
+                 inner_alternatives_enabled: bool = DEFAULT_PARAMS_VALUE['inner_alternatives_enabled'],
+                 inner_alternatives_search_beam_size: int = DEFAULT_PARAMS_VALUE[
+                     'inner_alternatives_search_beam_size'],
+                 inner_alternatives_max_search_iterations: int = DEFAULT_PARAMS_VALUE[
+                     'inner_alternatives_max_search_iterations'],
+                 ):
         self._params = None
         self._rule_generator = None
         self.set_params(
@@ -78,6 +89,10 @@ class BaseOperator:
             intervals_conditions_enabled=intervals_conditions_enabled,
             numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
             nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
+
+            inner_alternatives_enabled=inner_alternatives_enabled,
+            inner_alternatives_search_beam_size=inner_alternatives_search_beam_size,
+            inner_alternatives_max_search_iterations=inner_alternatives_max_search_iterations,
         )
         self.model: RuleSet = None
 
@@ -126,7 +141,15 @@ class BaseOperator:
                        'intervals_conditions_enabled'],
                    numerical_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
                        'numerical_attributes_conditions_enabled'],
-                   nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE['nominal_attributes_conditions_enabled']) -> object:
+                   nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
+                       'nominal_attributes_conditions_enabled'],
+                   inner_alternatives_enabled: bool = DEFAULT_PARAMS_VALUE[
+                       'inner_alternatives_enabled'],
+                   inner_alternatives_search_beam_size: int = DEFAULT_PARAMS_VALUE[
+                       'inner_alternatives_search_beam_size'],
+                   inner_alternatives_max_search_iterations: int = DEFAULT_PARAMS_VALUE[
+                       'inner_alternatives_max_search_iterations'],
+                   ) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
         self._params = dict(
@@ -145,6 +168,9 @@ class BaseOperator:
             intervals_conditions_enabled=intervals_conditions_enabled,
             numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
             nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
+            inner_alternatives_enabled=inner_alternatives_enabled,
+            inner_alternatives_search_beam_size=inner_alternatives_search_beam_size,
+            inner_alternatives_max_search_iterations=inner_alternatives_max_search_iterations,
         )
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = configurator.configure(**self._params)

@@ -1,3 +1,55 @@
+from typing import Dict, List
+
+
+class RuleConditionsStatistics:
+
+    def __init__(self, rule) -> None:
+        self.stats: dict = {
+            'Plain conditions': 0,
+            'Numerical attributes conditions': 0,
+            'Nominal attributes conditions': 0,
+            'Discrete set conditions': 0,
+            'Interval conditions': 0,
+        }
+        premise = rule._java_object.getPremise()
+        for subcondition in premise.getSubconditions():
+            condition_class_name = subcondition.getClass().getSimpleName()
+            if condition_class_name == 'AttributesCondition':
+                self.stats['Numerical attributes conditions'] += 1
+            if condition_class_name == 'NominalAttributesCondition':
+                self.stats['Nominal attributes conditions'] += 1
+            if condition_class_name == 'ElementaryCondition':
+                value_set_class_name = subcondition.getValueSet().getClass().getSimpleName()
+                if value_set_class_name == 'DiscreteSet':
+                    self.stats['Discrete set conditions'] += 1
+                if value_set_class_name == 'SingletonSet':
+                    self.stats['Plain conditions'] += 1
+                if value_set_class_name == 'Universum':
+                    self.stats['Plain conditions'] += 1
+                if value_set_class_name == 'Interval':
+                    if hasattr(subcondition.getValueSet(), 'isRealInterval'):
+                        is_real_interval = subcondition.getValueSet().isRealInterval()
+                    else:
+                        is_real_interval = False
+                    if is_real_interval:
+                        self.stats['Interval conditions'] += 1
+                    else:
+                        self.stats['Plain conditions'] += 1
+
+
+class RuleSetConditionsStatistics:
+
+    def __init__(self, ruleset) -> None:
+        self.rules_stats: List[RuleConditionsStatistics] = [
+            RuleConditionsStatistics(rule) for rule in ruleset.rules
+        ]
+        self.stats: Dict[str, int] = None
+        for rule_stats in self.rules_stats:
+            if self.stats is None:
+                self.stats = rule_stats.stats
+            else:
+                for key, value in rule_stats.stats.items():
+                    self.stats[key] += value
 
 
 class RuleStatistics:
@@ -76,6 +128,7 @@ class RuleSetStatistics:
     SIGNIFICANCE_LEVEL = 0.05
 
     def __init__(self, ruleset):
+        self._ruleset = ruleset
         self.time_total_s = ruleset.total_time
         self.time_growing_s = ruleset.growing_time
         self.time_pruning_s = ruleset.pruning_time
@@ -101,9 +154,16 @@ class RuleSetStatistics:
             'fraction']
         self.fraction_FWER_significant = ruleset.calculate_significance_fwer(RuleSetStatistics.SIGNIFICANCE_LEVEL)[
             'fraction']
+        self._conditions_stats: Dict[str, int] = None
+
+    @property
+    def conditions_stats(self) -> RuleSetConditionsStatistics:
+        if self._conditions_stats is None:
+            self._conditions_stats = RuleSetConditionsStatistics(self._ruleset)
+        return self._conditions_stats
 
     def __str__(self):
-        return f'Time total [s]: {self.time_total_s}\n' + \
+        stats_str = f'Time total [s]: {self.time_total_s}\n' + \
                f'Time growing [s]: {self.time_growing_s}\n' + \
                f'Time pruning [s]: {self.time_pruning_s}\n' + \
                '\n' + \
@@ -122,3 +182,8 @@ class RuleSetStatistics:
                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} significant: {self.fraction_significant}\n' + \
                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} FDR significant: {self.fraction_FDR_significant}\n' + \
                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} FWER significant: {self.fraction_FWER_significant}\n'
+        if self.conditions_stats.stats is not None:
+               stats_str += f'Conditions stats:\n' + \
+               '\n'.join(f'   {key}: {value}' for key,
+                         value in self.conditions_stats.stats.items())
+        return stats_str

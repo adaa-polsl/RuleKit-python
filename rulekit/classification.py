@@ -65,6 +65,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
                      'numerical_attributes_conditions_enabled'],
                  nominal_attributes_conditions_enabled: bool = DEFAULT_PARAMS_VALUE[
                      'nominal_attributes_conditions_enabled'],
+                 inner_alternatives_enabled: bool = DEFAULT_PARAMS_VALUE['inner_alternatives_enabled'],
+                 inner_alternatives_search_beam_size: int = DEFAULT_PARAMS_VALUE['inner_alternatives_search_beam_size'],
+                 inner_alternatives_max_search_iterations: int = DEFAULT_PARAMS_VALUE['inner_alternatives_max_search_iterations'],
                  ):
         """
         Parameters
@@ -101,6 +104,12 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             If set to true RuleKit will try to induce conditions like: attr_1 < attr_2 or attr_1 > attr_2 or attr_1 = attr_2 for numerical attributes
         nominal_attributes_conditions_enabled: bool = False
             If set to true RuleKit will try to induce conditions like: attr_1 = attr_2 for nominal attributes
+        inner_alternatives_enabled: bool = False
+            If set to true RuleKit will try to induce inner alternative conditions
+        inner_alternatives_search_beam_size: int = 3
+            Number of elements in beam during beam search finding inner alternatives conditions
+        inner_alternatives_max_search_iterations: int = 5
+            Max number of beam search iterations while finding inner alternatives conditions
         """
         BaseOperator.__init__(
             self,
@@ -119,6 +128,10 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             intervals_conditions_enabled=intervals_conditions_enabled,
             numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
             nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
+
+            inner_alternatives_enabled=inner_alternatives_enabled,
+            inner_alternatives_search_beam_size=inner_alternatives_search_beam_size,
+            inner_alternatives_max_search_iterations=inner_alternatives_max_search_iterations,
         )
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False

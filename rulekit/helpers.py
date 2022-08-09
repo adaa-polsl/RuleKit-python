@@ -57,7 +57,11 @@ class RuleGeneratorConfigurator:
                   negated_conditions_enabled: bool = None,
                   intervals_conditions_enabled: bool = None,
                   numerical_attributes_conditions_enabled: bool = None,
-                  nominal_attributes_conditions_enabled: bool = None) -> Any:
+                  nominal_attributes_conditions_enabled: bool = None,
+
+                  inner_alternatives_enabled: bool = None,
+                  inner_alternatives_search_beam_size: int = None,
+                  inner_alternatives_max_search_iterations: int = None) -> Any:
         self._configure_rule_generator(
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
@@ -80,7 +84,11 @@ class RuleGeneratorConfigurator:
             negated_conditions_enabled=negated_conditions_enabled,
             intervals_conditions_enabled=intervals_conditions_enabled,
             numerical_attributes_conditions_enabled=numerical_attributes_conditions_enabled,
-            nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled
+            nominal_attributes_conditions_enabled=nominal_attributes_conditions_enabled,
+
+            inner_alternatives_enabled=inner_alternatives_enabled,
+            inner_alternatives_search_beam_size=inner_alternatives_search_beam_size,
+            inner_alternatives_max_search_iterations=inner_alternatives_max_search_iterations
         )
         return self.rule_generator
 
@@ -146,12 +154,18 @@ class RuleGeneratorConfigurator:
             negated_conditions_enabled: bool = None,
             intervals_conditions_enabled: bool = None,
             numerical_attributes_conditions_enabled: bool = None,
-            nominal_attributes_conditions_enabled: bool = None):
+            nominal_attributes_conditions_enabled: bool = None,
+
+
+            inner_alternatives_enabled: bool = None,
+            inner_alternatives_search_beam_size: int = None,
+            inner_alternatives_max_search_iterations: int = None):
         if induction_measure == Measures.LogRank or pruning_measure == Measures.LogRank or voting_measure == Measures.LogRank:
             self.LogRank = JClass('adaa.analytics.rules.logic.quality.LogRank')
         self.configure_simple_parameter('min_rule_covered', min_rule_covered)
         self.configure_simple_parameter('max_growing', max_growing)
         self.configure_simple_parameter('enable_pruning', enable_pruning)
+        self.configure_simple_parameter('ignore_missing', ignore_missing)
         self.configure_simple_parameter(
             'max_uncovered_fraction', max_uncovered_fraction)
         self.configure_simple_parameter(
@@ -187,6 +201,13 @@ class RuleGeneratorConfigurator:
             'numerical_attributes_conditions_enabled', numerical_attributes_conditions_enabled)
         self.configure_simple_parameter(
             'nominal_attributes_conditions_enabled', nominal_attributes_conditions_enabled)
+
+        self.configure_simple_parameter(
+            'inner_alternatives_enabled', inner_alternatives_enabled)
+        self.configure_simple_parameter(
+            'inner_alternatives_search_beam_size', inner_alternatives_search_beam_size)
+        self.configure_simple_parameter(
+            'inner_alternatives_max_search_iterations', inner_alternatives_max_search_iterations)
 
 
 def map_attributes_names(example_set, attributes_names: List[str]):
