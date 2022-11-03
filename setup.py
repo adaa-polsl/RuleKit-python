@@ -36,7 +36,7 @@ setuptools.setup(
         "scikit-learn ~= 0.24.1",
         "requests ~= 2.25.1",
         "scipy ~= 1.6.0",
-        "joblib ~= 1.0.0",
+        "joblib >= 1.0,< 1.3",
         "JPype1 ~= 1.2.1",
     ],
     test_suite="tests",
