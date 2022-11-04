@@ -8,7 +8,7 @@ from jpype import JClass
 
 from .helpers import PredictionResultMapper
 from .params import Measures
-from .operator import BaseOperator, ExpertKnowledgeOperator, Data
+from .operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
 
 
 class BaseClassifier:
@@ -45,34 +45,41 @@ class RuleClassifier(BaseOperator, BaseClassifier):
     """Classification model."""
 
     def __init__(self,
-                 min_rule_covered: int = None,
-                 induction_measure: Measures = None,
-                 pruning_measure: Union[Measures, str] = None,
-                 voting_measure: Measures = None,
-                 max_growing: int = None,
-                 enable_pruning: bool = None,
-                 ignore_missing: bool = None):
+                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                 induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
+                 pruning_measure: Union[Measures,
+                                        str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
+                 voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
+                 max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
+                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
         """
         Parameters
         ----------
-        min_rule_covered : int = None
+        min_rule_covered : int = 5
             positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
             (positive examples for classification problems); default: 5
-        induction_measure : :class:`rulekit.params.Measures` = None
+        induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
-        pruning_measure : Union[:class:`rulekit.params.Measures`, str] = None
+        pruning_measure : Union[:class:`rulekit.params.Measures`, str] = :class:`rulekit.params.Measures.Correlation`
             measure used during pruning. Could be user defined (string), for example  :code:`2 * p / n`; 
             default measure is correlation
-        voting_measure : :class:`rulekit.params.Measures` = None
+        voting_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
-        max_growing : int = None
+        max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
             (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
-        enable_pruning : bool = None
+        enable_pruning : bool = True
             enable or disable pruning, default is True.
-        ignore_missing : bool = None
+        ignore_missing : bool = False
             boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
             considered as not fulfilling the condition build upon that attribute); default: False.
+        max_uncovered_fraction : float = 0.0
+            Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
+        select_best_candidate : bool = False
+            Flag determining if best candidate should be selected from growing phase; default: False.
         """
         BaseOperator.__init__(
             self,
@@ -82,7 +89,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             voting_measure=voting_measure,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing)
+            ignore_missing=ignore_missing,
+            max_uncovered_fraction=max_uncovered_fraction,
+            select_best_candidate=select_best_candidate)
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
         self.label_unique_values = []
@@ -131,7 +140,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         else:
             if isinstance(labels[0], Number):
                 self._remap_to_numeric = True
-                labels = list(map(str, labels))   
+                labels = list(map(str, labels))
         BaseOperator.fit(self, values, labels)
         return self
 
@@ -224,57 +233,65 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifi
     """Classification model using expert knowledge."""
 
     def __init__(self,
-                 min_rule_covered: int = None,
-                 induction_measure: Measures = None,
-                 pruning_measure: Union[Measures, str] = None,
-                 voting_measure: Measures = None,
-                 max_growing: int = None,
-                 enable_pruning: bool = None,
-                 ignore_missing: bool = None,
+                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                 induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
+                 pruning_measure: Union[Measures,
+                                        str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
+                 voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
+                 max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
+                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
 
-                 extend_using_preferred: bool = None,
-                 extend_using_automatic: bool = None,
-                 induce_using_preferred: bool = None,
-                 induce_using_automatic: bool = None,
-                 consider_other_classes: bool = None,
-                 preferred_conditions_per_rule: int = None,
-                 preferred_attributes_per_rule: int = None):
+                 extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
+                 extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
+                 induce_using_preferred: bool = DEFAULT_PARAMS_VALUE['induce_using_preferred'],
+                 induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
+                 consider_other_classes: bool = DEFAULT_PARAMS_VALUE['consider_other_classes'],
+                 preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
+                     'preferred_conditions_per_rule'],
+                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']):
         """
         Parameters
         ----------
-        min_rule_covered : int = None
+        min_rule_covered : int = 5
             positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
             (positive examples for classification problems); default: 5
-        induction_measure : :class:`rulekit.params.Measures` = None
+        induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
-        pruning_measure : Union[:class:`rulekit.params.Measures`, str] = None
+        pruning_measure : Union[:class:`rulekit.params.Measures`, str] = :class:`rulekit.params.Measures.Correlation`
             measure used during pruning. Could be user defined (string), for example  :code:`2 * p / n`; 
             default measure is correlation
-        voting_measure : :class:`rulekit.params.Measures` = None
+        voting_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
-        max_growing : int = None
+        max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
             (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
-        enable_pruning : bool = None
+        enable_pruning : bool = True
             enable or disable pruning, default is True.
-        ignore_missing : bool = None
+        ignore_missing : bool = False
             boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
             considered as not fulfilling the condition build upon that attribute); default: False.
+        max_uncovered_fraction : float = 0.0
+            Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
+        select_best_candidate : bool = False
+            Flag determining if best candidate should be selected from growing phase; default: False.
 
-        extend_using_preferred : bool = None
+        extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred conditions and attributes; default is False
-        extend_using_automatic : bool = None
+        extend_using_automatic : bool = False
             boolean indicating whether initial rules should be extended with a use of automatic conditions and attributes; default is False
-        induce_using_preferred : bool = None
+        induce_using_preferred : bool = False
             boolean indicating whether new rules should be induced with a use of preferred conditions and attributes; default is False
-        induce_using_automatic : bool = None
+        induce_using_automatic : bool = False
             boolean indicating whether new rules should be induced with a use of automatic conditions and attributes; default is False
-        consider_other_classes : bool = None
+        consider_other_classes : bool = False
             boolean indicating whether automatic induction should be performed for classes for which no user's knowledge has been defined (classification only); default is False.
         preferred_conditions_per_rule : int = None
-            maximum number of preferred conditions per rule,
+            maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
-            maximum number of preferred attributes per rule,
+            maximum number of preferred attributes per rule; default: unlimited.
         """
         self._remap_to_numeric = False
         ExpertKnowledgeOperator.__init__(
@@ -286,6 +303,8 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifi
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
+            max_uncovered_fraction=max_uncovered_fraction,
+            select_best_candidate=select_best_candidate,
             extend_using_preferred=extend_using_preferred,
             extend_using_automatic=extend_using_automatic,
             induce_using_preferred=induce_using_preferred,
@@ -332,7 +351,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier, BaseClassifi
         else:
             if isinstance(labels[0], Number):
                 self._remap_to_numeric = True
-                labels = list(map(str, labels))  
+                labels = list(map(str, labels))
         return ExpertKnowledgeOperator.fit(
             self,
             values,
