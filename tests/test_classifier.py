@@ -12,10 +12,6 @@ from tests.utils import get_test_cases, assert_rules_are_equals, assert_accuracy
 
 class TestClassifier(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        RuleKit.init()
-
     def test_classification_accuracy_on_iris(self):
         scikit_clf = scikit.DecisionTreeClassifier()
         rulekit_clf = classification.RuleClassifier()
@@ -117,10 +113,6 @@ class TestClassifier(unittest.TestCase):
 
 
 class TestExperClassifier(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        RuleKit.init()
 
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('ClassificationExpertSnCTest')

@@ -34,6 +34,7 @@ class RuleKit:
     _class_path: str
     _rulekit_jar_file_path: str
     _jre_type: JRE_Type
+    initialized: bool = False
 
     @staticmethod
     def _detect_jre_type():
@@ -68,6 +69,8 @@ class RuleKit:
         Exception
             If failed to load RuleKit jar file.
         """
+        if RuleKit.initialized:
+            return
         RuleKit._setup_logger()
 
         RuleKit._detect_jre_type()
@@ -88,6 +91,7 @@ If you're running this packae for the first time you need to download RuleKit ja
         ''')
         RuleKit._read_versions()
         RuleKit._launch_jvm(initial_heap_size, max_heap_size)
+        RuleKit.initialized = True
 
     @staticmethod
     def _setup_logger():

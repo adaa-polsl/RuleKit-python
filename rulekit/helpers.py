@@ -5,11 +5,13 @@ import io
 from warnings import warn
 import numpy as np
 import pandas as pd
-from .params import Measures
+from .params import *
 from .rules import Rule
+from rulekit import RuleKit
 
 
 def get_rule_generator(expert: bool = False) -> Any:
+    RuleKit.init()
     OperatorDocumentation = JClass(
         'com.rapidminer.tools.documentation.OperatorDocumentation')
     OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
@@ -83,7 +85,7 @@ class RuleGeneratorConfigurator:
             warn('"min_rule_covered" parameter was renamed to "minsupp_new" and is now deprecated, use "minsupp_new" instead. "min_rule_covered" parameter will be removed in next major version of the package. ', DeprecationWarning, stacklevel=6)
             kwargs['minsupp_new'] = kwargs['min_rule_covered']
         else:
-            kwargs['min_rule_covered'] = kwargs['min_rule_covered']
+            kwargs['min_rule_covered'] = kwargs['minsupp_new']
 
         if kwargs.get('induction_measure') == Measures.LogRank or \
                 kwargs.get('pruning_measure') == Measures.LogRank or \
@@ -103,7 +105,7 @@ def map_attributes_names(example_set, attributes_names: List[str]):
         example_set.getAttributes().get(f'att{index + 1}').setName(name)
 
 
-def set_survival_time(example_set, survival_time_attribute: str) -> object:
+def set_attribute_role(example_set, attribute: str, role: str) -> object:
     OperatorDocumentation = JClass(
         'com.rapidminer.tools.documentation.OperatorDocumentation')
     OperatorDescription = JClass('com.rapidminer.operator.OperatorDescription')
@@ -118,9 +120,9 @@ def set_survival_time(example_set, survival_time_attribute: str) -> object:
                  ).thenReturn(documentation, None)
     role_setter = ChangeAttributeRole(description)
     role_setter.setParameter(
-        ChangeAttributeRole.PARAMETER_NAME, survival_time_attribute)
+        ChangeAttributeRole.PARAMETER_NAME, attribute)
     role_setter.setParameter(
-        ChangeAttributeRole.PARAMETER_TARGET_ROLE, "survival_time")
+        ChangeAttributeRole.PARAMETER_TARGET_ROLE, role)
     return role_setter.apply(example_set)
 
 
@@ -130,7 +132,13 @@ def _fix_missing_values(column) -> Any:
             column.values[i] = None
 
 
-def create_example_set(values, labels=None, numeric_labels=False, survival_time_attribute: str = None) -> object:
+def create_example_set(
+    values,
+    labels=None,
+    numeric_labels=False,
+    survival_time_attribute: str = None,
+    contrast_attribute: str = None,
+) -> object:
     if labels is None:
         labels = ['' if not numeric_labels else 0] * len(values)
     attributes_names = None
@@ -152,18 +160,12 @@ def create_example_set(values, labels=None, numeric_labels=False, survival_time_
     if survival_time_attribute is not None:
         if survival_time_attribute == '':
             survival_time_attribute = f'att{example_set.getAttributes().size()}'
-        example_set = set_survival_time(example_set, survival_time_attribute)
+        example_set = set_attribute_role(
+            example_set, survival_time_attribute, SURVIVAL_TIME_ATTR_ROLE)
+    if contrast_attribute is not None:
+        example_set = set_attribute_role(
+            example_set, contrast_attribute, CONTRAST_ATTR_ROLE)
     return example_set
-
-
-def create_sorted_example_set(values, labels=None, numeric_labels=False, survival_time_attribute: str = None) -> object:
-    example_set = create_example_set(
-        values, labels, numeric_labels, survival_time_attribute)
-    SortedExampleSet = JClass("com.rapidminer.example.set.SortedExampleSet")
-    sorted_example_set = SortedExampleSet(
-        example_set, example_set.getAttributes().getLabel(), SortedExampleSet.INCREASING
-    )
-    return sorted_example_set
 
 
 class PredictionResultMapper:

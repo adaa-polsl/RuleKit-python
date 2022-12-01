@@ -1,9 +1,10 @@
+from __future__ import annotations
 from .helpers import RuleGeneratorConfigurator, \
     PredictionResultMapper, \
     create_example_set, \
     get_rule_generator, \
     ModelSerializer
-from .params import Measures, ModelsParams
+from .params import Measures, ModelsParams, ContrastSetModelParams
 from .rules import RuleSet, Rule
 import numpy as np
 import pandas as pd
@@ -30,12 +31,22 @@ DEFAULT_PARAMS_VALUE = {
     'consider_other_classes': None,
     'preferred_conditions_per_rule': None,
     'preferred_attributes_per_rule': None,
+
+    # Contrast sets
+    'minsupp_all': (0.8, 0.5, 0.2, 0.1),
+    'max_neg2pos': 0.5,
+    'max_passes_count': 5,
+    'penalty_strength': 0.5,
+    'penalty_saturation': 0.2,
 }
 
 
 class BaseOperator:
 
     def __init__(self, **kwargs):
+        if kwargs.get('minsupp_all', None) is not None and len(kwargs['minsupp_all']) > 0:
+            kwargs['minsupp_all'] = ' '.join(
+                list(map(lambda e: str(e), kwargs['minsupp_all'])))
         self._params = None
         self._rule_generator = None
         self.set_params(**kwargs)
@@ -44,9 +55,19 @@ class BaseOperator:
     def _map_result(self, predicted_example_set) -> np.ndarray:
         return PredictionResultMapper.map(predicted_example_set)
 
-    def fit(self, values: Data, labels: Data, survival_time_attribute: str = None) -> Any:
+    def fit(
+        self,
+        values: Data,
+        labels: Data,
+        survival_time_attribute: str = None,
+        contrast_attribute: str = None,
+    ) -> BaseOperator:
         example_set = create_example_set(
-            values, labels, survival_time_attribute=survival_time_attribute)
+            values,
+            labels,
+            survival_time_attribute=survival_time_attribute,
+            contrast_attribute=contrast_attribute
+        )
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)
         return self.model
@@ -71,7 +92,10 @@ class BaseOperator:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
         # validate
-        ModelsParams(**kwargs)
+        if 'minsupp_all' in kwargs:
+            ContrastSetModelParams(**kwargs)
+        else:
+            ModelsParams(**kwargs)
         self._params = kwargs
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = configurator.configure(**kwargs)
@@ -136,10 +160,11 @@ class ExpertKnowledgeOperator:
             values: Data,
             labels: Data,
             survival_time_attribute: str = None,
+            contrast_attribute: str = None,
 
             expert_rules: List[Union[str, Rule]] = None,
             expert_preferred_conditions: List[Union[str, Rule]] = None,
-            expert_forbidden_conditions: List[Union[str, Rule]] = None) -> Any:
+            expert_forbidden_conditions: List[Union[str, Rule]] = None) -> ExpertKnowledgeOperator:
         self._configurator.configure_simple_parameter('use_expert', True)
         self._configurator.configure_expert_parameter(
             'expert_preferred_conditions', expert_preferred_conditions)
@@ -148,7 +173,11 @@ class ExpertKnowledgeOperator:
         self._configurator.configure_expert_parameter(
             'expert_rules', expert_rules)
         example_set = create_example_set(
-            values, labels, survival_time_attribute=survival_time_attribute)
+            values,
+            labels,
+            survival_time_attribute=survival_time_attribute,
+            contrast_attribute=contrast_attribute
+        )
 
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)

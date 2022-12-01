@@ -1,6 +1,9 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union, List
 from pydantic import BaseModel
+
+SURVIVAL_TIME_ATTR_ROLE: str = "survival_time"
+CONTRAST_ATTR_ROLE: str = "contrast_attribute"
 
 
 class Measures(Enum):
@@ -69,3 +72,11 @@ class ModelsParams(BaseModel):
     induce_using_preferred: Optional[bool]
     induce_using_automatic: Optional[bool]
     consider_other_classes: Optional[bool]
+
+
+class ContrastSetModelParams(ModelsParams):
+    minsupp_all: str
+    max_neg2pos: float
+    max_passes_count: int
+    penalty_strength: float
+    penalty_saturation: float
