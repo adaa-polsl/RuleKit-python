@@ -1,7 +1,8 @@
-from typing import Union, List, Any
-from jpype import JClass, JString, JObject, JArray, java, addClassPath
+from typing import Union, Dict, List, Any
+from jpype import JClass, JString, JObject, JArray, java
 from jpype.pickle import JPickler, JUnpickler
 import io
+from warnings import warn
 import numpy as np
 import pandas as pd
 from .params import Measures
@@ -33,43 +34,8 @@ class RuleGeneratorConfigurator:
         self.rule_generator = rule_generator
         self.LogRank = None
 
-    def configure(self,
-                  min_rule_covered: int = None,
-                  induction_measure: Measures = None,
-                  pruning_measure: Union[Measures, str] = None,
-                  voting_measure: Measures = None,
-                  max_growing: int = None,
-                  enable_pruning: bool = None,
-                  ignore_missing: bool = None,
-                  max_uncovered_fraction: float = None,
-                  select_best_candidate: bool = None,
-                  survival_time_attr: str = None,
-
-                  extend_using_preferred: bool = None,
-                  extend_using_automatic: bool = None,
-                  induce_using_preferred: bool = None,
-                  induce_using_automatic: bool = None,
-                  consider_other_classes: bool = None,
-                  preferred_attributes_per_rule: int = None,
-                  preferred_conditions_per_rule: int = None) -> Any:
-        self._configure_rule_generator(
-            min_rule_covered=min_rule_covered,
-            induction_measure=induction_measure,
-            pruning_measure=pruning_measure,
-            voting_measure=voting_measure,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate,
-            extend_using_preferred=extend_using_preferred,
-            extend_using_automatic=extend_using_automatic,
-            induce_using_preferred=induce_using_preferred,
-            induce_using_automatic=induce_using_automatic,
-            consider_other_classes=consider_other_classes,
-            preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule
-        )
+    def configure(self, **kwargs: Dict[str, Any]) -> Any:
+        self._configure_rule_generator(**kwargs)
         return self.rule_generator
 
     def configure_expert_parameter(self, param_name: str, param_value: Any):
@@ -110,54 +76,26 @@ class RuleGeneratorConfigurator:
                 self.rule_generator.setParameter(param_name, 'UserDefined')
                 self.rule_generator.setParameter(param_name, param_value)
 
-    def _configure_rule_generator(
-            self,
-            min_rule_covered: int = None,
-            induction_measure: Measures = None,
-            pruning_measure: Measures = None,
-            voting_measure: Measures = None,
-            max_growing: int = None,
-            enable_pruning: bool = None,
-            ignore_missing: bool = None,
-            max_uncovered_fraction: float = None,
-            select_best_candidate: bool = None,
+    def _configure_rule_generator(self, **kwargs: Dict[str, Any]):
+        if kwargs.get('min_rule_covered', None) is not None:
+            # backward compatibility
+            # TODO remove in version 2.0.0
+            warn('"min_rule_covered" parameter was renamed to "minsupp_new" and is now deprecated, use "minsupp_new" instead. "min_rule_covered" parameter will be removed in next major version of the package. ', DeprecationWarning, stacklevel=6)
+            kwargs['minsupp_new'] = kwargs['min_rule_covered']
+        else:
+            kwargs['min_rule_covered'] = kwargs['min_rule_covered']
 
-            extend_using_preferred: bool = None,
-            extend_using_automatic: bool = None,
-            induce_using_preferred: bool = None,
-            induce_using_automatic: bool = None,
-            consider_other_classes: bool = None,
-            preferred_conditions_per_rule: int = None,
-            preferred_attributes_per_rule: int = None):
-        if induction_measure == Measures.LogRank or pruning_measure == Measures.LogRank or voting_measure == Measures.LogRank:
+        if kwargs.get('induction_measure') == Measures.LogRank or \
+                kwargs.get('pruning_measure') == Measures.LogRank or \
+                kwargs.get('voting_measure') == Measures.LogRank:
             self.LogRank = JClass('adaa.analytics.rules.logic.quality.LogRank')
-        self.configure_simple_parameter('min_rule_covered', min_rule_covered)
-        self.configure_simple_parameter('max_growing', max_growing)
-        self.configure_simple_parameter('enable_pruning', enable_pruning)
-        self.configure_simple_parameter(
-            'max_uncovered_fraction', max_uncovered_fraction)
-        self.configure_simple_parameter(
-            'select_best_candidate', select_best_candidate)
-
-        self.configure_simple_parameter(
-            'extend_using_preferred', extend_using_preferred)
-        self.configure_simple_parameter(
-            'extend_using_automatic', extend_using_automatic)
-        self.configure_simple_parameter(
-            'induce_using_preferred', induce_using_preferred)
-        self.configure_simple_parameter(
-            'induce_using_automatic', induce_using_automatic)
-        self.configure_simple_parameter(
-            'consider_other_classes', consider_other_classes)
-        self.configure_simple_parameter(
-            'preferred_conditions_per_rule', preferred_conditions_per_rule)
-        self.configure_simple_parameter(
-            'preferred_attributes_per_rule', preferred_attributes_per_rule)
-
-        self._configure_measure_parameter(
-            'induction_measure', induction_measure)
-        self._configure_measure_parameter('pruning_measure', pruning_measure)
-        self._configure_measure_parameter('voting_measure', voting_measure)
+        for measure_param_name in ['induction_measure', 'pruning_measure', 'voting_measure']:
+            measure_param_value: Measures = kwargs.pop(
+                measure_param_name, None)
+            self._configure_measure_parameter(
+                measure_param_name, measure_param_value)
+        for param_name, param_value in kwargs.items():
+            self.configure_simple_parameter(param_name, param_value)
 
 
 def map_attributes_names(example_set, attributes_names: List[str]):

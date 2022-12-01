@@ -3,15 +3,16 @@ from .helpers import RuleGeneratorConfigurator, \
     create_example_set, \
     get_rule_generator, \
     ModelSerializer
-from .params import Measures
+from .params import Measures, ModelsParams
 from .rules import RuleSet, Rule
 import numpy as np
 import pandas as pd
-from typing import Union, Any, List
+from typing import Union, Dict, Any, List
 
 Data = Union[np.ndarray, pd.DataFrame, List]
 
 DEFAULT_PARAMS_VALUE = {
+    'minsupp_new': 5,
     'min_rule_covered': 5,
     'induction_measure': Measures.Correlation,
     'pruning_measure':  Measures.Correlation,
@@ -34,30 +35,10 @@ DEFAULT_PARAMS_VALUE = {
 
 class BaseOperator:
 
-    def __init__(self,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                 induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
-                 pruning_measure: Union[Measures,
-                                        str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
-                 voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
-                 max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
-                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
+    def __init__(self, **kwargs):
         self._params = None
         self._rule_generator = None
-        self.set_params(
-            min_rule_covered=min_rule_covered,
-            induction_measure=induction_measure,
-            pruning_measure=pruning_measure,
-            voting_measure=voting_measure,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
-        )
+        self.set_params(**kwargs)
         self.model: RuleSet = None
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
@@ -77,7 +58,7 @@ class BaseOperator:
         example_set = create_example_set(values)
         return self.model._java_object.apply(example_set)
 
-    def get_params(self, deep=True) -> dict:
+    def get_params(self, deep=True) -> Dict[str, Any]:
         """
         Returns
         -------
@@ -86,32 +67,14 @@ class BaseOperator:
         """
         return self._params
 
-    def set_params(self,
-                   min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                   induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
-                   pruning_measure: Union[Measures,
-                                          str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
-                   voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
-                   max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
-                   enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                   ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                   max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                   select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']) -> object:
+    def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
-        self._params = dict(
-            min_rule_covered=min_rule_covered,
-            induction_measure=induction_measure,
-            pruning_measure=pruning_measure,
-            voting_measure=voting_measure,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
-        )
+        # validate
+        ModelsParams(**kwargs)
+        self._params = kwargs
         configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = configurator.configure(**self._params)
+        self._rule_generator = configurator.configure(**kwargs)
         return self
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
@@ -162,48 +125,11 @@ class BaseOperator:
 
 class ExpertKnowledgeOperator:
 
-    def __init__(self,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                 induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
-                 pruning_measure: Union[Measures,
-                                        str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
-                 voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
-                 max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
-                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
-
-                 extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
-                 extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
-                 induce_using_preferred: bool = DEFAULT_PARAMS_VALUE['induce_using_preferred'],
-                 induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
-                 consider_other_classes: bool = DEFAULT_PARAMS_VALUE['consider_other_classes'],
-                 preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
-                     'preferred_conditions_per_rule'],
-                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']):
+    def __init__(self, **kwargs):
         self._params = None
         self._rule_generator = None
         self._configurator = None
-        ExpertKnowledgeOperator.set_params(
-            self,
-            min_rule_covered=min_rule_covered,
-            induction_measure=induction_measure,
-            pruning_measure=pruning_measure,
-            voting_measure=voting_measure,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate,
-            extend_using_preferred=extend_using_preferred,
-            extend_using_automatic=extend_using_automatic,
-            induce_using_preferred=induce_using_preferred,
-            induce_using_automatic=induce_using_automatic,
-            consider_other_classes=consider_other_classes,
-            preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule
-        )
+        ExpertKnowledgeOperator.set_params(self, **kwargs)
         self.model: RuleSet = None
 
     def fit(self,
@@ -235,45 +161,11 @@ class ExpertKnowledgeOperator:
         example_set = create_example_set(values)
         return self.model._java_object.apply(example_set)
 
-    def set_params(self,
-                   min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                   induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
-                   pruning_measure: Union[Measures,
-                                          str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
-                   voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
-                   max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
-                   enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                   ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                   max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                   select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
-
-                   extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
-                   extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
-                   induce_using_preferred: bool = DEFAULT_PARAMS_VALUE['induce_using_preferred'],
-                   induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
-                   consider_other_classes: bool = DEFAULT_PARAMS_VALUE['consider_other_classes'],
-                   preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
-                       'preferred_conditions_per_rule'],
-                   preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']) -> object:
-        self._params = dict(
-            min_rule_covered=min_rule_covered,
-            induction_measure=induction_measure,
-            pruning_measure=pruning_measure,
-            voting_measure=voting_measure,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate,
-            extend_using_preferred=extend_using_preferred,
-            extend_using_automatic=extend_using_automatic,
-            induce_using_preferred=induce_using_preferred,
-            induce_using_automatic=induce_using_automatic,
-            consider_other_classes=consider_other_classes,
-            preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule,
-        )
+    def set_params(self, **kwargs) -> object:
+        # validate params
+        ModelsParams(**kwargs)
+        self._params = kwargs
         self._rule_generator = get_rule_generator(expert=True)
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = self._configurator.configure(**self._params)
+        self._rule_generator = self._configurator.configure(**kwargs)
         return self

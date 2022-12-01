@@ -1,4 +1,4 @@
-from typing import Any, Union, Tuple, List
+from typing import Any, Optional, Union, Tuple, List
 import numpy as np
 import pandas as pd
 from jpype import JClass
@@ -8,24 +8,24 @@ from .operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAM
 from .rules import RuleSet
 
 
-
 class SurvivalRules(BaseOperator):
     """Survival model."""
 
     def __init__(self,
                  survival_time_attr: str = None,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                 minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
                  max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
                  enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                  ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
                  max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
+                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+                 min_rule_covered: Optional[int] = None):
         """
         Parameters
         ----------
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is padnas dataframe).
-        min_rule_covered : int = 5
+        minsupp_new : int = 5
             positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
             (positive examples for classification problems); default: 5
         max_growing : int = 0.0
@@ -40,12 +40,18 @@ class SurvivalRules(BaseOperator):
             Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; default: False.
+        min_rule_covered : int = None
+            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major version, use `minsupp_new`
+
+            .. deprecated:: 1.7.0
+                Use parameter `minsupp_new` instead.
         """
         self._params = None
         self._rule_generator = None
         self._configurator = None
         self.set_params(
             survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
@@ -57,6 +63,7 @@ class SurvivalRules(BaseOperator):
     def set_params(self,
                    survival_time_attr: str = None,
                    min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                   minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
                    max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
                    enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                    ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
@@ -68,6 +75,7 @@ class SurvivalRules(BaseOperator):
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._params = dict(
             survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
@@ -184,7 +192,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     def __init__(self,
                  survival_time_attr: str = None,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                 minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
                  max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
                  enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                  ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
@@ -197,10 +205,15 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
                  induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
                  preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
                      'preferred_conditions_per_rule'],
-                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']):
+                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
+                     'preferred_attributes_per_rule'],
+                 min_rule_covered: Optional[int] = None):
         """
         Parameters
         ----------
+        minsupp_new : int = 5
+            positive integer representing minimum number of previously uncovered examples to be covered by a new rule
+            (positive examples for classification problems); default: 5
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is padnas dataframe).
         min_rule_covered : int = 5
@@ -231,12 +244,18 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
+        min_rule_covered : int = None
+            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major version, use `minsupp_new`
+
+            .. deprecated:: 1.7.0
+                Use parameter `minsupp_new` instead.
         """
         self._params = None
         self._rule_generator = None
         self._configurator = None
         self.set_params(
             survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
@@ -254,6 +273,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     def set_params(self,
                    survival_time_attr: str = None,
+                   minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
                    min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
                    max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
                    enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
@@ -273,6 +293,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
         self._params = dict(
             survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,

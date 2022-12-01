@@ -1,11 +1,14 @@
 from enum import Enum
+from typing import Optional
+from pydantic import BaseModel
 
 
 class Measures(Enum):
     """Enum for different measures used during induction, pruning and voting.
 
     You can ream more about each measure and its implementation
-    `here <https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation#41-rule-quality>`_ . 
+    #41-rule-quality>`_ .
+    `here <https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation
     """
     Accuracy = 'Accuracy'
     BinaryEntropy = 'BinaryEntropy'
@@ -47,3 +50,22 @@ class Measures(Enum):
     WeightedRelativeAccuracy = 'WeightedRelativeAccuracy'
     YAILS = 'YAILS'
     LogRank = 'LogRank'
+
+
+class ModelsParams(BaseModel):
+    min_rule_covered: Optional[int]
+    minsupp_new: Optional[int]
+    induction_measure: Measures
+    pruning_measure: Measures
+    voting_measure: Measures
+    max_growing: float
+    enable_pruning: bool
+    ignore_missing: bool
+    max_uncovered_fraction: float
+    select_best_candidate: bool
+
+    extend_using_preferred: Optional[bool]
+    extend_using_automatic: Optional[bool]
+    induce_using_preferred: Optional[bool]
+    induce_using_automatic: Optional[bool]
+    consider_other_classes: Optional[bool]

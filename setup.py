@@ -38,6 +38,7 @@ setuptools.setup(
         "scipy ~= 1.6.0",
         "joblib >= 1.0,< 1.3",
         "JPype1 ~= 1.2.1",
+        "pydantic==1.10.2",
     ],
     test_suite="tests",
     download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.6.0.tar.gz',

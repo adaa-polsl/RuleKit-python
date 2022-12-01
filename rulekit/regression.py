@@ -1,4 +1,4 @@
-from typing import Union, Any, List, Tuple
+from typing import Optional, Union, Any, List, Tuple
 from numbers import Number
 import numpy as np
 import pandas as pd
@@ -12,7 +12,7 @@ class RuleRegressor(BaseOperator):
     """Regression model."""
 
     def __init__(self,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                 minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
                  induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
                  pruning_measure: Union[Measures,
                                         str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -21,11 +21,13 @@ class RuleRegressor(BaseOperator):
                  enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
                  ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
                  max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
+                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+                 min_rule_covered: Optional[int] = None,
+                 ):
         """
         Parameters
         ----------
-        min_rule_covered : int = 5
+        minsupp_new : int = 5
             positive integer representing minimum number of previously uncovered examples to be covered by a new rule
             (positive examples for classification problems); default: 5
         induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.Measures.Correlation`
@@ -47,8 +49,14 @@ class RuleRegressor(BaseOperator):
             Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; default: False.
+        min_rule_covered : int = None
+            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major version, use `minsupp_new`
+
+            .. deprecated:: 1.7.0
+                Use parameter `minsupp_new` instead.
         """
         super().__init__(
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
@@ -123,7 +131,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
     """Expert Regression model."""
 
     def __init__(self,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
+                 minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
                  induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
                  pruning_measure: Union[Measures,
                                         str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -140,11 +148,13 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
                  induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
                  preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
                      'preferred_conditions_per_rule'],
-                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']):
+                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
+                     'preferred_attributes_per_rule'],
+                 min_rule_covered: Optional[int] = None):
         """
         Parameters
         ----------
-        min_rule_covered : int = 5
+        minsupp_new : int = 5
             positive integer representing minimum number of previously uncovered examples to be covered by a new rule
             (positive examples for classification problems); default: 5
         induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.Measures.Correlation`
@@ -179,9 +189,15 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
+        min_rule_covered : int = None
+            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major version, use `minsupp_new`
+
+            .. deprecated:: 1.7.0
+                Use parameter `minsupp_new` instead.
         """
         ExpertKnowledgeOperator.__init__(
             self,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
