@@ -9,7 +9,7 @@ from jpype import JClass
 
 from .helpers import PredictionResultMapper
 from .params import Measures
-from .operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
+from .operator import *
 
 
 class BaseClassifier:

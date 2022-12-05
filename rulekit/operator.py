@@ -68,6 +68,9 @@ class BaseOperator:
             survival_time_attribute=survival_time_attribute,
             contrast_attribute=contrast_attribute
         )
+        if contrast_attribute is not None and example_set.getAttributes().get(contrast_attribute).isNumerical():
+            raise ValueError(f'Contrast set attributes must be a nominal attribute while "{contrast_attribute}" is a numerical one.')
+
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)
         return self.model
