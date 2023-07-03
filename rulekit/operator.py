@@ -50,6 +50,10 @@ class BaseOperator:
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)
         return self.model
+        
+    def add_operator_command_proxy(self, operator_command_proxy):
+        self._rule_generator.addOperatorCommandProxy(operator_command_proxy)
+        
 
     def predict(self, values: Data) -> np.ndarray:
         if self.model is None:

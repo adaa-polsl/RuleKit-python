@@ -101,6 +101,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate)
         BaseClassifier.__init__(self)
+       
         self._remap_to_numeric = False
         self.label_unique_values = []
 
@@ -125,6 +126,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         if len(self.label_unique_values) > 0 and isinstance(self.label_unique_values[0], bytes):
             self.label_unique_values = [item.decode(
                 'utf-8') for item in self.label_unique_values]
+                
+    def add_operator_command_proxy(self, operator_command_proxy):
+        BaseOperator.add_operator_command_proxy(self, operator_command_proxy)
 
     def fit(self, values: Data, labels: Data) -> Any:
         """Train model on given dataset.

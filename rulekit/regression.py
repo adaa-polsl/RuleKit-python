@@ -90,6 +90,9 @@ class RuleRegressor(BaseOperator):
         super().fit(values, labels)
         return self
 
+    def add_operator_command_proxy(self, operator_command_proxy):
+        BaseOperator.add_operator_command_proxy(self, operator_command_proxy)
+        
     def predict(self, values: Data) -> np.ndarray:
         """Perform prediction and returns predicted values.
 
