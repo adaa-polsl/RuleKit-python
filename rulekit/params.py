@@ -61,8 +61,8 @@ class Measures(Enum):
 class ModelsParams(BaseModel):
     """Model for validating models hyperparameters
     """
-    min_rule_covered: Optional[int]
-    minsupp_new: Optional[int]
+    min_rule_covered: Optional[int] = None
+    minsupp_new: Optional[int] = None
     induction_measure: Measures
     pruning_measure: Measures
     voting_measure: Measures
@@ -72,13 +72,13 @@ class ModelsParams(BaseModel):
     max_uncovered_fraction: float
     select_best_candidate: bool
 
-    extend_using_preferred: Optional[bool]
-    extend_using_automatic: Optional[bool]
-    induce_using_preferred: Optional[bool]
-    induce_using_automatic: Optional[bool]
-    consider_other_classes: Optional[bool]
-    preferred_conditions_per_rule: Optional[int]
-    preferred_attributes_per_rule: Optional[int]
+    extend_using_preferred: Optional[bool] = None
+    extend_using_automatic: Optional[bool] = None
+    induce_using_preferred: Optional[bool] = None
+    induce_using_automatic: Optional[bool] = None
+    consider_other_classes: Optional[bool] = None
+    preferred_conditions_per_rule: Optional[int] = None
+    preferred_attributes_per_rule: Optional[int] = None
 
 
 class ContrastSetModelParams(ModelsParams):
