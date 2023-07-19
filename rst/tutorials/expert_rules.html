@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Expert Rules &mdash; rulekit 1.5.7 documentation</title>
+  <title>Expert Rules &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
@@ -104,15 +105,15 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#Regression">Regression</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1">Prepare dataset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id2">Define rules and conditions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">Rule induction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prepare-dataset-1">Prepare dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#define-rules-and-conditions-1">Define rules and conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rule-induction-1">Rule induction</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#Survival">Survival</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id4">Prepare dataset</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id5">Define rules and conditions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id6">Rule induction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prepare-dataset-2">Prepare dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#define-rules-and-conditions-2">Define rules and conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rule-induction-2">Rule induction</a></li>
 </ul>
 </li>
 </ul>
@@ -459,14 +460,14 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="section" id="Expert-Rules">
+<section id="Expert-Rules">
 <h1>Expert Rules<a class="headerlink" href="#Expert-Rules" title="Permalink to this headline">¶</a></h1>
 <div class="line-block">
 <div class="line">This notebook presents example usage of user-guided rule induction which follows the scheme introduced by the <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0950705119300802?dgcid=coauthor">GuideR</a> algorithm (Sikora et al, 2019).</div>
 <div class="line">Each problem (classification, regression, survival) in addition to the basic class has an expert class, i.e. RuleClassifier and ExpertRuleClassifier. Expert classes allow you to define set of initial rules, preferred conditions and forbidden conditions.</div>
 <div class="line">This tutorial will show you how to define rules and conditions</div>
 </div>
-<div class="section" id="Import-and-init-RuleKit">
+<section id="Import-and-init-RuleKit">
 <h2>Import and init RuleKit<a class="headerlink" href="#Import-and-init-RuleKit" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -482,10 +483,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Classification">
+</section>
+<section id="Classification">
 <h2>Classification<a class="headerlink" href="#Classification" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="Prepare-dataset">
+<section id="Prepare-dataset">
 <h3>Prepare dataset<a class="headerlink" href="#Prepare-dataset" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
@@ -506,8 +507,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Define-rules-and-conditions">
+</section>
+<section id="Define-rules-and-conditions">
 <h3>Define rules and conditions<a class="headerlink" href="#Define-rules-and-conditions" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
@@ -522,8 +523,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Rule-induction">
+</section>
+<section id="Rule-induction">
 <h3>Rule induction<a class="headerlink" href="#Rule-induction" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
@@ -609,12 +610,12 @@ IF goenergy = &lt;-37.50, 181) AND gimpuls = &lt;240, 470.50) AND genergy = &lt;
 IF gimpuls = &lt;54.50, inf) AND goimpuls = &lt;-74.50, inf) AND genergy = &lt;1510, inf) AND senergy = (-inf, 115450) THEN class = {1}
 </pre></div></div>
 </div>
-</div>
-</div>
-<div class="section" id="Regression">
+</section>
+</section>
+<section id="Regression">
 <h2>Regression<a class="headerlink" href="#Regression" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Prepare dataset<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<section id="prepare-dataset-1">
+<h3>Prepare dataset<a class="headerlink" href="#prepare-dataset-1" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
@@ -633,9 +634,9 @@ IF gimpuls = &lt;54.50, inf) AND goimpuls = &lt;-74.50, inf) AND genergy = &lt;1
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="id2">
-<h3>Define rules and conditions<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="define-rules-and-conditions-1">
+<h3>Define rules and conditions<a class="headerlink" href="#define-rules-and-conditions-1" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
@@ -649,9 +650,9 @@ IF gimpuls = &lt;54.50, inf) AND goimpuls = &lt;-74.50, inf) AND genergy = &lt;1
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="id3">
-<h3>Rule induction<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="rule-induction-1">
+<h3>Rule induction<a class="headerlink" href="#rule-induction-1" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
@@ -703,12 +704,12 @@ IF MM116 = &lt;0.45, inf) AND MM31 = &lt;0.30, inf) THEN MM116_pred = {0.90} [0.
 IF MM116 = &lt;0.70, inf) THEN MM116_pred = {0.90} [0.70,1.10]
 </pre></div></div>
 </div>
-</div>
-</div>
-<div class="section" id="Survival">
+</section>
+</section>
+<section id="Survival">
 <h2>Survival<a class="headerlink" href="#Survival" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>Prepare dataset<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<section id="prepare-dataset-2">
+<h3>Prepare dataset<a class="headerlink" href="#prepare-dataset-2" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
@@ -735,9 +736,9 @@ IF MM116 = &lt;0.70, inf) THEN MM116_pred = {0.90} [0.70,1.10]
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="id5">
-<h3>Define rules and conditions<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="define-rules-and-conditions-2">
+<h3>Define rules and conditions<a class="headerlink" href="#define-rules-and-conditions-2" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
@@ -751,9 +752,9 @@ IF MM116 = &lt;0.70, inf) THEN MM116_pred = {0.90} [0.70,1.10]
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="id6">
-<h3>Rule induction<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="rule-induction-2">
+<h3>Rule induction<a class="headerlink" href="#rule-induction-2" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
@@ -803,9 +804,9 @@ IF [CD34kgx10d6 = (-inf, 11.86)] AND PLTrecovery = &lt;19.50, inf) AND Donorage3
 IF [CD34kgx10d6 = &lt;11.86, inf)] THEN survival_status = {NaN}
 </pre></div></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Survival analysis &mdash; rulekit 1.5.7 documentation</title>
+  <title>Survival analysis &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
@@ -458,7 +459,7 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="section" id="Survival-analysis">
+<section id="Survival-analysis">
 <h1>Survival analysis<a class="headerlink" href="#Survival-analysis" title="Permalink to this headline">¶</a></h1>
 <p>This notebook presents example usage of package for solving survival problem on <code class="docutils literal notranslate"><span class="pre">bmt</span></code> dataset. You can download dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/bmt/bmt.arff">here</a></p>
 <div class="line-block">
@@ -469,7 +470,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">- calculating metrics for model</div>
 <div class="line">- getting RuleKit inbuilt</div>
 </div>
-<div class="section" id="Summary-of-the-dataset">
+<section id="Summary-of-the-dataset">
 <h2>Summary of the dataset<a class="headerlink" href="#Summary-of-the-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -999,7 +1000,7 @@ Basic attribute statistics:
 </table>
 </div></div>
 </div>
-<div class="section" id="Survival-curve-for-the-entire-set-(Kaplan-Meier-curve)">
+<section id="Survival-curve-for-the-entire-set-(Kaplan-Meier-curve)">
 <h3>Survival curve for the entire set (Kaplan Meier curve)<a class="headerlink" href="#Survival-curve-for-the-entire-set-(Kaplan-Meier-curve)" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -1034,9 +1035,9 @@ Basic attribute statistics:
 <div class="output_area docutils container">
 <img alt="../../_images/rst_tutorials_survival_7_1.svg" src="../../_images/rst_tutorials_survival_7_1.svg" /></div>
 </div>
-</div>
-</div>
-<div class="section" id="Import-and-init-RuleKit">
+</section>
+</section>
+<section id="Import-and-init-RuleKit">
 <h2>Import and init RuleKit<a class="headerlink" href="#Import-and-init-RuleKit" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -1052,8 +1053,8 @@ Basic attribute statistics:
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Helper-function-for-creating-ruleset-characteristics-dataframe">
+</section>
+<section id="Helper-function-for-creating-ruleset-characteristics-dataframe">
 <h2>Helper function for creating ruleset characteristics dataframe<a class="headerlink" href="#Helper-function-for-creating-ruleset-characteristics-dataframe" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
@@ -1067,8 +1068,8 @@ Basic attribute statistics:
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Rule-induction-on-full-dataset">
+</section>
+<section id="Rule-induction-on-full-dataset">
 <h2>Rule induction on full dataset<a class="headerlink" href="#Rule-induction-on-full-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
@@ -1122,7 +1123,7 @@ Basic attribute statistics:
 <div class="output_area docutils container">
 <img alt="../../_images/rst_tutorials_survival_15_1.svg" src="../../_images/rst_tutorials_survival_15_1.svg" /></div>
 </div>
-<div class="section" id="Generated-rules">
+<section id="Generated-rules">
 <h3>Generated rules<a class="headerlink" href="#Generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
@@ -1145,8 +1146,8 @@ IF Relapse = {1} AND PLTrecovery = &lt;15.50, inf) THEN survival_status = {NaN}
 IF PLTrecovery = (-inf, 266) THEN survival_status = {NaN}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Rules-evaluation-on-full-set">
+</section>
+<section id="Rules-evaluation-on-full-set">
 <h3>Rules evaluation on full set<a class="headerlink" href="#Rules-evaluation-on-full-set" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
@@ -1166,9 +1167,9 @@ IF PLTrecovery = (-inf, 266) THEN survival_status = {NaN}
 Integrated Brier Score: 0.2154545054362314
 </pre></div></div>
 </div>
-</div>
-</div>
-<div class="section" id="Stratified-K-Folds-cross-validation">
+</section>
+</section>
+<section id="Stratified-K-Folds-cross-validation">
 <h2>Stratified K-Folds cross-validation<a class="headerlink" href="#Stratified-K-Folds-cross-validation" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -1257,8 +1258,8 @@ dtype: float64
 0.24666778331912664
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Hyperparameters-tuning">
+</section>
+<section id="Hyperparameters-tuning">
 <h2>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Permalink to this headline">¶</a></h2>
 <p>This one gonna take a while…</p>
 <div class="nbinput nblast docutils container">
@@ -1314,10 +1315,10 @@ dtype: float64
 Best Integrated Brier Score: 0.228297 using {&#39;min_rule_covered&#39;: 5, &#39;survival_time_attr&#39;: &#39;survival_time&#39;}
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Building-model-with-tuned-hyperparameters">
+</section>
+<section id="Building-model-with-tuned-hyperparameters">
 <h2>Building model with tuned hyperparameters<a class="headerlink" href="#Building-model-with-tuned-hyperparameters" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="Split-dataset-to-train-and-test-(80%/20%)">
+<section id="Split-dataset-to-train-and-test-(80%/20%)">
 <h3>Split dataset to train and test (80%/20%)<a class="headerlink" href="#Split-dataset-to-train-and-test-(80%/20%)" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -1348,8 +1349,8 @@ Best Integrated Brier Score: 0.228297 using {&#39;min_rule_covered&#39;: 5, &#39
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Validate-model-on-test-dataset">
+</section>
+<section id="Validate-model-on-test-dataset">
 <h3>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
@@ -1402,9 +1403,9 @@ Integrated Brier Score: 0.19112015424542664
 <div class="output_area docutils container">
 <img alt="../../_images/rst_tutorials_survival_37_1.svg" src="../../_images/rst_tutorials_survival_37_1.svg" /></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

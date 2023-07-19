@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Parameters &mdash; rulekit 1.5.7 documentation</title>
+  <title>Parameters &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -194,7 +195,7 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="parameters">
+<section id="parameters">
 <h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
 <dl class="py data">
 <dt id="rulekit.operator.Data">
@@ -202,12 +203,15 @@
 <dd><p>alias of type Union[numpy.ndarray, pandas.core.frame.DataFrame, List]</p>
 </dd></dl>
 
-<span class="target" id="module-rulekit.params"></span><dl class="py class">
+<span class="target" id="module-rulekit.params"></span><p>Contains constants and classes for specyfing models parameters</p>
+<dl class="py class">
 <dt id="rulekit.params.Measures">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.params.</span></code><code class="sig-name descname"><span class="pre">Measures</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.params.Measures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Enum for different measures used during induction, pruning and voting.</p>
-<p>You can ream more about each measure and its implementation <a class="reference external" href="https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation#41-rule-quality">here</a> .</p>
+<p>You can ream more about each measure and its implementation
+#41-rule-quality&gt;`_ .
+<a href="#system-message-1"><span class="problematic" id="problematic-1">`</span></a>here &lt;<a class="reference external" href="https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation">https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation</a></p>
 <dl class="py attribute">
 <dt id="rulekit.params.Measures.Accuracy">
 <code class="sig-name descname"><span class="pre">Accuracy</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'Accuracy'</span></em><a class="headerlink" href="#rulekit.params.Measures.Accuracy" title="Permalink to this definition">¶</a></dt>
@@ -410,7 +414,7 @@
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

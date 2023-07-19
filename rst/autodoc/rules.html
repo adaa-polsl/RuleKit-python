@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Rules &mdash; rulekit 1.5.7 documentation</title>
+  <title>Rules &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -194,8 +195,36 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-rulekit.rules">
+<section id="module-rulekit.rules">
 <span id="rules"></span><h1>Rules<a class="headerlink" href="#module-rulekit.rules" title="Permalink to this headline">¶</a></h1>
+<p>Contains classes representing rules and rulesets.</p>
+<dl class="py class">
+<dt id="rulekit.rules.InductionParameters">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.rules.</span></code><code class="sig-name descname"><span class="pre">InductionParameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">java_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.rules.InductionParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Induction parameters.</p>
+<dl class="py method">
+<dt id="rulekit.rules.InductionParameters.induction_measure">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">induction_measure</span></code><a class="headerlink" href="#rulekit.rules.InductionParameters.induction_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+Union[Measures, str]: Measure used for induction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rulekit.rules.InductionParameters.pruning_measure">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pruning_measure</span></code><a class="headerlink" href="#rulekit.rules.InductionParameters.pruning_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+Union[Measures, str]: Measure used for pruning</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rulekit.rules.InductionParameters.voting_measure">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">voting_measure</span></code><a class="headerlink" href="#rulekit.rules.InductionParameters.voting_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns:
+Union[Measures, str]: Measure used for voting</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt id="rulekit.rules.Rule">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.rules.</span></code><code class="sig-name descname"><span class="pre">Rule</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">java_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.rules.Rule" title="Permalink to this definition">¶</a></dt>
@@ -207,10 +236,10 @@
 <code class="sig-name descname"><span class="pre">get_covering_information</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.rules.Rule.get_covering_information" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns information about rule covering</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>covering_data</strong> – Dictionary containing covering information.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
 </dd>
 </dl>
@@ -276,10 +305,10 @@
 <dt id="rulekit.rules.RuleSet.calculate_avg_rule_coverage">
 <code class="sig-name descname"><span class="pre">calculate_avg_rule_coverage</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_avg_rule_coverage" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>count</strong> – Average rule coverage.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -289,10 +318,10 @@
 <dt id="rulekit.rules.RuleSet.calculate_avg_rule_precision">
 <code class="sig-name descname"><span class="pre">calculate_avg_rule_precision</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_avg_rule_precision" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>count</strong> – Average rule precision.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -302,10 +331,10 @@
 <dt id="rulekit.rules.RuleSet.calculate_avg_rule_quality">
 <code class="sig-name descname"><span class="pre">calculate_avg_rule_quality</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_avg_rule_quality" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>count</strong> – Average rule quality.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -315,10 +344,10 @@
 <dt id="rulekit.rules.RuleSet.calculate_conditions_count">
 <code class="sig-name descname"><span class="pre">calculate_conditions_count</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_conditions_count" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>count</strong> – Number of conditions.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -328,10 +357,10 @@
 <dt id="rulekit.rules.RuleSet.calculate_induced_conditions_count">
 <code class="sig-name descname"><span class="pre">calculate_induced_conditions_count</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_induced_conditions_count" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>count</strong> – Number of induced conditions.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
@@ -341,13 +370,13 @@
 <dt id="rulekit.rules.RuleSet.calculate_significance">
 <code class="sig-name descname"><span class="pre">calculate_significance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_significance" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>alpha</strong> (<em>float</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>count</strong> – Significance of the rule set.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -357,11 +386,12 @@
 <dt id="rulekit.rules.RuleSet.calculate_significance_fdr">
 <code class="sig-name descname"><span class="pre">calculate_significance_fdr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_significance_fdr" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>count</strong> – Significance of the rule set with false discovery rate correction. Dictionary contains
-two fields: <em>fraction</em> (fraction of rules significant at assumed level) and <em>p</em> (average p-value of all rules).</p>
+two fields: <em>fraction</em> (fraction of rules significant at assumed level) and <em>p</em>
+(average p-value of all rules).</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
 </dd>
 </dl>
@@ -371,11 +401,12 @@ two fields: <em>fraction</em> (fraction of rules significant at assumed level) a
 <dt id="rulekit.rules.RuleSet.calculate_significance_fwer">
 <code class="sig-name descname"><span class="pre">calculate_significance_fwer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.rules.RuleSet.calculate_significance_fwer" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>count</strong> – Significance of the rule set with familiy-wise error rate correction. Dictionary contains
-two fields: <em>fraction</em> (fraction of rules significant at assumed level) and <em>p</em> (average p-value of all rules).</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>count</strong> – Significance of the rule set with familiy-wise error rate correction. Dictionary
+contains two fields: <em>fraction</em> (fraction of rules significant at assumed level)
+and <em>p</em> (average p-value of all rules).</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
 </dd>
 </dl>
@@ -425,7 +456,7 @@ two fields: <em>fraction</em> (fraction of rules significant at assumed level) a
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

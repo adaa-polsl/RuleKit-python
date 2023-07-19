@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Classification &mdash; rulekit 1.5.7 documentation</title>
+  <title>Classification &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -194,46 +195,56 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="classification">
+<section id="classification">
 <h1>Classification<a class="headerlink" href="#classification" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="rulekit.classification.RuleClassifier">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.classification.</span></code><code class="sig-name descname"><span class="pre">RuleClassifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">min_rule_covered:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></em>, <em class="sig-param"><span class="pre">induction_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">pruning_measure:</span> <span class="pre">Union[rulekit.params.Measures</span></em>, <em class="sig-param"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">voting_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">max_growing:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">enable_pruning:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></em>, <em class="sig-param"><span class="pre">ignore_missing:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">max_uncovered_fraction:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">select_best_candidate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.classification.RuleClassifier" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.classification.</span></code><code class="sig-name descname"><span class="pre">RuleClassifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">minsupp_new:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></em>, <em class="sig-param"><span class="pre">induction_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.Correlation:</span> <span class="pre">'Correlation'&gt;</span></em>, <em class="sig-param"><span class="pre">pruning_measure:</span> <span class="pre">Union[rulekit.params.Measures</span></em>, <em class="sig-param"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;Measures.Correlation:</span> <span class="pre">'Correlation'&gt;</span></em>, <em class="sig-param"><span class="pre">voting_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.Correlation:</span> <span class="pre">'Correlation'&gt;</span></em>, <em class="sig-param"><span class="pre">max_growing:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">enable_pruning:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></em>, <em class="sig-param"><span class="pre">ignore_missing:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">max_uncovered_fraction:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">select_best_candidate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">min_rule_covered:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.classification.RuleClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Classification model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>min_rule_covered</strong> (<em>int = 5</em>) – positive integer representing minimum number of previously uncovered examples to be covered by a new rule
-(positive examples for classification problems); default: 5</p></li>
-<li><p><strong>induction_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> = <a class="reference internal" href="params.html#rulekit.params.Measures.LogRank" title="rulekit.params.Measures.LogRank"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.LogRank</span></code></a>) – measure used during induction; default measure is LogRank</p></li>
-<li><p><strong>pruning_measure</strong> (Union[<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a>, str] = <a class="reference internal" href="params.html#rulekit.params.Measures.LogRank" title="rulekit.params.Measures.LogRank"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.LogRank</span></code></a>) – measure used during pruning. Could be user defined (string), for example  <code class="code docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">p</span> <span class="pre">/</span> <span class="pre">n</span></code>;
-default measure is LogRank</p></li>
-<li><p><strong>voting_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> = <a class="reference internal" href="params.html#rulekit.params.Measures.LogRank" title="rulekit.params.Measures.LogRank"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.LogRank</span></code></a>) – measure used during voting; default measure is LogRank</p></li>
-<li><p><strong>max_growing</strong> (<em>int = 0.0</em>) – non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase
-(use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,</p></li>
+<li><p><strong>minsupp_new</strong> (<em>int = 5</em>) – positive integer representing minimum number of previously uncovered examples to be
+covered by a new rule (positive examples for classification problems); default: 5</p></li>
+<li><p><strong>induction_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> = <code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">Measures.Correlation</span></code>) – measure used during induction; default measure is correlation</p></li>
+<li><p><strong>pruning_measure</strong> (Union[<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a>, str] =             <a class="reference internal" href="params.html#rulekit.params.Measures.Correlation" title="rulekit.params.Measures.Correlation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.Correlation</span></code></a>) – measure used during pruning. Could be user defined (string), for example
+<code class="code docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">p</span> <span class="pre">/</span> <span class="pre">n</span></code>; default measure is correlation</p></li>
+<li><p><strong>voting_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> =             <a class="reference internal" href="params.html#rulekit.params.Measures.Correlation" title="rulekit.params.Measures.Correlation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.Correlation</span></code></a>) – measure used during voting; default measure is correlation</p></li>
+<li><p><strong>max_growing</strong> (<em>int = 0.0</em>) – non-negative integer representing maximum number of conditions which can be added
+to the rule in the growing phase (use this parameter for large datasets if execution
+time is prohibitive); 0 indicates no limit; default: 0,</p></li>
 <li><p><strong>enable_pruning</strong> (<em>bool = True</em>) – enable or disable pruning, default is True.</p></li>
-<li><p><strong>ignore_missing</strong> (<em>bool = False</em>) – boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always
-considered as not fulfilling the condition build upon that attribute); default: False.</p></li>
-<li><p><strong>max_uncovered_fraction</strong> (<em>float = 0.0</em>) – Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.</p></li>
-<li><p><strong>select_best_candidate</strong> (<em>bool = False</em>) – Flag determining if best candidate should be selected from growing phase; default: False.</p></li>
+<li><p><strong>ignore_missing</strong> (<em>bool = False</em>) – boolean telling whether missing values should be ignored (by default, a missing value
+of given attribute is always cconsidered as not fulfilling the condition build upon
+that attribute); default: False.</p></li>
+<li><p><strong>max_uncovered_fraction</strong> (<em>float = 0.0</em>) – Floating-point number from [0,1] interval representing maximum fraction of examples
+that may remain uncovered by the rule set, default: 0.0.</p></li>
+<li><p><strong>select_best_candidate</strong> (<em>bool = False</em>) – Flag determining if best candidate should be selected from growing phase; default:
+False.</p></li>
+<li><p><strong>min_rule_covered</strong> (<em>int = None</em>) – <p>alias to <cite>minsupp_new</cite>. Parameter is deprecated and will be removed in the next major
+version, use <cite>minsupp_new</cite></p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.7.0: </span>Use parameter <cite>minsupp_new</cite> instead.</p>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.fit">
-<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#rulekit.classification.RuleClassifier" title="rulekit.classification.RuleClassifier"><span class="pre">rulekit.classification.RuleClassifier</span></a><a class="headerlink" href="#rulekit.classification.RuleClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train model on given dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – labels</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>self</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#rulekit.classification.RuleClassifier" title="rulekit.classification.RuleClassifier">RuleClassifier</a></p>
 </dd>
 </dl>
@@ -241,18 +252,18 @@ considered as not fulfilling the condition build upon that attribute); default: 
 
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.get_coverage_matrix">
-<code class="sig-name descname"><span class="pre">get_coverage_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.get_coverage_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_coverage_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.get_coverage_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates coverage matrix for ruleset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – dataset</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>coverage_matrix</strong> –  Each row of the matrix represent single example from dataset and every column represent
-on rule from rule set. Value 1 in the matrix cell means that rule covered certain example, value 0
-means that it doesn’t.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>coverage_matrix</strong> – Each row of the matrix represent single example from dataset and every column represent
+on rule from rule set. Value 1 in the matrix cell means that rule covered certain
+example, value 0 means that it doesn’t.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -260,12 +271,12 @@ means that it doesn’t.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.get_params">
-<code class="sig-name descname"><span class="pre">get_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_params</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>hyperparameters</strong> – Dictionary containing model hyperparameters.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -273,21 +284,21 @@ means that it doesn’t.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.predict">
-<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.RuleClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.RuleClassifier.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform prediction and returns predicted labels.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>return_metrics</strong> (<em>bool = False</em>) – Optional flag. If set to <em>True</em> method will calculate some additional model metrics.
 Method will then return tuple instead of just predicted labels.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just prediction, otherwise a tuple will be returned with first
-element being prediction and second one being metrics.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just prediction, otherwise a tuple
+will be returned with first element being prediction and second one being metrics.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]</p>
 </dd>
 </dl>
@@ -295,21 +306,22 @@ element being prediction and second one being metrics.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.predict_proba">
-<code class="sig-name descname"><span class="pre">predict_proba</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.RuleClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">predict_proba</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.RuleClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform prediction and returns class probabilities for each example.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>return_metrics</strong> (<em>bool = False</em>) – Optional flag. If set to <em>True</em> method will calculate some additional model metrics.
 Method will then return tuple instead of just probabilities.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just probabilities matrix, otherwise a tuple will be returned with first
-element being prediction and second one being metrics.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just probabilities matrix, otherwise
+a tuple will be returned with first element being prediction and second one being
+metrics.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]</p>
 </dd>
 </dl>
@@ -317,19 +329,19 @@ element being prediction and second one being metrics.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.score">
-<code class="sig-name descname"><span class="pre">score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the accuracy on the given test data and labels.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – true labels</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>score</strong> – Accuracy of self.predict(values) wrt. labels.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -337,7 +349,7 @@ element being prediction and second one being metrics.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.RuleClassifier.set_params">
-<code class="sig-name descname"><span class="pre">set_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">min_rule_covered:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></em>, <em class="sig-param"><span class="pre">induction_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">pruning_measure:</span> <span class="pre">Union[rulekit.params.Measures</span></em>, <em class="sig-param"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">voting_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">max_growing:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">enable_pruning:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></em>, <em class="sig-param"><span class="pre">ignore_missing:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">max_uncovered_fraction:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">select_best_candidate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">object</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.set_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">set_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">object</span><a class="headerlink" href="#rulekit.classification.RuleClassifier.set_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set models hyperparameters. Parameters are the same as in constructor.</p>
 </dd></dl>
 
@@ -345,55 +357,75 @@ element being prediction and second one being metrics.</p>
 
 <dl class="py class">
 <dt id="rulekit.classification.ExpertRuleClassifier">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.classification.</span></code><code class="sig-name descname"><span class="pre">ExpertRuleClassifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">min_rule_covered:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></em>, <em class="sig-param"><span class="pre">induction_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">pruning_measure:</span> <span class="pre">Union[rulekit.params.Measures</span></em>, <em class="sig-param"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">voting_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.LogRank:</span> <span class="pre">'LogRank'&gt;</span></em>, <em class="sig-param"><span class="pre">max_growing:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">enable_pruning:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></em>, <em class="sig-param"><span class="pre">ignore_missing:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">max_uncovered_fraction:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">select_best_candidate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">extend_using_preferred:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">extend_using_automatic:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">induce_using_preferred:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">induce_using_automatic:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">consider_other_classes:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">preferred_conditions_per_rule:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">preferred_attributes_per_rule:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.classification.</span></code><code class="sig-name descname"><span class="pre">ExpertRuleClassifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">minsupp_new:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></em>, <em class="sig-param"><span class="pre">induction_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.Correlation:</span> <span class="pre">'Correlation'&gt;</span></em>, <em class="sig-param"><span class="pre">pruning_measure:</span> <span class="pre">Union[rulekit.params.Measures</span></em>, <em class="sig-param"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;Measures.Correlation:</span> <span class="pre">'Correlation'&gt;</span></em>, <em class="sig-param"><span class="pre">voting_measure:</span> <span class="pre">rulekit.params.Measures</span> <span class="pre">=</span> <span class="pre">&lt;Measures.Correlation:</span> <span class="pre">'Correlation'&gt;</span></em>, <em class="sig-param"><span class="pre">max_growing:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">enable_pruning:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></em>, <em class="sig-param"><span class="pre">ignore_missing:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">max_uncovered_fraction:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></em>, <em class="sig-param"><span class="pre">select_best_candidate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em>, <em class="sig-param"><span class="pre">extend_using_preferred:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">extend_using_automatic:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">induce_using_preferred:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">induce_using_automatic:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">consider_other_classes:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">preferred_conditions_per_rule:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">preferred_attributes_per_rule:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">min_rule_covered:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Classification model using expert knowledge.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>min_rule_covered</strong> (<em>int = 5</em>) – positive integer representing minimum number of previously uncovered examples to be covered by a new rule
-(positive examples for classification problems); default: 5</p></li>
-<li><p><strong>induction_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> = <a class="reference internal" href="params.html#rulekit.params.Measures.LogRank" title="rulekit.params.Measures.LogRank"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.LogRank</span></code></a>) – measure used during induction; default measure is LogRank</p></li>
-<li><p><strong>pruning_measure</strong> (Union[<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a>, str] = <a class="reference internal" href="params.html#rulekit.params.Measures.LogRank" title="rulekit.params.Measures.LogRank"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.LogRank</span></code></a>) – measure used during pruning. Could be user defined (string), for example  <code class="code docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">p</span> <span class="pre">/</span> <span class="pre">n</span></code>;
-default measure is LogRank</p></li>
-<li><p><strong>voting_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> = <a class="reference internal" href="params.html#rulekit.params.Measures.LogRank" title="rulekit.params.Measures.LogRank"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.LogRank</span></code></a>) – measure used during voting; default measure is LogRank</p></li>
-<li><p><strong>max_growing</strong> (<em>int = 0.0</em>) – non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase
-(use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,</p></li>
+<li><p><strong>minsupp_new</strong> (<em>int = 5</em>) – positive integer representing minimum number of previously uncovered examples to be
+covered by a new rule (positive examples for classification problems); default: 5</p></li>
+<li><p><strong>induction_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> =             <a class="reference internal" href="params.html#rulekit.params.Measures.Correlation" title="rulekit.params.Measures.Correlation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.Correlation</span></code></a>) – measure used during induction; default measure is correlation</p></li>
+<li><p><strong>pruning_measure</strong> (Union[<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a>, str] =             <a class="reference internal" href="params.html#rulekit.params.Measures.Correlation" title="rulekit.params.Measures.Correlation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.Correlation</span></code></a>) – measure used during pruning. Could be user defined (string), for example
+<code class="code docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">p</span> <span class="pre">/</span> <span class="pre">n</span></code>; default measure is correlation</p></li>
+<li><p><strong>voting_measure</strong> (<a class="reference internal" href="params.html#rulekit.params.Measures" title="rulekit.params.Measures"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures</span></code></a> =             <a class="reference internal" href="params.html#rulekit.params.Measures.Correlation" title="rulekit.params.Measures.Correlation"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.params.Measures.Correlation</span></code></a>) – measure used during voting; default measure is correlation</p></li>
+<li><p><strong>max_growing</strong> (<em>int = 0.0</em>) – non-negative integer representing maximum number of conditions which can be added to
+the rule in the growing phase (use this parameter for large datasets if execution time
+is prohibitive); 0 indicates no limit; default: 0,</p></li>
 <li><p><strong>enable_pruning</strong> (<em>bool = True</em>) – enable or disable pruning, default is True.</p></li>
-<li><p><strong>ignore_missing</strong> (<em>bool = False</em>) – boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always
-considered as not fulfilling the condition build upon that attribute); default: False.</p></li>
-<li><p><strong>max_uncovered_fraction</strong> (<em>float = 0.0</em>) – Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.</p></li>
-<li><p><strong>select_best_candidate</strong> (<em>bool = False</em>) – Flag determining if best candidate should be selected from growing phase; default: False.</p></li>
-<li><p><strong>extend_using_preferred</strong> (<em>bool = False</em>) – boolean indicating whether initial rules should be extended with a use of preferred conditions and attributes; default is False</p></li>
-<li><p><strong>extend_using_automatic</strong> (<em>bool = False</em>) – boolean indicating whether initial rules should be extended with a use of automatic conditions and attributes; default is False</p></li>
-<li><p><strong>induce_using_preferred</strong> (<em>bool = False</em>) – boolean indicating whether new rules should be induced with a use of preferred conditions and attributes; default is False</p></li>
-<li><p><strong>induce_using_automatic</strong> (<em>bool = False</em>) – boolean indicating whether new rules should be induced with a use of automatic conditions and attributes; default is False</p></li>
-<li><p><strong>consider_other_classes</strong> (<em>bool = False</em>) – boolean indicating whether automatic induction should be performed for classes for which no user’s knowledge has been defined (classification only); default is False.</p></li>
+<li><p><strong>ignore_missing</strong> (<em>bool = False</em>) – boolean telling whether missing values should be ignored (by default, a missing value
+of given attribute is always considered as not fulfilling the condition build upon
+that attribute); default: False.</p></li>
+<li><p><strong>max_uncovered_fraction</strong> (<em>float = 0.0</em>) – Floating-point number from [0,1] interval representing maximum fraction of examples
+that may remain uncovered by the rule set, default: 0.0.</p></li>
+<li><p><strong>select_best_candidate</strong> (<em>bool = False</em>) – Flag determining if best candidate should be selected from growing phase; default:
+False.</p></li>
+<li><p><strong>extend_using_preferred</strong> (<em>bool = False</em>) – boolean indicating whether initial rules should be extended with a use of preferred
+conditions and attributes; default is False</p></li>
+<li><p><strong>extend_using_automatic</strong> (<em>bool = False</em>) – boolean indicating whether initial rules should be extended with a use of automatic
+conditions and attributes; default is False</p></li>
+<li><p><strong>induce_using_preferred</strong> (<em>bool = False</em>) – boolean indicating whether new rules should be induced with a use of preferred
+conditions and attributes; default is False</p></li>
+<li><p><strong>induce_using_automatic</strong> (<em>bool = False</em>) – boolean indicating whether new rules should be induced with a use of automatic
+conditions and attributes; default is False</p></li>
+<li><p><strong>consider_other_classes</strong> (<em>bool = False</em>) – <dl class="simple">
+<dt>boolean indicating whether automatic induction should be performed for classes for</dt><dd><p>which no user’s knowledge has been defined (classification only); default is False.</p>
+</dd>
+</dl>
+</p></li>
 <li><p><strong>preferred_conditions_per_rule</strong> (<em>int = None</em>) – maximum number of preferred conditions per rule; default: unlimited,</p></li>
 <li><p><strong>preferred_attributes_per_rule</strong> (<em>int = None</em>) – maximum number of preferred attributes per rule; default: unlimited.</p></li>
+<li><p><strong>min_rule_covered</strong> (<em>int = None</em>) – <p>alias to <cite>minsupp_new</cite>. Parameter is deprecated and will be removed in the next major
+version, use <cite>minsupp_new</cite></p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.7.0: </span>Use parameter <cite>minsupp_new</cite> instead.</p>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="rulekit.classification.ExpertRuleClassifier.fit">
-<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_rules</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_preferred_conditions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_forbidden_conditions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">fit</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_rules</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_preferred_conditions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_forbidden_conditions</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#rulekit.classification.ExpertRuleClassifier" title="rulekit.classification.ExpertRuleClassifier"><span class="pre">rulekit.classification.ExpertRuleClassifier</span></a><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train model on given dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – labels</p></li>
-<li><p><strong>expert_rules</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
-element is name of the rule and second one is rule string.</p></li>
-<li><p><strong>expert_preferred_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – multiset of preferred conditions (used also for specifying preferred attributes by using special value Any). Either passed as a list of strings representing rules or as list of tuples where first
-element is name of the rule and second one is rule string.</p></li>
-<li><p><strong>expert_forbidden_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of forbidden conditions (used also for specifying forbidden attributes by using special valye Any). Either passed as a list of strings representing rules or as list of tuples where first
-element is name of the rule and second one is rule string.</p></li>
+<li><p><strong>expert_rules</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of initial rules, either passed as a list of strings representing rules or as list
+of tuples where first element is name of the rule and second one is rule string.</p></li>
+<li><p><strong>expert_preferred_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – multiset of preferred conditions (used also for specifying preferred attributes by
+using special value Any). Either passed as a list of strings representing rules or as
+list of tuples where first element is name of the rule and second one is rule string.</p></li>
+<li><p><strong>expert_forbidden_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of forbidden conditions (used also for specifying forbidden attributes by using
+special valye Any). Either passed as a list of strings representing rules or as list
+of tuples where first element is name of the rule and second one is rule string.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>self</strong></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#rulekit.classification.ExpertRuleClassifier" title="rulekit.classification.ExpertRuleClassifier">ExpertRuleClassifier</a></p>
 </dd>
 </dl>
@@ -401,18 +433,18 @@ element is name of the rule and second one is rule string.</p></li>
 
 <dl class="py method">
 <dt id="rulekit.classification.ExpertRuleClassifier.get_coverage_matrix">
-<code class="sig-name descname"><span class="pre">get_coverage_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.get_coverage_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_coverage_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.get_coverage_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates coverage matrix for ruleset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – dataset</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>coverage_matrix</strong> –  Each row of the matrix represent single example from dataset and every column represent
-on rule from rule set. Value 1 in the matrix cell means that rule covered certain example, value 0
-means that it doesn’t.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>coverage_matrix</strong> – Each row of the matrix represent single example from dataset and every column represent
+on rule from rule set. Value 1 in the matrix cell means that rule covered certain
+example, value 0 means that it doesn’t.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -420,12 +452,12 @@ means that it doesn’t.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.ExpertRuleClassifier.get_params">
-<code class="sig-name descname"><span class="pre">get_params</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.get_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_params</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>hyperparameters</strong> – Dictionary containing model hyperparameters.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.ndarray</p>
 </dd>
 </dl>
@@ -433,21 +465,21 @@ means that it doesn’t.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.ExpertRuleClassifier.predict">
-<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">predict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform prediction and returns predicted labels.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>return_metrics</strong> (<em>bool = False</em>) – Optional flag. If set to <em>True</em> method will calculate some additional model metrics.
 Method will then return tuple instead of just predicted labels.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just prediction, otherwise a tuple will be returned with first
-element being prediction and second one being metrics.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just prediction, otherwise a tuple
+will be returned with first element being prediction and second one being metrics.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]</p>
 </dd>
 </dl>
@@ -455,21 +487,22 @@ element being prediction and second one being metrics.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.ExpertRuleClassifier.predict_proba">
-<code class="sig-name descname"><span class="pre">predict_proba</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">predict_proba</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metrics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform prediction and returns class probabilities for each example.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>return_metrics</strong> (<em>bool = False</em>) – Optional flag. If set to <em>True</em> method will calculate some additional model metrics.
 Method will then return tuple instead of just probabilities.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just probabilities matrix, otherwise a tuple will be returned with first
-element being prediction and second one being metrics.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – If <em>return_metrics</em> flag wasn’t set it will return just probabilities matrix, otherwise
+a tuple will be returned with first element being prediction and second one being
+metrics.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]</p>
 </dd>
 </dl>
@@ -477,19 +510,19 @@ element being prediction and second one being metrics.</p>
 
 <dl class="py method">
 <dt id="rulekit.classification.ExpertRuleClassifier.score">
-<code class="sig-name descname"><span class="pre">score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#rulekit.classification.ExpertRuleClassifier.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the accuracy on the given test data and labels.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
 <li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – true labels</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>score</strong> – Accuracy of self.predict(values) wrt. labels.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -497,7 +530,7 @@ element being prediction and second one being metrics.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

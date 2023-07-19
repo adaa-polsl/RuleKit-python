@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Statistics &mdash; rulekit 1.5.7 documentation</title>
+  <title>Statistics &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -87,7 +88,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
@@ -193,8 +194,9 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-rulekit.stats">
+<section id="module-rulekit.stats">
 <span id="statistics"></span><h1>Statistics<a class="headerlink" href="#module-rulekit.stats" title="Permalink to this headline">¶</a></h1>
+<p>Contains classes describing rules and rulesets statistics and metrics</p>
 <dl class="py class">
 <dt id="rulekit.stats.RuleSetStatistics">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">rulekit.stats.</span></code><code class="sig-name descname"><span class="pre">RuleSetStatistics</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ruleset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.stats.RuleSetStatistics" title="Permalink to this definition">¶</a></dt>
@@ -204,7 +206,7 @@
 <code class="sig-name descname"><span class="pre">SIGNIFICANCE_LEVEL</span></code><a class="headerlink" href="#rulekit.stats.RuleSetStatistics.SIGNIFICANCE_LEVEL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Significance level, default value is <em>0.05</em></p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -237,9 +239,11 @@
 </dd>
 <dt>fraction_significant<span class="classifier">float</span></dt><dd><p>Fraction of rules significant at assumed level</p>
 </dd>
-<dt>fraction_FDR_significant<span class="classifier">float</span></dt><dd><p>Fraction of rules significant, set with false discovery rate correction, at assumed level.</p>
+<dt>fraction_FDR_significant<span class="classifier">float</span></dt><dd><p>Fraction of rules significant, set with false discovery rate correction,
+at assumed level.</p>
 </dd>
-<dt>fraction_FWER_significant<span class="classifier">float</span></dt><dd><p>Fraction of rules significant, set with familiy-wise error rate correction, at assumed level.</p>
+<dt>fraction_FWER_significant<span class="classifier">float</span></dt><dd><p>Fraction of rules significant, set with familiy-wise error rate correction,
+at assumed level.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -253,7 +257,7 @@
 <code class="sig-name descname"><span class="pre">p</span></code><a class="headerlink" href="#rulekit.stats.RuleStatistics.p" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of positives covered by the rule (accounting weights).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -264,7 +268,7 @@
 <code class="sig-name descname"><span class="pre">n</span></code><a class="headerlink" href="#rulekit.stats.RuleStatistics.n" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of negatives covered by the rule (accounting weights).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -275,7 +279,7 @@
 <code class="sig-name descname"><span class="pre">P</span></code><a class="headerlink" href="#rulekit.stats.RuleStatistics.P" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of positives in the training set (accounting weights).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -286,7 +290,7 @@
 <code class="sig-name descname"><span class="pre">N</span></code><a class="headerlink" href="#rulekit.stats.RuleStatistics.N" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of negatives in the training set (accounting weights).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -297,7 +301,7 @@
 <code class="sig-name descname"><span class="pre">weight</span></code><a class="headerlink" href="#rulekit.stats.RuleStatistics.weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rule weight.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -308,7 +312,7 @@
 <code class="sig-name descname"><span class="pre">pvalue</span></code><a class="headerlink" href="#rulekit.stats.RuleStatistics.pvalue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rule significance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -316,7 +320,7 @@
 
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

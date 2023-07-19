@@ -4,10 +4,11 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Regression &mdash; rulekit 1.5.7 documentation</title>
+  <title>Regression &mdash; rulekit 1.6.0 documentation</title>
   
 
   
@@ -88,7 +89,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Table of contents:</span></p>
+              <p><span class="caption-text">Table of contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
@@ -459,7 +460,7 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="section" id="Regression">
+<section id="Regression">
 <h1>Regression<a class="headerlink" href="#Regression" title="Permalink to this headline">¶</a></h1>
 <p>This notebook presents example usage of package for solving regression problem on <code class="docutils literal notranslate"><span class="pre">methane</span></code> dataset. You can download training dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/methane/methane-train.arff">here</a> and test dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/methane/methane-test.arff">here</a></p>
 <div class="line-block">
@@ -470,7 +471,7 @@ div.rendered_html tbody tr:hover {
 <div class="line">- calculating metrics for model</div>
 <div class="line">- getting RuleKit inbuilt</div>
 </div>
-<div class="section" id="Summary-of-the-dataset">
+<section id="Summary-of-the-dataset">
 <h2>Summary of the dataset<a class="headerlink" href="#Summary-of-the-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -490,7 +491,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="Train-file">
+<section id="Train-file">
 <h3>Train file<a class="headerlink" href="#Train-file" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -642,8 +643,8 @@ Basic attribute statistics:
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Test-file">
+</section>
+<section id="Test-file">
 <h3>Test file<a class="headerlink" href="#Test-file" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -797,9 +798,9 @@ Basic attribute statistics:
 </table>
 </div></div>
 </div>
-</div>
-</div>
-<div class="section" id="Import-and-init-RuleKit">
+</section>
+</section>
+<section id="Import-and-init-RuleKit">
 <h2>Import and init RuleKit<a class="headerlink" href="#Import-and-init-RuleKit" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -815,8 +816,8 @@ Basic attribute statistics:
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Helper-function-for-calculating-metrics">
+</section>
+<section id="Helper-function-for-calculating-metrics">
 <h2>Helper function for calculating metrics<a class="headerlink" href="#Helper-function-for-calculating-metrics" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
@@ -879,8 +880,8 @@ Basic attribute statistics:
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Rule-induction-on-training-dataset">
+</section>
+<section id="Rule-induction-on-training-dataset">
 <h2>Rule induction on training dataset<a class="headerlink" href="#Rule-induction-on-training-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -1178,7 +1179,7 @@ Basic attribute statistics:
 </table>
 </div></div>
 </div>
-<div class="section" id="C2-Measure-generated-rules">
+<section id="C2-Measure-generated-rules">
 <h3>C2 Measure generated rules<a class="headerlink" href="#C2-Measure-generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -1227,8 +1228,8 @@ IF MM116 = &lt;0.65, inf) AND DMM116 = &lt;0.05, inf) AND AS038 = &lt;2.15, inf)
 IF MM116 = &lt;0.45, inf) AND DMM116 = &lt;-0.15, inf) AND MM31 = &lt;0.32, inf) THEN MM116_pred = {0.90} [0.69,1.11]
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Correlation-Measure-generated-rules">
+</section>
+<section id="Correlation-Measure-generated-rules">
 <h3>Correlation Measure generated rules<a class="headerlink" href="#Correlation-Measure-generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -1261,8 +1262,8 @@ IF MM116 = &lt;0.45, 0.85) AND MM31 = &lt;0.26, inf) THEN MM116_pred = {0.70} [0
 IF MM116 = &lt;0.70, inf) THEN MM116_pred = {0.90} [0.70,1.10]
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="RSS-Measure-generated-rules">
+</section>
+<section id="RSS-Measure-generated-rules">
 <h3>RSS Measure generated rules<a class="headerlink" href="#RSS-Measure-generated-rules" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
@@ -1295,9 +1296,9 @@ IF MM116 = &lt;0.85, inf) THEN MM116_pred = {1} [0.82,1.18]
 IF MM116 = &lt;0.65, 0.85) THEN MM116_pred = {0.80} [0.71,0.89]
 </pre></div></div>
 </div>
-</div>
-</div>
-<div class="section" id="Evaluation-on-a-test-set">
+</section>
+</section>
+<section id="Evaluation-on-a-test-set">
 <h2>Evaluation on a test set<a class="headerlink" href="#Evaluation-on-a-test-set" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -1429,8 +1430,8 @@ IF MM116 = &lt;0.65, 0.85) THEN MM116_pred = {0.80} [0.71,0.89]
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Hyperparameters-tuning">
+</section>
+<section id="Hyperparameters-tuning">
 <h2>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Permalink to this headline">¶</a></h2>
 <p>This one gonna take a while…</p>
 <div class="nbinput nblast docutils container">
@@ -1464,8 +1465,8 @@ IF MM116 = &lt;0.65, 0.85) THEN MM116_pred = {0.80} [0.71,0.89]
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Prediction-using-the-model-selected-from-the-tuning">
+</section>
+<section id="Prediction-using-the-model-selected-from-the-tuning">
 <h2>Prediction using the model selected from the tuning<a class="headerlink" href="#Prediction-using-the-model-selected-from-the-tuning" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
@@ -1639,7 +1640,7 @@ IF MM116 = &lt;0.45, inf) AND DMM116 = &lt;-0.15, inf) AND MM31 = &lt;0.32, inf)
 </table>
 </div></div>
 </div>
-<div class="section" id="Validate-model-on-test-dataset">
+<section id="Validate-model-on-test-dataset">
 <h3>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
@@ -1717,9 +1718,9 @@ IF MM116 = &lt;0.45, inf) AND DMM116 = &lt;-0.15, inf) AND MM31 = &lt;0.32, inf)
 </table>
 </div></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
