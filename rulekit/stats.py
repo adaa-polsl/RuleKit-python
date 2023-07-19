@@ -1,3 +1,5 @@
+"""Contains classes describing rules and rulesets statistics and metrics
+"""
 
 
 class RuleStatistics:
@@ -20,6 +22,7 @@ class RuleStatistics:
     """
 
     def __init__(self, rule):
+        # pylint: disable=invalid-name
         self.p = rule.weighted_p
         self.n = rule.weighted_n
         self.P = rule.weighted_P
@@ -69,13 +72,16 @@ class RuleSetStatistics:
     fraction_significant : float
         Fraction of rules significant at assumed level
     fraction_FDR_significant : float
-        Fraction of rules significant, set with false discovery rate correction, at assumed level.
+        Fraction of rules significant, set with false discovery rate correction,
+        at assumed level.
     fraction_FWER_significant : float
-        Fraction of rules significant, set with familiy-wise error rate correction, at assumed level.
+        Fraction of rules significant, set with familiy-wise error rate correction,
+        at assumed level.
     """
     SIGNIFICANCE_LEVEL = 0.05
 
     def __init__(self, ruleset):
+        # pylint: disable=invalid-name
         self.time_total_s = ruleset.total_time
         self.time_growing_s = ruleset.growing_time
         self.time_pruning_s = ruleset.pruning_time
@@ -97,28 +103,41 @@ class RuleSetStatistics:
 
         self.fraction_significant = ruleset.calculate_significance(
             RuleSetStatistics.SIGNIFICANCE_LEVEL)['fraction']
-        self.fraction_FDR_significant = ruleset.calculate_significance_fdr(RuleSetStatistics.SIGNIFICANCE_LEVEL)[
-            'fraction']
-        self.fraction_FWER_significant = ruleset.calculate_significance_fwer(RuleSetStatistics.SIGNIFICANCE_LEVEL)[
-            'fraction']
+        self.fraction_FDR_significant = ruleset.calculate_significance_fdr(
+            RuleSetStatistics.SIGNIFICANCE_LEVEL
+        )['fraction']
+        self.fraction_FWER_significant = ruleset.calculate_significance_fwer(
+            RuleSetStatistics.SIGNIFICANCE_LEVEL
+        )['fraction']
 
     def __str__(self):
-        return f'Time total [s]: {self.time_total_s}\n' + \
-               f'Time growing [s]: {self.time_growing_s}\n' + \
-               f'Time pruning [s]: {self.time_pruning_s}\n' + \
-               '\n' + \
-               f'Rules count: {self.rules_count}\n' + \
-               f'Conditions per rule: {self.conditions_per_rule}\n' + \
-               f'Induced conditions per rule: {self.induced_conditions_per_rule}\n' + \
-               '\n' + \
-               f'Average rule coverage: {self.avg_rule_coverage}\n' + \
-               f'Average rule precision: {self.avg_rule_precision}\n' + \
-               f'Average rule quality: {self.avg_rule_quality}\n' + \
-               '\n' + \
-               f'pvalue: {self.pvalue}\n' + \
-               f'FDR pvalue: {self.FDR_pvalue}\n' + \
-               f'FWER pvalue: {self.FWER_pvalue}\n' + \
-               '\n' + \
-               f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} significant: {self.fraction_significant}\n' + \
-               f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} FDR significant: {self.fraction_FDR_significant}\n' + \
-               f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} FWER significant: {self.fraction_FWER_significant}\n'
+        return (
+            f'Time total [s]: {self.time_total_s}\n' +
+            f'Time growing [s]: {self.time_growing_s}\n' +
+            f'Time pruning [s]: {self.time_pruning_s}\n' +
+            '\n' +
+            f'Rules count: {self.rules_count}\n' +
+            f'Conditions per rule: {self.conditions_per_rule}\n' +
+            f'Induced conditions per rule: {self.induced_conditions_per_rule}\n' +
+            '\n' +
+            f'Average rule coverage: {self.avg_rule_coverage}\n' +
+            f'Average rule precision: {self.avg_rule_precision}\n' +
+            f'Average rule quality: {self.avg_rule_quality}\n' +
+            '\n' +
+            f'pvalue: {self.pvalue}\n' +
+            f'FDR pvalue: {self.FDR_pvalue}\n' +
+            f'FWER pvalue: {self.FWER_pvalue}\n' +
+            '\n' +
+            (
+                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} ' +
+                f'significant: {self.fraction_significant}\n'
+            ) +
+            (
+                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} ' +
+                f'FDR significant: {self.fraction_FDR_significant}\n'
+            ) +
+            (
+                f'Fraction {RuleSetStatistics.SIGNIFICANCE_LEVEL} ' +
+                f'FWER significant: {self.fraction_FWER_significant}\n'
+            )
+        )

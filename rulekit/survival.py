@@ -1,51 +1,96 @@
-from typing import Any, Union, Tuple, List
+"""Module contaiing classes for survival analysis and prediction.
+"""
+from __future__ import annotations
+from typing import Optional, Union, Iterable
 import numpy as np
 import pandas as pd
 from jpype import JClass
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
-from .helpers import PredictionResultMapper, RuleGeneratorConfigurator, get_rule_generator, create_example_set
-from .operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
+from ._helpers import (
+    PredictionResultMapper,
+    RuleGeneratorConfigurator,
+    get_rule_generator,
+    create_example_set
+)
+from ._operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
+from .params import ContrastSetModelParams
 from .rules import RuleSet
 
+
+class SurvivalModelsParams(BaseModel):
+    """Model for validating survival models hyperparameters
+    """
+    survival_time_attr: Optional[str]
+    minsupp_new: int
+    max_growing: int
+    enable_pruning: bool
+    ignore_missing: bool
+    max_uncovered_fraction: float
+    select_best_candidate: bool
+    min_rule_covered: Optional[int]
+
+    extend_using_preferred: Optional[bool]
+    extend_using_automatic: Optional[bool]
+    induce_using_preferred: Optional[bool]
+    induce_using_automatic: Optional[bool]
+    consider_other_classes: Optional[bool]
+    preferred_conditions_per_rule: Optional[int]
+    preferred_attributes_per_rule: Optional[int]
 
 
 class SurvivalRules(BaseOperator):
     """Survival model."""
 
-    def __init__(self,
-                 survival_time_attr: str = None,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                 max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
-                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']):
+    def __init__(  # pylint: disable=super-init-not-called
+        self,
+        survival_time_attr: str = None,
+        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
+        enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+        ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+        max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        min_rule_covered: Optional[int] = None
+    ):
         """
         Parameters
         ----------
         survival_time_attr : str
-            name of column containing survival time data (use when data passed to model is padnas dataframe).
-        min_rule_covered : int = 5
-            positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
-            (positive examples for classification problems); default: 5
+            name of column containing survival time data (use when data passed to model is padnas
+            dataframe).
+        minsupp_new : int = 5
+            positive integer representing minimum number of previously uncovered examples to be
+            covered by a new rule (positive examples for classification problems); default: 5
         max_growing : int = 0.0
-            non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
-            (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
+            non-negative integer representing maximum number of conditions which can be added to
+            the rule in the growing phase  (use this parameter for large datasets if execution time
+            is prohibitive); 0 indicates no limit; default: 0,
         enable_pruning : bool = True
             enable or disable pruning, default is True.
         ignore_missing : bool = False
-            boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
-            considered as not fulfilling the condition build upon that attribute); default: False.
+            boolean telling whether missing values should be ignored (by default, a missing value 
+            of given attribute is always considered as not fulfilling the condition build upon that
+            attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples 
+            that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; default: False.
+            Flag determining if best candidate should be selected from growing phase; 
+            default: False.
+        min_rule_covered : int = None
+            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
+            version, use `minsupp_new`
+
+            .. deprecated:: 1.7.0
+                Use parameter `minsupp_new` instead.
         """
         self._params = None
         self._rule_generator = None
         self._configurator = None
         self.set_params(
             survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
@@ -54,26 +99,25 @@ class SurvivalRules(BaseOperator):
             select_best_candidate=select_best_candidate)
         self.model: RuleSet = None
 
-    def set_params(self,
-                   survival_time_attr: str = None,
-                   min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                   max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
-                   enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                   ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                   max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                   select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']) -> object:
+    def set_params(
+        self,
+        **kwargs
+    ) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
-        self.survival_time_attr = survival_time_attr
+        # params validatio
+        params = SurvivalModelsParams(**kwargs)
+        self.survival_time_attr = params.survival_time_attr
         self._rule_generator = get_rule_generator()
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._params = dict(
-            survival_time_attr=survival_time_attr,
-            min_rule_covered=min_rule_covered,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
+            survival_time_attr=params.survival_time_attr,
+            minsupp_new=params.minsupp_new,
+            min_rule_covered=params.min_rule_covered,
+            max_growing=params.max_growing,
+            enable_pruning=params.enable_pruning,
+            ignore_missing=params.ignore_missing,
+            max_uncovered_fraction=params.max_uncovered_fraction,
+            select_best_candidate=params.select_best_candidate
         )
         self._rule_generator = self._configurator.configure(**self._params)
         return self
@@ -92,10 +136,23 @@ class SurvivalRules(BaseOperator):
                 row.append(survival_time[index])
         else:
             raise ValueError(
-                'Data values must be instance of either pandas DataFrame, numpy array or list')
+                'Data values must be instance of either pandas DataFrame, numpy array or list'
+            )
         return ''
 
-    def fit(self, values: Data, labels: Data, survival_time: Data = None) -> Any:
+    def _prepare_survival_attribute(self, survival_time: Data, values: Data) -> str:
+        if self.survival_time_attr is None and survival_time is None:
+            raise ValueError(
+                'No "survival_time" attribute name was specified. ' +
+                'Specify it using method set_params'
+            )
+        if survival_time is not None:
+            return SurvivalRules._append_survival_time_columns(
+                values, survival_time)
+        else:
+            return self.survival_time_attr
+
+    def fit(self, values: Data, labels: Data, survival_time: Data = None) -> SurvivalRules:  # pylint: disable=arguments-differ
         """Train model on given dataset.
 
         Parameters
@@ -105,20 +162,15 @@ class SurvivalRules(BaseOperator):
         labels : :class:`rulekit.operator.Data`
             survival status
         survival_time: :class:`rulekit.operator.Data`
-            data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
+            data about survival time. Could be omitted when *survival_time_attr* parameter 
+            was specified.
 
         Returns
         -------
         self : SurvivalRules
         """
-        if self.survival_time_attr is None and survival_time is None:
-            raise ValueError(
-                'No "survival_time" attribute name was specified. Specify it using method set_params')
-        if survival_time is not None:
-            survival_time_attribute = SurvivalRules._append_survival_time_columns(
-                values, survival_time)
-        else:
-            survival_time_attribute = self.survival_time_attr
+        survival_time_attribute = self._prepare_survival_attribute(
+            survival_time, values)
         super().fit(values, labels, survival_time_attribute)
         return self
 
@@ -133,15 +185,20 @@ class SurvivalRules(BaseOperator):
         Returns
         -------
         result : np.ndarray
-            Each row represent single example from dataset and contains estimated survival function for that example. Estimated survival function is returned as a dictionary containing times and corresponding probabilities.
+            Each row represent single example from dataset and contains estimated survival function
+            for that example. Estimated survival function is returned as a dictionary containing 
+            times and corresponding probabilities.
         """
         return PredictionResultMapper.map_survival(super().predict(values))
 
     def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
-        """Return the Integrated Brier Score on the given dataset and labels(event status indicator).
+        """Return the Integrated Brier Score on the given dataset and labels 
+        (event status indicator).
 
-        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference between true event status at time T and predicted event status at that time; 
-        the Integrated Brier score summarizes the prediction error over all observations and over all times in a test set.
+        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference 
+        between true event status at time T and predicted event status at that time; 
+        the Integrated Brier score summarizes the prediction error over all observations and over
+        all times in a test set.
 
         Parameters
         ----------
@@ -150,7 +207,8 @@ class SurvivalRules(BaseOperator):
         labels : :class:`rulekit.operator.Data`
             survival status
         survival_time: :class:`rulekit.operator.Data`
-            data about survival time. Could be omitted when *survival_time_attr* parameter was specified
+            data about survival time. Could be omitted when *survival_time_attr* parameter was
+            specified
 
         Returns
         -------
@@ -158,85 +216,104 @@ class SurvivalRules(BaseOperator):
             Integrated Brier Score of self.predict(values) wrt. labels.
         """
 
-        if self.survival_time_attr is None and survival_time is None:
-            raise ValueError(
-                'No "survival_time" attribute name was specified. Specify it using method set_params')
-        if survival_time is not None:
-            survival_time_attribute = SurvivalRules._append_survival_time_columns(
-                values, survival_time)
-        else:
-            survival_time_attribute = self.survival_time_attr
-
+        survival_time_attribute = self._prepare_survival_attribute(
+            survival_time, values)
         example_set = create_example_set(
             values, labels,  survival_time_attribute=survival_time_attribute)
 
-        predicted_example_set = self.model._java_object.apply(example_set)
+        predicted_example_set = self.model._java_object.apply(  # pylint: disable=protected-access
+            example_set
+        )
 
-        IntegratedBrierScore = JClass(
-            'adaa.analytics.rules.logic.quality.IntegratedBrierScore')
-        integratedBrierScore = IntegratedBrierScore()
-        integratedBrierScore.startCounting(predicted_example_set, True)
-        return integratedBrierScore.getMikroAverage()
+        IntegratedBrierScore = JClass(  # pylint: disable=invalid-name
+            'adaa.analytics.rules.logic.quality.IntegratedBrierScore'
+        )
+        integrated_brier_score = IntegratedBrierScore()
+        integrated_brier_score.startCounting(predicted_example_set, True)
+        return integrated_brier_score.getMikroAverage()
 
 
 class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
     """Expert Survival model."""
 
-    def __init__(self,
-                 survival_time_attr: str = None,
-                 min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                 max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
-                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+    def __init__(  # pylint: disable=super-init-not-called
+        self,
+        survival_time_attr: str = None,
+        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
+        enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+        ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+        max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
 
-                 extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
-                 extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
-                 induce_using_preferred: bool = DEFAULT_PARAMS_VALUE['induce_using_preferred'],
-                 induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
-                 preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
-                     'preferred_conditions_per_rule'],
-                 preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']):
+        extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
+        extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
+        induce_using_preferred: bool = DEFAULT_PARAMS_VALUE['induce_using_preferred'],
+        induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
+        preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
+            'preferred_conditions_per_rule'],
+        preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
+            'preferred_attributes_per_rule'],
+        min_rule_covered: Optional[int] = None
+    ):
         """
         Parameters
         ----------
+        minsupp_new : int = 5
+            positive integer representing minimum number of previously uncovered examples to be
+            covered by a new rule (positive examples for classification problems); default: 5
         survival_time_attr : str
-            name of column containing survival time data (use when data passed to model is padnas dataframe).
+            name of column containing survival time data (use when data passed to model is pandas
+            dataframe).
         min_rule_covered : int = 5
-            positive integer representing minimum number of previously uncovered examples to be covered by a new rule 
-            (positive examples for classification problems); default: 5
+            positive integer representing minimum number of previously uncovered examples to be 
+            covered by a new rule (positive examples for classification problems); default: 5
         max_growing : int = 0.0
-            non-negative integer representing maximum number of conditions which can be added to the rule in the growing phase 
-            (use this parameter for large datasets if execution time is prohibitive); 0 indicates no limit; default: 0,
+            non-negative integer representing maximum number of conditions which can be added to
+            the rule in the growing phase (use this parameter for large datasets if execution time
+            is prohibitive); 0 indicates no limit; default: 0,
         enable_pruning : bool = True
             enable or disable pruning, default is True.
         ignore_missing : bool = False
-            boolean telling whether missing values should be ignored (by default, a missing value of given attribute is always 
-            considered as not fulfilling the condition build upon that attribute); default: False.
+            boolean telling whether missing values should be ignored (by default, a missing value
+            of given attribute is always considered as not fulfilling the condition build upon that
+            attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples 
+            that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; default: False.
+            Flag determining if best candidate should be selected from growing phase; 
+            default: False.
 
         extend_using_preferred : bool = False
-            boolean indicating whether initial rules should be extended with a use of preferred conditions and attributes; default is False
+            boolean indicating whether initial rules should be extended with a use of preferred
+            conditions and attributes; default is False
         extend_using_automatic : bool = False
-            boolean indicating whether initial rules should be extended with a use of automatic conditions and attributes; default is False
+            boolean indicating whether initial rules should be extended with a use of automatic
+            conditions and attributes; default is False
         induce_using_preferred : bool = False
-            boolean indicating whether new rules should be induced with a use of preferred conditions and attributes; default is False
+            boolean indicating whether new rules should be induced with a use of preferred 
+            conditions and attributes; default is False
         induce_using_automatic : bool = False
-            boolean indicating whether new rules should be induced with a use of automatic conditions and attributes; default is False
+            boolean indicating whether new rules should be induced with a use of automatic 
+            conditions and attributes; default is False
         preferred_conditions_per_rule : int = None
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
+        min_rule_covered : int = None
+            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
+            version, use `minsupp_new`
+
+            .. deprecated:: 1.7.0
+                Use parameter `minsupp_new` instead.
         """
         self._params = None
         self._rule_generator = None
         self._configurator = None
         self.set_params(
             survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
             min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
@@ -252,54 +329,44 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         )
         self.model: RuleSet = None
 
-    def set_params(self,
-                   survival_time_attr: str = None,
-                   min_rule_covered: int = DEFAULT_PARAMS_VALUE['min_rule_covered'],
-                   max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
-                   enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                   ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                   max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                   select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
-
-                   extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
-                   extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
-                   induce_using_preferred: bool = DEFAULT_PARAMS_VALUE['induce_using_preferred'],
-                   induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
-                   preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
-                       'preferred_conditions_per_rule'],
-                   preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']) -> object:
-
-        self.survival_time_attr = survival_time_attr
+    def set_params(  # pylint: disable=arguments-differ
+        self,
+        **kwargs
+    ) -> object:
+        params = SurvivalModelsParams(**kwargs)
+        self.survival_time_attr = params.survival_time_attr
 
         self._params = dict(
-            survival_time_attr=survival_time_attr,
-            min_rule_covered=min_rule_covered,
-            max_growing=max_growing,
-            enable_pruning=enable_pruning,
-            ignore_missing=ignore_missing,
-            max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate,
-            extend_using_preferred=extend_using_preferred,
-            extend_using_automatic=extend_using_automatic,
-            induce_using_preferred=induce_using_preferred,
-            induce_using_automatic=induce_using_automatic,
-            preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule,
+            survival_time_attr=params.survival_time_attr,
+            minsupp_new=params.minsupp_new,
+            min_rule_covered=params.min_rule_covered,
+            max_growing=params.max_growing,
+            enable_pruning=params.enable_pruning,
+            ignore_missing=params.ignore_missing,
+            max_uncovered_fraction=params.max_uncovered_fraction,
+            select_best_candidate=params.select_best_candidate,
+            extend_using_preferred=params.extend_using_preferred,
+            extend_using_automatic=params.extend_using_automatic,
+            induce_using_preferred=params.induce_using_preferred,
+            induce_using_automatic=params.induce_using_automatic,
+            preferred_conditions_per_rule=params.preferred_conditions_per_rule,
+            preferred_attributes_per_rule=params.preferred_attributes_per_rule,
         )
         self._rule_generator = get_rule_generator(expert=True)
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = self._configurator.configure(**self._params)
         return self
 
-    def fit(self,
-            values: Data,
-            labels: Data,
-            survival_time: Data = None,
+    def fit(  # pylint: disable=arguments-differ
+        self,
+        values: Data,
+        labels: Data,
+        survival_time: Data = None,
 
-            expert_rules: List[Union[str, Tuple[str, str]]] = None,
-            expert_preferred_conditions: List[Union[str,
-                                                    Tuple[str, str]]] = None,
-            expert_forbidden_conditions: List[Union[str, Tuple[str, str]]] = None) -> Any:
+        expert_rules: list[Union[str, tuple[str, str]]] = None,
+        expert_preferred_conditions: list[Union[str, tuple[str, str]]] = None,
+        expert_forbidden_conditions: list[Union[str, tuple[str, str]]] = None
+    ) -> ExpertSurvivalRules:
         """Train model on given dataset.
 
         Parameters
@@ -309,30 +376,28 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         labels : Data
             survival status
         survival_time: :class:`rulekit.operator.Data`
-            data about survival time. Could be omitted when *survival_time_attr* parameter was specified.
+            data about survival time. Could be omitted when *survival_time_attr* parameter was
+            specified.
 
         expert_rules : List[Union[str, Tuple[str, str]]]
-             set of initial rules, either passed as a list of strings representing rules or as list of tuples where first
-             element is name of the rule and second one is rule string.
+            set of initial rules, either passed as a list of strings representing rules or as list
+            of tuples where first
+            element is name of the rule and second one is rule string.
         expert_preferred_conditions : List[Union[str, Tuple[str, str]]]
-             multiset of preferred conditions (used also for specifying preferred attributes by using special value Any). Either passed as a list of strings representing rules or as list of tuples where first
-             element is name of the rule and second one is rule string.
+            multiset of preferred conditions (used also for specifying preferred attributes by 
+            using special value Any). Either passed as a list of strings representing rules or as
+            list of tuples where first element is name of the rule and second one is rule string.
         expert_forbidden_conditions : List[Union[str, Tuple[str, str]]]
-             set of forbidden conditions (used also for specifying forbidden attributes by using special valye Any). Either passed as a list of strings representing rules or as list of tuples where first
-             element is name of the rule and second one is rule string.
+            set of forbidden conditions (used also for specifying forbidden attributes by using 
+            special valye Any). Either passed as a list of strings representing rules or as list
+            of tuples where first element is name of the rule and second one is rule string.
 
         Returns
         -------
         self : ExpertSurvivalRules
         """
-        if self.survival_time_attr is None and survival_time is None:
-            raise ValueError('No "survival_time" attribute name was specified. '
-                             'Specify it or pass its values by "survival_time" parameter.')
-        if survival_time is not None:
-            survival_time_attribute = SurvivalRules._append_survival_time_columns(
-                values, survival_time)
-        else:
-            survival_time_attribute = self.survival_time_attr
+        survival_time_attribute = SurvivalRules._prepare_survival_attribute(
+            self, survival_time, values)
         return ExpertKnowledgeOperator.fit(
             self,
             values=values,
@@ -345,3 +410,189 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     def predict(self, values: Data) -> np.ndarray:
         return PredictionResultMapper.map_survival(ExpertKnowledgeOperator.predict(self, values))
+
+
+class SurvivalContrastSetModelParams(ContrastSetModelParams, SurvivalModelsParams):
+    """Model for validating survival contrast sets models hyperparameters
+     """
+
+
+class ContrastSetSurvivalRules(BaseOperator):
+    """Contrast set survival model."""
+
+    def __init__(  # pylint: disable=super-init-not-called
+        self,
+        minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
+        max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
+        max_passes_count: int = DEFAULT_PARAMS_VALUE['max_passes_count'],
+        penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
+        penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
+
+        survival_time_attr: str = None,
+        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
+        enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+        ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+        max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']
+    ):
+        """
+        Parameters
+        ----------
+        minsupp_all: Iterable[float]
+            a minimum positive support of a contrast set (p/P). When multiple values are specified,
+            a metainduction is performed; Default and recommended sequence is: 0.8, 0.5, 0.2, 0.1
+        max_neg2pos: float
+            a maximum ratio of negative to positive supports (nP/pN); Default is 0.5
+        max_passes_count: int
+            a maximum number of sequential covering passes for a single minsupp-all; Default is 5
+        penalty_strength: float
+            (s) - penalty strength; Default is 0.5
+        penalty_saturation: float
+            the value of p_new / P at which penalty reward saturates; Default is 0.2.
+        survival_time_attr : str
+            name of column containing survival time data (use when data passed to model is pandas
+            dataframe).
+        minsupp_new : int = 5
+            positive integer representing minimum number of previously uncovered examples to be 
+            covered by a new rule  (positive examples for classification problems); default: 5
+        max_growing : int = 0.0
+            non-negative integer representing maximum number of conditions which can be added to 
+            the rule in the growing phase (use this parameter for large datasets if execution time
+            is prohibitive); 0 indicates no limit; default: 0,
+        enable_pruning : bool = True
+            enable or disable pruning, default is True.
+        ignore_missing : bool = False
+            boolean telling whether missing values should be ignored (by default, a missing value 
+            of given attribute is always considered as not fulfilling the condition build upon that
+            attribute); default: False.
+        max_uncovered_fraction : float = 0.0
+            Floating-point number from [0,1] interval representing maximum fraction of examples 
+            that may remain uncovered by the rule set, default: 0.0.
+        select_best_candidate : bool = False
+            Flag determining if best candidate should be selected from growing phase;
+            default: False.
+        """
+        if minsupp_all is not None and len(minsupp_all) > 0:
+            minsupp_all = ' '.join([
+                str(e) for e in minsupp_all
+            ])
+        self._params = None
+        self._rule_generator = None
+        self._configurator = None
+        self.contrast_attribute: str = None
+        self.set_params(
+            minsupp_all=minsupp_all,
+            max_neg2pos=max_neg2pos,
+            max_passes_count=max_passes_count,
+            penalty_strength=penalty_strength,
+            penalty_saturation=penalty_saturation,
+            survival_time_attr=survival_time_attr,
+            minsupp_new=minsupp_new,
+            max_growing=max_growing,
+            enable_pruning=enable_pruning,
+            ignore_missing=ignore_missing,
+            max_uncovered_fraction=max_uncovered_fraction,
+            select_best_candidate=select_best_candidate)
+        self.model: RuleSet = None
+
+    def set_params(self, **kwargs) -> object:
+        """Set models hyperparameters. Parameters are the same as in constructor."""
+        # params validation
+        params = SurvivalContrastSetModelParams(**kwargs)
+        self.survival_time_attr = params.survival_time_attr
+        self._rule_generator = get_rule_generator()
+        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._params = dict(
+            minsupp_all=params.minsupp_all,
+            max_neg2pos=params.max_neg2pos,
+            max_passes_count=params.max_passes_count,
+            penalty_strength=params.penalty_strength,
+            penalty_saturation=params.penalty_saturation,
+            survival_time_attr=params.survival_time_attr,
+            minsupp_new=params.minsupp_new,
+            max_growing=params.max_growing,
+            enable_pruning=params.enable_pruning,
+            ignore_missing=params.ignore_missing,
+            max_uncovered_fraction=params.max_uncovered_fraction,
+            select_best_candidate=params.select_best_candidate
+        )
+        self._rule_generator = self._configurator.configure(**self._params)
+        return self
+
+    def fit(  # pylint: disable=arguments-renamed
+        self,
+        values: Data,
+        labels: Data,
+        contrast_attribute: str,
+        survival_time: Data = None
+    ) -> ContrastSetSurvivalRules:
+        """Train model on given dataset.
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            survival status
+        contrast_attribute: str 
+            group attribute
+        survival_time: :class:`rulekit.operator.Data`
+            data about survival time. Could be omitted when *survival_time_attr* parameter 
+            was specified.
+
+        Returns
+        -------
+        self : ContrastSetSurvivalRules
+        """
+        survival_time_attribute = SurvivalRules._prepare_survival_attribute(  # pylint: disable=protected-access
+            self, survival_time, values)
+        super().fit(
+            values, labels,
+            survival_time_attribute=survival_time_attribute,
+            contrast_attribute=contrast_attribute)
+        self.contrast_attribute = contrast_attribute
+        return self
+
+    def predict(self, values: Data) -> np.ndarray:
+        """Perform prediction and return estimated survival function for each example.
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+
+        Returns
+        -------
+        result : np.ndarray
+            Each row represent single example from dataset and contains estimated survival function
+            for that example. Estimated survival function is returned as a dictionary containing 
+            times and corresponding probabilities.
+        """
+        return PredictionResultMapper.map_survival(super().predict(values))
+
+    def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
+        """Return the Integrated Brier Score on the given dataset and 
+        labels(event status indicator).
+
+        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference
+        between true event status at time T and predicted event status at that time; 
+        the Integrated Brier score summarizes the prediction error over all observations and 
+        over all times in a test set.
+
+        Parameters
+        ----------
+        values : :class:`rulekit.operator.Data`
+            attributes
+        labels : :class:`rulekit.operator.Data`
+            survival status
+        survival_time: :class:`rulekit.operator.Data`
+            data about survival time. Could be omitted when *survival_time_attr* parameter was
+            specified
+
+        Returns
+        -------
+        score : float
+            Integrated Brier Score of self.predict(values) wrt. labels.
+        """
+        return SurvivalRules.score(self, values, labels, survival_time=survival_time)
