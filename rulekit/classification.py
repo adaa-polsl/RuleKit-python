@@ -280,17 +280,17 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
     """Classification model using expert knowledge."""
 
     def __init__(
-            self,
-            minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
-            induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
-            pruning_measure: Union[Measures,
-                                   str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
-            voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
-            max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
-            enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-            ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-            max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-            select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        self,
+        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
+        pruning_measure: Union[Measures,
+                               str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
+        voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
+        max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
+        enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+        ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+        max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -298,9 +298,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         induce_using_automatic: bool = DEFAULT_PARAMS_VALUE['induce_using_automatic'],
         consider_other_classes: bool = DEFAULT_PARAMS_VALUE['consider_other_classes'],
         preferred_conditions_per_rule: int = DEFAULT_PARAMS_VALUE[
-                'preferred_conditions_per_rule'],
+            'preferred_conditions_per_rule'],
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
-                'preferred_attributes_per_rule'],
+            'preferred_attributes_per_rule'],
         min_rule_covered: Optional[int] = None
     ):
         """
@@ -397,9 +397,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         )
 
     def fit(  # pylint: disable=arguments-differ
-            self,
-            values: Data,
-            labels: Data,
+        self,
+        values: Data,
+        labels: Data,
 
         expert_rules: list[Union[str, tuple[str, str]]] = None,
         expert_preferred_conditions: list[Union[str, tuple[str, str]]] = None,
@@ -467,12 +467,12 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
     """Contrast set classification model."""
 
     def __init__(
-            self,
-            minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
-            max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
-            max_passes_count: int = DEFAULT_PARAMS_VALUE['max_passes_count'],
-            penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
-            penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
+        self,
+        minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
+        max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
+        max_passes_count: int = DEFAULT_PARAMS_VALUE['max_passes_count'],
+        penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
+        penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
 
         minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
