@@ -8,3 +8,7 @@ Regression
 .. autoclass:: rulekit.regression.ExpertRuleRegressor
    :members:
    :inherited-members: 
+
+.. autoclass:: rulekit.regression.ContrastSetRuleRegressor
+   :members:
+   :inherited-members: 
