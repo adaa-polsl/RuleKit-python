@@ -1,9 +1,15 @@
+"""Contains constants and classes for specyfing models parameters
+"""
 from enum import Enum
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel  # pylint: disable=no-name-in-module
+
+SURVIVAL_TIME_ATTR_ROLE: str = "survival_time"
+CONTRAST_ATTR_ROLE: str = "contrast_attribute"
 
 
 class Measures(Enum):
+    # pylint: disable=invalid-name
     """Enum for different measures used during induction, pruning and voting.
 
     You can ream more about each measure and its implementation
@@ -53,6 +59,8 @@ class Measures(Enum):
 
 
 class ModelsParams(BaseModel):
+    """Model for validating models hyperparameters
+    """
     min_rule_covered: Optional[int]
     minsupp_new: Optional[int]
     induction_measure: Measures
@@ -69,3 +77,15 @@ class ModelsParams(BaseModel):
     induce_using_preferred: Optional[bool]
     induce_using_automatic: Optional[bool]
     consider_other_classes: Optional[bool]
+    preferred_conditions_per_rule: Optional[int]
+    preferred_attributes_per_rule: Optional[int]
+
+
+class ContrastSetModelParams(ModelsParams):
+    """Model for validating contrast set models hyperparameters
+    """
+    minsupp_all: str
+    max_neg2pos: float
+    max_passes_count: int
+    penalty_strength: float
+    penalty_saturation: float

@@ -1,4 +1,6 @@
-from typing import Union, List
+"""Contains classes representing rules and rulesets.
+"""
+from typing import Union
 import numpy as np
 from .params import Measures
 from .stats import RuleStatistics, RuleSetStatistics
@@ -28,12 +30,12 @@ class Rule:
         return self._java_object.getWeighted_n()
 
     @property
-    def weighted_P(self) -> float:
+    def weighted_P(self) -> float:  # pylint: disable=invalid-name
         """Number of positives in the training set (accounting weights)."""
         return self._java_object.getWeighted_P()
 
     @property
-    def weighted_N(self) -> float:
+    def weighted_N(self) -> float:  # pylint: disable=invalid-name
         """Number of negatives in the training set (accounting weights)."""
         return self._java_object.getWeighted_N()
 
@@ -51,7 +53,7 @@ class Rule:
 
     def get_covering_information(self) -> dict:
         """Returns information about rule covering
-        
+
         Returns
         -------
         covering_data : dict
@@ -74,6 +76,8 @@ class Rule:
 
 
 class InductionParameters:
+    """Induction parameters.
+    """
 
     def __init__(self, java_object):
         self._java_object = java_object
@@ -86,14 +90,26 @@ class InductionParameters:
 
     @property
     def induction_measure(self) -> Union[Measures, str]:
+        """
+        Returns:
+            Union[Measures, str]: Measure used for induction
+        """
         return InductionParameters._get_measure_str(self._java_object.getInductionMeasure())
 
     @property
     def pruning_measure(self) -> Union[Measures, str]:
+        """
+        Returns:
+            Union[Measures, str]: Measure used for pruning
+        """
         return InductionParameters._get_measure_str(self._java_object.getPruningMeasure())
 
     @property
     def voting_measure(self) -> Union[Measures, str]:
+        """
+        Returns:
+            Union[Measures, str]: Measure used for voting
+        """
         return InductionParameters._get_measure_str(self._java_object.getVotingMeasure())
 
     @staticmethod
@@ -151,17 +167,18 @@ class RuleSet:
         """:meta private:"""
         res = []
         for rule in self.rules:
-            covering_info = rule._java_object.coversUnlabelled(example_set)
+            covering_info = rule._java_object.coversUnlabelled(  # pylint: disable=protected-access
+                example_set
+            )
             covered_examples_indexes = []
             covered_examples_indexes += covering_info
             res.append(covered_examples_indexes)
         return np.array(res, dtype=object)
 
     @property
-    def rules(self) -> List[Rule]:
+    def rules(self) -> list[Rule]:
         """List of rules objects."""
-        rules = self._java_object.getRules()
-        return list(map(lambda rule: Rule(rule), rules))
+        return [Rule(java_rule) for java_rule in self._java_object.getRules()]
 
     def calculate_conditions_count(self) -> float:
         """
@@ -213,7 +230,7 @@ class RuleSet:
         Parameters
         ----------
         alpha : float
-        
+
         Returns
         -------
         count: float
@@ -231,7 +248,8 @@ class RuleSet:
         -------
         count: dict
             Significance of the rule set with false discovery rate correction. Dictionary contains
-            two fields: *fraction* (fraction of rules significant at assumed level) and *p* (average p-value of all rules).
+            two fields: *fraction* (fraction of rules significant at assumed level) and *p* 
+            (average p-value of all rules).
         """
         significance = self._java_object.calculateSignificanceFDR(alpha)
         return {
@@ -244,8 +262,9 @@ class RuleSet:
         Returns
         -------
         count: dict
-            Significance of the rule set with familiy-wise error rate correction. Dictionary contains
-            two fields: *fraction* (fraction of rules significant at assumed level) and *p* (average p-value of all rules).
+            Significance of the rule set with familiy-wise error rate correction. Dictionary 
+            contains two fields: *fraction* (fraction of rules significant at assumed level) 
+            and *p* (average p-value of all rules).
         """
         significance = self._java_object.calculateSignificanceFWER(alpha)
         return {
