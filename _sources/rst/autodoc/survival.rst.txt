@@ -8,7 +8,3 @@ Survival
 .. autoclass:: rulekit.survival.ExpertSurvivalRules
    :members:
    :inherited-members: 
-
-.. autoclass:: rulekit.survival.ContrastSetSurvivalRules
-   :members:
-   :inherited-members: 

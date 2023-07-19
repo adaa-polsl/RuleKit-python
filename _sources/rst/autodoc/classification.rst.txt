@@ -9,7 +9,3 @@ Classification
 .. autoclass:: rulekit.classification.ExpertRuleClassifier
    :members:
    :inherited-members: 
-
-.. autoclass:: rulekit.classification.ContrastSetRuleClassifier
-   :members:
-   :inherited-members: 
