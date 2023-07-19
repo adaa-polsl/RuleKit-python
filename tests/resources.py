@@ -1,7 +1,6 @@
 import requests
 import os
 import sys
-from typing import List
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -30,7 +29,7 @@ def create_folders():
         os.mkdir(REPORTS_DIRECTORY_PATH)
         
 
-def download_files(content: List, directory_path: str):
+def download_files(content: list, directory_path: str):
     for item in content:
         file_name = item['name']
         download_url = item['download_url']

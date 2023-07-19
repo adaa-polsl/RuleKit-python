@@ -1,16 +1,16 @@
+import os
+import re
+from typing import Union
 from xml.etree import ElementTree
 import pandas as pd
 from scipy.io.arff import loadarff
 from sklearn import metrics
 from jpype import JClass
-from typing import List, Dict, Tuple, Union
-import os
-import re
 
-from rulekit.helpers import create_example_set, _fix_missing_values
+
+from rulekit._helpers import create_example_set
 from rulekit.rules import Rule
 
-import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -27,6 +27,12 @@ DATASETS_PATH = '/resources/data'
 EXPERIMENTS_PATH = '/resources/config'
 
 
+def _fix_missing_values(column) -> None:
+    for i, value in enumerate(column.values):
+        if value == b'?':
+            column.values[i] = None
+
+
 class ExampleSetWrapper:
 
     def __init__(self, values, labels):
@@ -34,7 +40,7 @@ class ExampleSetWrapper:
         self.labels = labels
         self.example_set = create_example_set(values, labels)
 
-    def get_data(self) -> Tuple:
+    def get_data(self) -> tuple:
         return self.values, self.labels
 
 
@@ -77,10 +83,10 @@ class TestReport:
 class TestCase:
 
     def __init__(self):
-        self.param_config: Dict[str, object] = None
+        self.param_config: dict[str, object] = None
         self._reference_report: TestReport = None
         self._example_set: ExampleSetWrapper = None
-        self.induction_params: Dict = None
+        self.induction_params: dict = None
         self.knowledge: Knowledge = None
 
         self.name: str = None
@@ -93,14 +99,17 @@ class TestCase:
     @property
     def example_set(self) -> ExampleSetWrapper:
         if self._example_set is None:
-            self._example_set = load_arff_to_example_set(self.data_set_file_path, self.label_attribute)
+            self._example_set = load_arff_to_example_set(
+                self.data_set_file_path, self.label_attribute)
         return self._example_set
 
     @property
     def reference_report(self) -> TestReport:
         if self._reference_report is None:
-            ExampleSetMetaData = JClass('com.rapidminer.operator.ports.metadata.ExampleSetMetaData')
-            reader = TestReportReader(f'{self.report_file_path}.txt', ExampleSetMetaData(self._example_set.example_set))
+            ExampleSetMetaData = JClass(
+                'com.rapidminer.operator.ports.metadata.ExampleSetMetaData')
+            reader = TestReportReader(f'{self.report_file_path}.txt', ExampleSetMetaData(
+                self._example_set.example_set))
             self._reference_report = reader.read()
             reader.close()
         return self._reference_report
@@ -119,8 +128,8 @@ class TestConfig:
 
     def __init__(self):
         self.name: str = None
-        self.parameter_configs: Dict[str, Dict[str, object]] = None
-        self.datasets: List[DataSetConfig] = None
+        self.parameter_configs: dict[str, dict[str, object]] = None
+        self.datasets: list[DataSetConfig] = None
 
 
 class TestConfigParser:
@@ -145,17 +154,18 @@ class TestConfigParser:
     ]
 
     def __init__(self):
-        self.tests_configs: Dict[str, TestConfig] = {}
+        self.tests_configs: dict[str, TestConfig] = {}
         self.root: ElementTree = None
 
     def _parse_survival_time(self, element) -> Union[str, None]:
-        survival_time_element = element.find(TestConfigParser.SURVIVAL_TIME_ROLE)
+        survival_time_element = element.find(
+            TestConfigParser.SURVIVAL_TIME_ROLE)
         if element.find(TestConfigParser.SURVIVAL_TIME_ROLE) is not None:
             return survival_time_element.text
         else:
             return None
 
-    def _parse_experts_rules_parameters(self, elements) -> List[Tuple]:
+    def _parse_experts_rules_parameters(self, elements) -> list[tuple]:
         expert_rules = []
         for element in elements:
             rule_name = element.attrib['name']
@@ -163,19 +173,21 @@ class TestConfigParser:
             expert_rules.append((rule_name, rule_content))
         return expert_rules if len(expert_rules) > 0 else None
 
-    def _check_ambigous_data_sets_names(self, data_sets_configs: List[DataSetConfig]):
-        dict = {}
+    def _check_ambigous_data_sets_names(self, data_sets_configs: list[DataSetConfig]):
+        dictionary = {}
         for element in data_sets_configs:
-            dict[element.name] = None
-        if len(dict.keys()) < len(data_sets_configs):
+            dictionary[element.name] = None
+        if len(dictionary.keys()) < len(data_sets_configs):
             raise ValueError('Datasets are ambigous')
 
     def _parse_data_set(self, element) -> DataSetConfig:
         data_set_config = DataSetConfig()
-        data_set_config.label_attribute = element.find(TestConfigParser.LABEL_KEY).text
+        data_set_config.label_attribute = element.find(
+            TestConfigParser.LABEL_KEY).text
         train_element = element.find(TestConfigParser.TRAINING_KEY)
         train_element = train_element.find(TestConfigParser.TRAIN_KEY)
-        data_set_config.train_file_name = train_element.find(TestConfigParser.IN_FILE_KEY).text
+        data_set_config.train_file_name = train_element.find(
+            TestConfigParser.IN_FILE_KEY).text
         data_set_config.name = element.attrib.get('name', None)
         if data_set_config.name is None:
             file_name = os.path.basename(data_set_config.train_file_name)
@@ -183,27 +195,29 @@ class TestConfigParser:
         data_set_config.survival_time = self._parse_survival_time(element)
         return data_set_config
 
-    def _parse_data_sets(self, element) -> List[DataSetConfig]:
+    def _parse_data_sets(self, element) -> list[DataSetConfig]:
         data_set_configs = []
         node = element.find(TestConfigParser.DATASETS_KEY)
         for element in node.findall(TestConfigParser.DATASET_KEY):
             data_set_configs.append(self._parse_data_set(element))
         return data_set_configs
 
-    def parse_test_parameters(self, element) -> Dict[str, object]:
+    def parse_test_parameters(self, element) -> dict[str, object]:
         params = {}
         for param_node in element.findall(TestConfigParser.PARAM_KEY):
             name: str = param_node.attrib['name']
             if name in TestConfigParser.EXPERTS_RULES_PARAMETERS_NAMES:
-                value = self._parse_experts_rules_parameters(param_node.findall(TestConfigParser.ENTRY_KEY))
+                value = self._parse_experts_rules_parameters(
+                    param_node.findall(TestConfigParser.ENTRY_KEY))
             else:
                 value = param_node.text
             params[name] = value
         return params
 
-    def _parse_test_parameters_sets(self, element) -> Dict[str, Dict[str, object]]:
+    def _parse_test_parameters_sets(self, element) -> dict[str, dict[str, object]]:
         parameters_sets = {}
-        params_sets_node = element.findall(TestConfigParser.PARAMETERS_SET_KEY)[0]
+        params_sets_node = element.findall(
+            TestConfigParser.PARAMETERS_SET_KEY)[0]
         for param_set in params_sets_node.findall(TestConfigParser.PARAMETERS_KEY):
             name: str = param_set.attrib['name']
             parameters_sets[name] = self.parse_test_parameters(param_set)
@@ -211,12 +225,13 @@ class TestConfigParser:
 
     def _parse_test(self, element) -> TestConfig:
         test_config = TestConfig()
-        test_config.parameter_configs = self._parse_test_parameters_sets(element)
+        test_config.parameter_configs = self._parse_test_parameters_sets(
+            element)
         test_config.datasets = self._parse_data_sets(element)
         test_config.name = element.attrib['name']
         return test_config
 
-    def parse(self, file_path: str) -> Dict[str, TestConfig]:
+    def parse(self, file_path: str) -> dict[str, TestConfig]:
         self.tests_configs = {}
         self.root = ElementTree.parse(file_path).getroot()
         if self.root.tag == 'test':
@@ -234,7 +249,7 @@ class TestCaseFactory:
     def _make_test_case(
             self,
             test_case_name: str,
-            params: Dict[str, object],
+            params: dict[str, object],
             data_set_config: DataSetConfig) -> TestCase:
         test_case = TestCase()
         self.fix_params_typing(params)
@@ -256,7 +271,7 @@ class TestCaseFactory:
             if not 'measure' in key:
                 params[key] = int(float(value))
 
-    def make(self, tests_configs: Dict[str, TestConfig], report_dir_path: str) -> List[TestCase]:
+    def make(self, tests_configs: dict[str, TestConfig], report_dir_path: str) -> list[TestCase]:
         test_cases = []
         for key in tests_configs.keys():
             test_config = tests_configs[key]
@@ -264,8 +279,10 @@ class TestCaseFactory:
                 for data_set_config in test_config.datasets:
                     params = test_config.parameter_configs[config_name]
                     test_case_name = f'{key}.{config_name}.{data_set_config.name}'
-                    test_config.parameter_configs[config_name].pop('use_expert', None)
-                    expert_rules = test_config.parameter_configs[config_name].pop('expert_rules', None)
+                    test_config.parameter_configs[config_name].pop(
+                        'use_expert', None)
+                    expert_rules = test_config.parameter_configs[config_name].pop(
+                        'expert_rules', None)
                     preferred_conditions = test_config.parameter_configs[config_name].pop('expert_preferred_conditions',
                                                                                           None)
                     forbidden_conditions = test_config.parameter_configs[config_name].pop('expert_forbidden_conditions',
@@ -298,7 +315,7 @@ class TestReportReader:
     def __init__(self, file_name: str, example_set_meta_data):
         self.example_set_meta_data = example_set_meta_data
         self.file_name = file_name
-        self._file = f = open(file_name, "r")
+        self._file = open(file_name, encoding='utf-8', mode='r')
 
     def _read_rules(self, test_report: TestReport):
         rules = []
@@ -320,7 +337,8 @@ class TestReportReader:
             elif line == '':
                 continue
             else:
-                raise ValueError(f'Invalid report file format for file: {self.file_name}')
+                raise ValueError(
+                    f'Invalid report file format for file: {self.file_name}')
         return test_report
 
     def close(self):
@@ -330,7 +348,7 @@ class TestReportReader:
 class TestReportWriter:
 
     def __init__(self, file_name: str):
-        self._file = f = open(file_name, "w")
+        self._file = open(file_name, encoding='utf-8', mode="w")
         if not os.path.exists(REPORTS_OUT_DIRECTORY_PATH):
             os.makedirs(REPORTS_OUT_DIRECTORY_PATH)
 
@@ -344,9 +362,9 @@ class TestReportWriter:
         self._file.close()
 
 
-def get_test_cases(class_name: str) -> List[TestCase]:
+def get_test_cases(class_name: str) -> list[TestCase]:
     if not os.path.exists(DATA_IN_DIRECTORY_PATH):
-        raise Exception('''\n
+        raise RuntimeError('''\n
 Test resources directory dosen't exist. Check if 'tests/resources/' directory exist.
 
 If you're running tests for the first time you need to download resources folder from RuleKit repository by running:
@@ -360,7 +378,7 @@ def _get_rule_string(rule: Rule) -> str:
     return re.sub(r'(\\[[^\\]]*\\]$)|(\\([^\\)]*\\)$)', '', str(rule))
 
 
-def assert_rules_are_equals(expected: List[str], actual: List[str]):
+def assert_rules_are_equals(expected: list[str], actual: list[str]):
     def sanitize_rule_string(rule_string: str) -> str:
         return re.sub(r'(\t)|(\n)|(\[[^\]]*\]$)', '', rule_string)
 
@@ -375,11 +393,12 @@ def assert_rules_are_equals(expected: List[str], actual: List[str]):
         if key in dictionary:
             dictionary[key] = dictionary[key] + 1
         else:
-            pass
-            raise AssertionError('Actual ruleset contains rules not present in expected ruleset')
+            raise AssertionError(
+                'Actual ruleset contains rules not present in expected ruleset')
     for key in dictionary.keys():
         if dictionary[key] == 0:
-            raise AssertionError('Ruleset are not equal, some rules are missing')
+            raise AssertionError(
+                'Ruleset are not equal, some rules are missing')
         elif dictionary[key] > 1:
             raise AssertionError('Somes rules were duplicated')
 
@@ -396,7 +415,8 @@ def assert_score_is_greater(prediction, expected, threshold: float):
         labels = expected.to_numpy().astype(int)
     if isinstance(prediction[0], float):
         labels = expected.to_numpy().astype(float)
-    explained_variance_score = metrics.explained_variance_score(labels, prediction)
+    explained_variance_score = metrics.explained_variance_score(
+        labels, prediction)
 
     if explained_variance_score <= threshold:
         raise AssertionError(f'Score should be greater than {threshold}')
