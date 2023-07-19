@@ -4,6 +4,5 @@ nbsphinx==0.8.2
 sphinx-copybutton==0.3.1
 ipykernel==5.5.0
 pandoc==1.0.2
-Jinja2<3.1
 ../
 
