@@ -17,7 +17,7 @@ def _download_rulekit_jar():
     release_version = 'latest'
     current_rulekit_jars_files: list[str] = glob.glob(
         f"{dir_path}/jar/*-all.jar")
-    url = f"{REPOSITORY_URL}/{release_version}"
+    url = f"{REPOSITORY_URL}/releases/{release_version}"
     req = urllib.request.Request(url)
     req.add_header('Content-Type', 'application/json; charset=utf-8')
     response = urllib.request.urlopen(req)

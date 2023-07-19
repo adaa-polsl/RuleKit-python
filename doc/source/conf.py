@@ -21,7 +21,7 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 # -- Project information -----------------------------------------------------
 
 project = 'rulekit'
-copyright = '2021, ADAA'
+copyright = '2023, ADAA'
 
 release = open(f'{current_path}/../../rulekit/__init__.py', mode='r').read().strip()
 version_regex = r'__version__\s*=\s*\'{0,1}"{0,1}([^\'"]+)\'{0,1}"{0,1}'
