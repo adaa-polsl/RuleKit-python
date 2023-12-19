@@ -14,7 +14,7 @@ REPOSITORY_URL: str = 'https://api.github.com/repos/adaa-polsl/RuleKit'
 
 
 def _download_rulekit_jar():
-    release_version = '1.5.2'
+    release_version = '96995295'
     current_rulekit_jars_files: list[str] = glob.glob(
         f"{dir_path}/jar/*-all.jar")
     url = f"{REPOSITORY_URL}/releases/{release_version}"
