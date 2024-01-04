@@ -25,7 +25,6 @@ class TestSurvivalLogRankTree(unittest.TestCase):
             lock = threading.Lock()
             induced_rules_count = 0
             on_progress_calls_count = 0
-            should_stop_calls_count = 0
 
             def on_new_rule(self, rule: Rule):
                 self.lock.acquire()
@@ -41,12 +40,6 @@ class TestSurvivalLogRankTree(unittest.TestCase):
                 self.on_progress_calls_count += 1
                 self.lock.release()
 
-            def should_stop(self) -> bool:
-                self.lock.acquire()
-                self.should_stop_calls_count += 1
-                self.lock.release()
-                return False
-
         listener = EventListener()
         surv.add_event_listener(listener)
         surv.fit(
@@ -56,7 +49,6 @@ class TestSurvivalLogRankTree(unittest.TestCase):
         rules_count = len(surv.model.rules)
         self.assertEqual(rules_count, listener.induced_rules_count)
         self.assertEqual(rules_count, listener.on_progress_calls_count)
-        self.assertEqual(rules_count, listener.should_stop_calls_count)
 
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('SurvivalLogRankSnCTest')

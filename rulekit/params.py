@@ -53,7 +53,6 @@ class Measures(Enum):
     Sensitivity = 'Sensitivity'
     Specificity = 'Specificity'
     TwoWaySupport = 'TwoWaySupport'
-    UserDefined = 'UserDefined'
     WeightedLaplace = 'WeightedLaplace'
     WeightedRelativeAccuracy = 'WeightedRelativeAccuracy'
     YAILS = 'YAILS'
@@ -71,6 +70,8 @@ DEFAULT_PARAMS_VALUE = {
     'max_uncovered_fraction': 0.0,
     'select_best_candidate': False,
     'complementary_conditions': False,
+    'control_apriori_precision': True,
+    'mean_based_regression': True,
 
     'extend_using_preferred': None,
     'extend_using_automatic': None,
@@ -79,7 +80,6 @@ DEFAULT_PARAMS_VALUE = {
     'consider_other_classes': None,
     'preferred_conditions_per_rule': None,
     'preferred_attributes_per_rule': None,
-    'complementary_conditions ': False,
 
     # Contrast sets
     'minsupp_all': (0.8, 0.5, 0.2, 0.1),
@@ -103,8 +103,8 @@ class ModelsParams(BaseModel):
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
     max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
-    complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
-
+    mean_based_regression: Optional[bool] = DEFAULT_PARAMS_VALUE['mean_based_regression']
+    
     extend_using_preferred: Optional[bool] = None
     extend_using_automatic: Optional[bool] = None
     induce_using_preferred: Optional[bool] = None

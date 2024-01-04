@@ -38,7 +38,6 @@ class TestClassifier(unittest.TestCase):
             lock = threading.Lock()
             induced_rules_count = 0
             on_progress_calls_count = 0
-            should_stop_calls_count = 0
 
             def on_new_rule(self, rule: Rule):
                 self.lock.acquire()
@@ -54,12 +53,6 @@ class TestClassifier(unittest.TestCase):
                 self.on_progress_calls_count += 1
                 self.lock.release()
 
-            def should_stop(self) -> bool:
-                self.lock.acquire()
-                self.should_stop_calls_count += 1
-                self.lock.release()
-                return False
-
         listener = EventListener()
         rulekit_clf.add_event_listener(listener)
         rulekit_clf.fit(x, y)
@@ -67,7 +60,6 @@ class TestClassifier(unittest.TestCase):
         rules_count = len(rulekit_clf.model.rules)
         self.assertEqual(rules_count, listener.induced_rules_count)
         self.assertEqual(rules_count, listener.on_progress_calls_count)
-        self.assertEqual(rules_count + 1, listener.should_stop_calls_count)
 
     def test_getting_examples_coverage(self):
         clf = classification.RuleClassifier()

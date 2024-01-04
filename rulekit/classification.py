@@ -10,12 +10,21 @@ from sklearn import metrics
 from jpype import JClass
 
 from ._helpers import PredictionResultMapper
-from .params import Measures, DEFAULT_PARAMS_VALUE
+from .params import (
+    Measures,
+    ModelsParams,
+    DEFAULT_PARAMS_VALUE,
+    ContrastSetModelParams
+)
 from ._operator import (
     Data,
     BaseOperator,
     ExpertKnowledgeOperator,
 )
+
+
+class ClassificationParams(ModelsParams):
+    control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision']
 
 
 class BaseClassifier:
@@ -58,6 +67,8 @@ class BaseClassifier:
 class RuleClassifier(BaseOperator, BaseClassifier):
     """Classification model."""
 
+    __params_class__ = ClassificationParams
+
     def __init__(
         self,
         minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
@@ -71,6 +82,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        control_apriori_precision : bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
         min_rule_covered: Optional[int] = None,
     ):
         """
@@ -108,6 +120,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        control_apriori_precision : bool = True
+            When inducing classification rules, verify if candidate precision is higher than 
+            apriori precision of the investigated class.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -128,6 +143,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
+            control_apriori_precision=control_apriori_precision
         )
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
@@ -283,6 +299,8 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
     """Classification model using expert knowledge."""
 
+    __params_class__ = ClassificationParams
+
     def __init__(
         self,
         minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
@@ -296,6 +314,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        control_apriori_precision : bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -343,6 +362,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        control_apriori_precision : bool = True
+            When inducing classification rules, verify if candidate precision is higher than 
+            apriori precision of the investigated class.
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
             conditions and attributes; default is False
@@ -383,6 +405,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
+            control_apriori_precision=control_apriori_precision,
         )
         ExpertKnowledgeOperator.__init__(
             self,
@@ -403,7 +426,8 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             induce_using_automatic=induce_using_automatic,
             consider_other_classes=consider_other_classes,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule
+            preferred_attributes_per_rule=preferred_attributes_per_rule,
+            control_apriori_precision=control_apriori_precision,
         )
 
     def fit(  # pylint: disable=arguments-differ
@@ -476,6 +500,8 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
 class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
     """Contrast set classification model."""
 
+    __params_class__ = ContrastSetModelParams
+
     def __init__(
         self,
         minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
@@ -495,6 +521,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        control_apriori_precision : bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
     ):
         """
         Parameters
@@ -542,6 +569,9 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        control_apriori_precision : bool = True
+            When inducing classification rules, verify if candidate precision is higher than 
+            apriori precision of the investigated class.
         """
         BaseOperator.__init__(
             self,
@@ -559,7 +589,8 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
-            complementary_conditions=complementary_conditions
+            complementary_conditions=complementary_conditions,
+            control_apriori_precision=control_apriori_precision,
         )
         BaseClassifier.__init__(self)
         self.contrast_attribute: str = None

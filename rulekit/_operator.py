@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Union, Any
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel
 
 from .main import RuleKit
 from ._helpers import (
@@ -13,7 +14,6 @@ from ._helpers import (
     get_rule_generator,
     ModelSerializer,
 )
-from .params import Measures, ModelsParams, ContrastSetModelParams
 from .rules import RuleSet, Rule
 from .events import RuleInductionProgressListener, command_proxy_client_factory
 
@@ -24,6 +24,8 @@ Data = Union[np.ndarray, pd.DataFrame, list]
 class BaseOperator:
     """Base class for rule induction operator
     """
+
+    __params_class__: type = None
 
     def __init__(self, **kwargs):
         if not RuleKit.initialized:
@@ -84,11 +86,7 @@ class BaseOperator:
     def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = get_rule_generator()
-        # validate
-        if 'minsupp_all' in kwargs:
-            params = ContrastSetModelParams(**kwargs)
-        else:
-            params = ModelsParams(**kwargs)
+        params: BaseModel = self.__params_class__(**kwargs)
         self._params = {
             key: value for key, value in params.dict().items() if value is not None
         }
@@ -151,7 +149,6 @@ class ExpertKnowledgeOperator:
     def __init__(self, **kwargs):
         self._params = None
         self._rule_generator = None
-        self._configurator = None
         ExpertKnowledgeOperator.set_params(self, **kwargs)
         self.model: RuleSet = None
 
@@ -166,15 +163,16 @@ class ExpertKnowledgeOperator:
         expert_preferred_conditions: list[Union[str, Rule]] = None,
         expert_forbidden_conditions: list[Union[str, Rule]] = None
     ) -> ExpertKnowledgeOperator:
-        self._configurator._configure_simple_parameter(  # pylint: disable=protected-access
+        configurator = RuleGeneratorConfigurator(self._rule_generator)
+        configurator._configure_simple_parameter(  # pylint: disable=protected-access
             'use_expert', True)
-        self._configurator._configure_expert_parameter(  # pylint: disable=protected-access
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
             'expert_preferred_conditions', expert_preferred_conditions
         )
-        self._configurator._configure_expert_parameter(  # pylint: disable=protected-access
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
             'expert_forbidden_conditions', expert_forbidden_conditions
         )
-        self._configurator._configure_expert_parameter(  # pylint: disable=protected-access
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
             'expert_rules', expert_rules
         )
         example_set = create_example_set(
@@ -188,18 +186,20 @@ class ExpertKnowledgeOperator:
         self.model = RuleSet(java_model)
         return self.model
 
+    def add_event_listener(self, listener: RuleInductionProgressListener):
+        return BaseOperator.add_event_listener(self, listener)
+
     def predict(self, values: Data) -> np.ndarray:  # pylint: disable=missing-function-docstring
-        if self.model is None:
-            raise ValueError(
-                '"fit" method must be called before calling this method')
-        example_set = create_example_set(values)
-        return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
+        return BaseOperator.predict(self, values)
 
     def set_params(self, **kwargs) -> object:  # pylint: disable=missing-function-docstring
         # validate params
-        ModelsParams(**kwargs)
-        self._params = kwargs
         self._rule_generator = get_rule_generator(expert=True)
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = self._configurator.configure(**kwargs)
+        params: BaseModel = self.__params_class__( # pylint: disable=not-callable
+            **kwargs)  
+        self._params = {
+            key: value for key, value in params.dict().items() if value is not None
+        }
+        configurator = RuleGeneratorConfigurator(self._rule_generator)
+        self._rule_generator = configurator.configure(**params.dict())
         return self

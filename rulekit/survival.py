@@ -43,6 +43,8 @@ class SurvivalModelsParams(BaseModel):
 class SurvivalRules(BaseOperator):
     """Survival model."""
 
+    __params_class__ = SurvivalModelsParams
+
     def __init__(  # pylint: disable=super-init-not-called
         self,
         survival_time_attr: str = None,
@@ -111,15 +113,8 @@ class SurvivalRules(BaseOperator):
         **kwargs
     ) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
-        # params validatio
-        params = SurvivalModelsParams(**kwargs)
-        self.survival_time_attr = params.survival_time_attr
-        self._rule_generator = get_rule_generator()
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._params = {key: value for key,
-                        value in params.dict().items() if value is not None}
-        self._rule_generator = self._configurator.configure(**self._params)
-        return self
+        self.survival_time_attr = kwargs.get('survival_time_attr')
+        return BaseOperator.set_params(self, **kwargs)
 
     @staticmethod
     def _append_survival_time_columns(values, survival_time) -> str:
@@ -235,6 +230,8 @@ class SurvivalRules(BaseOperator):
 class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
     """Expert Survival model."""
 
+    __params_class__ = SurvivalModelsParams
+
     def __init__(  # pylint: disable=super-init-not-called
         self,
         survival_time_attr: str = None,
@@ -337,15 +334,8 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         self,
         **kwargs
     ) -> object:
-        params = SurvivalModelsParams(**kwargs)
-        self.survival_time_attr = params.survival_time_attr
-        self._params = {
-            key: value for key, value in params.dict().items() if value is not None
-        }
-        self._rule_generator = get_rule_generator(expert=True)
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = self._configurator.configure(**self._params)
-        return self
+        self.survival_time_attr = kwargs['survival_time_attr']
+        return ExpertKnowledgeOperator.set_params(self, **kwargs)
 
     def fit(  # pylint: disable=arguments-differ
         self,
@@ -409,6 +399,8 @@ class SurvivalContrastSetModelParams(ContrastSetModelParams, SurvivalModelsParam
 
 class ContrastSetSurvivalRules(BaseOperator):
     """Contrast set survival model."""
+
+    __params_class__ = SurvivalContrastSetModelParams
 
     def __init__(  # pylint: disable=super-init-not-called
         self,
@@ -495,15 +487,8 @@ class ContrastSetSurvivalRules(BaseOperator):
     def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         # params validation
-        params = SurvivalContrastSetModelParams(**kwargs)
-        self.survival_time_attr = params.survival_time_attr
-        self._rule_generator = get_rule_generator()
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._params = {
-            key: value for key, value in params.dict().items() if value is not None
-        }
-        self._rule_generator = self._configurator.configure(**self._params)
-        return self
+        self.survival_time_attr = kwargs['survival_time_attr']
+        return BaseOperator.set_params(self, **kwargs)
 
     def fit(  # pylint: disable=arguments-renamed
         self,

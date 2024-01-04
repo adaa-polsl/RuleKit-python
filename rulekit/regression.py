@@ -8,11 +8,22 @@ import pandas as pd
 from sklearn import metrics
 from ._helpers import PredictionResultMapper
 from ._operator import BaseOperator, ExpertKnowledgeOperator, Data
-from .params import Measures, DEFAULT_PARAMS_VALUE
+from .params import (
+    Measures,
+    DEFAULT_PARAMS_VALUE,
+    ModelsParams,
+    ContrastSetModelParams
+)
+
+
+class _RegressionParams(ModelsParams):
+    mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression']
 
 
 class RuleRegressor(BaseOperator):
     """Regression model."""
+
+    __params_class__ = _RegressionParams
 
     def __init__(
         self,
@@ -27,6 +38,7 @@ class RuleRegressor(BaseOperator):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression'],
         min_rule_covered: Optional[int] = None,
     ):
         """
@@ -64,6 +76,8 @@ class RuleRegressor(BaseOperator):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        mean_based_regression : bool = True
+            Enable fast induction of mean-based regression rules instead of default median-based.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -82,7 +96,8 @@ class RuleRegressor(BaseOperator):
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
-            complementary_conditions=complementary_conditions
+            complementary_conditions=complementary_conditions,
+            mean_based_regression=mean_based_regression,
         )
 
     def _validate_labels(self, labels: Data):
@@ -151,6 +166,8 @@ class RuleRegressor(BaseOperator):
 class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
     """Expert Regression model."""
 
+    __params_class__ = _RegressionParams
+
     def __init__(
         self,
         minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
@@ -164,6 +181,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -211,6 +229,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        mean_based_regression : bool = True
+            Enable fast induction of mean-based regression rules instead of default median-based.
 
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
@@ -247,7 +267,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
-            complementary_conditions=complementary_conditions
+            complementary_conditions=complementary_conditions,
+            mean_based_regression=mean_based_regression,
         )
         ExpertKnowledgeOperator.__init__(
             self,
@@ -267,7 +288,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             induce_using_automatic=induce_using_automatic,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
             preferred_attributes_per_rule=preferred_attributes_per_rule,
-            complementary_conditions=complementary_conditions
+            complementary_conditions=complementary_conditions,
+            mean_based_regression=mean_based_regression,
         )
 
     def fit(  # pylint: disable=arguments-differ
@@ -320,6 +342,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 class ContrastSetRuleRegressor(BaseOperator):
     """Contrast set regression model."""
 
+    __params_class__ = ContrastSetModelParams
+
     def __init__(
         self,
         minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
@@ -339,6 +363,7 @@ class ContrastSetRuleRegressor(BaseOperator):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression'],
     ):
         """
         Parameters
@@ -386,6 +411,8 @@ class ContrastSetRuleRegressor(BaseOperator):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        mean_based_regression : bool = True
+            Enable fast induction of mean-based regression rules instead of default median-based.
         """
         super().__init__(
             minsupp_all=minsupp_all,
@@ -403,6 +430,7 @@ class ContrastSetRuleRegressor(BaseOperator):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
+            mean_based_regression=mean_based_regression,
         )
         self.contrast_attribute: str = None
 

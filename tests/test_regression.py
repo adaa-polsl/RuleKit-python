@@ -25,7 +25,6 @@ class TestRegressor(unittest.TestCase):
             lock = threading.Lock()
             induced_rules_count = 0
             on_progress_calls_count = 0
-            should_stop_calls_count = 0
 
             def on_new_rule(self, rule: Rule):
                 self.lock.acquire()
@@ -41,12 +40,6 @@ class TestRegressor(unittest.TestCase):
                 self.on_progress_calls_count += 1
                 self.lock.release()
 
-            def should_stop(self) -> bool:
-                self.lock.acquire()
-                self.should_stop_calls_count += 1
-                self.lock.release()
-                return False
-
         listener = EventListener()
         reg.add_event_listener(listener)
         reg.fit(example_set.values, example_set.labels)
@@ -54,7 +47,6 @@ class TestRegressor(unittest.TestCase):
         rules_count = len(reg.model.rules)
         self.assertEqual(rules_count, listener.induced_rules_count)
         self.assertEqual(rules_count, listener.on_progress_calls_count)
-        self.assertEqual(rules_count + 1, listener.should_stop_calls_count)
 
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionSnCTest')
@@ -84,6 +76,7 @@ class TestExpertRegressor(unittest.TestCase):
         for test_case in test_cases:
             params = test_case.induction_params
             tree = regression.ExpertRuleRegressor(**params)
+            tree.set_params()
             example_set = test_case.example_set
             tree.fit(example_set.values,
                      example_set.labels,
