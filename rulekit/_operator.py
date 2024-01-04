@@ -5,6 +5,7 @@ from typing import Union, Any
 import numpy as np
 import pandas as pd
 
+from .main import RuleKit
 from ._helpers import (
     RuleGeneratorConfigurator,
     PredictionResultMapper,
@@ -14,6 +15,7 @@ from ._helpers import (
 )
 from .params import Measures, ModelsParams, ContrastSetModelParams
 from .rules import RuleSet, Rule
+from .events import RuleInductionProgressListener, command_proxy_client_factory
 
 
 Data = Union[np.ndarray, pd.DataFrame, list]
@@ -52,6 +54,9 @@ class BaseOperator:
     """
 
     def __init__(self, **kwargs):
+        if not RuleKit.initialized:
+            RuleKit.init()
+
         if kwargs.get('minsupp_all', None) is not None and len(kwargs['minsupp_all']) > 0:
             kwargs['minsupp_all'] = ' '.join(
                 [str(e) for e in kwargs['minsupp_all']]
@@ -146,6 +151,10 @@ class BaseOperator:
                 row_result.append(value)
             result.append(np.array(row_result))
         return np.array(result)
+
+    def add_event_listener(self, listener: RuleInductionProgressListener):
+        command_proxy = command_proxy_client_factory(listener)
+        self._rule_generator.addOperatorCommandProxy(command_proxy)
 
     def __getstate__(self) -> dict:
         state = self.__dict__.copy()

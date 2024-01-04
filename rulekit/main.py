@@ -83,10 +83,10 @@ class RuleKit:
                 filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
         except IndexError as error:
             RuleKit._logger.error('Failed to load jar files')
-            raise RuntimeError('''\n
-Failed to load RuleKit jar file. Check if valid rulekit jar file is present in "rulekit/jar" directory.
+            raise RuntimeError(f'''\n
+Failed to load RuleKit jar file. Check if valid rulekit jar file is present in "{RuleKit._jar_dir_path}" directory.
 
-If you're running this packae for the first time you need to download RuleKit jar file by running:
+If you're running this package for the first time you need to download RuleKit jar file by running:
     python -m rulekit download_jar
         ''') from error
         RuleKit._read_versions()
