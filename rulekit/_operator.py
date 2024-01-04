@@ -20,34 +20,6 @@ from .events import RuleInductionProgressListener, command_proxy_client_factory
 
 Data = Union[np.ndarray, pd.DataFrame, list]
 
-DEFAULT_PARAMS_VALUE = {
-    'minsupp_new': 5,
-    'min_rule_covered': 5,
-    'induction_measure': Measures.Correlation,
-    'pruning_measure':  Measures.Correlation,
-    'voting_measure': Measures.Correlation,
-    'max_growing': 0.0,
-    'enable_pruning': True,
-    'ignore_missing': False,
-    'max_uncovered_fraction': 0.0,
-    'select_best_candidate': False,
-
-    'extend_using_preferred': None,
-    'extend_using_automatic': None,
-    'induce_using_preferred': None,
-    'induce_using_automatic': None,
-    'consider_other_classes': None,
-    'preferred_conditions_per_rule': None,
-    'preferred_attributes_per_rule': None,
-
-    # Contrast sets
-    'minsupp_all': (0.8, 0.5, 0.2, 0.1),
-    'max_neg2pos': 0.5,
-    'max_passes_count': 5,
-    'penalty_strength': 0.5,
-    'penalty_saturation': 0.2,
-}
-
 
 class BaseOperator:
     """Base class for rule induction operator
@@ -114,12 +86,14 @@ class BaseOperator:
         self._rule_generator = get_rule_generator()
         # validate
         if 'minsupp_all' in kwargs:
-            ContrastSetModelParams(**kwargs)
+            params = ContrastSetModelParams(**kwargs)
         else:
-            ModelsParams(**kwargs)
-        self._params = kwargs
+            params = ModelsParams(**kwargs)
+        self._params = {
+            key: value for key, value in params.dict().items() if value is not None
+        }
         configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = configurator.configure(**kwargs)
+        self._rule_generator = configurator.configure(**params.dict())
         return self
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:

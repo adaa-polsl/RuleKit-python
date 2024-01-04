@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 from sklearn import metrics
 from ._helpers import PredictionResultMapper
-from ._operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
-from .params import Measures
+from ._operator import BaseOperator, ExpertKnowledgeOperator, Data
+from .params import Measures, DEFAULT_PARAMS_VALUE
 
 
 class RuleRegressor(BaseOperator):
@@ -26,6 +26,7 @@ class RuleRegressor(BaseOperator):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
         min_rule_covered: Optional[int] = None,
     ):
         """
@@ -60,6 +61,9 @@ class RuleRegressor(BaseOperator):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; 
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -77,7 +81,8 @@ class RuleRegressor(BaseOperator):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions
         )
 
     def _validate_labels(self, labels: Data):
@@ -158,6 +163,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -167,6 +173,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             'preferred_conditions_per_rule'],
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
+
         min_rule_covered: Optional[int] = None
     ):
         """
@@ -201,6 +208,9 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase;
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
 
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
@@ -236,7 +246,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions
         )
         ExpertKnowledgeOperator.__init__(
             self,
@@ -255,7 +266,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             induce_using_preferred=induce_using_preferred,
             induce_using_automatic=induce_using_automatic,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule
+            preferred_attributes_per_rule=preferred_attributes_per_rule,
+            complementary_conditions=complementary_conditions
         )
 
     def fit(  # pylint: disable=arguments-differ
@@ -308,24 +320,26 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 class ContrastSetRuleRegressor(BaseOperator):
     """Contrast set regression model."""
 
-    def __init__(self,
-                 minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
-                 max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
-                 max_passes_count: int = DEFAULT_PARAMS_VALUE['max_passes_count'],
-                 penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
-                 penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
+    def __init__(
+        self,
+        minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
+        max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
+        max_passes_count: int = DEFAULT_PARAMS_VALUE['max_passes_count'],
+        penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
+        penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
 
-                 minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
-                 induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
-                 pruning_measure: Union[Measures,
-                                        str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
-                 voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
-                 max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
-                 enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
-                 ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
-                 max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-                 select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
-                 ):
+        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
+        pruning_measure: Union[Measures,
+                               str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
+        voting_measure: Measures = DEFAULT_PARAMS_VALUE['voting_measure'],
+        max_growing: float = DEFAULT_PARAMS_VALUE['max_growing'],
+        enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
+        ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
+        max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
+        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+    ):
         """
         Parameters
         ----------
@@ -369,6 +383,9 @@ class ContrastSetRuleRegressor(BaseOperator):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase;
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         """
         super().__init__(
             minsupp_all=minsupp_all,
@@ -384,7 +401,9 @@ class ContrastSetRuleRegressor(BaseOperator):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate)
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions,
+        )
         self.contrast_attribute: str = None
 
     def fit(self, values: Data, labels: Data, contrast_attribute: str) -> ContrastSetRuleRegressor:  # pylint: disable=arguments-differ

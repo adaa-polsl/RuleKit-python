@@ -13,8 +13,8 @@ from ._helpers import (
     get_rule_generator,
     create_example_set
 )
-from ._operator import BaseOperator, ExpertKnowledgeOperator, Data, DEFAULT_PARAMS_VALUE
-from .params import ContrastSetModelParams
+from ._operator import BaseOperator, ExpertKnowledgeOperator, Data
+from .params import ContrastSetModelParams, DEFAULT_PARAMS_VALUE
 from .rules import RuleSet
 
 
@@ -22,21 +22,22 @@ class SurvivalModelsParams(BaseModel):
     """Model for validating survival models hyperparameters
     """
     survival_time_attr: Optional[str]
-    minsupp_new: int
-    max_growing: int
-    enable_pruning: bool
-    ignore_missing: bool
-    max_uncovered_fraction: float
-    select_best_candidate: bool
-    min_rule_covered: Optional[int]
+    minsupp_new: Optional[int] = DEFAULT_PARAMS_VALUE['minsupp_new']
+    max_growing: Optional[int] = DEFAULT_PARAMS_VALUE['max_growing']
+    enable_pruning: Optional[bool] = DEFAULT_PARAMS_VALUE['enable_pruning']
+    ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
+    max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
+    select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
+    min_rule_covered: Optional[int] = DEFAULT_PARAMS_VALUE['min_rule_covered']
+    complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
 
-    extend_using_preferred: Optional[bool]
-    extend_using_automatic: Optional[bool]
-    induce_using_preferred: Optional[bool]
-    induce_using_automatic: Optional[bool]
-    consider_other_classes: Optional[bool]
-    preferred_conditions_per_rule: Optional[int]
-    preferred_attributes_per_rule: Optional[int]
+    extend_using_preferred: Optional[bool] = None
+    extend_using_automatic: Optional[bool] = None
+    induce_using_preferred: Optional[bool] = None
+    induce_using_automatic: Optional[bool] = None
+    consider_other_classes: Optional[bool] = None
+    preferred_conditions_per_rule: Optional[int] = None
+    preferred_attributes_per_rule: Optional[int] = None
 
 
 class SurvivalRules(BaseOperator):
@@ -51,6 +52,7 @@ class SurvivalRules(BaseOperator):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
         min_rule_covered: Optional[int] = None
     ):
         """
@@ -78,6 +80,9 @@ class SurvivalRules(BaseOperator):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; 
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -96,7 +101,9 @@ class SurvivalRules(BaseOperator):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate)
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions,
+        )
         self.model: RuleSet = None
 
     def set_params(
@@ -109,16 +116,8 @@ class SurvivalRules(BaseOperator):
         self.survival_time_attr = params.survival_time_attr
         self._rule_generator = get_rule_generator()
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._params = dict(
-            survival_time_attr=params.survival_time_attr,
-            minsupp_new=params.minsupp_new,
-            min_rule_covered=params.min_rule_covered,
-            max_growing=params.max_growing,
-            enable_pruning=params.enable_pruning,
-            ignore_missing=params.ignore_missing,
-            max_uncovered_fraction=params.max_uncovered_fraction,
-            select_best_candidate=params.select_best_candidate
-        )
+        self._params = {key: value for key,
+                        value in params.dict().items() if value is not None}
         self._rule_generator = self._configurator.configure(**self._params)
         return self
 
@@ -245,6 +244,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -284,6 +284,9 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; 
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
 
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
@@ -325,7 +328,8 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             induce_using_preferred=induce_using_preferred,
             induce_using_automatic=induce_using_automatic,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
-            preferred_attributes_per_rule=preferred_attributes_per_rule
+            preferred_attributes_per_rule=preferred_attributes_per_rule,
+            complementary_conditions=complementary_conditions
         )
         self.model: RuleSet = None
 
@@ -335,23 +339,9 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
     ) -> object:
         params = SurvivalModelsParams(**kwargs)
         self.survival_time_attr = params.survival_time_attr
-
-        self._params = dict(
-            survival_time_attr=params.survival_time_attr,
-            minsupp_new=params.minsupp_new,
-            min_rule_covered=params.min_rule_covered,
-            max_growing=params.max_growing,
-            enable_pruning=params.enable_pruning,
-            ignore_missing=params.ignore_missing,
-            max_uncovered_fraction=params.max_uncovered_fraction,
-            select_best_candidate=params.select_best_candidate,
-            extend_using_preferred=params.extend_using_preferred,
-            extend_using_automatic=params.extend_using_automatic,
-            induce_using_preferred=params.induce_using_preferred,
-            induce_using_automatic=params.induce_using_automatic,
-            preferred_conditions_per_rule=params.preferred_conditions_per_rule,
-            preferred_attributes_per_rule=params.preferred_attributes_per_rule,
-        )
+        self._params = {
+            key: value for key, value in params.dict().items() if value is not None
+        }
         self._rule_generator = get_rule_generator(expert=True)
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = self._configurator.configure(**self._params)
@@ -434,7 +424,8 @@ class ContrastSetSurvivalRules(BaseOperator):
         enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
-        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate']
+        select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
     ):
         """
         Parameters
@@ -472,6 +463,9 @@ class ContrastSetSurvivalRules(BaseOperator):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase;
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         """
         if minsupp_all is not None and len(minsupp_all) > 0:
             minsupp_all = ' '.join([
@@ -493,7 +487,9 @@ class ContrastSetSurvivalRules(BaseOperator):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate)
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions,
+        )
         self.model: RuleSet = None
 
     def set_params(self, **kwargs) -> object:
@@ -503,20 +499,9 @@ class ContrastSetSurvivalRules(BaseOperator):
         self.survival_time_attr = params.survival_time_attr
         self._rule_generator = get_rule_generator()
         self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._params = dict(
-            minsupp_all=params.minsupp_all,
-            max_neg2pos=params.max_neg2pos,
-            max_passes_count=params.max_passes_count,
-            penalty_strength=params.penalty_strength,
-            penalty_saturation=params.penalty_saturation,
-            survival_time_attr=params.survival_time_attr,
-            minsupp_new=params.minsupp_new,
-            max_growing=params.max_growing,
-            enable_pruning=params.enable_pruning,
-            ignore_missing=params.ignore_missing,
-            max_uncovered_fraction=params.max_uncovered_fraction,
-            select_best_candidate=params.select_best_candidate
-        )
+        self._params = {
+            key: value for key, value in params.dict().items() if value is not None
+        }
         self._rule_generator = self._configurator.configure(**self._params)
         return self
 

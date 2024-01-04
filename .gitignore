@@ -290,3 +290,4 @@ doc/build/html/.buildinfo
 RELEASE_INSTRUCTION.md
 
 notebooks/
+classification_tabular_datasets/

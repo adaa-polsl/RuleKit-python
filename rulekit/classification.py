@@ -10,12 +10,11 @@ from sklearn import metrics
 from jpype import JClass
 
 from ._helpers import PredictionResultMapper
-from .params import Measures
+from .params import Measures, DEFAULT_PARAMS_VALUE
 from ._operator import (
     Data,
     BaseOperator,
     ExpertKnowledgeOperator,
-    DEFAULT_PARAMS_VALUE
 )
 
 
@@ -71,6 +70,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
         min_rule_covered: Optional[int] = None,
     ):
         """
@@ -105,6 +105,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; default:
             False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -123,7 +126,8 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions,
         )
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
@@ -291,6 +295,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -335,6 +340,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; default: 
             False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
             conditions and attributes; default is False
@@ -374,6 +382,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions,
         )
         ExpertKnowledgeOperator.__init__(
             self,
@@ -387,6 +396,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions,
             extend_using_preferred=extend_using_preferred,
             extend_using_automatic=extend_using_automatic,
             induce_using_preferred=induce_using_preferred,
@@ -484,6 +494,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
+        complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
     ):
         """
         Parameters
@@ -528,6 +539,9 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase; 
             default: False.
+        complementary_conditions : bool = False
+            If enabled, complementary conditions in the form a = !{value} for nominal attributes
+            are supported.
         """
         BaseOperator.__init__(
             self,
@@ -544,7 +558,9 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
             max_uncovered_fraction=max_uncovered_fraction,
-            select_best_candidate=select_best_candidate)
+            select_best_candidate=select_best_candidate,
+            complementary_conditions=complementary_conditions
+        )
         BaseClassifier.__init__(self)
         self.contrast_attribute: str = None
         self._remap_to_numeric = False
