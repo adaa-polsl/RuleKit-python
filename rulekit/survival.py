@@ -9,7 +9,6 @@ from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
 from ._helpers import (
     PredictionResultMapper,
-    RuleGeneratorConfigurator,
     get_rule_generator,
     create_example_set
 )
@@ -55,6 +54,7 @@ class SurvivalRules(BaseOperator):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
         min_rule_covered: Optional[int] = None
     ):
         """
@@ -85,6 +85,9 @@ class SurvivalRules(BaseOperator):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        max_rule_count : int = 0
+            Maximum number of rules to be generated (for classification data sets it applies 
+            to a single class); 0 indicates no limit.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -105,6 +108,7 @@ class SurvivalRules(BaseOperator):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
+            max_rule_count=max_rule_count
         )
         self.model: RuleSet = None
 
@@ -251,6 +255,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             'preferred_conditions_per_rule'],
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
+        max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
         min_rule_covered: Optional[int] = None
     ):
         """
@@ -284,6 +289,9 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        max_rule_count : int = 0
+            Maximum number of rules to be generated (for classification data sets it applies 
+            to a single class); 0 indicates no limit.
 
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
@@ -326,7 +334,8 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             induce_using_automatic=induce_using_automatic,
             preferred_conditions_per_rule=preferred_conditions_per_rule,
             preferred_attributes_per_rule=preferred_attributes_per_rule,
-            complementary_conditions=complementary_conditions
+            complementary_conditions=complementary_conditions,
+            max_rule_count=max_rule_count
         )
         self.model: RuleSet = None
 
@@ -418,6 +427,7 @@ class ContrastSetSurvivalRules(BaseOperator):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
+        max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
     ):
         """
         Parameters
@@ -458,6 +468,9 @@ class ContrastSetSurvivalRules(BaseOperator):
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
+        max_rule_count : int = 0
+            Maximum number of rules to be generated (for classification data sets it applies 
+            to a single class); 0 indicates no limit.
         """
         if minsupp_all is not None and len(minsupp_all) > 0:
             minsupp_all = ' '.join([
@@ -481,6 +494,7 @@ class ContrastSetSurvivalRules(BaseOperator):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
+            max_rule_count=max_rule_count
         )
         self.model: RuleSet = None
 

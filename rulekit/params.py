@@ -71,6 +71,9 @@ DEFAULT_PARAMS_VALUE = {
     'select_best_candidate': False,
     'complementary_conditions': False,
     'control_apriori_precision': True,
+    'max_rule_count': 0,
+    'approximate_induction': False,
+    'approximate_bins_count': 100,
     'mean_based_regression': True,
 
     'extend_using_preferred': None,
@@ -103,8 +106,10 @@ class ModelsParams(BaseModel):
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
     max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
-    mean_based_regression: Optional[bool] = DEFAULT_PARAMS_VALUE['mean_based_regression']
-    
+    complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
+    max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count']
+
+
     extend_using_preferred: Optional[bool] = None
     extend_using_automatic: Optional[bool] = None
     induce_using_preferred: Optional[bool] = None

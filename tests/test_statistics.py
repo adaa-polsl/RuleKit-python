@@ -6,7 +6,7 @@ from rulekit.rules import RuleSetStatistics
 from sklearn.datasets import load_iris
 
 
-class TestDecisionTreeClassifier(unittest.TestCase):
+class TestRuleClassifier(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

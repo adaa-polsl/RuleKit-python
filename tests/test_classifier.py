@@ -1,5 +1,8 @@
+import os
 import unittest
 import threading
+import pandas as pd
+from scipy.io import arff
 
 from rulekit import classification
 from rulekit.rules import Rule
@@ -56,9 +59,10 @@ class TestClassifier(unittest.TestCase):
         listener = EventListener()
         rulekit_clf.add_event_listener(listener)
         rulekit_clf.fit(x, y)
-
         rules_count = len(rulekit_clf.model.rules)
-        self.assertEqual(rules_count, listener.induced_rules_count)
+        self.assertEqual(
+            rules_count, listener.induced_rules_count
+        )
         self.assertEqual(rules_count, listener.on_progress_calls_count)
 
     def test_getting_examples_coverage(self):
@@ -145,6 +149,31 @@ class TestClassifier(unittest.TestCase):
             assert_accuracy_is_greater(tree.predict(
                 example_set.values), example_set.labels, 0.9)
 
+    def test_predict_proba(self):
+        test_case = get_test_cases('ClassificationSnCTest')[0]
+        params = test_case.induction_params
+        clf = classification.ExpertRuleClassifier(**params)
+        example_set = test_case.example_set
+        clf.fit(
+            example_set.values,
+            example_set.labels,
+        )
+        res = clf.predict_proba(example_set.values)
+        self.assertEqual(
+            res.shape[0],
+            example_set.values.shape[0],
+            'Should have as many rows as the original dataset'
+        )
+        self.assertEqual(
+            res.shape[1],
+            np.unique(example_set.labels).shape[0],
+            'Should have as many columns as there are classes in the dataset'
+        )
+        self.assertTrue(
+            res.max() <= 1 and res.min() >= 0,
+            'Predicted probabilities should be in range [0, 1]'
+        )
+
 
 class TestExperClassifier(unittest.TestCase):
 
@@ -153,20 +182,99 @@ class TestExperClassifier(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = classification.ExpertRuleClassifier(**params)
+            clf = classification.ExpertRuleClassifier(**params)
             example_set = test_case.example_set
-            tree.fit(example_set.values,
-                     example_set.labels,
-                     expert_rules=test_case.knowledge.expert_rules,
-                     expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
-                     expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
-            model = tree.model
+            clf.fit(example_set.values,
+                    example_set.labels,
+                    expert_rules=test_case.knowledge.expert_rules,
+                    expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
+                    expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
+            model = clf.model
             expected = test_case.reference_report.rules
             actual = list(map(lambda e: str(e), model.rules))
             assert_rules_are_equals(expected, actual)
-            assert_accuracy_is_greater(tree.predict(
+            assert_accuracy_is_greater(clf.predict(
                 example_set.values), example_set.labels, 0.9)
+
+    def test_predict_proba(self):
+        test_case = get_test_cases('ClassificationExpertSnCTest')[0]
+        params = test_case.induction_params
+        clf = classification.ExpertRuleClassifier(**params)
+        example_set = test_case.example_set
+        clf.fit(example_set.values,
+                example_set.labels,
+                expert_rules=test_case.knowledge.expert_rules,
+                expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
+                expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
+        res = clf.predict_proba(example_set.values)
+        self.assertEqual(
+            res.shape[0],
+            example_set.values.shape[0],
+            'Should have as many rows as the original dataset'
+        )
+        self.assertEqual(
+            res.shape[1],
+            np.unique(example_set.labels).shape[0],
+            'Should have as many columns as there are classes in the dataset'
+        )
+        self.assertTrue(
+            res.max() <= 1 and res.min() >= 0,
+            'Predicted probabilities should be in range [0, 1]'
+        )
+
+    # Issue 14 - NullPointerException on ExpertRuleClassifier
+    def test_expert_classifier_issue_14(self):
+        from rulekit.exceptions import RuleKitJavaException, JException
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        data_df = pd.DataFrame(
+            arff.loadarff(os.path.join(
+                dir_path, 'resources', 'data', 'seismics2.arff'
+            ))[0]
+        )
+        data_df['class'] = data_df['class'].astype(int)
+
+        x = data_df.drop(['class'], axis=1)
+        y = data_df['class']
+
+        expert_rules = [
+            ('rule-0', 'IF [[gimpuls = (-inf, 750)]] THEN class = {0}'),
+            ('rule-1', 'IF [[gimpuls = &lt;750, inf)]] THEN class = {1}')
+        ]
+
+        expert_preferred_conditions = [
+            ('preferred-condition-0',
+             '1: IF [[seismic = {a}]] THEN class = {0}'),
+            ('preferred-attribute-0',
+             '1: IF [[gimpuls = Any]] THEN class = {1}')
+        ]
+
+        expert_forbidden_conditions = [
+            ('forb-attribute-0',
+             '1: IF [[seismoacoustic  = Any]] THEN class = {0}'),
+            ('forb-attribute-1', 'inf: IF [[ghazard  = Any]] THEN class = {1}')
+        ]
+
+        clf = classification.ExpertRuleClassifier(
+            minsupp_new=8,
+            max_growing=0,
+            extend_using_preferred=True,
+            extend_using_automatic=True,
+            induce_using_preferred=True,
+            induce_using_automatic=True
+        )
+        try:
+            clf.fit(
+                x,
+                y,
+                expert_rules=expert_rules,
+                expert_preferred_conditions=expert_preferred_conditions,
+                expert_forbidden_conditions=expert_forbidden_conditions
+            )
+        except JException as e:
+            e = RuleKitJavaException(e)
+            e.print_java_stack_trace()
 
 
 if __name__ == '__main__':
     unittest.main()
+"['seismic', 'seismoacoustic', 'shift', 'genergy', 'gpuls', 'gdenergy', 'gdpuls', 'ghazard', 'nbumps', 'nbumps2', 'nbumps3', 'nbumps4', 'nbumps5', 'nbumps6', 'nbumps7', 'nbumps89', 'energy', 'maxenergy']"

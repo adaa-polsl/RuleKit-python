@@ -16,9 +16,8 @@ class RuleInductionProgressListener:
     ):
         pass
 
-    # TODO this method will not work due to the bug in Java RuleKit library
-    # def should_stop(self) -> bool:
-    #     pass
+    def should_stop(self) -> bool:
+        return False
 
 
 def command_proxy_client_factory(listener: RuleInductionProgressListener) -> Any:
@@ -37,7 +36,7 @@ def command_proxy_client_factory(listener: RuleInductionProgressListener) -> Any
 
         @JOverride
         def isRequestStop(self) -> bool:
-            # return listener.should_stop()
-            return False
+            return listener.should_stop()
+            # return False
 
     return CommandProxyClient()

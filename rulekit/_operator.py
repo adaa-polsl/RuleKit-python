@@ -85,7 +85,7 @@ class BaseOperator:
 
     def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
-        self._rule_generator = get_rule_generator()
+        self._rule_generator = self._get_rule_generator()
         params: BaseModel = self.__params_class__(**kwargs)
         self._params = {
             key: value for key, value in params.dict().items() if value is not None
@@ -141,16 +141,14 @@ class BaseOperator:
         self._rule_generator = get_rule_generator()
         self.set_params(**state['_params'])
 
+    def _get_rule_generator(self) -> RuleGeneratorConfigurator:
+        return get_rule_generator()
 
-class ExpertKnowledgeOperator:
+class ExpertKnowledgeOperator(BaseOperator):
     """Base class for expert rule induction operator
     """
 
-    def __init__(self, **kwargs):
-        self._params = None
-        self._rule_generator = None
-        ExpertKnowledgeOperator.set_params(self, **kwargs)
-        self.model: RuleSet = None
+    __params_class__: type = None
 
     def fit(  # pylint: disable=missing-function-docstring
         self,
@@ -163,6 +161,18 @@ class ExpertKnowledgeOperator:
         expert_preferred_conditions: list[Union[str, Rule]] = None,
         expert_forbidden_conditions: list[Union[str, Rule]] = None
     ) -> ExpertKnowledgeOperator:
+        example_set = create_example_set(
+            values,
+            labels,
+            survival_time_attribute=survival_time_attribute,
+            contrast_attribute=contrast_attribute
+        )
+        contrast_attribute_instance = example_set.getAttributes().get(contrast_attribute)
+        if contrast_attribute is not None and contrast_attribute_instance.isNumerical():
+            raise ValueError(
+                'Contrast set attributes must be a nominal attribute while ' +
+                f'"{contrast_attribute}" is a numerical one.'
+            )
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         configurator._configure_simple_parameter(  # pylint: disable=protected-access
             'use_expert', True)
@@ -175,31 +185,9 @@ class ExpertKnowledgeOperator:
         configurator._configure_expert_parameter(  # pylint: disable=protected-access
             'expert_rules', expert_rules
         )
-        example_set = create_example_set(
-            values,
-            labels,
-            survival_time_attribute=survival_time_attribute,
-            contrast_attribute=contrast_attribute
-        )
-
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)
         return self.model
 
-    def add_event_listener(self, listener: RuleInductionProgressListener):
-        return BaseOperator.add_event_listener(self, listener)
-
-    def predict(self, values: Data) -> np.ndarray:  # pylint: disable=missing-function-docstring
-        return BaseOperator.predict(self, values)
-
-    def set_params(self, **kwargs) -> object:  # pylint: disable=missing-function-docstring
-        # validate params
-        self._rule_generator = get_rule_generator(expert=True)
-        params: BaseModel = self.__params_class__( # pylint: disable=not-callable
-            **kwargs)  
-        self._params = {
-            key: value for key, value in params.dict().items() if value is not None
-        }
-        configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = configurator.configure(**params.dict())
-        return self
+    def _get_rule_generator(self) -> RuleGeneratorConfigurator:
+        return get_rule_generator(expert=True)

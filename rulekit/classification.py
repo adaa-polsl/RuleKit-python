@@ -25,6 +25,8 @@ from ._operator import (
 
 class ClassificationParams(ModelsParams):
     control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision']
+    approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction']
+    approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count']
 
 
 class BaseClassifier:
@@ -82,7 +84,10 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
-        control_apriori_precision : bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
+        control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
+        max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
+        approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction'],
+        approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count'],
         min_rule_covered: Optional[int] = None,
     ):
         """
@@ -123,6 +128,15 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         control_apriori_precision : bool = True
             When inducing classification rules, verify if candidate precision is higher than 
             apriori precision of the investigated class.
+        max_rule_count : int = 0
+            Maximum number of rules to be generated (for classification data sets it applies 
+            to a single class); 0 indicates no limit.
+        approximate_induction: bool = False
+            Use an approximate induction heuristic which does not check all possible splits;
+            note: this is an experimental feature and currently works only for classification
+            data sets, results may change in future;
+        approximate_bins_count: int = 100
+            maximum number of bins for an attribute evaluated in the approximate induction.
         min_rule_covered : int = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
@@ -143,7 +157,10 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             max_uncovered_fraction=max_uncovered_fraction,
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
-            control_apriori_precision=control_apriori_precision
+            control_apriori_precision=control_apriori_precision,
+            max_rule_count=max_rule_count,
+            approximate_induction=approximate_induction,
+            approximate_bins_count=approximate_bins_count,
         )
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
@@ -314,7 +331,10 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
-        control_apriori_precision : bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
+        control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
+        max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
+        approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction'],
+        approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count'],
 
         extend_using_preferred: bool = DEFAULT_PARAMS_VALUE['extend_using_preferred'],
         extend_using_automatic: bool = DEFAULT_PARAMS_VALUE['extend_using_automatic'],
@@ -365,6 +385,16 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         control_apriori_precision : bool = True
             When inducing classification rules, verify if candidate precision is higher than 
             apriori precision of the investigated class.
+        max_rule_count : int = 0
+            Maximum number of rules to be generated (for classification data sets it applies 
+            to a single class); 0 indicates no limit.
+        approximate_induction: bool = False
+            Use an approximate induction heuristic which does not check all possible splits;
+            note: this is an experimental feature and currently works only for classification
+            data sets, results may change in future;
+        approximate_bins_count: int = 100
+            maximum number of bins for an attribute evaluated in the approximate induction.
+
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
             conditions and attributes; default is False
@@ -406,6 +436,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
             control_apriori_precision=control_apriori_precision,
+            max_rule_count=max_rule_count,
+            approximate_induction=approximate_induction,
+            approximate_bins_count=approximate_bins_count,
         )
         ExpertKnowledgeOperator.__init__(
             self,
@@ -428,6 +461,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             preferred_conditions_per_rule=preferred_conditions_per_rule,
             preferred_attributes_per_rule=preferred_attributes_per_rule,
             control_apriori_precision=control_apriori_precision,
+            max_rule_count=max_rule_count,
+            approximate_induction=approximate_induction,
+            approximate_bins_count=approximate_bins_count,
         )
 
     def fit(  # pylint: disable=arguments-differ
@@ -471,6 +507,8 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             if isinstance(labels[0], Number):
                 self._remap_to_numeric = True
                 labels = list(map(str, labels))
+        self._get_unique_label_values(labels)
+        self._prepare_labels(labels)
         return ExpertKnowledgeOperator.fit(
             self,
             values,
@@ -521,7 +559,10 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         max_uncovered_fraction: float = DEFAULT_PARAMS_VALUE['max_uncovered_fraction'],
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
-        control_apriori_precision : bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
+        control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision'],
+        max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
+        approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction'],
+        approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count'],
     ):
         """
         Parameters
@@ -572,6 +613,15 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         control_apriori_precision : bool = True
             When inducing classification rules, verify if candidate precision is higher than 
             apriori precision of the investigated class.
+        max_rule_count : int = 0
+            Maximum number of rules to be generated (for classification data sets it applies 
+            to a single class); 0 indicates no limit.
+        approximate_induction: bool = False
+            Use an approximate induction heuristic which does not check all possible splits;
+            note: this is an experimental feature and currently works only for classification
+            data sets, results may change in future;
+        approximate_bins_count: int = 100
+            maximum number of bins for an attribute evaluated in the approximate induction.
         """
         BaseOperator.__init__(
             self,
@@ -591,6 +641,9 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             select_best_candidate=select_best_candidate,
             complementary_conditions=complementary_conditions,
             control_apriori_precision=control_apriori_precision,
+            max_rule_count=max_rule_count,
+            approximate_induction=approximate_induction,
+            approximate_bins_count=approximate_bins_count
         )
         BaseClassifier.__init__(self)
         self.contrast_attribute: str = None

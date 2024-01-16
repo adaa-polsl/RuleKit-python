@@ -19,7 +19,7 @@ class TestRegressor(unittest.TestCase):
 
         reg = regression.RuleRegressor()
         example_set = test_case.example_set
-
+        MAX_RULES = 3
         class EventListener(RuleInductionProgressListener):
 
             lock = threading.Lock()
@@ -40,12 +40,18 @@ class TestRegressor(unittest.TestCase):
                 self.on_progress_calls_count += 1
                 self.lock.release()
 
+            def should_stop(self) -> bool:
+                self.lock.acquire()
+                should_stop = self.induced_rules_count == MAX_RULES
+                self.lock.release()
+                return should_stop
+
         listener = EventListener()
         reg.add_event_listener(listener)
         reg.fit(example_set.values, example_set.labels)
 
         rules_count = len(reg.model.rules)
-        self.assertEqual(rules_count, listener.induced_rules_count)
+        self.assertEqual(rules_count, MAX_RULES)
         self.assertEqual(rules_count, listener.on_progress_calls_count)
 
     def test_compare_with_java_results(self):
@@ -76,7 +82,6 @@ class TestExpertRegressor(unittest.TestCase):
         for test_case in test_cases:
             params = test_case.induction_params
             tree = regression.ExpertRuleRegressor(**params)
-            tree.set_params()
             example_set = test_case.example_set
             tree.fit(example_set.values,
                      example_set.labels,
