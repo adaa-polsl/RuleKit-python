@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Union, Any
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator
 from pydantic import BaseModel
 
 from .main import RuleKit
@@ -21,7 +22,7 @@ from .events import RuleInductionProgressListener, command_proxy_client_factory
 Data = Union[np.ndarray, pd.DataFrame, list]
 
 
-class BaseOperator:
+class BaseOperator(BaseEstimator):
     """Base class for rule induction operator
     """
 
@@ -74,8 +75,13 @@ class BaseOperator:
         example_set = create_example_set(values)
         return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
 
-    def get_params(self) -> dict[str, Any]:
+    def get_params(self, deep: bool = True) -> dict[str, Any]:  # pylint: disable=unused-argument
         """
+        Parameters
+        ----------
+        deep : :class:`rulekit.operator.Data`
+            Parameter for scikit-learn compatibility. Not used.
+
         Returns
         -------
         hyperparameters : np.ndarray
@@ -95,6 +101,11 @@ class BaseOperator:
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = configurator.configure(**params_dict)
         return self
+
+    def get_metadata_routing(self) -> None:
+        raise NotImplementedError(
+            'Scikit-learn metadata routing is not supported yet.'
+        )
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
         """Calculates coverage matrix for ruleset.

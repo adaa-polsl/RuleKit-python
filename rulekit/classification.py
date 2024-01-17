@@ -237,7 +237,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
             If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple 
             will be returned with first element being prediction and second one being metrics.
         """
@@ -268,7 +268,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
             If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
             a tuple will be returned with first element being prediction and second one being 
             metrics.
@@ -715,7 +715,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
             If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple
             will be returned with first element being prediction and second one being metrics.
         """
@@ -739,7 +739,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, Tuple[np.ndarray, Dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
             If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
             a tuple will be returned with first element being prediction and second one being 
             metrics.
