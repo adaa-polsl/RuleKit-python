@@ -11,7 +11,7 @@ import jpype
 import jpype.imports
 
 
-class JRE_Type(Enum): # pylint: disable=invalid-name
+class JRE_Type(Enum):  # pylint: disable=invalid-name
     """:meta private:"""
     OPEN_JDK = 'open_jdk'
     ORACLE = 'oracle'
@@ -50,7 +50,11 @@ class RuleKit:
             ) from error
 
     @staticmethod
-    def init(initial_heap_size: int = None, max_heap_size: int = None):
+    def init(
+        initial_heap_size: int = None,
+        max_heap_size: int = None,
+        rulekit_jar_file_path: str = None
+    ):
         """Initialize package.
 
         This method must by called before using any operators in this package.
@@ -62,6 +66,12 @@ class RuleKit:
             JVM initial heap size in mb
         max_heap_size : int
             JVM max heap size in mb
+        rulekit_jar_file_path : str
+            Path to the RuleKit jar file. This parameters.
+            .. note::
+                You probably don't need to use this parameter unless you want to use 
+                your own custom version of RuleKit jar file. Otherwise leave it as it
+                is and the package will use the official RuleKit release jar file.
 
         Raises
         ------
@@ -78,9 +88,14 @@ class RuleKit:
         class_path_separator = os.pathsep
         try:
             jars_paths: list[str] = glob.glob(f"{RuleKit._jar_dir_path}/*.jar")
-            RuleKit._class_path = f'{str.join(class_path_separator, jars_paths)}'
             RuleKit._rulekit_jar_file_path = list(
-                filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths))[0]
+                filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths)
+            )[0]
+            if rulekit_jar_file_path is not None:
+                jars_paths.remove(RuleKit._rulekit_jar_file_path)
+                jars_paths.append(rulekit_jar_file_path)
+                RuleKit._rulekit_jar_file_path = rulekit_jar_file_path
+            RuleKit._class_path = f'{str.join(class_path_separator, jars_paths)}'
         except IndexError as error:
             RuleKit._logger.error('Failed to load jar files')
             raise RuntimeError(f'''\n
