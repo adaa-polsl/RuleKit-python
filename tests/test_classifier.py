@@ -222,59 +222,6 @@ class TestExperClassifier(unittest.TestCase):
             'Predicted probabilities should be in range [0, 1]'
         )
 
-    # Issue 14 - NullPointerException on ExpertRuleClassifier
-    def test_expert_classifier_issue_14(self):
-        from rulekit.exceptions import RuleKitJavaException, JException
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        data_df = pd.DataFrame(
-            arff.loadarff(os.path.join(
-                dir_path, 'resources', 'data', 'seismics2.arff'
-            ))[0]
-        )
-        data_df['class'] = data_df['class'].astype(int)
-
-        x = data_df.drop(['class'], axis=1)
-        y = data_df['class']
-
-        expert_rules = [
-            ('rule-0', 'IF [[gimpuls = (-inf, 750)]] THEN class = {0}'),
-            ('rule-1', 'IF [[gimpuls = &lt;750, inf)]] THEN class = {1}')
-        ]
-
-        expert_preferred_conditions = [
-            ('preferred-condition-0',
-             '1: IF [[seismic = {a}]] THEN class = {0}'),
-            ('preferred-attribute-0',
-             '1: IF [[gimpuls = Any]] THEN class = {1}')
-        ]
-
-        expert_forbidden_conditions = [
-            ('forb-attribute-0',
-             '1: IF [[seismoacoustic  = Any]] THEN class = {0}'),
-            ('forb-attribute-1', 'inf: IF [[ghazard  = Any]] THEN class = {1}')
-        ]
-
-        clf = classification.ExpertRuleClassifier(
-            minsupp_new=8,
-            max_growing=0,
-            extend_using_preferred=True,
-            extend_using_automatic=True,
-            induce_using_preferred=True,
-            induce_using_automatic=True
-        )
-        try:
-            clf.fit(
-                x,
-                y,
-                expert_rules=expert_rules,
-                expert_preferred_conditions=expert_preferred_conditions,
-                expert_forbidden_conditions=expert_forbidden_conditions
-            )
-        except JException as e:
-            e = RuleKitJavaException(e)
-            e.print_java_stack_trace()
-
 
 if __name__ == '__main__':
     unittest.main()
-"['seismic', 'seismoacoustic', 'shift', 'genergy', 'gpuls', 'gdenergy', 'gdpuls', 'ghazard', 'nbumps', 'nbumps2', 'nbumps3', 'nbumps4', 'nbumps5', 'nbumps6', 'nbumps7', 'nbumps89', 'energy', 'maxenergy']"

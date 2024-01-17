@@ -27,7 +27,7 @@ class SurvivalModelsParams(BaseModel):
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
     max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
-    min_rule_covered: Optional[int] = DEFAULT_PARAMS_VALUE['min_rule_covered']
+    min_rule_covered: Optional[int] = None
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
 
     extend_using_preferred: Optional[bool] = None

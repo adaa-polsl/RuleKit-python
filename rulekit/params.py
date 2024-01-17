@@ -96,7 +96,7 @@ DEFAULT_PARAMS_VALUE = {
 class ModelsParams(BaseModel):
     """Model for validating models hyperparameters
     """
-    min_rule_covered: Optional[int] = DEFAULT_PARAMS_VALUE['min_rule_covered']
+    min_rule_covered: Optional[int] = None
     minsupp_new: Optional[int] = DEFAULT_PARAMS_VALUE['minsupp_new']
     induction_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['induction_measure']
     pruning_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['pruning_measure']

@@ -32,13 +32,13 @@ setuptools.setup(
     include_package_data = True,
     python_requires='>=3.6',
     install_requires=[
-        "pandas ~= 1.5.2",
-        "scikit-learn ~= 1.2.0",
-        "requests ~= 2.25.1",
-        "scipy ~= 1.9.3",
-        "joblib >= 1.0,< 1.3",
-        "JPype1 ~= 1.4.1",
-        "pydantic ~= 2.0.3"
+        "pandas ~= 2.1.4",
+        "scikit-learn ~= 1.3.2",
+        "requests ~= 2.31.0",
+        "scipy ~= 1.11.4",
+        "joblib ~= 1.3.2",
+        "JPype1 ~= 1.5.0",
+        "pydantic ~= 2.5.3"
     ],
     test_suite="tests",
     download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.6.0.tar.gz',

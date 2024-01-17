@@ -87,11 +87,13 @@ class BaseOperator:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = self._get_rule_generator()
         params: BaseModel = self.__params_class__(**kwargs)
+        params_dict: dict = params.model_dump()
         self._params = {
-            key: value for key, value in params.dict().items() if value is not None
+            key: value for key, value in params_dict.items()
+            if value is not None
         }
         configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = configurator.configure(**params.dict())
+        self._rule_generator = configurator.configure(**params_dict)
         return self
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
@@ -143,6 +145,7 @@ class BaseOperator:
 
     def _get_rule_generator(self) -> RuleGeneratorConfigurator:
         return get_rule_generator()
+
 
 class ExpertKnowledgeOperator(BaseOperator):
     """Base class for expert rule induction operator
