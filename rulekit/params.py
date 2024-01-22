@@ -108,7 +108,7 @@ class ModelsParams(BaseModel):
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
     max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count']
-
+    minsupp_all: Optional[str] = '0.0'
 
     extend_using_preferred: Optional[bool] = None
     extend_using_automatic: Optional[bool] = None

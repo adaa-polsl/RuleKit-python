@@ -168,8 +168,10 @@ class TestConfigParser:
     def _parse_experts_rules_parameters(self, elements) -> list[tuple]:
         expert_rules = []
         for element in elements:
-            rule_name = element.attrib['name']
-            rule_content = element.text
+            rule_name: str = element.attrib['name']
+            rule_content: str = element.text
+            # RuleKit originally used XML for specifying parameters and uses special xml characters
+            rule_content = rule_content.replace('&lt;', '<').replace('&gt;', '>')
             expert_rules.append((rule_name, rule_content))
         return expert_rules if len(expert_rules) > 0 else None
 

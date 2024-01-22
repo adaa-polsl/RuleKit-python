@@ -22,7 +22,7 @@ class SurvivalModelsParams(BaseModel):
     """
     survival_time_attr: Optional[str]
     minsupp_new: Optional[int] = DEFAULT_PARAMS_VALUE['minsupp_new']
-    max_growing: Optional[int] = DEFAULT_PARAMS_VALUE['max_growing']
+    max_growing: Optional[float] = DEFAULT_PARAMS_VALUE['max_growing']
     enable_pruning: Optional[bool] = DEFAULT_PARAMS_VALUE['enable_pruning']
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
     max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
@@ -472,10 +472,6 @@ class ContrastSetSurvivalRules(BaseOperator):
             Maximum number of rules to be generated (for classification data sets it applies 
             to a single class); 0 indicates no limit.
         """
-        if minsupp_all is not None and len(minsupp_all) > 0:
-            minsupp_all = ' '.join([
-                str(e) for e in minsupp_all
-            ])
         self._params = None
         self._rule_generator = None
         self._configurator = None
