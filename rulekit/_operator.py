@@ -104,8 +104,8 @@ class BaseOperator(BaseEstimator):
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = self._get_rule_generator()
         self._sanitize_parameters(kwargs)
-        params: BaseModel = self.__params_class__(
-            **kwargs)  # pylint: disable=not-callable
+        params: BaseModel = self.__params_class__( # pylint: disable=not-callable
+            **kwargs)  
         params_dict: dict = params.model_dump()
         self._params = {
             key: value for key, value in params_dict.items()

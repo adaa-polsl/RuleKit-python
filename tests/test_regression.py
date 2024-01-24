@@ -64,7 +64,7 @@ class TestRegressor(unittest.TestCase):
             tree.fit(example_set.values, example_set.labels)
             model = tree.model
             expected = test_case.reference_report.rules
-            actual = list(map(lambda e: str(e), model.rules))
+            actual = [str(r) for r in model.rules]
             assert_rules_are_equals(expected, actual)
             assert_score_is_greater(tree.predict(
                 example_set.values), example_set.labels, 0.7)
@@ -90,7 +90,7 @@ class TestExpertRegressor(unittest.TestCase):
                      expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
             model = tree.model
             expected = test_case.reference_report.rules
-            actual = list(map(lambda e: str(e), model.rules))
+            actual = [str(r) for r in model.rules]
             assert_rules_are_equals(expected, actual)
             assert_score_is_greater(tree.predict(
                 example_set.values), example_set.labels, 0.66)
