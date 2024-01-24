@@ -36,18 +36,19 @@ class Measures(Enum):
     Laplace = 'Laplace'
     Lift = 'Lift'
     LogicalSufficiency = 'LogicalSufficiency'
+    LogRank = 'LogRank'
     MEstimate = 'MEstimate'
     MutualSupport = 'MutualSupport'
     Novelty = 'Novelty'
     OddsRatio = 'OddsRatio'
     OneWaySupport = 'OneWaySupport'
     PawlakDependencyFactor = 'PawlakDependencyFactor'
-    Q2 = 'Q2'
     Precision = 'Precision'
+    Q2 = 'Q2'
     RelativeRisk = 'RelativeRisk'
     Ripper = 'Ripper'
-    RuleInterest = 'RuleInterest'
     RSS = 'RSS'
+    RuleInterest = 'RuleInterest'
     SBayesian = 'SBayesian'
     Sensitivity = 'Sensitivity'
     Specificity = 'Specificity'
@@ -55,22 +56,59 @@ class Measures(Enum):
     WeightedLaplace = 'WeightedLaplace'
     WeightedRelativeAccuracy = 'WeightedRelativeAccuracy'
     YAILS = 'YAILS'
-    LogRank = 'LogRank'
+
+
+DEFAULT_PARAMS_VALUE = {
+    'minsupp_new': 5,
+    'min_rule_covered': 5,
+    'induction_measure': Measures.Correlation,
+    'pruning_measure':  Measures.Correlation,
+    'voting_measure': Measures.Correlation,
+    'max_growing': 0.0,
+    'enable_pruning': True,
+    'ignore_missing': False,
+    'max_uncovered_fraction': 0.0,
+    'select_best_candidate': False,
+    'complementary_conditions': False,
+    'control_apriori_precision': True,
+    'max_rule_count': 0,
+    'approximate_induction': False,
+    'approximate_bins_count': 100,
+    'mean_based_regression': True,
+
+    'extend_using_preferred': None,
+    'extend_using_automatic': None,
+    'induce_using_preferred': None,
+    'induce_using_automatic': None,
+    'consider_other_classes': None,
+    'preferred_conditions_per_rule': None,
+    'preferred_attributes_per_rule': None,
+
+    # Contrast sets
+    'minsupp_all': (0.8, 0.5, 0.2, 0.1),
+    'max_neg2pos': 0.5,
+    'max_passes_count': 5,
+    'penalty_strength': 0.5,
+    'penalty_saturation': 0.2,
+}
 
 
 class ModelsParams(BaseModel):
     """Model for validating models hyperparameters
     """
     min_rule_covered: Optional[int] = None
-    minsupp_new: Optional[int] = None
-    induction_measure: Measures
-    pruning_measure: Measures
-    voting_measure: Measures
-    max_growing: float
-    enable_pruning: bool
-    ignore_missing: bool
-    max_uncovered_fraction: float
-    select_best_candidate: bool
+    minsupp_new: Optional[int] = DEFAULT_PARAMS_VALUE['minsupp_new']
+    induction_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['induction_measure']
+    pruning_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['pruning_measure']
+    voting_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['voting_measure']
+    max_growing: Optional[float] = DEFAULT_PARAMS_VALUE['max_growing']
+    enable_pruning: Optional[bool] = DEFAULT_PARAMS_VALUE['enable_pruning']
+    ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
+    max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
+    select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
+    complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
+    max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count']
+    minsupp_all: Optional[str] = '0.0'
 
     extend_using_preferred: Optional[bool] = None
     extend_using_automatic: Optional[bool] = None
@@ -84,8 +122,8 @@ class ModelsParams(BaseModel):
 class ContrastSetModelParams(ModelsParams):
     """Model for validating contrast set models hyperparameters
     """
-    minsupp_all: str
-    max_neg2pos: float
-    max_passes_count: int
-    penalty_strength: float
-    penalty_saturation: float
+    minsupp_all: Optional[str] = DEFAULT_PARAMS_VALUE['minsupp_all']
+    max_neg2pos: Optional[float] = DEFAULT_PARAMS_VALUE['max_neg2pos']
+    max_passes_count: Optional[int] = DEFAULT_PARAMS_VALUE['max_passes_count']
+    penalty_strength: Optional[float] = DEFAULT_PARAMS_VALUE['penalty_strength']
+    penalty_saturation: Optional[float] = DEFAULT_PARAMS_VALUE['penalty_saturation']

@@ -45,7 +45,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_classifier_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = RuleClassifier(min_rule_covered=1)
+        model = RuleClassifier(minsupp_new=1)
         model.fit(x, y)
         prediction, metrics = model.predict(x, return_metrics=True)
 
@@ -72,7 +72,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_expert_classifier_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = ExpertRuleClassifier(min_rule_covered=1)
+        model = ExpertRuleClassifier(minsupp_new=1)
         model.fit(x, y)
         prediction = model.predict(x)
 
@@ -86,7 +86,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_regressor_serialization(self):
         x, y = load_diabetes(return_X_y=True)
 
-        model = RuleRegressor(min_rule_covered=10)
+        model = RuleRegressor(minsupp_new=10)
         model.fit(x, y)
         prediction = model.predict(x)
 
@@ -101,7 +101,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_expert_regressor_serialization(self):
         x, y = load_diabetes(return_X_y=True)
 
-        model = ExpertRuleRegressor(min_rule_covered=10)
+        model = ExpertRuleRegressor(minsupp_new=10)
         model.fit(x, y)
         prediction = model.predict(x)
 
@@ -115,7 +115,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_survival_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = SurvivalRules(min_rule_covered=10, survival_time_attr='')
+        model = SurvivalRules(minsupp_new=10, survival_time_attr='')
         model.fit(x, y)
         prediction = model.predict(x)
 
@@ -129,7 +129,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_expert_survival_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = ExpertSurvivalRules(min_rule_covered=10, survival_time_attr='')
+        model = ExpertSurvivalRules(minsupp_new=10, survival_time_attr='')
         model.fit(x, y)
         prediction = model.predict(x)
 
@@ -143,7 +143,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_multiple_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = RuleClassifier(min_rule_covered=1)
+        model = RuleClassifier(minsupp_new=1)
         model.fit(x, y)
         prediction, metrics = model.predict(x, return_metrics=True)
 

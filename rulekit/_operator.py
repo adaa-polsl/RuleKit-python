@@ -1,10 +1,13 @@
 """Contains base classes for rule induction operators
 """
 from __future__ import annotations
-from typing import Union, Any
+from typing import Union, Any, Optional
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator
+from pydantic import BaseModel
 
+from .main import RuleKit
 from ._helpers import (
     RuleGeneratorConfigurator,
     PredictionResultMapper,
@@ -12,57 +15,50 @@ from ._helpers import (
     get_rule_generator,
     ModelSerializer,
 )
-from .params import Measures, ModelsParams, ContrastSetModelParams
 from .rules import RuleSet, Rule
+from .events import RuleInductionProgressListener, command_proxy_client_factory
 
 
 Data = Union[np.ndarray, pd.DataFrame, list]
 
-DEFAULT_PARAMS_VALUE = {
-    'minsupp_new': 5,
-    'min_rule_covered': 5,
-    'induction_measure': Measures.Correlation,
-    'pruning_measure':  Measures.Correlation,
-    'voting_measure': Measures.Correlation,
-    'max_growing': 0.0,
-    'enable_pruning': True,
-    'ignore_missing': False,
-    'max_uncovered_fraction': 0.0,
-    'select_best_candidate': False,
 
-    'extend_using_preferred': None,
-    'extend_using_automatic': None,
-    'induce_using_preferred': None,
-    'induce_using_automatic': None,
-    'consider_other_classes': None,
-    'preferred_conditions_per_rule': None,
-    'preferred_attributes_per_rule': None,
-
-    # Contrast sets
-    'minsupp_all': (0.8, 0.5, 0.2, 0.1),
-    'max_neg2pos': 0.5,
-    'max_passes_count': 5,
-    'penalty_strength': 0.5,
-    'penalty_saturation': 0.2,
-}
-
-
-class BaseOperator:
+class BaseOperator(BaseEstimator):
     """Base class for rule induction operator
     """
 
+    __params_class__: type = None
+
     def __init__(self, **kwargs):
-        if kwargs.get('minsupp_all', None) is not None and len(kwargs['minsupp_all']) > 0:
-            kwargs['minsupp_all'] = ' '.join(
-                [str(e) for e in kwargs['minsupp_all']]
-            )
+        self._initialize_rulekit()
         self._params = None
         self._rule_generator = None
         self.set_params(**kwargs)
         self.model: RuleSet = None
 
+    def _initialize_rulekit(self):
+        if not RuleKit.initialized:
+            RuleKit.init()
+
     def _map_result(self, predicted_example_set) -> np.ndarray:
         return PredictionResultMapper.map(predicted_example_set)
+
+    def _validate_contrast_attribute(
+        self,
+        example_set,
+        contrast_attribute: Optional[str]
+    ) -> None:
+        contrast_attribute_instance = example_set.getAttributes().get(contrast_attribute)
+        if contrast_attribute is not None and contrast_attribute_instance.isNumerical():
+            raise ValueError(
+                'Contrast set attributes must be a nominal attribute while ' +
+                f'"{contrast_attribute}" is a numerical one.'
+            )
+
+    def _sanitize_parameters(self, params: dict[str, Any]) -> None:
+        if params.get('minsupp_all', None) is not None and len(params['minsupp_all']) > 0:
+            params['minsupp_all'] = ' '.join(
+                [str(e) for e in params['minsupp_all']]
+            )
 
     def fit(  # pylint: disable=missing-function-docstring
         self,
@@ -77,12 +73,7 @@ class BaseOperator:
             survival_time_attribute=survival_time_attribute,
             contrast_attribute=contrast_attribute
         )
-        contrast_attribute_instance = example_set.getAttributes().get(contrast_attribute)
-        if contrast_attribute is not None and contrast_attribute_instance.isNumerical():
-            raise ValueError(
-                'Contrast set attributes must be a nominal attribute while ' +
-                f'"{contrast_attribute}" is a numerical one.'
-            )
+        self._validate_contrast_attribute(example_set, contrast_attribute)
 
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)
@@ -95,8 +86,13 @@ class BaseOperator:
         example_set = create_example_set(values)
         return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
 
-    def get_params(self) -> dict[str, Any]:
+    def get_params(self, deep: bool = True) -> dict[str, Any]:  # pylint: disable=unused-argument
         """
+        Parameters
+        ----------
+        deep : :class:`rulekit.operator.Data`
+            Parameter for scikit-learn compatibility. Not used.
+
         Returns
         -------
         hyperparameters : np.ndarray
@@ -106,16 +102,23 @@ class BaseOperator:
 
     def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
-        self._rule_generator = get_rule_generator()
-        # validate
-        if 'minsupp_all' in kwargs:
-            ContrastSetModelParams(**kwargs)
-        else:
-            ModelsParams(**kwargs)
-        self._params = kwargs
+        self._rule_generator = self._get_rule_generator()
+        self._sanitize_parameters(kwargs)
+        params: BaseModel = self.__params_class__( # pylint: disable=not-callable
+            **kwargs)  
+        params_dict: dict = params.model_dump()
+        self._params = {
+            key: value for key, value in params_dict.items()
+            if value is not None
+        }
         configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = configurator.configure(**kwargs)
+        self._rule_generator = configurator.configure(**params_dict)
         return self
+
+    def get_metadata_routing(self) -> None:
+        raise NotImplementedError(
+            'Scikit-learn metadata routing is not supported yet.'
+        )
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
         """Calculates coverage matrix for ruleset.
@@ -147,6 +150,10 @@ class BaseOperator:
             result.append(np.array(row_result))
         return np.array(result)
 
+    def add_event_listener(self, listener: RuleInductionProgressListener):
+        command_proxy = command_proxy_client_factory(listener)
+        self._rule_generator.addOperatorCommandProxy(command_proxy)
+
     def __getstate__(self) -> dict:
         state = self.__dict__.copy()
         state.pop('_rule_generator')
@@ -160,17 +167,13 @@ class BaseOperator:
         self._rule_generator = get_rule_generator()
         self.set_params(**state['_params'])
 
+    def _get_rule_generator(self) -> RuleGeneratorConfigurator:
+        return get_rule_generator()
 
-class ExpertKnowledgeOperator:
+
+class ExpertKnowledgeOperator(BaseOperator):
     """Base class for expert rule induction operator
     """
-
-    def __init__(self, **kwargs):
-        self._params = None
-        self._rule_generator = None
-        self._configurator = None
-        ExpertKnowledgeOperator.set_params(self, **kwargs)
-        self.model: RuleSet = None
 
     def fit(  # pylint: disable=missing-function-docstring
         self,
@@ -183,40 +186,57 @@ class ExpertKnowledgeOperator:
         expert_preferred_conditions: list[Union[str, Rule]] = None,
         expert_forbidden_conditions: list[Union[str, Rule]] = None
     ) -> ExpertKnowledgeOperator:
-        self._configurator._configure_simple_parameter(  # pylint: disable=protected-access
-            'use_expert', True)
-        self._configurator._configure_expert_parameter(  # pylint: disable=protected-access
-            'expert_preferred_conditions', expert_preferred_conditions
-        )
-        self._configurator._configure_expert_parameter(  # pylint: disable=protected-access
-            'expert_forbidden_conditions', expert_forbidden_conditions
-        )
-        self._configurator._configure_expert_parameter(  # pylint: disable=protected-access
-            'expert_rules', expert_rules
-        )
         example_set = create_example_set(
             values,
             labels,
             survival_time_attribute=survival_time_attribute,
             contrast_attribute=contrast_attribute
         )
-
+        self._validate_contrast_attribute(example_set, contrast_attribute)
+        self._configure_expert_parameters(
+            expert_rules,
+            expert_preferred_conditions,
+            expert_forbidden_conditions,
+        )
         java_model = self._rule_generator.learn(example_set)
         self.model = RuleSet(java_model)
         return self.model
 
-    def predict(self, values: Data) -> np.ndarray:  # pylint: disable=missing-function-docstring
-        if self.model is None:
-            raise ValueError(
-                '"fit" method must be called before calling this method')
-        example_set = create_example_set(values)
-        return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
+    def _get_rule_generator(self) -> RuleGeneratorConfigurator:
+        return get_rule_generator(expert=True)
+    
+    def _configure_expert_parameters(
+        self,
+        expert_rules: list[Union[str, Rule]] = None,
+        expert_preferred_conditions: list[Union[str, Rule]] = None,
+        expert_forbidden_conditions: list[Union[str, Rule]] = None
+    ) -> None:
+        configurator = RuleGeneratorConfigurator(self._rule_generator)
+        configurator._configure_simple_parameter(  # pylint: disable=protected-access
+            'use_expert', True)
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
+            'expert_preferred_conditions',
+            self._sanitize_expert_parameter(expert_preferred_conditions)
+        )
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
+            'expert_forbidden_conditions',
+            self._sanitize_expert_parameter(expert_forbidden_conditions)
+        )
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
+            'expert_rules',
+            self._sanitize_expert_parameter(expert_rules)
+        )
 
-    def set_params(self, **kwargs) -> object:  # pylint: disable=missing-function-docstring
-        # validate params
-        ModelsParams(**kwargs)
-        self._params = kwargs
-        self._rule_generator = get_rule_generator(expert=True)
-        self._configurator = RuleGeneratorConfigurator(self._rule_generator)
-        self._rule_generator = self._configurator.configure(**kwargs)
-        return self
+    def _sanitize_expert_parameter(
+        self,
+        expert_parameter: list[tuple[str, str]]
+    ) -> list[tuple[str, str]]:
+        if expert_parameter is None:
+            return None
+        sanitized_parameter: list[tuple[str, str]] = []
+        for item in expert_parameter:
+            item_id, item_value = item
+            # RuleKit originally used XML for specifying parameters, use special xml characters
+            item_value = item_value.replace('<', '&lt;').replace('>', '&gt;')
+            sanitized_parameter.append((item_id, item_value))
+        return sanitized_parameter

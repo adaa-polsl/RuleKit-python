@@ -1,7 +1,12 @@
+import os
 import unittest
+import threading
+import pandas as pd
+from scipy.io import arff
 
-from rulekit.main import RuleKit
 from rulekit import classification
+from rulekit.rules import Rule
+from rulekit.events import RuleInductionProgressListener
 import sklearn.tree as scikit
 from sklearn.datasets import load_iris
 from sklearn import metrics
@@ -26,6 +31,39 @@ class TestClassifier(unittest.TestCase):
 
         assert abs(scikit_accuracy -
                    rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
+
+    def test_induction_progress_listener(self):
+        rulekit_clf = classification.RuleClassifier()
+        x, y = load_iris(return_X_y=True)
+
+        class EventListener(RuleInductionProgressListener):
+
+            lock = threading.Lock()
+            induced_rules_count = 0
+            on_progress_calls_count = 0
+
+            def on_new_rule(self, rule: Rule):
+                self.lock.acquire()
+                self.induced_rules_count += 1
+                self.lock.release()
+
+            def on_progress(
+                self,
+                total_examples_count: int,
+                uncovered_examples_count: int
+            ):
+                self.lock.acquire()
+                self.on_progress_calls_count += 1
+                self.lock.release()
+
+        listener = EventListener()
+        rulekit_clf.add_event_listener(listener)
+        rulekit_clf.fit(x, y)
+        rules_count = len(rulekit_clf.model.rules)
+        self.assertEqual(
+            rules_count, listener.induced_rules_count
+        )
+        self.assertEqual(rules_count, listener.on_progress_calls_count)
 
     def test_getting_examples_coverage(self):
         clf = classification.RuleClassifier()
@@ -111,6 +149,31 @@ class TestClassifier(unittest.TestCase):
             assert_accuracy_is_greater(tree.predict(
                 example_set.values), example_set.labels, 0.9)
 
+    def test_predict_proba(self):
+        test_case = get_test_cases('ClassificationSnCTest')[0]
+        params = test_case.induction_params
+        clf = classification.ExpertRuleClassifier(**params)
+        example_set = test_case.example_set
+        clf.fit(
+            example_set.values,
+            example_set.labels,
+        )
+        res = clf.predict_proba(example_set.values)
+        self.assertEqual(
+            res.shape[0],
+            example_set.values.shape[0],
+            'Should have as many rows as the original dataset'
+        )
+        self.assertEqual(
+            res.shape[1],
+            np.unique(example_set.labels).shape[0],
+            'Should have as many columns as there are classes in the dataset'
+        )
+        self.assertTrue(
+            res.max() <= 1 and res.min() >= 0,
+            'Predicted probabilities should be in range [0, 1]'
+        )
+
 
 class TestExperClassifier(unittest.TestCase):
 
@@ -119,19 +182,45 @@ class TestExperClassifier(unittest.TestCase):
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = classification.ExpertRuleClassifier(**params)
+            clf = classification.ExpertRuleClassifier(**params)
             example_set = test_case.example_set
-            tree.fit(example_set.values,
-                     example_set.labels,
-                     expert_rules=test_case.knowledge.expert_rules,
-                     expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
-                     expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
-            model = tree.model
+            clf.fit(example_set.values,
+                    example_set.labels,
+                    expert_rules=test_case.knowledge.expert_rules,
+                    expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
+                    expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
+            model = clf.model
             expected = test_case.reference_report.rules
             actual = list(map(lambda e: str(e), model.rules))
             assert_rules_are_equals(expected, actual)
-            assert_accuracy_is_greater(tree.predict(
+            assert_accuracy_is_greater(clf.predict(
                 example_set.values), example_set.labels, 0.9)
+
+    def test_predict_proba(self):
+        test_case = get_test_cases('ClassificationExpertSnCTest')[0]
+        params = test_case.induction_params
+        clf = classification.ExpertRuleClassifier(**params)
+        example_set = test_case.example_set
+        clf.fit(example_set.values,
+                example_set.labels,
+                expert_rules=test_case.knowledge.expert_rules,
+                expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
+                expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
+        res = clf.predict_proba(example_set.values)
+        self.assertEqual(
+            res.shape[0],
+            example_set.values.shape[0],
+            'Should have as many rows as the original dataset'
+        )
+        self.assertEqual(
+            res.shape[1],
+            np.unique(example_set.labels).shape[0],
+            'Should have as many columns as there are classes in the dataset'
+        )
+        self.assertTrue(
+            res.max() <= 1 and res.min() >= 0,
+            'Predicted probabilities should be in range [0, 1]'
+        )
 
 
 if __name__ == '__main__':

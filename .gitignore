@@ -239,6 +239,7 @@ celerybeat.pid
 .env
 .venv
 env/
+env1/
 venv/
 ENV/
 env.bak/
@@ -287,3 +288,6 @@ doc/build/html/.buildinfo
 doc/build/html/.buildinfo
 
 RELEASE_INSTRUCTION.md
+
+notebooks/
+classification_tabular_datasets/

@@ -103,7 +103,7 @@ class RuleGeneratorConfigurator:
                 self.rule_generator.setParameter(param_name, param_value)
 
     def _configure_rule_generator(self, **kwargs: dict[str, Any]):
-        if kwargs.get('min_rule_covered', None) is not None:
+        if 'min_rule_covered' in kwargs and kwargs.get('min_rule_covered', None) is not None:
             # backward compatibility
             # TODO remove in version 2.0.0
             warn(
@@ -114,8 +114,7 @@ class RuleGeneratorConfigurator:
                 stacklevel=6
             )
             kwargs['minsupp_new'] = kwargs['min_rule_covered']
-        else:
-            kwargs['min_rule_covered'] = kwargs['minsupp_new']
+            del kwargs['min_rule_covered']
 
         if kwargs.get('induction_measure') == Measures.LogRank or \
                 kwargs.get('pruning_measure') == Measures.LogRank or \
