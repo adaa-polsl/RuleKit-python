@@ -4,7 +4,6 @@ from __future__ import annotations
 from typing import Union, Any, Optional
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator
 from pydantic import BaseModel
 
 from .main import RuleKit
@@ -22,7 +21,7 @@ from .events import RuleInductionProgressListener, command_proxy_client_factory
 Data = Union[np.ndarray, pd.DataFrame, list]
 
 
-class BaseOperator(BaseEstimator):
+class BaseOperator:
     """Base class for rule induction operator
     """
 
@@ -116,6 +115,12 @@ class BaseOperator(BaseEstimator):
         return self
 
     def get_metadata_routing(self) -> None:
+        """
+        .. warning:: Scikit-learn metadata routing is not supported yet.
+
+        Raises:
+            NotImplementedError: _description_
+        """
         raise NotImplementedError(
             'Scikit-learn metadata routing is not supported yet.'
         )

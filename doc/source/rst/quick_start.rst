@@ -28,28 +28,6 @@ To check if everything was installed correctly call:
 
 It should run without errors and print package version.
 
-Initializing package
---------------------
-
-Before you start using any of rulelkit package functionality you need to initialize it first. This step should be done only
-once at the beginning of the program, no need to initialize before every usage.
-
-.. code-block:: python
-
-    from rulekit import RuleKit
-
-    RuleKit.init()
-  
-    print(RuleKit.version)
-
-If this step failed it probably means one of two things:
-
-- you do not have java installed on your computer. Run :code:`'java -version'` and check for error and JRE version (it should be 1.8.0)
-
-- there is no *'rulekit-*-all.jar'* file in *'jar'* directory of the package. You can get jar file from `here <https://github.com/adaa-polsl/RuleKit/releases>`_ (download file ending with *'-all.jar'*).
-
-If everything worked fine it should print RuleKit jar version on the screen. You may wonder what is the difference between this version and the one printed at the beginning of this section. The first one is a version of python wrapper itself whereas the second on is a version of the `RuleKit <https://github.com/adaa-polsl/RuleKit>`_ library that is being used by the wrapper.
-
 Package usage
 --------------------
 
@@ -64,9 +42,6 @@ Now we are finally ready to use rulekit package and its models.
     iris=datasets.load_iris()
     X=iris.data
     y=iris.target
-
-    # don't forget to call init!
-    RuleKit.init()
 
     classifier = RuleClassifier()
     classifier.fit(X, y)

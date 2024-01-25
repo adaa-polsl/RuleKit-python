@@ -6,7 +6,7 @@ from .rules import Rule
 
 class RuleInductionProgressListener:
 
-    def on_new_rule(self, rule):
+    def on_new_rule(self, rule: str):
         pass
 
     def on_progress(

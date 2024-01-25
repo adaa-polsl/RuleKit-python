@@ -20,5 +20,6 @@ All package models are writen to be compatible with scikit learn library.
    :caption: Table of contents:
 
    Quick start <./rst/quick_start.rst>
+   Whats new <./rst/whats_new.rst>
    Tutorials <./rst/tutorials.rst>
    Code documentation <./rst/autodoc.rst>
