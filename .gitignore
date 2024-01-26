@@ -283,6 +283,7 @@ tests/resources
 
 *.pickle
 
+doc/doc_env/
 doc/build/html
 doc/build/html/.buildinfo
 doc/build/html/.buildinfo

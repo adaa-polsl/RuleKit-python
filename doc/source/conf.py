@@ -13,18 +13,20 @@
 import os
 import sys
 import re
+from datetime import datetime
 sys.path.insert(0, os.path.abspath('../..'))
 
 current_path = os.path.dirname(os.path.realpath(__file__))
 
+import rulekit
 
 # -- Project information -----------------------------------------------------
 
-project = 'rulekit'
-copyright = '2023, ADAA'
+project = f'rulekit v{rulekit.__VERSION__}'
+copyright = f'{datetime.now().year}, ADAA'
 
 release = open(f'{current_path}/../../rulekit/__init__.py', mode='r').read().strip()
-version_regex = r'__version__\s*=\s*\'{0,1}"{0,1}([^\'"]+)\'{0,1}"{0,1}'
+version_regex = r'__VERSION__\s*=\s*\'{0,1}"{0,1}([^\'"]+)\'{0,1}"{0,1}'
 release = re.search(version_regex, release)[1]
 master_doc = 'index'
 

@@ -18,9 +18,13 @@ class JRE_Type(Enum):  # pylint: disable=invalid-name
 
 
 class RuleKit:
-    """Class used for initializing RuleKit
+    """Class used for initializing RuleKit. It starts JVM underhood and setups it with jars. 
 
-    It starts JVM underhood and setups it with jars. 
+    .. note:: Since version 1.7.0 there is no need to manually initialize RuleKit. 
+    You may just skip the **RuleKit.init()** line. However in certain scenarios when
+    you want use a custom RuleKit jar file or modify Java VM parameters, this class
+    can be used.
+
 
     Attributes
     ----------
@@ -57,8 +61,11 @@ class RuleKit:
     ):
         """Initialize package.
 
-        This method must by called before using any operators in this package.
-        It configure and starts JVM and load RuleKit jar file.
+        This method configure and starts JVM and load RuleKit jar file. 
+
+        .. note:: Since version 1.7.0 it don't have to be called before using any operator class. 
+        However in certain scenarios when you want use a custom RuleKit jar file or modify Java VM
+        parameters, this method can be used.
 
         Parameters
         ----------

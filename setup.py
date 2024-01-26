@@ -41,7 +41,6 @@ setuptools.setup(
         "pydantic ~= 2.5.3"
     ],
     test_suite="tests",
-    download_url = 'https://github.com/adaa-polsl/RuleKit-python/archive/refs/tags/v1.6.0.tar.gz',
     project_urls={
         'Bug Tracker': 'https://github.com/adaa-polsl/RuleKit-python/issues',
         'Documentation': 'https://adaa-polsl.github.io/RuleKit-python/',

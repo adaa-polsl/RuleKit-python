@@ -38,13 +38,11 @@ from rulekit import RuleKit
 from rulekit.classification import RuleClassifier
 from sklearn.datasets import load_iris
  
-RuleKit.init()
- 
-x, y = load_iris(return_X_y=True)
+X, y = load_iris(return_X_y=True)
  
 clf = RuleClassifier()
-clf.fit(x, y)
-prediction = clf.predict(x)
+clf.fit(X, y)
+prediction = clf.predict(X)
  
 print(prediction)
 ```
