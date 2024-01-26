@@ -40,7 +40,7 @@ setuptools.setup(
         "JPype1 ~= 1.5.0",
         "pydantic ~= 2.5.3"
     ],
-    test_suite="tests",,
+    test_suite="tests",
     project_urls={
         'Bug Tracker': 'https://github.com/adaa-polsl/RuleKit-python/issues',
         'Documentation': 'https://adaa-polsl.github.io/RuleKit-python/',
