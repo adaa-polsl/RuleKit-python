@@ -1,34 +1,15 @@
 {
- "metadata": {
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.8.6"
-  },
-  "orig_nbformat": 2,
-  "kernelspec": {
-   "name": "rulekit",
-   "display_name": "Python 3.8.6 64-bit ('env': venv)"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 2,
  "cells": [
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "# Classification"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "This notebook presents example usage of package for solving classification problem on `seismic-bumps` dataset. You can download dataset [here](https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/seismic-bumps/seismic-bumps.arff).\n",
     "\n",
@@ -38,25 +19,207 @@
     "- hyperparameters tuning   \n",
     "- calculating metrics for model    \n",
     "- getting RuleKit inbuilt   "
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Summary of the dataset"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 28,
+   "execution_count": 1,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "execute_result",
      "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>genergy</th>\n",
+       "      <th>gimpuls</th>\n",
+       "      <th>goenergy</th>\n",
+       "      <th>goimpuls</th>\n",
+       "      <th>nbumps</th>\n",
+       "      <th>nbumps2</th>\n",
+       "      <th>nbumps3</th>\n",
+       "      <th>nbumps4</th>\n",
+       "      <th>nbumps5</th>\n",
+       "      <th>nbumps6</th>\n",
+       "      <th>nbumps7</th>\n",
+       "      <th>nbumps89</th>\n",
+       "      <th>senergy</th>\n",
+       "      <th>maxenergy</th>\n",
+       "      <th>class</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>2.584000e+03</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.0</td>\n",
+       "      <td>2584.0</td>\n",
+       "      <td>2584.0</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "      <td>2584.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>9.024252e+04</td>\n",
+       "      <td>538.579334</td>\n",
+       "      <td>12.375774</td>\n",
+       "      <td>4.508901</td>\n",
+       "      <td>0.859520</td>\n",
+       "      <td>0.393576</td>\n",
+       "      <td>0.392802</td>\n",
+       "      <td>0.067724</td>\n",
+       "      <td>0.004644</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>4975.270898</td>\n",
+       "      <td>4278.850619</td>\n",
+       "      <td>0.065789</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>2.292005e+05</td>\n",
+       "      <td>562.652536</td>\n",
+       "      <td>80.319051</td>\n",
+       "      <td>63.166556</td>\n",
+       "      <td>1.364616</td>\n",
+       "      <td>0.783772</td>\n",
+       "      <td>0.769710</td>\n",
+       "      <td>0.279059</td>\n",
+       "      <td>0.068001</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>20450.833222</td>\n",
+       "      <td>19357.454882</td>\n",
+       "      <td>0.247962</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>1.000000e+02</td>\n",
+       "      <td>2.000000</td>\n",
+       "      <td>-96.000000</td>\n",
+       "      <td>-96.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>1.166000e+04</td>\n",
+       "      <td>190.000000</td>\n",
+       "      <td>-37.000000</td>\n",
+       "      <td>-36.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>2.548500e+04</td>\n",
+       "      <td>379.000000</td>\n",
+       "      <td>-6.000000</td>\n",
+       "      <td>-6.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>5.283250e+04</td>\n",
+       "      <td>669.000000</td>\n",
+       "      <td>38.000000</td>\n",
+       "      <td>30.250000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>2600.000000</td>\n",
+       "      <td>2000.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>2.595650e+06</td>\n",
+       "      <td>4518.000000</td>\n",
+       "      <td>1245.000000</td>\n",
+       "      <td>838.000000</td>\n",
+       "      <td>9.000000</td>\n",
+       "      <td>8.000000</td>\n",
+       "      <td>7.000000</td>\n",
+       "      <td>3.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>402000.000000</td>\n",
+       "      <td>400000.000000</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
       "text/plain": [
        "            genergy      gimpuls     goenergy     goimpuls       nbumps  \\\n",
        "count  2.584000e+03  2584.000000  2584.000000  2584.000000  2584.000000   \n",
@@ -87,42 +250,43 @@
        "50%         0.0       0.000000       0.000000     0.000000  \n",
        "75%         0.0    2600.000000    2000.000000     0.000000  \n",
        "max         0.0  402000.000000  400000.000000     1.000000  "
-      ],
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>genergy</th>\n      <th>gimpuls</th>\n      <th>goenergy</th>\n      <th>goimpuls</th>\n      <th>nbumps</th>\n      <th>nbumps2</th>\n      <th>nbumps3</th>\n      <th>nbumps4</th>\n      <th>nbumps5</th>\n      <th>nbumps6</th>\n      <th>nbumps7</th>\n      <th>nbumps89</th>\n      <th>senergy</th>\n      <th>maxenergy</th>\n      <th>class</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>count</th>\n      <td>2.584000e+03</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.0</td>\n      <td>2584.0</td>\n      <td>2584.0</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n      <td>2584.000000</td>\n    </tr>\n    <tr>\n      <th>mean</th>\n      <td>9.024252e+04</td>\n      <td>538.579334</td>\n      <td>12.375774</td>\n      <td>4.508901</td>\n      <td>0.859520</td>\n      <td>0.393576</td>\n      <td>0.392802</td>\n      <td>0.067724</td>\n      <td>0.004644</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>4975.270898</td>\n      <td>4278.850619</td>\n      <td>0.065789</td>\n    </tr>\n    <tr>\n      <th>std</th>\n      <td>2.292005e+05</td>\n      <td>562.652536</td>\n      <td>80.319051</td>\n      <td>63.166556</td>\n      <td>1.364616</td>\n      <td>0.783772</td>\n      <td>0.769710</td>\n      <td>0.279059</td>\n      <td>0.068001</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>20450.833222</td>\n      <td>19357.454882</td>\n      <td>0.247962</td>\n    </tr>\n    <tr>\n      <th>min</th>\n      <td>1.000000e+02</td>\n      <td>2.000000</td>\n      <td>-96.000000</td>\n      <td>-96.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n    </tr>\n    <tr>\n      <th>25%</th>\n      <td>1.166000e+04</td>\n      <td>190.000000</td>\n      <td>-37.000000</td>\n      <td>-36.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n    </tr>\n    <tr>\n      <th>50%</th>\n      <td>2.548500e+04</td>\n      <td>379.000000</td>\n      <td>-6.000000</td>\n      <td>-6.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n    </tr>\n    <tr>\n      <th>75%</th>\n      <td>5.283250e+04</td>\n      <td>669.000000</td>\n      <td>38.000000</td>\n      <td>30.250000</td>\n      <td>1.000000</td>\n      <td>1.000000</td>\n      <td>1.000000</td>\n      <td>0.000000</td>\n      <td>0.000000</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>2600.000000</td>\n      <td>2000.000000</td>\n      <td>0.000000</td>\n    </tr>\n    <tr>\n      <th>max</th>\n      <td>2.595650e+06</td>\n      <td>4518.000000</td>\n      <td>1245.000000</td>\n      <td>838.000000</td>\n      <td>9.000000</td>\n      <td>8.000000</td>\n      <td>7.000000</td>\n      <td>3.000000</td>\n      <td>1.000000</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>402000.000000</td>\n      <td>400000.000000</td>\n      <td>1.000000</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      ]
      },
+     "execution_count": 1,
      "metadata": {},
-     "execution_count": 28
+     "output_type": "execute_result"
     }
    ],
    "source": [
     "from scipy.io import arff\n",
     "import pandas as pd\n",
     "\n",
-    "df_full = pd.DataFrame(arff.loadarff('../../../../../data/seismic-bumps/seismic-bumps.arff')[0])\n",
+    "df_full = pd.DataFrame(arff.loadarff('./seismic-bumps.arff')[0])\n",
     "df_full['class'] = df_full['class'].astype(int)\n",
     "df_full.describe()"
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "### Decision class distribution"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "<Figure size 432x288 with 1 Axes>",
-      "image/svg+xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\r\n<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\r\n  \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n<!-- Created with matplotlib (https://matplotlib.org/) -->\r\n<svg height=\"236.173697pt\" version=\"1.1\" viewBox=\"0 0 349.2 236.173697\" width=\"349.2pt\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n <metadata>\r\n  <rdf:RDF xmlns:cc=\"http://creativecommons.org/ns#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\r\n   <cc:Work>\r\n    <dc:type rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\"/>\r\n    <dc:date>2021-03-25T09:37:19.290051</dc:date>\r\n    <dc:format>image/svg+xml</dc:format>\r\n    <dc:creator>\r\n     <cc:Agent>\r\n      <dc:title>Matplotlib v3.3.4, https://matplotlib.org/</dc:title>\r\n     </cc:Agent>\r\n    </dc:creator>\r\n   </cc:Work>\r\n  </rdf:RDF>\r\n </metadata>\r\n <defs>\r\n  <style type=\"text/css\">*{stroke-linecap:butt;stroke-linejoin:round;}</style>\r\n </defs>\r\n <g id=\"figure_1\">\r\n  <g id=\"patch_1\">\r\n   <path d=\"M 0 236.173697 \r\nL 349.2 236.173697 \r\nL 349.2 0 \r\nL 0 0 \r\nz\r\n\" style=\"fill:none;\"/>\r\n  </g>\r\n  <g id=\"axes_1\">\r\n   <g id=\"patch_2\">\r\n    <path d=\"M 172.726649 21.553377 \r\nC 160.647186 21.553377 148.670118 23.775329 137.39446 28.108106 \r\nC 126.118801 32.440883 115.735716 38.811028 106.764496 46.899949 \r\nC 97.793276 54.98887 90.386018 64.65943 84.913182 75.427973 \r\nC 79.440346 86.196515 75.994718 97.880472 74.748624 109.895491 \r\nC 73.502531 121.91051 74.477099 134.052892 77.623586 145.715355 \r\nC 80.770073 157.377818 86.035135 168.362641 93.155448 178.120436 \r\nC 100.275762 187.878232 109.130611 196.243568 119.277136 202.798067 \r\nC 129.423661 209.352567 140.68984 213.985106 152.512214 216.463997 \r\nC 164.334589 218.942888 176.512725 219.226103 188.437554 217.299479 \r\nC 200.362383 215.372855 211.831735 211.269055 222.27199 205.193323 \r\nC 232.712244 199.117591 241.9464 191.172934 249.512626 181.75669 \r\nC 257.078853 172.340446 262.848874 161.612255 266.534112 150.108671 \r\nC 270.219351 138.605087 271.757327 126.521137 271.071123 114.461181 \r\nC 270.384919 102.401224 267.486168 90.569721 262.519846 79.558405 \r\nC 257.553524 68.547089 250.603829 58.542643 242.018338 50.045422 \r\nC 233.432846 41.5482 223.357115 34.702264 212.295064 29.849999 \r\nL 172.726649 120.05692 \r\nL 172.726649 21.553377 \r\nz\r\n\" style=\"fill:#092436;opacity:0.5;stroke:#092436;stroke-linejoin:miter;\"/>\r\n   </g>\r\n   <g id=\"patch_3\">\r\n    <path d=\"M 212.295064 29.849999 \r\nC 206.074771 27.121526 199.588909 25.043744 192.941079 23.649841 \r\nC 186.293248 22.255938 179.519034 21.553376 172.72664 21.553377 \r\nL 172.726649 120.05692 \r\nL 212.295064 29.849999 \r\nz\r\n\" style=\"fill:#4c2604;opacity:0.5;stroke:#4c2604;stroke-linejoin:miter;\"/>\r\n   </g>\r\n   <g id=\"patch_4\">\r\n    <path d=\"M 174.69672 19.583306 \r\nC 162.617256 19.583306 150.640189 21.805258 139.364531 26.138035 \r\nC 128.088872 30.470812 117.705787 36.840957 108.734567 44.929878 \r\nC 99.763347 53.0188 92.356088 62.68936 86.883253 73.457902 \r\nC 81.410417 84.226444 77.964788 95.910401 76.718695 107.92542 \r\nC 75.472602 119.940439 76.447169 132.082821 79.593656 143.745284 \r\nC 82.740144 155.407748 88.005205 166.39257 95.125519 176.150366 \r\nC 102.245833 185.908161 111.100682 194.273497 121.247207 200.827997 \r\nC 131.393732 207.382496 142.659911 212.015036 154.482285 214.493926 \r\nC 166.30466 216.972817 178.482796 217.256033 190.407625 215.329408 \r\nC 202.332454 213.402784 213.801806 209.298984 224.242061 203.223252 \r\nC 234.682315 197.14752 243.916471 189.202863 251.482697 179.786619 \r\nC 259.048924 170.370375 264.818945 159.642185 268.504183 148.1386 \r\nC 272.189421 136.635016 273.727398 124.551066 273.041194 112.49111 \r\nC 272.35499 100.431153 269.456239 88.59965 264.489917 77.588334 \r\nC 259.523595 66.577019 252.5739 56.572572 243.988408 48.075351 \r\nC 235.402917 39.57813 225.327186 32.732193 214.265135 27.879929 \r\nL 174.69672 118.086849 \r\nL 174.69672 19.583306 \r\nz\r\n\" style=\"fill:#1f77b4;\"/>\r\n   </g>\r\n   <g id=\"patch_5\">\r\n    <path d=\"M 214.265135 27.879929 \r\nC 208.044842 25.151455 201.55898 23.073673 194.91115 21.67977 \r\nC 188.263319 20.285867 181.489104 19.583305 174.696711 19.583306 \r\nL 174.69672 118.086849 \r\nL 214.265135 27.879929 \r\nz\r\n\" style=\"fill:#ff7f0e;\"/>\r\n   </g>\r\n   <g id=\"matplotlib.axis_1\"/>\r\n   <g id=\"matplotlib.axis_2\"/>\r\n   <g id=\"text_1\">\r\n    <!-- 0 -->\r\n    <g transform=\"translate(146.098342 226.894009)scale(0.1 -0.1)\">\r\n     <defs>\r\n      <path d=\"M 31.78125 66.40625 \r\nQ 24.171875 66.40625 20.328125 58.90625 \r\nQ 16.5 51.421875 16.5 36.375 \r\nQ 16.5 21.390625 20.328125 13.890625 \r\nQ 24.171875 6.390625 31.78125 6.390625 \r\nQ 39.453125 6.390625 43.28125 13.890625 \r\nQ 47.125 21.390625 47.125 36.375 \r\nQ 47.125 51.421875 43.28125 58.90625 \r\nQ 39.453125 66.40625 31.78125 66.40625 \r\nz\r\nM 31.78125 74.21875 \r\nQ 44.046875 74.21875 50.515625 64.515625 \r\nQ 56.984375 54.828125 56.984375 36.375 \r\nQ 56.984375 17.96875 50.515625 8.265625 \r\nQ 44.046875 -1.421875 31.78125 -1.421875 \r\nQ 19.53125 -1.421875 13.0625 8.265625 \r\nQ 6.59375 17.96875 6.59375 36.375 \r\nQ 6.59375 54.828125 13.0625 64.515625 \r\nQ 19.53125 74.21875 31.78125 74.21875 \r\nz\r\n\" id=\"DejaVuSans-48\"/>\r\n     </defs>\r\n     <use xlink:href=\"#DejaVuSans-48\"/>\r\n    </g>\r\n   </g>\r\n   <g id=\"text_2\">\r\n    <!-- 93.4% -->\r\n    <g transform=\"translate(146.684465 178.69047)scale(0.1 -0.1)\">\r\n     <defs>\r\n      <path d=\"M 10.984375 1.515625 \r\nL 10.984375 10.5 \r\nQ 14.703125 8.734375 18.5 7.8125 \r\nQ 22.3125 6.890625 25.984375 6.890625 \r\nQ 35.75 6.890625 40.890625 13.453125 \r\nQ 46.046875 20.015625 46.78125 33.40625 \r\nQ 43.953125 29.203125 39.59375 26.953125 \r\nQ 35.25 24.703125 29.984375 24.703125 \r\nQ 19.046875 24.703125 12.671875 31.3125 \r\nQ 6.296875 37.9375 6.296875 49.421875 \r\nQ 6.296875 60.640625 12.9375 67.421875 \r\nQ 19.578125 74.21875 30.609375 74.21875 \r\nQ 43.265625 74.21875 49.921875 64.515625 \r\nQ 56.59375 54.828125 56.59375 36.375 \r\nQ 56.59375 19.140625 48.40625 8.859375 \r\nQ 40.234375 -1.421875 26.421875 -1.421875 \r\nQ 22.703125 -1.421875 18.890625 -0.6875 \r\nQ 15.09375 0.046875 10.984375 1.515625 \r\nz\r\nM 30.609375 32.421875 \r\nQ 37.25 32.421875 41.125 36.953125 \r\nQ 45.015625 41.5 45.015625 49.421875 \r\nQ 45.015625 57.28125 41.125 61.84375 \r\nQ 37.25 66.40625 30.609375 66.40625 \r\nQ 23.96875 66.40625 20.09375 61.84375 \r\nQ 16.21875 57.28125 16.21875 49.421875 \r\nQ 16.21875 41.5 20.09375 36.953125 \r\nQ 23.96875 32.421875 30.609375 32.421875 \r\nz\r\n\" id=\"DejaVuSans-57\"/>\r\n      <path d=\"M 40.578125 39.3125 \r\nQ 47.65625 37.796875 51.625 33 \r\nQ 55.609375 28.21875 55.609375 21.1875 \r\nQ 55.609375 10.40625 48.1875 4.484375 \r\nQ 40.765625 -1.421875 27.09375 -1.421875 \r\nQ 22.515625 -1.421875 17.65625 -0.515625 \r\nQ 12.796875 0.390625 7.625 2.203125 \r\nL 7.625 11.71875 \r\nQ 11.71875 9.328125 16.59375 8.109375 \r\nQ 21.484375 6.890625 26.8125 6.890625 \r\nQ 36.078125 6.890625 40.9375 10.546875 \r\nQ 45.796875 14.203125 45.796875 21.1875 \r\nQ 45.796875 27.640625 41.28125 31.265625 \r\nQ 36.765625 34.90625 28.71875 34.90625 \r\nL 20.21875 34.90625 \r\nL 20.21875 43.015625 \r\nL 29.109375 43.015625 \r\nQ 36.375 43.015625 40.234375 45.921875 \r\nQ 44.09375 48.828125 44.09375 54.296875 \r\nQ 44.09375 59.90625 40.109375 62.90625 \r\nQ 36.140625 65.921875 28.71875 65.921875 \r\nQ 24.65625 65.921875 20.015625 65.03125 \r\nQ 15.375 64.15625 9.8125 62.3125 \r\nL 9.8125 71.09375 \r\nQ 15.4375 72.65625 20.34375 73.4375 \r\nQ 25.25 74.21875 29.59375 74.21875 \r\nQ 40.828125 74.21875 47.359375 69.109375 \r\nQ 53.90625 64.015625 53.90625 55.328125 \r\nQ 53.90625 49.265625 50.4375 45.09375 \r\nQ 46.96875 40.921875 40.578125 39.3125 \r\nz\r\n\" id=\"DejaVuSans-51\"/>\r\n      <path d=\"M 10.6875 12.40625 \r\nL 21 12.40625 \r\nL 21 0 \r\nL 10.6875 0 \r\nz\r\n\" id=\"DejaVuSans-46\"/>\r\n      <path d=\"M 37.796875 64.3125 \r\nL 12.890625 25.390625 \r\nL 37.796875 25.390625 \r\nz\r\nM 35.203125 72.90625 \r\nL 47.609375 72.90625 \r\nL 47.609375 25.390625 \r\nL 58.015625 25.390625 \r\nL 58.015625 17.1875 \r\nL 47.609375 17.1875 \r\nL 47.609375 0 \r\nL 37.796875 0 \r\nL 37.796875 17.1875 \r\nL 4.890625 17.1875 \r\nL 4.890625 26.703125 \r\nz\r\n\" id=\"DejaVuSans-52\"/>\r\n      <path d=\"M 72.703125 32.078125 \r\nQ 68.453125 32.078125 66.03125 28.46875 \r\nQ 63.625 24.859375 63.625 18.40625 \r\nQ 63.625 12.0625 66.03125 8.421875 \r\nQ 68.453125 4.78125 72.703125 4.78125 \r\nQ 76.859375 4.78125 79.265625 8.421875 \r\nQ 81.6875 12.0625 81.6875 18.40625 \r\nQ 81.6875 24.8125 79.265625 28.4375 \r\nQ 76.859375 32.078125 72.703125 32.078125 \r\nz\r\nM 72.703125 38.28125 \r\nQ 80.421875 38.28125 84.953125 32.90625 \r\nQ 89.5 27.546875 89.5 18.40625 \r\nQ 89.5 9.28125 84.9375 3.921875 \r\nQ 80.375 -1.421875 72.703125 -1.421875 \r\nQ 64.890625 -1.421875 60.34375 3.921875 \r\nQ 55.8125 9.28125 55.8125 18.40625 \r\nQ 55.8125 27.59375 60.375 32.9375 \r\nQ 64.9375 38.28125 72.703125 38.28125 \r\nz\r\nM 22.3125 68.015625 \r\nQ 18.109375 68.015625 15.6875 64.375 \r\nQ 13.28125 60.75 13.28125 54.390625 \r\nQ 13.28125 47.953125 15.671875 44.328125 \r\nQ 18.0625 40.71875 22.3125 40.71875 \r\nQ 26.5625 40.71875 28.96875 44.328125 \r\nQ 31.390625 47.953125 31.390625 54.390625 \r\nQ 31.390625 60.6875 28.953125 64.34375 \r\nQ 26.515625 68.015625 22.3125 68.015625 \r\nz\r\nM 66.40625 74.21875 \r\nL 74.21875 74.21875 \r\nL 28.609375 -1.421875 \r\nL 20.796875 -1.421875 \r\nz\r\nM 22.3125 74.21875 \r\nQ 30.03125 74.21875 34.609375 68.875 \r\nQ 39.203125 63.53125 39.203125 54.390625 \r\nQ 39.203125 45.171875 34.640625 39.84375 \r\nQ 30.078125 34.515625 22.3125 34.515625 \r\nQ 14.546875 34.515625 10.03125 39.859375 \r\nQ 5.515625 45.21875 5.515625 54.390625 \r\nQ 5.515625 63.484375 10.046875 68.84375 \r\nQ 14.59375 74.21875 22.3125 74.21875 \r\nz\r\n\" id=\"DejaVuSans-37\"/>\r\n     </defs>\r\n     <use xlink:href=\"#DejaVuSans-57\"/>\r\n     <use x=\"63.623047\" xlink:href=\"#DejaVuSans-51\"/>\r\n     <use x=\"127.246094\" xlink:href=\"#DejaVuSans-46\"/>\r\n     <use x=\"159.033203\" xlink:href=\"#DejaVuSans-52\"/>\r\n     <use x=\"222.65625\" xlink:href=\"#DejaVuSans-37\"/>\r\n    </g>\r\n   </g>\r\n   <g id=\"text_3\">\r\n    <!-- 1 -->\r\n    <g transform=\"translate(196.932593 14.798438)scale(0.1 -0.1)\">\r\n     <defs>\r\n      <path d=\"M 12.40625 8.296875 \r\nL 28.515625 8.296875 \r\nL 28.515625 63.921875 \r\nL 10.984375 60.40625 \r\nL 10.984375 69.390625 \r\nL 28.421875 72.90625 \r\nL 38.28125 72.90625 \r\nL 38.28125 8.296875 \r\nL 54.390625 8.296875 \r\nL 54.390625 0 \r\nL 12.40625 0 \r\nz\r\n\" id=\"DejaVuSans-49\"/>\r\n     </defs>\r\n     <use xlink:href=\"#DejaVuSans-49\"/>\r\n    </g>\r\n   </g>\r\n   <g id=\"text_4\">\r\n    <!-- 6.6% -->\r\n    <g transform=\"translate(174.123034 63.001977)scale(0.1 -0.1)\">\r\n     <defs>\r\n      <path d=\"M 33.015625 40.375 \r\nQ 26.375 40.375 22.484375 35.828125 \r\nQ 18.609375 31.296875 18.609375 23.390625 \r\nQ 18.609375 15.53125 22.484375 10.953125 \r\nQ 26.375 6.390625 33.015625 6.390625 \r\nQ 39.65625 6.390625 43.53125 10.953125 \r\nQ 47.40625 15.53125 47.40625 23.390625 \r\nQ 47.40625 31.296875 43.53125 35.828125 \r\nQ 39.65625 40.375 33.015625 40.375 \r\nz\r\nM 52.59375 71.296875 \r\nL 52.59375 62.3125 \r\nQ 48.875 64.0625 45.09375 64.984375 \r\nQ 41.3125 65.921875 37.59375 65.921875 \r\nQ 27.828125 65.921875 22.671875 59.328125 \r\nQ 17.53125 52.734375 16.796875 39.40625 \r\nQ 19.671875 43.65625 24.015625 45.921875 \r\nQ 28.375 48.1875 33.59375 48.1875 \r\nQ 44.578125 48.1875 50.953125 41.515625 \r\nQ 57.328125 34.859375 57.328125 23.390625 \r\nQ 57.328125 12.15625 50.6875 5.359375 \r\nQ 44.046875 -1.421875 33.015625 -1.421875 \r\nQ 20.359375 -1.421875 13.671875 8.265625 \r\nQ 6.984375 17.96875 6.984375 36.375 \r\nQ 6.984375 53.65625 15.1875 63.9375 \r\nQ 23.390625 74.21875 37.203125 74.21875 \r\nQ 40.921875 74.21875 44.703125 73.484375 \r\nQ 48.484375 72.75 52.59375 71.296875 \r\nz\r\n\" id=\"DejaVuSans-54\"/>\r\n     </defs>\r\n     <use xlink:href=\"#DejaVuSans-54\"/>\r\n     <use x=\"63.623047\" xlink:href=\"#DejaVuSans-46\"/>\r\n     <use x=\"95.410156\" xlink:href=\"#DejaVuSans-54\"/>\r\n     <use x=\"159.033203\" xlink:href=\"#DejaVuSans-37\"/>\r\n    </g>\r\n   </g>\r\n  </g>\r\n </g>\r\n</svg>\r\n",
-      "image/png": "iVBORw0KGgoAAAANSUhEUgAAAV0AAADsCAYAAADXaXXTAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjMuNCwgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy8QVMy6AAAACXBIWXMAAAsTAAALEwEAmpwYAAAkh0lEQVR4nO3dd5hU5aE/8O85U/fMsI0FdqmDMFJFIOBEUQSNiC7GgiUWTCxJNPHGn0luMk+SJ5eb3Jtwfz9vFKwxxhhNgiUa2yT2ggWHIl2BQVjKLm37Ti/n/P44A4iCzOzOzDtn5vt5nnk2kS3fbd995z3v+x5J0zQQEVFhyKIDEBGVE5YuEVEBsXSJiAqIpUtEVEAsXSKiAmLpEhEVEEuX6BgkSXpEkqQDkiRtFJ2FSgtLl+jYHgUwV3QIKj0sXaJj0DRtGYB20Tmo9LB0iYgKiKVLRFRALF0iogJi6RIRFRBLl+gYJElaCmA5gDGSJO2RJOkm0ZmoNEg82pGIqHA40iUiKiCWLhFRAbF0iYgKyCw6ANEhLq+vFkA9gEHHeFkD/efVDMB8qfzunrusDwwDkASQ+MzLVgAtAJo/87IZC7u4u4yKAkuXCsrl9ZkBjAUwOf04FcAY6MVqzfT9mFLRdem3zczCqij0Ej5UxJsBrAGwBgu7dmX8foj6iKVLeePy+qwAPACm4EjBTgBg6+v7TkaCg1GR1ZvYAZyUfhxtYVUbgLUAVgB4H8ByjowpX1i6lFMur+8kABcAmKtp2mxJkhz5+DiSbIrn8N31B3Bu+gEAGhZWbYFewP8C8C8s7Arn8ONRGWPpUp+4vL4KALOhl+xcSZLch/5NkiRxwfpGgj4FMhbATQAiWFj1CoBnAbyIhV2dArORwbF0KWvpor0EwLWapp0rSZIdMHTJnsihz/cSAAksrHoLegE/h4Vd+wXmIgNi6VLGXF7fTE3TvgloV0iS3A8o6aI9HguAOenH/VhY9QGApwE8joVdHUKTkSGwdOlLuby+/gC+panqLZIsj9ZLtuyK9nhkAGemH7/FwqqlAO7Dwq41YmNRMWPp0jG5vL5TNVX9KSRpviRJVknmPpoTUKDP/96EhVXLr4//9M5l6qnPNy1qTIkORsWFpUtHGfGTF6dqavI3kskyR5JlDml7IaaZBy1TJ/0dwC6X13cXgIebFjWGROei4sDSJQDAiJ+8OF1LJRbJFts5kpzxHgU6hnvDc4IwSRKAEQDuBvAfLq9vCYA7mxY1BoWGI+F4tGOZG/GTFz1aKvE/ssV2tugs2bg0+kLzXdVPDBGd4/N6EnJiWvz3UszkONaAZj+A/4A+8uW0Q5niRF2ZGvGTF04Z/qNn35Vk+UOjFW4xey50SstxChfQtzo/CGC9y+ubV8BYVEQ4vVBmht/xtFNLJZfIFc5vyhYb/+jmUFKFdq95Qf8MXnU8gBddXt9bAH7ctKjxozxHoyLCX7oyMvT7f74Bsmm3Sam8QeJyhJx7Lzh4737zYGcWbzIbwCqX1/e4y+sbmq9cVFz4i1cGht32lzHDbl+60tyv7hHZYqsWnadULcbVvXnmKAG4DsBGl9d3Q44jURHi9EIJc3l91mSw/f+alKrvS7KJ3+s82hJytq+xfmVgH95FFYBHXF7fpQC+07SocV+OolGR4Ui3RA359oNnqLHwDrOz9nYWbv49mGjM1SlkF0Ef9V6Zo/dHRYalW2IUt0duuGHJ/zPXDH5HtimDRecpB60xc+Q527xcLl/rD+BJl9f3ZHobNpUQlm4JqZv3w4aac769wjZo1I85ui2cv0a+ul+TTPnYvXcl9FEvl5eVEJZuiRh01a/mVYz2bLLUNHxFdJZyEk1JqYct19Tn8UPUQ19e9muX18dt2SWApWtwittjavjmXYvtIyY/Z7I7a0TnKTcv94xu6TFV2wvwoX4B4BmX15eXO3FQ4bB0Daz2a98dVHPOt1fYGk7+gSSbTKLzlBtVAxabFmSzLrevLgXwgcvrcxXwY1KOsXQNqvZr3/E4xp651lLTMFV0lnK1Olh3YIdldKGfXUwCsNLl9c0s8MelHGHpGozi9ki1c2693jnx3NdMztp8ziXSCdyrzlcFfeg6AK+7vL7vCPr41AcsXQNR3B6TcvIZv3Cect5Dst3ZT3SecrYrbO9+x3a2yD96FgC/d3l9S1xeH3+PDYTfLINQ3B67MvasxY7xs34pW2w20XnK3R9j53aKzpD2bwD+7PL6OKdvECxdA1DcHqdjwuxHHOPOvlUymbn+VrDuuBxfarusmDaeXAfgCZfXZxEdhE6MpVvkFLen2jlpzlJlzJnfkGSeDFYMnglP3huXK4rtj9/lAP7h8vr4LKjI8Ze4iCluzwBl3MzHK0Z75klleK/zYpRQod1nXlAnOsdxNEJfy8v7LRUxlm6RUtyegRUnTXvIMXbmhezb4vFOz7CWVvOgYt6g0AjgKU41FC+WbhFS3J4a27CJv3NOmjOPUwrFZTGuMcLT94sBLHV5fcU2BUJg6RYdxe1xWuvdv62cOu9yXjQrLpuClW0bbKcW69TC580HcK/oEPRFLN0iorg9dkv/4b+snH7JAslsNcKIqqw8kLwoIjpDlr7r8vpuFx2CjsbSLRKK22MxV9X/uPKrl98iWysU0XnoaAei5vBLtrlFd8v3DPyvy+u7QHQIOoKlWwQUt8ck2ZSbq06/4g4Td5oVpcejMw4iP2fm5psJ+hreCaKDkI6lK5ji9kgArqycdskPTY6aWtF5jKYzquHyp8IYe28Q4+4LYvnu5Bde5+2mJCY/GMSE+4M4+9EQAOBgSMWZj4Qw8f4gntucOPy6Fz8RRkvP0UcqRJJS8hHL1UY+56ISwEsur2+A6CDEG1MWg7OVcTNvs9WPHi06iBHd/nIUc0eb8fcrrYinNIQTR/97Z1TD93xRvHydguFVMg6E9EJdujGBW6ZZcNk4Cy78axiXjLXgxS0JTKmXMbjf0WORl4JjWkL2yuGF+pzyxAV988S5TYsaY6LDlDOOdAVS3J6RloEjb3eMPes00VmMqCuqYdnOJG6aoi9JtZokVNuPngH424YELhtnxvAq/Ud9oEN/aZElhBNALAmYZCCparjbH8dPZhx9/VLVgCWmBVUF+HQKYQaAP4gOUe5YuoIobk8/2eb4YdX0S2fxfma9s6NTxQBFwg3PRzHl90Hc/EIEobh21OtsbVPREdEw69EQvvJQEI+tiwMArjnFgue3JHHe4yH87Ewb7l8Zx4JJFiiWo0vb3zNw327LyFIpXQBY4PL6bhIdopyxdAVQ3B4ZwI1Vp185T7Y7q0XnMaqkCny0V8Wt0yxY810nHBYJi96Lfe51NKzeq8J3jYJXrlPw62VxbG1LocouwXeNglXfcWJqgwkvbk3i8vEWfPuFCC5/Knx4bniJdoWITy3f7nZ5fSeJDlGuWLpizHVOmnOdpf8wl+ggRja0UsLQSgmeofoThcvHm/HRPvVzryPj/FEmOKwS6hQZM4ebsO5zr/PrZTH8/Cwblm5I4MzhJvz5kgosfCeG7eGKruW2GUa+gHY8TgCP8RxeMfhFLzDF7RlrrXd/v2L0abzNTh/VO2UMq5KxpTUFAHhjRxLj647+kb54jBnv7U4hqWoIJzT4m1MYN+DI6wTaUtjTrWKWy4xwQoMsAZIERBLAw/E5XQX9hAprBoCfig5Rjli6BaS4PTWQTbf1m9p4miTxTIVcuOcCO659NoJJDwSxdp+Kn51lw4Or4nhwlT53O26ACXNHmTHpgRBO+0MIN0+1YOLAI+d9//zNGP77HP3i2dWnWPDAqgSm/yGEG6faE09ZLzXiZohs/KfL65ssOkS5kTRNO/FrUZ+l53Hv6DflwisqTprmEZ3H6C6NvtB8V/UTeSvFhzqn7/yN/Y4R+Xr/RWQTgGlNixqjooOUC462Cme6ubp+ht015Suig9CXi6tQH7QsKJeNBBMA/FZ0iHLC0i0Axe2pBHB95bRLpnB5WPF7o8fV0m6qK6fzL253eX1niA5RLli6hTFfGTNjvLlqoEt0EDqxxdK15VS4ACABuMvl9RnxbAnDYenmmeL2jJXt/eYo3HVmCOuD1a2brRPK8QyM0wBcKzpEOWDp5pHi9tgA3Fg5/ZJTZLO13EZPhnRf8uJyPpfgty6vjz+necbSza+51nr3OMsAF4/VM4C9UUvoZdt5pb5M7MsMBfBj0SFKHUs3TxS3ZwiAi52nfG0CbyxpDH+OnN0qSWX/K/ETl9c3WHSIUlb2P2H5cOiMXPvwSXXmygEjReehEwslpMSjtitZNoADwG9EhyhlLN38GA3gVMf4WdzqaxAvhCa0RGUnb1uuu97l9XE9eZ6wdHPs0Ci3YtT0OpOjupznBw0jpUK7x7SgRnSOIiKBo928Yenm3gQAbuXkM6aIDkKZ+SBYv6/FMqxSdI4iM8fl9fGZWh6wdHMoPcq93D5yapVJqeL8oEEs0a7i78GxeUUHKEX8Ycut8QBcjjEzOB9mEIGQo3OlzTNIdI4iNd/l9fHefTnG0s2R9Cj3MtvQ8Q6To2aY6DyUmYcSc3tEZyhiMoAfiQ5Rali6uTMGwKiK0R636CCUmfaYKfqs7SJe7Pxy17u8Pl5kzCGWbu7Mle3OhKVmMHefGcTSyGn7U5KVvwNfTgFws+gQpYQ/cDmguD11ACY5xs0cwqMbjSGWgvqQ+bqBonMYxG0ur8904lejTLB0c8MDQLM2jOESG4N4LTiqpctcUyE6h0EMBzBPdIhSwdLtI8XtMQOYYxs6wWqq6Mer4AagasDd0nUO0TkMhsc+5ghLt+/GAqisGDWNc7kGsTZYe2CbdQwvDmWn0eX1OUWHKAUs3b47V7I5kpbaIRNFB6HM3Je6NCU6gwEpAL4uOkQpYOn2geL21AI41THmzAZJNvOwFAPYE7H1vG6b3SA6h0F9Q3SAUsDS7ZvTAGjWQSeNER2EMvOn2Ox2npnba+dzzW7f8aevl9I70OZIFnuXyVnrEp2HTiyYkBN/sV7BzRC9ZwVwmegQRsfS7b0hAKorRk6t59pcY3g2dEpLTK7g96pvOMXQRyzd3hsLANb60SeLDkInllSh3Wde0F90jhIw2+X1cVNJH7B0e+90AF3m6nqetWAA7waH7N1vHswlT31nAnC+6BBGxtLtBcXtqQQw0jp4TIVssfPwawNYjKu5uiR3zhYdwMhYur3jBgD7kPEc5RrA5pCzfa116gDROUrITNEBjIyl2zvTAMQs/YdxPtcAHkw0hkVnKDFul9fHtc69xNLNUvqshSmyzRGUlSouPypyrTFz5HnbPH6fco9TDL3E0s2eC4DF2nBynSRJkugw9OX+Ejl9vyaZ+H3KPZZuL7F0szcagGSpHcqnV0UukpRSf7RcXS86R4nivG4vsXSzNxZA0Fw5gHf7LXIvh9wtPaZqu+gcJWq8y+vjxcleYOlmIb31dxSAoMlRzZFuEVM1YLG8oJ/oHCXuLNEBjIilm51qAA7J5oBkc3B3UxFbFazb32QZVS06R4k7RXQAI2LpZqcBgGqrH13Pi2jF7V71clV0hjLAJZO9wNLNzhAAMi+iFbedYXv3MttMfo/yj6XbCyzd7IwDEDJVDeQvdBH7Y/xrnaIzlAmWbi+wdDOUvog2GkCPqaKSV22LVFdcji+1zudmiMKodHl9XJKXJZZu5ioBOAHEZWtFteAsdBzPhCfvTcg2k+gcZYSj3SyxdDNXB0CVLHazZLYqosPQFyVUaPebF9SJzlFmWLpZYulmrgqAZK5uqBIdhI7t7Z7hLa3mQQ7ROcoM7w+YJZZu5moASObKOpZukVosXWMTnaEM8XjTLLF0M1cPIC5XVPLuA0VoU7CybaN1EqcWCo+37skSSzdz9QBiss3Bp69F6P7k1yOiM5Qp7szMEks3czUA4rJN4Ui3yOyPWsI+2/lcJiZGregARsPSzVwVgLhkreBIt8g8HjnzIHhmrig1Lq+PX/sssHQzoLg9JuhrdBOSycKLNUUknJSSj1i/wR2C4pgA8DS3LLB0M+MAoAGAJEn8mhUBTVNNAOALjm0Jm/pZRecpc1y3ngUWSGasSJcuwNPFikFKVStUDVhsur5adBYCp9yywNLNjIxDpcuRblFQVc36Yc/AfXssIypFZyGWbjZYIJk5MrrlObpFQZVMySXalfxeFIcK0QGMxCw6gEF85o8TR7rFYL11stxsdQ0SnYMAAEnRAYyEBZIZjnSLTLPVxae0xYMbU7LA0s3M4a+TxJEu0eexdLPAAskMR7pEx8fSzQJLNzOHv06apqZEBiEqQizdLLB0M3N4dKslYmGRQYiKEEs3CyzdzBwe3WpJli7RZ6hNixrjokMYCUs3M4eLVo1HWLpER3CUmyWWbmZCSH+ttHgkJDgLUTHhICRLLN3MxKBvA5bUWJg/ZERHNIsOYDQs3QyEA34NQA8AixoNsnSJjmgSHcBoWLqZ6wZgUaM9LF2iI3aIDmA0LN3MdQGwpkKdnNMlOoKlmyWWbuY6AViSPQeDmqaqosMQFYkm0QGMhqWbuQ4AFqSSqhoLtYoOQ1QkONLNEks3cweg3w8Karj7gOAsRMWiSXQAo2HpZu4AABUAUsF2li4R0Nq0qDEoOoTRsHQzdwDpMxiSXftZukTAdtEBjIilm7kuAHEA5kTbbpYuEbBKdAAjYulmKL1BYhcAR6Jtd4eWSvKQDyp3H4oOYEQs3ex8ivSdT9VY8KDgLESiLRcdwIhYutnZifTNPFPhLk4xUNnSNO1g06LGbaJzGBFLNzuHVzAkO/fxoA8qW5IkcWqhl1i62Tm8VjfWvJmLwqmcsXR7iaWbhXDAHwJwEICSaN3ZriaiPaIzEQnC+dxeYulmbw2AagBIdbdytEtlR9O0FIAVonMYFUs3e58gPcWQaNvF0qWyI0nSuqZFjTxtr5dYutnbgfTOtMjO9ds0TRMch6jgXhIdwMhYulkKB/xdAPYBcKS6DwTVaM8+0ZmICuxF0QGMjKXbOyuQntdNdrRwrSKVDU3TmgGsFp3DyFi6vfMx0l+7WMuWrYKzEBWMJEkvNS1q5JxaH7B0e2cHgCQAU3Tnut1qPNIlOhBRgfxddACjY+n2QjjgTwDYAKAWAOIHm9aLTUSUf5qmtQJ4S3QOo2Pp9t77ACoAIPLpynWCsxDlnSRJzzQtakyJzmF0LN3e+xj6+bqWxMGmtlSoY4/oQER59pToAKWApdtL4YA/BuBdAAMAILY3sFZoIKI80jR1F4C3RecoBSzdvvkQgAUAwls/2KSpqaTgPER5IUnyvU2LGlXROUoBS7dvdgBoBeBQI93RZNf+LaIDEeWapqkxAH8UnaNUsHT7IBzwqwBeR3oVQ3T3Rl5Qo9KjaX9rWtTYLjpGqWDp9t1q6GcxSJFtK7ap8Uin4DxEOSXJprtFZyglLN0+Cgf8rQC2AqiBpmrR3RvfF52JKFe0VHJ506JGrkPPIZZubrwGoB8AhDa+sUZNxIKC8xDlhGQy3yU6Q6lh6ebGOgBtAJxaMp6KNX/CU/XJ8DQ1tQ/AP0TnKDUs3RwIB/xJAM8C6A8AwY1vrNKSiYjYVER9JEl3Ny1q5DLIHGPp5s4qAN0AFC0Wisf2bvWLDkTUW1oq2SpJ8hLROUoRSzdHwgF/HMBzSO9QC2583a+lknGhoYh6SUslFzYtauSztTxg6ebWcgARAHY13BWN7/90pehARNlSE7HdstX+oOgcpYqlm0PhgD8K4AUAAwEguPH15VoqGRObiihLmvbvPE0sf1i6ufcu9NPHrKmetlB014a3xcYhypwaj27c9bv5T4rOUcpYujkWDvhD0O+WWg8APWv/uSIV7TkgNhVRhmT5B6IjlDqWbn68AaALQD+oKTW06e1/ig5EdCJqPPLurjsv5Z0h8oylmwfhgD8C4DEAdQAQbVqzM9HevFFsKqLj01Q1JcnmW0XnKAcs3fxZC/0+aoMAoOejl17lEjIqVmqk656dd16ySXSOcsDSzZNwwK8B+BsAGwBzsmt/T3T3xncExyL6glQ0uEeNR/9ddI5yIWkab2GfT4rbMx9AI4BdMJnlurk/uFW2O+tE58qX7lXPI7juFUADnKeej8rpF6Nz2eMIb/MDkgSTUo3+F/4fmPv1P+bbq7EwWh6+FcrJX0XtebdCSyZw4NlfI9XTin5TGtFvaiMAoO3le+CcfAFs9aML+emVHE1V1UT77lktD3/vXdFZygVHuvn3TwA9AJxIJdXghtdf0Er0L138YBOC615B/fW/Q8ON9yDy6QokOlpQ6ZmPwTfei8E33IOKUdPR9cHS476Pzncfh23YxMP/P7LjI9iGjkfDjfciuOlN/eMc2A5NVVm4OZDsPvAoC7ewWLp59pmLagMAILpr/e5Yy+aS/CFPtO2BtWEMZIsdkmyCbdhEhLd+ANmmHH4dLRGFfub7F8X2bUMq1ImKkVMO/zdJNkFLxIBUCkj/qep89y+oPuu6fH4qZUGNBlvUaJAXzwqMpVsYH0G/sDYYALpXPPtOKtzZLDRRHljrRiC2ZxNSkW6oiSgi21ch1d0KAOhY9hj23P8thD5++5iFqWkqOt58GDWzbzrqv9tHTkGy6wD2Pv4jVE67COGAH9ZBo447PUGZ0TRVTQbbrt376O28uFtgnNMtEMXtqQHwX9DPZgha6kbUVp917S2SbLYIjpZTPeteRXCND5LFDkvdcEgmC2q/9p3D/961/CloyQSqz7r2qLfrXv0itGQMVZ7LEdzwOuL7Aqg97+hBmJZKYv9Tv8TAy36Bzvf+ilT3QTgmngvF7SnI51ZKEp37/tz84E3fEp2jHHGkWyDhgL8DwEPQz2WQE60728NbP3xJcKyc63fqHDR8azHqr/0fyHYnLLVDjvp3x4RZCG/94h2NYi2b0bPahz0P3IiOtx5BcOOb6Hj70aNep2eND86J5yDWsgWyzYG6i3+K7pU8YztbqVDn9lSw/duic5Qrs+gAZWY99LsHzwKwK7TpzfWW/sNGWAeMmCo2Vu6kQp0wOaqR7D6A8NblaFhwJxLtzYfLNxzww1I79AtvN+CiIyuWDo10a2Z968j7jQYR2bYSA6/6FSLbVgCSBEgSNJ4nlBU1Ho3E9gW+fuDphQnRWcoVS7eAwgG/prg9TwMYA/3C2sGu5U/8q/a87w0xVfQbJDheThx87jdQIz2AbELtebdAtjvR9q8lSLTvASQZ5soBqD3/+wCA2N4Agmv/hf4XnHi7f9f7S1F1xpWQJBkVI6ei5yMf9v7xNjinXJDvT6lkaKqqRXdvvOPA0wu5CUIgzukKoLg9QwAsBNAOIGKpG1FbPeOamyWzpUJsMiplsZbNj3ctf+qb6Y07JAjndAUIB/zNAB4B0ID0/G7P2n8+oakqzzClvIi37lrdtfypm1m44rF0xfkQ+mlkwwEgunPdrtDmZc/ymQflWrKntSW06c156VtKkWAsXUE+czbDBgBDASD8ybKPozvXvio0GJUUNRYKhrd+cGnX8qf3ic5COpauQOGAPwHgQQB7ceg0stUvLo/t28Y7CVOfqfFIJPTJspvaX/v9CtFZ6AiWrmDpO03cBSAKoD8AdH2w9JVEx95PhAYjQ1MT0Whw3Ss/j3y68mnRWehoLN0iEA742wH8LwArgH7QNK3z3ceeTYU6dguORgakJmOxnjX/vDO6a/0SXjgrPizdIhEO+PdAH/HWArBriViyY9njS1PhrhbB0chAtGQ8Hlz78pLY7o2/Cgf8XA1ThFi6RSQc8G8G8HvoB+NY1HBnpOOtRx5LBtt3CY5GBqClEsme9a8+EN257hfp6wVUhLg5oggpbs/5AK4FsAdAXLLYzTWzbrjKXDmAB8jSMWmpZCq4/tWHIttX3REO+Lk3uohxpFucXgXwJwBDANi1RDTZ8ebDTyQ6Wj4WnIuKkJZKJIIbXn80sn3Vj1i4xY8j3SKmuD2nA7gFwH4AYUiyVD3z+q9b64ZPFpuMioUaD4e6V734p/jeLd70ShgqcizdIqe4PVMB/BuANgBBAKg689oLbINGnSY0GAmXCnW0dS1/6tFk1/6F4YA/KDoPZYalawCK2zMBwB0AutMPVJ522Uzb0AmzJenYt76h0pZo37On64Mnl6ix0H3hgD8sOg9ljqVrEIrb4wbwY+ibKDoAoML9Vbdz/OzLJLPFLjQcFVS0+ZPN3f5n/gua+mQ44E+KzkPZYekaiOL2uAD8CIAFwD4AsPQfVlPpmX+VqaKyJM7jpePTNE0LB5avDG14/WcA3uTGB2Ni6RqM4vb0B3ArgNEAdgFQJYvdXD3j6oss/YdNEpuO8kVNxCLB9a8uizat+Wk44F8nOg/1HkvXgBS3xwrgKgDnAWiBPuUA5+QLp1ecNHWuJMlcClhCEp17d3X7n3k1FWz/73DA3yQ6D/UNS9egFLdHAnA6gJsAhKDfhQL24ZOGOSfPvUK22PuJzEd9p6mpZGTbitXBDa+9AuCecMDfKjoT9R1L1+AUt2cEgB8AqATQDAAmZ61SOf3SCy21QyYIDUe9lop0t3av+McHidadfwXwHA8gLx0s3RKguD2V0Ee8k6FvHU4AgDL2rHHKmBmNstnqEBiPsqBpGuItWzZ1r3ruHS0Zvy8c8HMXYolh6ZYIxe0xATgfwOUAIgAOAodHvRdYaodMFJmPTkyNR7qD619bGd259jkAj4UD/m7RmSj3WLolRnF7hkEf9Y7EZ0a9FaNOG+UYN7NRtik1IvPRF2mqmoo1f7yuZ41vvZaI/QnAe+GAXxWdi/KDpVuCFLfHAmAOgPnQVzYcAADJYjdXTvv62daGk8/gCofikOw+uKN79Qtrk+3N6wE8FA74eX5yiWPpljDF7RkCYAGAcdA3U0QAwFI7tNox6bxZltqhkyTuIxZCjYbaQp+8syqyfdVOAE8CWMbdZeWBpVviFLdHhr607FoANug3wUwCgHXQqAGOCefMNlfXj2P3FoaWjEciO9asCG58fRfU1HsAng4H/B2ic1HhsHTLhOL2VAG4APqGChV6+aoAYBsyrsExfta55soBowRGLGlqIhaMNX/yUXDjG81aLLQNwF/DAf8W0bmo8Fi6ZUZxewYAmAdgJoA49GkHDQDsrikjHGNmnGNy1g4XGLGkqLFwe3TX+hXBTW/tRyrRBWApgJW8f1n5YumWKcXtGQzgYgAe6HO9B/CZ8q0YOXWaubphnCTLJoExDSsV7tob2b56ZXjr++3QtAiAlwC8FQ74I6KzkVgs3TKX3tE2H8AkAGHo63s1ADD16+9wjJ051Vo/+iuytaJKYEzDSHa3bg8HPlgTbVobhL41+3kA/nDAHxUcjYoES5cOneMwGsCFAE6FXroHkT5IB5IkKe6vuu3DT51uqhwwiisejqZGQ63xgzs2hAMf7k52tGjQ10c/B2AtVyTQ57F06SjpOd/Toa/zdQDoQfowHUBfblZx8ulTLf2HjTXZnQMExRROTcSCibbdG6M7Pvo41rI5Bf2M460AXgDwCTc30PGwdOmY0sdHToS+tfhk6MvMDiC9ww0ALHUjau0jTh1jqRs+1uSoGVbqI2AtlYwnO/duju7euDGyfXU3NNUO/dnA++lHEw8WpxNh6dIJpTdZnAVgNvQRXRL6jTIP3+7b5KxV7K6pbuugkWPNlQNGSbLZIiZt7miqmkqFO/ckO/buiO/ftiO6e1MIatIBfandRwDeA7CZJ4BRNli6lLH06HcU9NPMTgfghD7/24H0nYoBQLLYzPZhE4dZ6kYMM1cOHGZy1Aw1wn3cNE3T1HBXS7Jr3474/u07ors3tmiJqAP6NIsEYAuAtwBs4t13qbdYutQr6Z1uw6BPQcwAUJ/+pxCALqR3vR1iGXhSnXWAq8FcNajB5KxtMCmV9ZJJXBFraiqpRoMHU+Gu/ametv3Jzr0HYs2f7FVjITuAftD/mCQBfAxgDfSibROVl0oHS5f6LL36oQ76GQ9TAYwBYIU+OkxAvxgXQnop2iEmZ3/FXDWwyuTsX2VSqqrkin6Vst1ZJVsrqiRrRZVktjl7M0+spZJxLZWIaKlEVEsmIloyHlFjoe5UqLMt1XOwLdGxtz3Z0dwFTbNAH8U602+qQr8Y9hGATwHs4eoDyjWWLuVcehQ8EPpI+GToJTwk/c8S9PKNQp8TjkHfGffFH0TZJMt2p1UyWUxHHmYT0i8lk9kE2WxCKp5MRUNRNdIVSYW7IkglP79ywAZAAVABwAy9XGXofwh2AtgIYBuAXZyfpXxj6VJBpI+bHASgAfpUxCDoxTwAQBWOLl0ZejFq6Yd6nJcy9BI1AzB95t8OkdKPTug38NwNfQ3tAQD7AfRwtQEVGkuXhFPcHjP0edSqzzwU6CsljvUwp18moM8fd6cfEegj6Mhn/ndPOOCPgahIsHQppyRJmgtgMfSR58Oapi0SHImoqLB0KWckSTJBvxB1HvSn8SsBXK1pGm+uSJTGW7ZQLp0GYJumads1TYsDeAL6SWZElMbSpVwaAv1i1SF7cGTVAhGBpUtEVFAsXcqlZuhrcw8Zmv5vRJTG0qVcWgnALUnSSEmSrAC+Af2oQyJKM4sOQKVD07SkJEm3AXgF+pKxRzRN2yQ4FlFR4ZIxIqIC4vQCEVEBsXSJiAqIpUtEVEAsXSKiAmLpEhEVEEuXiKiAWLpERAXE0iUiKqD/Dw13tVN4Tzd8AAAAAElFTkSuQmCC\n"
+      "image/png": "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",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -140,36 +304,32 @@
    ]
   },
   {
-   "source": [
-    "## Import and init RuleKit"
-   ],
    "cell_type": "markdown",
-   "metadata": {}
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
    "metadata": {},
-   "outputs": [],
    "source": [
-    "from rulekit import RuleKit\n",
-    "from rulekit.classification import RuleClassifier\n",
-    "from rulekit.params import Measures\n",
-    "\n",
-    "\n",
-    "RuleKit.init()"
+    "## Import RuleKit"
    ]
   },
   {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from rulekit.classification import RuleClassifier\n",
+    "from rulekit.params import Measures"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Helper function for calculating metrics"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 30,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -180,13 +340,12 @@
     "from sklearn import metrics\n",
     "import pandas as pd\n",
     "import numpy as np\n",
-    "from typing import Tuple\n",
     "\n",
     "\n",
     "x = df_full.drop(['class'], axis=1)\n",
     "y = df_full['class']\n",
     "\n",
-    "def get_prediction_metrics(measure: str, y_pred, y_true, classification_metrics: dict) -> Tuple[pd.DataFrame, np.ndarray]:\n",
+    "def get_prediction_metrics(measure: str, y_pred, y_true, classification_metrics: dict) -> tuple[pd.DataFrame, np.ndarray]:\n",
     "    confusion_matrix = metrics.confusion_matrix(y_true, y_pred)\n",
     "    tn, fp, fn, tp = confusion_matrix.ravel()\n",
     "    sensitivity = tp  / (tp + fn)\n",
@@ -230,81 +389,520 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Rule induction on full dataset"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 18,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "             time_total_s  time_growing_s  time_pruning_s  rules_count  \\\nMeasure                                                                  \nC2               2.878110        4.122812        0.673479          178   \nCorrelation      3.684995        6.220216        0.909509           58   \nRSS              3.444098        5.140447        0.778426           60   \n\n             conditions_per_rule  induced_conditions_per_rule  \\\nMeasure                                                         \nC2                      5.005618                    14.387640   \nCorrelation             6.000000                    54.517241   \nRSS                     4.233333                    46.266667   \n\n             avg_rule_coverage  avg_rule_precision  avg_rule_quality  \\\nMeasure                                                                \nC2                    0.141539            0.916631          0.479177   \nCorrelation           0.396505            0.692544          0.188542   \nRSS                   0.585900            0.852020          0.328324   \n\n               pvalue  FDR_pvalue  FWER_pvalue  fraction_significant  \\\nMeasure                                                                \nC2           0.058208    0.063738     0.884413              0.769663   \nCorrelation  0.031233    0.032530     0.101139              0.879310   \nRSS          0.011781    0.012022     0.025579              0.950000   \n\n             fraction_FDR_significant  fraction_FWER_significant  \nMeasure                                                           \nC2                           0.752809                   0.561798  \nCorrelation                  0.879310                   0.862069  \nRSS                          0.933333                   0.900000  ",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>time_total_s</th>\n      <th>time_growing_s</th>\n      <th>time_pruning_s</th>\n      <th>rules_count</th>\n      <th>conditions_per_rule</th>\n      <th>induced_conditions_per_rule</th>\n      <th>avg_rule_coverage</th>\n      <th>avg_rule_precision</th>\n      <th>avg_rule_quality</th>\n      <th>pvalue</th>\n      <th>FDR_pvalue</th>\n      <th>FWER_pvalue</th>\n      <th>fraction_significant</th>\n      <th>fraction_FDR_significant</th>\n      <th>fraction_FWER_significant</th>\n    </tr>\n    <tr>\n      <th>Measure</th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>C2</th>\n      <td>2.878110</td>\n      <td>4.122812</td>\n      <td>0.673479</td>\n      <td>178</td>\n      <td>5.005618</td>\n      <td>14.387640</td>\n      <td>0.141539</td>\n      <td>0.916631</td>\n      <td>0.479177</td>\n      <td>0.058208</td>\n      <td>0.063738</td>\n      <td>0.884413</td>\n      <td>0.769663</td>\n      <td>0.752809</td>\n      <td>0.561798</td>\n    </tr>\n    <tr>\n      <th>Correlation</th>\n      <td>3.684995</td>\n      <td>6.220216</td>\n      <td>0.909509</td>\n      <td>58</td>\n      <td>6.000000</td>\n      <td>54.517241</td>\n      <td>0.396505</td>\n      <td>0.692544</td>\n      <td>0.188542</td>\n      <td>0.031233</td>\n      <td>0.032530</td>\n      <td>0.101139</td>\n      <td>0.879310</td>\n      <td>0.879310</td>\n      <td>0.862069</td>\n    </tr>\n    <tr>\n      <th>RSS</th>\n      <td>3.444098</td>\n      <td>5.140447</td>\n      <td>0.778426</td>\n      <td>60</td>\n      <td>4.233333</td>\n      <td>46.266667</td>\n      <td>0.585900</td>\n      <td>0.852020</td>\n      <td>0.328324</td>\n      <td>0.011781</td>\n      <td>0.012022</td>\n      <td>0.025579</td>\n      <td>0.950000</td>\n      <td>0.933333</td>\n      <td>0.900000</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>time_total_s</th>\n",
+       "      <th>time_growing_s</th>\n",
+       "      <th>time_pruning_s</th>\n",
+       "      <th>rules_count</th>\n",
+       "      <th>conditions_per_rule</th>\n",
+       "      <th>induced_conditions_per_rule</th>\n",
+       "      <th>avg_rule_coverage</th>\n",
+       "      <th>avg_rule_precision</th>\n",
+       "      <th>avg_rule_quality</th>\n",
+       "      <th>pvalue</th>\n",
+       "      <th>FDR_pvalue</th>\n",
+       "      <th>FWER_pvalue</th>\n",
+       "      <th>fraction_significant</th>\n",
+       "      <th>fraction_FDR_significant</th>\n",
+       "      <th>fraction_FWER_significant</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Measure</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>C2</th>\n",
+       "      <td>3.784658</td>\n",
+       "      <td>3.268134</td>\n",
+       "      <td>0.394257</td>\n",
+       "      <td>178</td>\n",
+       "      <td>5.005618</td>\n",
+       "      <td>14.382022</td>\n",
+       "      <td>0.141539</td>\n",
+       "      <td>0.916631</td>\n",
+       "      <td>0.479177</td>\n",
+       "      <td>0.058208</td>\n",
+       "      <td>0.063738</td>\n",
+       "      <td>0.884413</td>\n",
+       "      <td>0.769663</td>\n",
+       "      <td>0.752809</td>\n",
+       "      <td>0.561798</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Correlation</th>\n",
+       "      <td>3.130663</td>\n",
+       "      <td>2.592273</td>\n",
+       "      <td>0.492708</td>\n",
+       "      <td>58</td>\n",
+       "      <td>6.000000</td>\n",
+       "      <td>54.293103</td>\n",
+       "      <td>0.401149</td>\n",
+       "      <td>0.692328</td>\n",
+       "      <td>0.189074</td>\n",
+       "      <td>0.028175</td>\n",
+       "      <td>0.029145</td>\n",
+       "      <td>0.080958</td>\n",
+       "      <td>0.896552</td>\n",
+       "      <td>0.896552</td>\n",
+       "      <td>0.879310</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>RSS</th>\n",
+       "      <td>3.186367</td>\n",
+       "      <td>2.761221</td>\n",
+       "      <td>0.402097</td>\n",
+       "      <td>60</td>\n",
+       "      <td>4.216667</td>\n",
+       "      <td>46.200000</td>\n",
+       "      <td>0.599639</td>\n",
+       "      <td>0.851306</td>\n",
+       "      <td>0.333375</td>\n",
+       "      <td>0.006559</td>\n",
+       "      <td>0.006685</td>\n",
+       "      <td>0.013799</td>\n",
+       "      <td>0.966667</td>\n",
+       "      <td>0.950000</td>\n",
+       "      <td>0.916667</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "             time_total_s  time_growing_s  time_pruning_s  rules_count  \\\n",
+       "Measure                                                                  \n",
+       "C2               3.784658        3.268134        0.394257          178   \n",
+       "Correlation      3.130663        2.592273        0.492708           58   \n",
+       "RSS              3.186367        2.761221        0.402097           60   \n",
+       "\n",
+       "             conditions_per_rule  induced_conditions_per_rule  \\\n",
+       "Measure                                                         \n",
+       "C2                      5.005618                    14.382022   \n",
+       "Correlation             6.000000                    54.293103   \n",
+       "RSS                     4.216667                    46.200000   \n",
+       "\n",
+       "             avg_rule_coverage  avg_rule_precision  avg_rule_quality  \\\n",
+       "Measure                                                                \n",
+       "C2                    0.141539            0.916631          0.479177   \n",
+       "Correlation           0.401149            0.692328          0.189074   \n",
+       "RSS                   0.599639            0.851306          0.333375   \n",
+       "\n",
+       "               pvalue  FDR_pvalue  FWER_pvalue  fraction_significant  \\\n",
+       "Measure                                                                \n",
+       "C2           0.058208    0.063738     0.884413              0.769663   \n",
+       "Correlation  0.028175    0.029145     0.080958              0.896552   \n",
+       "RSS          0.006559    0.006685     0.013799              0.966667   \n",
+       "\n",
+       "             fraction_FDR_significant  fraction_FWER_significant  \n",
+       "Measure                                                           \n",
+       "C2                           0.752809                   0.561798  \n",
+       "Correlation                  0.896552                   0.879310  \n",
+       "RSS                          0.950000                   0.916667  "
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     },
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "             Accuracy       MAE     Kappa  Balanced accuracy  Logistic loss  \\\nMeasure                                                                       \nC2           0.968266  0.031734  0.682882           0.777962       1.096047   \nCorrelation  0.916796  0.083204  0.321259           0.660191       2.873809   \nRSS          0.922601  0.077399  0.241820           0.600414       2.673301   \n\n             Precision  Sensitivity  Specificity       NPV       PPV  ...  \\\nMeasure                                                               ...   \nC2            1.096047     0.558824     0.997100  0.969782  0.931373  ...   \nCorrelation   2.873809     0.364706     0.955675  0.955280  0.366864  ...   \nRSS           2.673301     0.229412     0.971417  0.947092  0.361111  ...   \n\n             F-measure  Fowlkes-Mallows index  False positive  False negative  \\\nMeasure                                                                         \nC2            0.698529               0.966199               7              75   \nCorrelation   0.365782               0.913023             107             108   \nRSS           0.280576               0.920751              69             131   \n\n             True positive  True negative  Rules per example  \\\nMeasure                                                        \nC2                      95           2407          25.193885   \nCorrelation             62           2307          22.997291   \nRSS                     39           2345          35.154025   \n\n             Voting conflicts  Negative voting conflicts  Geometric mean  \nMeasure                                                                   \nC2                      837.0                       57.0        0.746460  \nCorrelation            1603.0                      157.0        0.590373  \nRSS                    1844.0                       94.0        0.472075  \n\n[3 rows x 24 columns]",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>Accuracy</th>\n      <th>MAE</th>\n      <th>Kappa</th>\n      <th>Balanced accuracy</th>\n      <th>Logistic loss</th>\n      <th>Precision</th>\n      <th>Sensitivity</th>\n      <th>Specificity</th>\n      <th>NPV</th>\n      <th>PPV</th>\n      <th>...</th>\n      <th>F-measure</th>\n      <th>Fowlkes-Mallows index</th>\n      <th>False positive</th>\n      <th>False negative</th>\n      <th>True positive</th>\n      <th>True negative</th>\n      <th>Rules per example</th>\n      <th>Voting conflicts</th>\n      <th>Negative voting conflicts</th>\n      <th>Geometric mean</th>\n    </tr>\n    <tr>\n      <th>Measure</th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n      <th></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>C2</th>\n      <td>0.968266</td>\n      <td>0.031734</td>\n      <td>0.682882</td>\n      <td>0.777962</td>\n      <td>1.096047</td>\n      <td>1.096047</td>\n      <td>0.558824</td>\n      <td>0.997100</td>\n      <td>0.969782</td>\n      <td>0.931373</td>\n      <td>...</td>\n      <td>0.698529</td>\n      <td>0.966199</td>\n      <td>7</td>\n      <td>75</td>\n      <td>95</td>\n      <td>2407</td>\n      <td>25.193885</td>\n      <td>837.0</td>\n      <td>57.0</td>\n      <td>0.746460</td>\n    </tr>\n    <tr>\n      <th>Correlation</th>\n      <td>0.916796</td>\n      <td>0.083204</td>\n      <td>0.321259</td>\n      <td>0.660191</td>\n      <td>2.873809</td>\n      <td>2.873809</td>\n      <td>0.364706</td>\n      <td>0.955675</td>\n      <td>0.955280</td>\n      <td>0.366864</td>\n      <td>...</td>\n      <td>0.365782</td>\n      <td>0.913023</td>\n      <td>107</td>\n      <td>108</td>\n      <td>62</td>\n      <td>2307</td>\n      <td>22.997291</td>\n      <td>1603.0</td>\n      <td>157.0</td>\n      <td>0.590373</td>\n    </tr>\n    <tr>\n      <th>RSS</th>\n      <td>0.922601</td>\n      <td>0.077399</td>\n      <td>0.241820</td>\n      <td>0.600414</td>\n      <td>2.673301</td>\n      <td>2.673301</td>\n      <td>0.229412</td>\n      <td>0.971417</td>\n      <td>0.947092</td>\n      <td>0.361111</td>\n      <td>...</td>\n      <td>0.280576</td>\n      <td>0.920751</td>\n      <td>69</td>\n      <td>131</td>\n      <td>39</td>\n      <td>2345</td>\n      <td>35.154025</td>\n      <td>1844.0</td>\n      <td>94.0</td>\n      <td>0.472075</td>\n    </tr>\n  </tbody>\n</table>\n<p>3 rows × 24 columns</p>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Accuracy</th>\n",
+       "      <th>MAE</th>\n",
+       "      <th>Kappa</th>\n",
+       "      <th>Balanced accuracy</th>\n",
+       "      <th>Logistic loss</th>\n",
+       "      <th>Precision</th>\n",
+       "      <th>Sensitivity</th>\n",
+       "      <th>Specificity</th>\n",
+       "      <th>NPV</th>\n",
+       "      <th>PPV</th>\n",
+       "      <th>...</th>\n",
+       "      <th>F-measure</th>\n",
+       "      <th>Fowlkes-Mallows index</th>\n",
+       "      <th>False positive</th>\n",
+       "      <th>False negative</th>\n",
+       "      <th>True positive</th>\n",
+       "      <th>True negative</th>\n",
+       "      <th>Rules per example</th>\n",
+       "      <th>Voting conflicts</th>\n",
+       "      <th>Negative voting conflicts</th>\n",
+       "      <th>Geometric mean</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Measure</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>C2</th>\n",
+       "      <td>0.968266</td>\n",
+       "      <td>0.031734</td>\n",
+       "      <td>0.682882</td>\n",
+       "      <td>0.777962</td>\n",
+       "      <td>1.143800</td>\n",
+       "      <td>1.143800</td>\n",
+       "      <td>0.558824</td>\n",
+       "      <td>0.997100</td>\n",
+       "      <td>0.969782</td>\n",
+       "      <td>0.931373</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.698529</td>\n",
+       "      <td>0.966199</td>\n",
+       "      <td>7</td>\n",
+       "      <td>75</td>\n",
+       "      <td>95</td>\n",
+       "      <td>2407</td>\n",
+       "      <td>25.193885</td>\n",
+       "      <td>837.0</td>\n",
+       "      <td>57.0</td>\n",
+       "      <td>0.746460</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Correlation</th>\n",
+       "      <td>0.916409</td>\n",
+       "      <td>0.083591</td>\n",
+       "      <td>0.323665</td>\n",
+       "      <td>0.662717</td>\n",
+       "      <td>3.012937</td>\n",
+       "      <td>3.012937</td>\n",
+       "      <td>0.370588</td>\n",
+       "      <td>0.954847</td>\n",
+       "      <td>0.955638</td>\n",
+       "      <td>0.366279</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.368421</td>\n",
+       "      <td>0.912555</td>\n",
+       "      <td>109</td>\n",
+       "      <td>107</td>\n",
+       "      <td>63</td>\n",
+       "      <td>2305</td>\n",
+       "      <td>23.266641</td>\n",
+       "      <td>1846.0</td>\n",
+       "      <td>160.0</td>\n",
+       "      <td>0.594857</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>RSS</th>\n",
+       "      <td>0.923762</td>\n",
+       "      <td>0.076238</td>\n",
+       "      <td>0.225132</td>\n",
+       "      <td>0.590099</td>\n",
+       "      <td>2.747910</td>\n",
+       "      <td>2.747910</td>\n",
+       "      <td>0.205882</td>\n",
+       "      <td>0.974316</td>\n",
+       "      <td>0.945718</td>\n",
+       "      <td>0.360825</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.262172</td>\n",
+       "      <td>0.922288</td>\n",
+       "      <td>62</td>\n",
+       "      <td>135</td>\n",
+       "      <td>35</td>\n",
+       "      <td>2352</td>\n",
+       "      <td>35.978328</td>\n",
+       "      <td>1843.0</td>\n",
+       "      <td>82.0</td>\n",
+       "      <td>0.447878</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>3 rows × 24 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "             Accuracy       MAE     Kappa  Balanced accuracy  Logistic loss  \\\n",
+       "Measure                                                                       \n",
+       "C2           0.968266  0.031734  0.682882           0.777962       1.143800   \n",
+       "Correlation  0.916409  0.083591  0.323665           0.662717       3.012937   \n",
+       "RSS          0.923762  0.076238  0.225132           0.590099       2.747910   \n",
+       "\n",
+       "             Precision  Sensitivity  Specificity       NPV       PPV  ...  \\\n",
+       "Measure                                                               ...   \n",
+       "C2            1.143800     0.558824     0.997100  0.969782  0.931373  ...   \n",
+       "Correlation   3.012937     0.370588     0.954847  0.955638  0.366279  ...   \n",
+       "RSS           2.747910     0.205882     0.974316  0.945718  0.360825  ...   \n",
+       "\n",
+       "             F-measure  Fowlkes-Mallows index  False positive  False negative  \\\n",
+       "Measure                                                                         \n",
+       "C2            0.698529               0.966199               7              75   \n",
+       "Correlation   0.368421               0.912555             109             107   \n",
+       "RSS           0.262172               0.922288              62             135   \n",
+       "\n",
+       "             True positive  True negative  Rules per example  \\\n",
+       "Measure                                                        \n",
+       "C2                      95           2407          25.193885   \n",
+       "Correlation             63           2305          23.266641   \n",
+       "RSS                     35           2352          35.978328   \n",
+       "\n",
+       "             Voting conflicts  Negative voting conflicts  Geometric mean  \n",
+       "Measure                                                                   \n",
+       "C2                      837.0                       57.0        0.746460  \n",
+       "Correlation            1846.0                      160.0        0.594857  \n",
+       "RSS                    1843.0                       82.0        0.447878  \n",
+       "\n",
+       "[3 rows x 24 columns]"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     },
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Confusion matrix - C2\n"
      ]
     },
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "      0   1\n0  2407   7\n1    75  95",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>0</th>\n      <th>1</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>2407</td>\n      <td>7</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>75</td>\n      <td>95</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2407</td>\n",
+       "      <td>7</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>75</td>\n",
+       "      <td>95</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      0   1\n",
+       "0  2407   7\n",
+       "1    75  95"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     },
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Confusion matrix - Correlation\n"
      ]
     },
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "      0    1\n0  2307  107\n1   108   62",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>0</th>\n      <th>1</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>2307</td>\n      <td>107</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>108</td>\n      <td>62</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2305</td>\n",
+       "      <td>109</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>107</td>\n",
+       "      <td>63</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      0    1\n",
+       "0  2305  109\n",
+       "1   107   63"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     },
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
       "Confusion matrix - RSS\n"
      ]
     },
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "      0   1\n0  2345  69\n1   131  39",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>0</th>\n      <th>1</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>2345</td>\n      <td>69</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>131</td>\n      <td>39</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2352</td>\n",
+       "      <td>62</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>135</td>\n",
+       "      <td>35</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      0   1\n",
+       "0  2352  62\n",
+       "1   135  35"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
-    "from rulekit.params import Measures\n",
     "from IPython.display import display\n",
     "\n",
     "# C2\n",
@@ -361,22 +959,199 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "### C2 Measure generated rules"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 15,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
-      "IF gimpuls = (-inf, 32.50) THEN label = {0}\nIF gimpuls = (-inf, 54.50) AND senergy = (-inf, 3700) THEN label = {0}\nIF gimpuls = (-inf, 54.50) AND genergy = <1865, inf) THEN label = {0}\nIF goenergy = <-84.50, inf) AND goimpuls = (-inf, -0.50) AND genergy = (-inf, 13675) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND genergy = (-inf, 17640) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF genergy = <1635, 13675) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND senergy = (-inf, 650) THEN label = {0}\nIF goenergy = <-84.50, inf) AND maxenergy = (-inf, 950) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) THEN label = {0}\nIF goenergy = <-84.50, inf) AND goimpuls = (-inf, -5.50) AND genergy = (-inf, 13675) AND senergy = (-inf, 2200) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND senergy = (-inf, 2200) THEN label = {0}\nIF goenergy = <-84.50, inf) AND maxenergy = (-inf, 3500) AND genergy = (-inf, 17640) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND maxenergy = (-inf, 3500) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND nbumps3 = (-inf, 0.50) AND senergy = (-inf, 25000) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND nbumps3 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = (-inf, 772.50) AND genergy = <1865, 17640) AND senergy = (-inf, 4400) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 217) AND genergy = <1865, inf) AND goimpuls = (-inf, -5.50) AND nbumps4 = (-inf, 0.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 68) AND genergy = <1865, 17640) AND senergy = (-inf, 25000) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF ghazard = {c} THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 536) AND genergy = (-inf, 18585) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND genergy = (-inf, 18585) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF maxenergy = (-inf, 950) AND gimpuls = (-inf, 536) AND genergy = (-inf, 18585) THEN label = {0}\nIF gimpuls = (-inf, 536) AND genergy = <1865, 18585) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 27100) THEN label = {0}\nIF goenergy = <297.50, inf) THEN label = {0}\nIF senergy = <115450, inf) THEN label = {0}\nIF genergy = <1789250, inf) THEN label = {0}\nIF gimpuls = (-inf, 786) AND genergy = <1865, 18810) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 27100) THEN label = {0}\nIF goenergy = <-84.50, inf) AND genergy = (-inf, 51290) AND goimpuls = (-inf, -0.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 184.50) AND goimpuls = (-inf, 27.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND genergy = (-inf, 51290) AND shift = {N} AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-73.50, inf) AND goimpuls = (-inf, -0.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-73.50, inf) AND goimpuls = (-inf, 96.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-55.50, inf) AND goimpuls = (-inf, 96.50) AND shift = {N} AND senergy = (-inf, 2150) THEN label = {0}\nIF goimpuls = <-70.50, 96.50) AND genergy = <4640, inf) AND shift = {N} AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = <135, inf) AND goimpuls = (-inf, 230.50) AND genergy = <9110, inf) AND shift = {N} AND senergy = (-inf, 2150) THEN label = {0}\nIF genergy = <9110, inf) AND shift = {N} AND senergy = <2400, 9500) AND nbumps3 = (-inf, 1.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 395) AND genergy = (-inf, 19310) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 786) AND genergy = (-inf, 19310) AND senergy = (-inf, 650) THEN label = {0}\nIF goenergy = <-54.50, inf) AND genergy = <10915, 19310) AND goimpuls = <-50.50, 230.50) AND nbumps2 = (-inf, 1.50) AND nbumps = <0.50, inf) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 786) AND genergy = (-inf, 19510) AND senergy = (-inf, 650) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 392.50) AND genergy = (-inf, 20525) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, 118) AND genergy = (-inf, 20525) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND seismoacoustic = {a} AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 118) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, 118) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 118) AND gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, 120.50) AND gimpuls = (-inf, 395.50) AND maxenergy = (-inf, 350) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 120.50) AND gimpuls = (-inf, 449.50) AND maxenergy = (-inf, 350) AND genergy = (-inf, 32875) THEN label = {0}\nIF goenergy = <-84.50, 120.50) AND gimpuls = (-inf, 449.50) AND maxenergy = (-inf, 350) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 449.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 537.50) AND genergy = (-inf, 25125) AND goimpuls = (-inf, 27.50) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-84.50, 114.50) AND gimpuls = (-inf, 537.50) AND maxenergy = (-inf, 350) AND genergy = (-inf, 31790) THEN label = {0}\nIF goenergy = <-84.50, 114.50) AND genergy = (-inf, 31790) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <116.50, inf) AND gimpuls = (-inf, 788.50) AND genergy = <20930, 31790) THEN label = {0}\nIF goenergy = <-84.50, 114.50) AND genergy = (-inf, 32770) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 87.50) AND gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 87.50) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 87.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <-84.50, 87.50) AND genergy = (-inf, 1674705) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN label = {0}\nIF ghazard = {a} AND goenergy = <57, inf) AND gimpuls = (-inf, 514.50) AND goimpuls = <-1.50, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND gimpuls = <523, 1342.50) AND goimpuls = <17.50, inf) AND genergy = <46870, inf) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goenergy = <29.50, 104.50) AND gimpuls = <522, 2168) AND senergy = (-inf, 250) THEN label = {0}\nIF goenergy = <-19, inf) AND goimpuls = <4.50, 312) AND genergy = <4455, 34260) AND nbumps = (-inf, 0.50) THEN label = {0}\nIF goenergy = <8.50, inf) AND gimpuls = <523, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 250) THEN label = {0}\nIF genergy = <36470, 42165) AND goimpuls = <5.50, inf) AND senergy = (-inf, 550) THEN label = {0}\nIF goenergy = <119.50, inf) AND gimpuls = <516, 1210) AND goimpuls = (-inf, 118.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = <144.50, 1210) AND genergy = <42430, inf) AND goimpuls = <59.50, inf) AND senergy = (-inf, 250) THEN label = {0}\nIF gimpuls = <813.50, 1427.50) AND goimpuls = <104.50, inf) AND senergy = (-inf, 350) THEN label = {0}\nIF gimpuls = (-inf, 319) AND genergy = <1865, 19670) AND goimpuls = (-inf, -6.50) AND senergy = (-inf, 9600) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 650) THEN label = {0}\nIF goenergy = <-44.50, inf) AND gimpuls = <324.50, inf) AND genergy = (-inf, 32770) AND goimpuls = (-inf, 105.50) AND nbumps = <0.50, 1.50) THEN label = {0}\nIF goenergy = <-73.50, 14.50) AND gimpuls = (-inf, 1342.50) AND genergy = <36280, inf) AND senergy = (-inf, 650) THEN label = {0}\nIF goimpuls = <-6.50, inf) AND genergy = <49585, inf) AND senergy = (-inf, 650) AND nbumps = <0.50, inf) THEN label = {0}\nIF goenergy = <-54.50, inf) AND genergy = (-inf, 64725) AND senergy = <650, 750) THEN label = {0}\nIF goenergy = <-33.50, inf) AND maxenergy = (-inf, 950) AND gimpuls = (-inf, 537.50) AND genergy = (-inf, 25125) AND goimpuls = <-41.50, -0.50) THEN label = {0}\nIF goenergy = <-84.50, 114.50) AND gimpuls = (-inf, 587.50) AND genergy = (-inf, 27275) AND nbumps3 = (-inf, 0.50) AND senergy = (-inf, 25250) THEN label = {0}\nIF goenergy = (-inf, 114.50) AND genergy = <1865, 28515) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goenergy = (-inf, -20.50) AND gimpuls = (-inf, 537.50) AND genergy = <20610, 28515) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF genergy = (-inf, 28515) AND nbumps = <5.50, inf) THEN label = {0}\nIF maxenergy = (-inf, 3500) AND genergy = <20270, 28515) AND goimpuls = (-inf, -8.50) AND nbumps2 = <0.50, 1.50) THEN label = {0}\nIF genergy = <3260, 28515) AND senergy = <8500, inf) AND nbumps = (-inf, 2.50) THEN label = {0}\nIF goenergy = <-36.50, inf) AND genergy = (-inf, 28515) AND senergy = <5050, inf) THEN label = {0}\nIF ghazard = {a} AND goenergy = <-53.50, 40.50) AND genergy = <20560, 29105) AND nbumps2 = <0.50, inf) THEN label = {0}\nIF goenergy = (-inf, 14.50) AND maxenergy = (-inf, 550) AND gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 2.50) THEN label = {0}\nIF goenergy = <-40.50, 28.50) AND gimpuls = (-inf, 2168) AND genergy = <40210, inf) AND senergy = (-inf, 850) AND seismic = {a} THEN label = {0}\nIF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 362.50) AND genergy = <1865, inf) AND goimpuls = (-inf, 66.50) AND senergy = (-inf, 7500) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96) AND genergy = <1865, inf) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goenergy = <17.50, inf) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 66.50) AND nbumps2 = (-inf, 0.50) AND nbumps = <0.50, inf) THEN label = {0}\nIF gimpuls = (-inf, 1210) AND genergy = <7815, inf) AND senergy = <1500, 7500) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1252.50) AND goimpuls = (-inf, 96) AND genergy = <1865, inf) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1342.50) AND goimpuls = <-54.50, inf) AND genergy = <7870, inf) AND senergy = <1500, inf) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goenergy = <-40.50, 31.50) AND gimpuls = (-inf, 1485) AND genergy = <44960, inf) AND senergy = (-inf, 5500) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = <1441.50, inf) AND genergy = (-inf, 117575) THEN label = {0}\nIF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1752) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 0.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goimpuls = <-40.50, inf) AND genergy = <422215, inf) AND seismoacoustic = {a} AND senergy = <2500, inf) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF genergy = <29945, 31245) THEN label = {0}\nIF goenergy = <-33.50, inf) AND genergy = <29155, 31615) AND goimpuls = (-inf, 105.50) AND nbumps3 = (-inf, 1.50) THEN label = {0}\nIF genergy = <31805, 32680) THEN label = {0}\nIF goenergy = (-inf, 158.50) AND maxenergy = (-inf, 650) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96.50) THEN label = {0}\nIF genergy = <32925, 34315) THEN label = {0}\nIF maxenergy = (-inf, 750) AND genergy = <35480, 45240) AND nbumps = <0.50, inf) THEN label = {0}\nIF ghazard = {a} AND goenergy = <-27.50, inf) AND maxenergy = (-inf, 750) AND gimpuls = (-inf, 2056) AND genergy = (-inf, 715465) AND senergy = <850, inf) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 305.50) AND goimpuls = (-inf, 17.50) AND senergy = (-inf, 2300) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 305.50) AND maxenergy = (-inf, 3500) AND goimpuls = (-inf, -5.50) THEN label = {0}\nIF gimpuls = (-inf, 305.50) AND genergy = <29195, inf) AND goimpuls = (-inf, 96) AND senergy = (-inf, 9850) THEN label = {0}\nIF senergy = <71000, inf) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1141.50) AND maxenergy = (-inf, 7500) AND genergy = <1865, inf) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-72.50, inf) AND gimpuls = (-inf, 1372) AND genergy = <55365, inf) AND senergy = <1500, inf) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 87.50) AND genergy = (-inf, 1733075) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = <-32.50, inf) AND gimpuls = (-inf, 2681) AND genergy = <173815, 1026530) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF ghazard = {a} AND goenergy = <0.50, 87.50) AND maxenergy = <550, 850) THEN label = {0}\nIF ghazard = {a} AND goenergy = <-29.50, inf) AND gimpuls = <259.50, inf) AND maxenergy = <550, inf) AND genergy = (-inf, 39305) AND goimpuls = <-39.50, inf) AND senergy = (-inf, 4400) AND nbumps3 = (-inf, 2.50) THEN label = {0}\nIF goenergy = <-18.50, 105.50) AND genergy = <9110, 39695) AND goimpuls = <-41.50, inf) AND nbumps3 = (-inf, 2.50) THEN label = {0}\nIF gimpuls = (-inf, 361.50) AND maxenergy = (-inf, 3500) AND senergy = <3250, inf) THEN label = {0}\nIF goenergy = <-37.50, inf) AND gimpuls = (-inf, 361.50) AND maxenergy = (-inf, 35000) AND genergy = <38315, inf) AND senergy = <950, inf) THEN label = {0}\nIF goenergy = <-18.50, inf) AND gimpuls = <334.50, 804.50) AND maxenergy = <550, inf) AND genergy = (-inf, 44750) AND senergy = (-inf, 25150) AND nbumps2 = <0.50, 3.50) THEN label = {0}\nIF senergy = <1250, 1550) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF genergy = <44780, 45255) THEN label = {0}\nIF goenergy = (-inf, 158.50) AND senergy = <1150, 1650) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF genergy = <46690, 48545) THEN label = {0}\nIF goenergy = (-inf, 68) AND gimpuls = (-inf, 769.50) AND genergy = <43280, 49095) AND nbumps3 = (-inf, 3.50) THEN label = {0}\nIF goenergy = (-inf, 95.50) AND gimpuls = (-inf, 514.50) AND goimpuls = <-7, 96.50) AND genergy = <40245, inf) AND nbumps3 = (-inf, 2.50) THEN label = {0}\nIF goenergy = <-73.50, inf) AND gimpuls = (-inf, 514.50) AND maxenergy = <550, 8500) AND genergy = <49265, 108000) THEN label = {0}\nIF goenergy = <-53.50, inf) AND gimpuls = (-inf, 1836) AND nbumps3 = (-inf, 0.50) AND nbumps4 = <0.50, inf) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF maxenergy = (-inf, 1500) AND gimpuls = <673.50, 1210) AND senergy = <1700, inf) THEN label = {0}\nIF goenergy = <-84.50, inf) AND gimpuls = (-inf, 1245.50) AND genergy = <49585, 58435) AND goimpuls = (-inf, 96.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF ghazard = {a} AND goenergy = (-inf, 68.50) AND gimpuls = <526, 606) AND genergy = <17700, inf) AND senergy = (-inf, 9550) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF goenergy = <-43.50, 87.50) AND senergy = (-inf, 3150) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 1.50) AND nbumps = <1.50, inf) THEN label = {0}\nIF goenergy = (-inf, 120.50) AND gimpuls = (-inf, 1029.50) AND genergy = <58515, 61125) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF gimpuls = <393.50, 725.50) AND genergy = <81935, inf) AND nbumps3 = (-inf, 2.50) THEN label = {0}\nIF goenergy = <11.50, 68.50) AND maxenergy = (-inf, 2500) AND gimpuls = <556, inf) AND genergy = (-inf, 1482055) AND nbumps2 = <0.50, inf) THEN label = {0}\nIF goenergy = (-inf, 28.50) AND gimpuls = <354, 791.50) AND genergy = <81505, 366505) AND nbumps3 = (-inf, 2.50) THEN label = {0}\nIF goenergy = <-31.50, 104.50) AND gimpuls = <325, 2068.50) AND goimpuls = (-inf, 50.50) AND senergy = (-inf, 5750) AND nbumps3 = (-inf, 1.50) AND nbumps2 = <0.50, 1.50) THEN label = {0}\nIF goenergy = <-9.50, inf) AND gimpuls = <938.50, 2902.50) AND maxenergy = (-inf, 3500) AND genergy = <80845, 508210) AND nbumps = <0.50, inf) THEN label = {0}\nIF senergy = <5050, 5750) THEN label = {0}\nIF gimpuls = <887.50, 977) AND goimpuls = (-inf, -6.50) AND senergy = (-inf, 85450) THEN label = {0}\nIF ghazard = {a} AND goenergy = <-38.50, inf) AND gimpuls = <813.50, 1151) AND maxenergy = <3500, inf) AND goimpuls = (-inf, 89.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF goenergy = <-27.50, inf) AND genergy = <123990, 544010) AND senergy = (-inf, 17850) AND nbumps = <3.50, inf) THEN label = {0}\nIF goenergy = (-inf, 68.50) AND maxenergy = <7500, inf) AND genergy = (-inf, 189505) AND goimpuls = <32.50, inf) THEN label = {0}\nIF goenergy = <-29.50, inf) AND gimpuls = (-inf, 2078.50) AND goimpuls = (-inf, -5.50) AND genergy = <138665, inf) AND senergy = <3250, inf) AND nbumps2 = (-inf, 1.50) AND nbumps = <1.50, inf) THEN label = {0}\nIF goenergy = <-15.50, 53.50) AND gimpuls = (-inf, 2917) AND goimpuls = <-7.50, inf) AND nbumps3 = (-inf, 1.50) AND senergy = <7500, inf) THEN label = {0}\nIF goenergy = <-88.50, 87.50) AND genergy = (-inf, 1713980) AND goimpuls = (-inf, 89.50) AND senergy = (-inf, 18500) AND nbumps3 = (-inf, 4.50) AND nbumps2 = (-inf, 3.50) THEN label = {0}\nIF goenergy = <22.50, inf) AND gimpuls = <364, inf) AND genergy = (-inf, 144410) AND nbumps3 = <3.50, inf) THEN label = {1}\nIF gimpuls = <364, inf) AND goimpuls = (-inf, 21.50) AND nbumps3 = <3.50, inf) AND senergy = <10150, inf) THEN label = {1}\nIF goenergy = <-15, inf) AND goimpuls = (-inf, 44.50) AND senergy = <13850, inf) AND nbumps3 = (-inf, 3.50) AND nbumps = <5.50, inf) THEN label = {1}\nIF gimpuls = <2208.50, 2361.50) AND genergy = <493095, inf) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF gimpuls = <3011, inf) AND genergy = (-inf, 1005720) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF gimpuls = <1328, 1361.50) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF goenergy = (-inf, -29.50) AND gimpuls = <1328, inf) AND goimpuls = <-29, -14.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-10.50, inf) AND gimpuls = <1328, 1443.50) AND goimpuls = <-1, inf) AND nbumps2 = (-inf, 1.50) THEN label = {1}\nIF gimpuls = <1328, 2109) AND maxenergy = (-inf, 7500) AND goimpuls = (-inf, -5.50) AND genergy = (-inf, 642325) AND senergy = <850, 9350) AND seismoacoustic = {a} AND nbumps = (-inf, 3.50) THEN label = {1}\nIF gimpuls = <1394.50, 2004) AND goimpuls = <-25, 13) AND genergy = <393900, inf) AND senergy = (-inf, 38250) AND nbumps2 = <0.50, inf) AND nbumps = <1.50, 3.50) THEN label = {1}\nIF gimpuls = <1747.50, 3018) AND goimpuls = <-25, 20.50) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 32750) THEN label = {1}\nIF goenergy = <-16.50, inf) AND gimpuls = <1831, 2945.50) AND genergy = <254130, 1133675) AND seismic = {b} AND senergy = <1600, 32750) THEN label = {1}\nIF maxenergy = (-inf, 25000) AND gimpuls = <364, inf) AND goimpuls = <1.50, inf) AND nbumps3 = <1.50, 4.50) AND senergy = <4300, inf) AND nbumps = <4.50, 6.50) THEN label = {1}\nIF gimpuls = <740.50, 887.50) AND goimpuls = (-inf, 9) AND nbumps = <2.50, inf) THEN label = {1}\nIF gimpuls = <764.50, 1288.50) AND genergy = <61240, 213225) AND goimpuls = <-22.50, 58.50) AND senergy = (-inf, 27350) AND nbumps3 = (-inf, 1.50) AND nbumps = <2.50, inf) THEN label = {1}\nIF gimpuls = <379, 484) AND goimpuls = (-inf, 12.50) AND senergy = (-inf, 10350) AND nbumps = <2.50, inf) THEN label = {1}\nIF goenergy = (-inf, -4.50) AND maxenergy = <3500, inf) AND goimpuls = <-50, inf) AND genergy = (-inf, 52070) AND senergy = <5750, 15200) AND nbumps = <2.50, 5.50) AND nbumps2 = (-inf, 2.50) THEN label = {1}\nIF goenergy = (-inf, 123.50) AND goimpuls = <-70.50, 32.50) AND seismoacoustic = {a} AND senergy = (-inf, 27350) AND nbumps = <2.50, 4.50) THEN label = {1}\nIF goenergy = <-30.50, inf) AND gimpuls = <1139.50, 1270.50) AND goimpuls = (-inf, 105) AND genergy = <54930, 220205) AND senergy = (-inf, 38250) AND nbumps3 = (-inf, 1.50) THEN label = {1}\nIF goenergy = <-51, inf) AND gimpuls = <754.50, 1048) AND goimpuls = (-inf, 62.50) AND genergy = (-inf, 99210) AND senergy = (-inf, 201650) AND nbumps = <1.50, 2.50) AND nbumps2 = (-inf, 1.50) THEN label = {1}\nIF goenergy = (-inf, 144) AND gimpuls = <361.50, 728.50) AND maxenergy = <450, inf) AND genergy = <32455, inf) AND goimpuls = <-12.50, 8.50) AND senergy = (-inf, 7600) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 2.50) THEN label = {1}\nIF ghazard = {a} AND gimpuls = <160, 256) AND maxenergy = (-inf, 4500) AND genergy = (-inf, 21865) AND nbumps = <1.50, inf) THEN label = {1}\nIF goenergy = (-inf, 106.50) AND gimpuls = <110, 649.50) AND genergy = (-inf, 46930) AND senergy = (-inf, 40500) AND nbumps = <1.50, 2.50) THEN label = {1}\nIF gimpuls = <110, inf) AND senergy = <550, inf) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF goenergy = <-78.50, inf) AND gimpuls = <32.50, 237.50) AND maxenergy = <3500, inf) AND goimpuls = <-74.50, 68.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) AND nbumps = (-inf, 4.50) THEN label = {1}\nIF gimpuls = <767.50, 813.50) AND genergy = (-inf, 75455) AND goimpuls = <1, inf) AND senergy = (-inf, 1300) AND nbumps = (-inf, 1.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = (-inf, 106.50) AND gimpuls = <131, 735) AND maxenergy = (-inf, 350) AND genergy = <48545, 66335) AND goimpuls = <-72, inf) THEN label = {1}\nIF ghazard = {a} AND goenergy = <5.50, inf) AND gimpuls = <396, 732.50) AND genergy = <40050, 50765) AND goimpuls = (-inf, 79.50) AND senergy = (-inf, 350) THEN label = {1}\nIF goenergy = <-37.50, 152.50) AND gimpuls = <571, 651) AND genergy = <20840, 36590) AND nbumps = (-inf, 0.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-22, 33.50) AND gimpuls = <361.50, 525.50) AND genergy = <25145, 42200) AND goimpuls = <-27.50, 8.50) AND nbumps = (-inf, 0.50) THEN label = {1}\nIF goenergy = <-45.50, inf) AND gimpuls = <380.50, 542.50) AND genergy = <17635, 21260) AND shift = {W} AND nbumps = (-inf, 0.50) THEN label = {1}\nIF gimpuls = <240, 324.50) AND genergy = <18585, 25665) AND goimpuls = <-49.50, 37.50) AND shift = {W} AND senergy = (-inf, 3350) AND nbumps = (-inf, 2.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-59.50, -10.50) AND gimpuls = <88, 269.50) AND maxenergy = (-inf, 4500) AND goimpuls = <-42.50, 4.50) AND genergy = <4565, 21365) THEN label = {1}\n"
+      "IF gimpuls = (-inf, 32.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 54.50) AND senergy = (-inf, 3700) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 54.50) AND genergy = <1865, inf) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND goimpuls = (-inf, -0.50) AND genergy = (-inf, 13675) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND genergy = (-inf, 17640) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF genergy = <1635, 13675) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND senergy = (-inf, 650) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND maxenergy = (-inf, 950) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND goimpuls = (-inf, -5.50) AND genergy = (-inf, 13675) AND senergy = (-inf, 2200) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND senergy = (-inf, 2200) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND maxenergy = (-inf, 3500) AND genergy = (-inf, 17640) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND maxenergy = (-inf, 3500) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND nbumps3 = (-inf, 0.50) AND senergy = (-inf, 25000) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND nbumps3 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 772.50) AND genergy = <1865, 17640) AND senergy = (-inf, 4400) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 217) AND genergy = <1865, inf) AND goimpuls = (-inf, -5.50) AND nbumps4 = (-inf, 0.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 68) AND genergy = <1865, 17640) AND senergy = (-inf, 25000) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF ghazard = {c} THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 536) AND genergy = (-inf, 18585) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND genergy = (-inf, 18585) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 950) AND gimpuls = (-inf, 536) AND genergy = (-inf, 18585) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 536) AND genergy = <1865, 18585) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 27100) THEN class = {0}\n",
+      "IF goenergy = <297.50, inf) THEN class = {0}\n",
+      "IF senergy = <115450, inf) THEN class = {0}\n",
+      "IF genergy = <1789250, inf) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 786) AND genergy = <1865, 18810) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 27100) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND genergy = (-inf, 51290) AND goimpuls = (-inf, -0.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 184.50) AND goimpuls = (-inf, 27.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND genergy = (-inf, 51290) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-73.50, inf) AND goimpuls = (-inf, -0.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-73.50, inf) AND goimpuls = (-inf, 96.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-55.50, inf) AND goimpuls = (-inf, 96.50) AND shift = {N} AND senergy = (-inf, 2150) THEN class = {0}\n",
+      "IF goimpuls = <-70.50, 96.50) AND genergy = <4640, inf) AND shift = {N} AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = <135, inf) AND goimpuls = (-inf, 230.50) AND genergy = <9110, inf) AND shift = {N} AND senergy = (-inf, 2150) THEN class = {0}\n",
+      "IF genergy = <9110, inf) AND shift = {N} AND senergy = <2400, 9500) AND nbumps3 = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 395) AND genergy = (-inf, 19310) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 786) AND genergy = (-inf, 19310) AND senergy = (-inf, 650) THEN class = {0}\n",
+      "IF goenergy = <-54.50, inf) AND genergy = <10915, 19310) AND goimpuls = <-50.50, 230.50) AND nbumps2 = (-inf, 1.50) AND nbumps = <0.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 786) AND genergy = (-inf, 19510) AND senergy = (-inf, 650) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 392.50) AND genergy = (-inf, 20525) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 118) AND genergy = (-inf, 20525) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND seismoacoustic = {a} AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 118) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 118) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 118) AND gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 120.50) AND gimpuls = (-inf, 395.50) AND maxenergy = (-inf, 350) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 120.50) AND gimpuls = (-inf, 449.50) AND maxenergy = (-inf, 350) AND genergy = (-inf, 32875) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 120.50) AND gimpuls = (-inf, 449.50) AND maxenergy = (-inf, 350) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 449.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 537.50) AND genergy = (-inf, 25125) AND goimpuls = (-inf, 27.50) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 114.50) AND gimpuls = (-inf, 537.50) AND maxenergy = (-inf, 350) AND genergy = (-inf, 31790) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 114.50) AND genergy = (-inf, 31790) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <116.50, inf) AND gimpuls = (-inf, 788.50) AND genergy = <20930, 31790) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 114.50) AND genergy = (-inf, 32770) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 87.50) AND gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 87.50) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 87.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 87.50) AND genergy = (-inf, 1674705) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <57, inf) AND gimpuls = (-inf, 514.50) AND goimpuls = <-1.50, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND gimpuls = <523, 1342.50) AND goimpuls = <17.50, inf) AND genergy = <46870, inf) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = <29.50, 104.50) AND gimpuls = <522, 2168) AND senergy = (-inf, 250) THEN class = {0}\n",
+      "IF goenergy = <-19, inf) AND goimpuls = <4.50, 312) AND genergy = <4455, 34260) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <8.50, inf) AND gimpuls = <523, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 250) THEN class = {0}\n",
+      "IF genergy = <36470, 42165) AND goimpuls = <5.50, inf) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF goenergy = <119.50, inf) AND gimpuls = <516, 1210) AND goimpuls = (-inf, 118.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = <144.50, 1210) AND genergy = <42430, inf) AND goimpuls = <59.50, inf) AND senergy = (-inf, 250) THEN class = {0}\n",
+      "IF gimpuls = <813.50, 1427.50) AND goimpuls = <104.50, inf) AND senergy = (-inf, 350) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 319) AND genergy = <1865, 19670) AND goimpuls = (-inf, -6.50) AND senergy = (-inf, 9600) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 650) THEN class = {0}\n",
+      "IF goenergy = <-44.50, inf) AND gimpuls = <324.50, inf) AND genergy = (-inf, 32770) AND goimpuls = (-inf, 105.50) AND nbumps = <0.50, 1.50) THEN class = {0}\n",
+      "IF goenergy = <-73.50, 14.50) AND gimpuls = (-inf, 1342.50) AND genergy = <36280, inf) AND senergy = (-inf, 650) THEN class = {0}\n",
+      "IF goimpuls = <-6.50, inf) AND genergy = <49585, inf) AND senergy = (-inf, 650) AND nbumps = <0.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-54.50, inf) AND genergy = (-inf, 64725) AND senergy = <650, 750) THEN class = {0}\n",
+      "IF goenergy = <-33.50, inf) AND maxenergy = (-inf, 950) AND gimpuls = (-inf, 537.50) AND genergy = (-inf, 25125) AND goimpuls = <-41.50, -0.50) THEN class = {0}\n",
+      "IF goenergy = <-84.50, 114.50) AND gimpuls = (-inf, 587.50) AND genergy = (-inf, 27275) AND nbumps3 = (-inf, 0.50) AND senergy = (-inf, 25250) THEN class = {0}\n",
+      "IF goenergy = (-inf, 114.50) AND genergy = <1865, 28515) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, -20.50) AND gimpuls = (-inf, 537.50) AND genergy = <20610, 28515) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF genergy = (-inf, 28515) AND nbumps = <5.50, inf) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 3500) AND genergy = <20270, 28515) AND goimpuls = (-inf, -8.50) AND nbumps2 = <0.50, 1.50) THEN class = {0}\n",
+      "IF genergy = <3260, 28515) AND senergy = <8500, inf) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-36.50, inf) AND genergy = (-inf, 28515) AND senergy = <5050, inf) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <-53.50, 40.50) AND genergy = <20560, 29105) AND nbumps2 = <0.50, inf) THEN class = {0}\n",
+      "IF goenergy = (-inf, 14.50) AND maxenergy = (-inf, 550) AND gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-40.50, 28.50) AND gimpuls = (-inf, 2168) AND genergy = <40210, inf) AND senergy = (-inf, 850) AND seismic = {a} THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 362.50) AND genergy = <1865, inf) AND goimpuls = (-inf, 66.50) AND senergy = (-inf, 7500) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96) AND genergy = <1865, inf) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = <17.50, inf) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 66.50) AND nbumps2 = (-inf, 0.50) AND nbumps = <0.50, inf) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1210) AND genergy = <7815, inf) AND senergy = <1500, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1252.50) AND goimpuls = (-inf, 96) AND genergy = <1865, inf) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1342.50) AND goimpuls = <-54.50, inf) AND genergy = <7870, inf) AND senergy = <1500, inf) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = <-40.50, 31.50) AND gimpuls = (-inf, 1485) AND genergy = <44960, inf) AND senergy = (-inf, 5500) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = <1441.50, inf) AND genergy = (-inf, 117575) THEN class = {0}\n",
+      "IF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1752) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 0.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goimpuls = <-40.50, inf) AND genergy = <422215, inf) AND seismoacoustic = {a} AND senergy = <2500, inf) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF genergy = <29945, 31245) THEN class = {0}\n",
+      "IF goenergy = <-33.50, inf) AND genergy = <29155, 31615) AND goimpuls = (-inf, 105.50) AND nbumps3 = (-inf, 1.50) THEN class = {0}\n",
+      "IF genergy = <31805, 32680) THEN class = {0}\n",
+      "IF goenergy = (-inf, 158.50) AND maxenergy = (-inf, 650) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96.50) THEN class = {0}\n",
+      "IF genergy = <32925, 34315) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 750) AND genergy = <35480, 45240) AND nbumps = <0.50, inf) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <-27.50, inf) AND maxenergy = (-inf, 750) AND gimpuls = (-inf, 2056) AND genergy = (-inf, 715465) AND senergy = <850, inf) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 305.50) AND goimpuls = (-inf, 17.50) AND senergy = (-inf, 2300) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 305.50) AND maxenergy = (-inf, 3500) AND goimpuls = (-inf, -5.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 305.50) AND genergy = <29195, inf) AND goimpuls = (-inf, 96) AND senergy = (-inf, 9850) THEN class = {0}\n",
+      "IF senergy = <71000, inf) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1141.50) AND maxenergy = (-inf, 7500) AND genergy = <1865, inf) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-72.50, inf) AND gimpuls = (-inf, 1372) AND genergy = <55365, inf) AND senergy = <1500, inf) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 87.50) AND genergy = (-inf, 1733075) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = <-32.50, inf) AND gimpuls = (-inf, 2681) AND genergy = <173815, 1026530) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <0.50, 87.50) AND maxenergy = <550, 850) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <-29.50, inf) AND gimpuls = <259.50, inf) AND maxenergy = <550, inf) AND genergy = (-inf, 39305) AND goimpuls = <-39.50, inf) AND senergy = (-inf, 4400) AND nbumps3 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-18.50, 105.50) AND genergy = <9110, 39695) AND goimpuls = <-41.50, inf) AND nbumps3 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 361.50) AND maxenergy = (-inf, 3500) AND senergy = <3250, inf) THEN class = {0}\n",
+      "IF goenergy = <-37.50, inf) AND gimpuls = (-inf, 361.50) AND maxenergy = (-inf, 35000) AND genergy = <38315, inf) AND senergy = <950, inf) THEN class = {0}\n",
+      "IF goenergy = <-18.50, inf) AND gimpuls = <334.50, 804.50) AND maxenergy = <550, inf) AND genergy = (-inf, 44750) AND senergy = (-inf, 25150) AND nbumps2 = <0.50, 3.50) THEN class = {0}\n",
+      "IF senergy = <1250, 1550) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF genergy = <44780, 45255) THEN class = {0}\n",
+      "IF goenergy = (-inf, 158.50) AND senergy = <1150, 1650) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF genergy = <46690, 48545) THEN class = {0}\n",
+      "IF goenergy = (-inf, 68) AND gimpuls = (-inf, 769.50) AND genergy = <43280, 49095) AND nbumps3 = (-inf, 3.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 95.50) AND gimpuls = (-inf, 514.50) AND goimpuls = <-7, 96.50) AND genergy = <40245, inf) AND nbumps3 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-73.50, inf) AND gimpuls = (-inf, 514.50) AND maxenergy = <550, 8500) AND genergy = <49265, 108000) THEN class = {0}\n",
+      "IF goenergy = <-53.50, inf) AND gimpuls = (-inf, 1836) AND nbumps3 = (-inf, 0.50) AND nbumps4 = <0.50, inf) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 1500) AND gimpuls = <673.50, 1210) AND senergy = <1700, inf) THEN class = {0}\n",
+      "IF goenergy = <-84.50, inf) AND gimpuls = (-inf, 1245.50) AND genergy = <49585, 58435) AND goimpuls = (-inf, 96.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = (-inf, 68.50) AND gimpuls = <526, 606) AND genergy = <17700, inf) AND senergy = (-inf, 9550) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = <-43.50, 87.50) AND senergy = (-inf, 3150) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 1.50) AND nbumps = <1.50, inf) THEN class = {0}\n",
+      "IF goenergy = (-inf, 120.50) AND gimpuls = (-inf, 1029.50) AND genergy = <58515, 61125) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = <393.50, 725.50) AND genergy = <81935, inf) AND nbumps3 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <11.50, 68.50) AND maxenergy = (-inf, 2500) AND gimpuls = <556, inf) AND genergy = (-inf, 1482055) AND nbumps2 = <0.50, inf) THEN class = {0}\n",
+      "IF goenergy = (-inf, 28.50) AND gimpuls = <354, 791.50) AND genergy = <81505, 366505) AND nbumps3 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-31.50, 104.50) AND gimpuls = <325, 2068.50) AND goimpuls = (-inf, 50.50) AND senergy = (-inf, 5750) AND nbumps3 = (-inf, 1.50) AND nbumps2 = <0.50, 1.50) THEN class = {0}\n",
+      "IF goenergy = <-9.50, inf) AND gimpuls = <938.50, 2902.50) AND maxenergy = (-inf, 3500) AND genergy = <80845, 508210) AND nbumps = <0.50, inf) THEN class = {0}\n",
+      "IF senergy = <5050, 5750) THEN class = {0}\n",
+      "IF gimpuls = <887.50, 977) AND goimpuls = (-inf, -6.50) AND senergy = (-inf, 85450) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <-38.50, inf) AND gimpuls = <813.50, 1151) AND maxenergy = <3500, inf) AND goimpuls = (-inf, 89.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-27.50, inf) AND genergy = <123990, 544010) AND senergy = (-inf, 17850) AND nbumps = <3.50, inf) THEN class = {0}\n",
+      "IF goenergy = (-inf, 68.50) AND maxenergy = <7500, inf) AND genergy = (-inf, 189505) AND goimpuls = <32.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-29.50, inf) AND gimpuls = (-inf, 2078.50) AND goimpuls = (-inf, -5.50) AND genergy = <138665, inf) AND senergy = <3250, inf) AND nbumps2 = (-inf, 1.50) AND nbumps = <1.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-15.50, 53.50) AND gimpuls = (-inf, 2917) AND goimpuls = <-7.50, inf) AND nbumps3 = (-inf, 1.50) AND senergy = <7500, inf) THEN class = {0}\n",
+      "IF goenergy = <-88.50, 87.50) AND genergy = (-inf, 1713980) AND goimpuls = (-inf, 89.50) AND senergy = (-inf, 18500) AND nbumps3 = (-inf, 4.50) AND nbumps2 = (-inf, 3.50) THEN class = {0}\n",
+      "IF goenergy = <22.50, inf) AND gimpuls = <364, inf) AND genergy = (-inf, 144410) AND nbumps3 = <3.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <364, inf) AND goimpuls = (-inf, 21.50) AND nbumps3 = <3.50, inf) AND senergy = <10150, inf) THEN class = {1}\n",
+      "IF goenergy = <-15, inf) AND goimpuls = (-inf, 44.50) AND senergy = <13850, inf) AND nbumps3 = (-inf, 3.50) AND nbumps = <5.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <2208.50, 2361.50) AND genergy = <493095, inf) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <3011, inf) AND genergy = (-inf, 1005720) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <1328, 1361.50) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, -29.50) AND gimpuls = <1328, inf) AND goimpuls = <-29, -14.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-10.50, inf) AND gimpuls = <1328, 1443.50) AND goimpuls = <-1, inf) AND nbumps2 = (-inf, 1.50) THEN class = {1}\n",
+      "IF gimpuls = <1328, 2109) AND maxenergy = (-inf, 7500) AND goimpuls = (-inf, -5.50) AND genergy = (-inf, 642325) AND senergy = <850, 9350) AND seismoacoustic = {a} AND nbumps = (-inf, 3.50) THEN class = {1}\n",
+      "IF gimpuls = <1394.50, 2004) AND goimpuls = <-25, 13) AND genergy = <393900, inf) AND senergy = (-inf, 38250) AND nbumps2 = <0.50, inf) AND nbumps = <1.50, 3.50) THEN class = {1}\n",
+      "IF gimpuls = <1747.50, 3018) AND goimpuls = <-25, 20.50) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 32750) THEN class = {1}\n",
+      "IF goenergy = <-16.50, inf) AND gimpuls = <1831, 2945.50) AND genergy = <254130, 1133675) AND seismic = {b} AND senergy = <1600, 32750) THEN class = {1}\n",
+      "IF maxenergy = (-inf, 25000) AND gimpuls = <364, inf) AND goimpuls = <1.50, inf) AND nbumps3 = <1.50, 4.50) AND senergy = <4300, inf) AND nbumps = <4.50, 6.50) THEN class = {1}\n",
+      "IF gimpuls = <740.50, 887.50) AND goimpuls = (-inf, 9) AND nbumps = <2.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <764.50, 1288.50) AND genergy = <61240, 213225) AND goimpuls = <-22.50, 58.50) AND senergy = (-inf, 27350) AND nbumps3 = (-inf, 1.50) AND nbumps = <2.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <379, 484) AND goimpuls = (-inf, 12.50) AND senergy = (-inf, 10350) AND nbumps = <2.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, -4.50) AND maxenergy = <3500, inf) AND goimpuls = <-50, inf) AND genergy = (-inf, 52070) AND senergy = <5750, 15200) AND nbumps = <2.50, 5.50) AND nbumps2 = (-inf, 2.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 123.50) AND goimpuls = <-70.50, 32.50) AND seismoacoustic = {a} AND senergy = (-inf, 27350) AND nbumps = <2.50, 4.50) THEN class = {1}\n",
+      "IF goenergy = <-30.50, inf) AND gimpuls = <1139.50, 1270.50) AND goimpuls = (-inf, 105) AND genergy = <54930, 220205) AND senergy = (-inf, 38250) AND nbumps3 = (-inf, 1.50) THEN class = {1}\n",
+      "IF goenergy = <-51, inf) AND gimpuls = <754.50, 1048) AND goimpuls = (-inf, 62.50) AND genergy = (-inf, 99210) AND senergy = (-inf, 201650) AND nbumps = <1.50, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 144) AND gimpuls = <361.50, 728.50) AND maxenergy = <450, inf) AND genergy = <32455, inf) AND goimpuls = <-12.50, 8.50) AND senergy = (-inf, 7600) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 2.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND gimpuls = <160, 256) AND maxenergy = (-inf, 4500) AND genergy = (-inf, 21865) AND nbumps = <1.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 106.50) AND gimpuls = <110, 649.50) AND genergy = (-inf, 46930) AND senergy = (-inf, 40500) AND nbumps = <1.50, 2.50) THEN class = {1}\n",
+      "IF gimpuls = <110, inf) AND senergy = <550, inf) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF goenergy = <-78.50, inf) AND gimpuls = <32.50, 237.50) AND maxenergy = <3500, inf) AND goimpuls = <-74.50, 68.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) AND nbumps = (-inf, 4.50) THEN class = {1}\n",
+      "IF gimpuls = <767.50, 813.50) AND genergy = (-inf, 75455) AND goimpuls = <1, inf) AND senergy = (-inf, 1300) AND nbumps = (-inf, 1.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = (-inf, 106.50) AND gimpuls = <131, 735) AND maxenergy = (-inf, 350) AND genergy = <48545, 66335) AND goimpuls = <-72, inf) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <5.50, inf) AND gimpuls = <396, 732.50) AND genergy = <40050, 50765) AND goimpuls = (-inf, 79.50) AND senergy = (-inf, 350) THEN class = {1}\n",
+      "IF goenergy = <-37.50, 152.50) AND gimpuls = <571, 651) AND genergy = <20840, 36590) AND nbumps = (-inf, 0.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-22, 33.50) AND gimpuls = <361.50, 525.50) AND genergy = <25145, 42200) AND goimpuls = <-27.50, 8.50) AND nbumps = (-inf, 0.50) THEN class = {1}\n",
+      "IF goenergy = <-45.50, inf) AND gimpuls = <380.50, 542.50) AND genergy = <17635, 21260) AND shift = {W} AND nbumps = (-inf, 0.50) THEN class = {1}\n",
+      "IF gimpuls = <240, 324.50) AND genergy = <18585, 25665) AND goimpuls = <-49.50, 37.50) AND shift = {W} AND senergy = (-inf, 3350) AND nbumps = (-inf, 2.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-59.50, -10.50) AND gimpuls = <88, 269.50) AND maxenergy = (-inf, 4500) AND goimpuls = <-42.50, 4.50) AND genergy = <4565, 21365) THEN class = {1}\n"
      ]
     }
    ],
@@ -386,22 +1161,79 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "### Correlation Measure generated rules"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 16,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
-      "IF gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1410) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1653.50) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1684) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1798) AND goimpuls = (-inf, 312) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 2733) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = (-inf, 3146) AND genergy = (-inf, 1733075) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF senergy = (-inf, 2350) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1331) AND nbumps = (-inf, 2.50) THEN label = {0}\nIF gimpuls = (-inf, 1655.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF ghazard = {a} AND gimpuls = <334.50, 2892) AND genergy = (-inf, 318735) AND goimpuls = <31.50, inf) AND senergy = <350, inf) AND nbumps = (-inf, 2.50) THEN label = {0}\nIF gimpuls = (-inf, 1832.50) AND nbumps = (-inf, 2.50) THEN label = {0}\nIF gimpuls = (-inf, 3146) AND genergy = (-inf, 1713980) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps5 = (-inf, 0.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND genergy = (-inf, 32675) AND senergy = (-inf, 2350) THEN label = {0}\nIF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1150.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF maxenergy = (-inf, 4500) AND gimpuls = (-inf, 769.50) THEN label = {0}\nIF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF goenergy = (-inf, 123.50) AND gimpuls = (-inf, 1028.50) AND maxenergy = <1500, inf) AND genergy = <31805, 373295) AND goimpuls = <-54.50, inf) AND senergy = (-inf, 14350) AND seismic = {a} AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF genergy = (-inf, 378500) AND nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 5.50) THEN label = {0}\nIF goenergy = (-inf, 68.50) AND gimpuls = (-inf, 901) AND genergy = <21765, inf) AND nbumps3 = (-inf, 3.50) AND nbumps2 = <1.50, 3.50) AND nbumps = <3.50, inf) THEN label = {0}\nIF gimpuls = (-inf, 1150.50) AND senergy = (-inf, 20650) THEN label = {0}\nIF gimpuls = (-inf, 1378) AND maxenergy = (-inf, 75000) AND goimpuls = (-inf, 312) AND nbumps4 = (-inf, 2.50) AND nbumps = (-inf, 8.50) THEN label = {0}\nIF goenergy = <-4.50, inf) AND gimpuls = (-inf, 2185.50) AND genergy = <135285, 1505475) AND senergy = (-inf, 5750) AND nbumps2 = <0.50, inf) THEN label = {0}\nIF goenergy = <-0.50, 104.50) AND maxenergy = (-inf, 5500) AND goimpuls = <20.50, inf) AND genergy = <101710, inf) AND nbumps = <1.50, inf) THEN label = {0}\nIF goenergy = <-29.50, inf) AND goimpuls = (-inf, 6.50) AND genergy = <392530, inf) AND senergy = <7250, inf) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 3881.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF maxenergy = <1500, inf) AND gimpuls = <994.50, 1959) AND goimpuls = <-34, 95) AND genergy = (-inf, 662435) AND senergy = (-inf, 36050) AND nbumps3 = <0.50, 4.50) AND nbumps2 = <0.50, 2.50) THEN label = {1}\nIF goenergy = (-inf, 96) AND maxenergy = <1500, inf) AND gimpuls = <712, 2257.50) AND genergy = <61250, 662435) AND goimpuls = (-inf, 95) AND nbumps3 = <0.50, inf) AND senergy = (-inf, 27350) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 6.50) THEN label = {1}\nIF goenergy = (-inf, 96) AND maxenergy = <1500, inf) AND gimpuls = <538.50, inf) AND goimpuls = <-34, 109) AND genergy = <61250, 826925) AND senergy = (-inf, 36050) AND nbumps3 = (-inf, 4.50) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 6.50) THEN label = {1}\nIF goenergy = (-inf, 186) AND maxenergy = <1500, inf) AND gimpuls = <538.50, inf) AND genergy = <58310, 934630) AND goimpuls = <-55, inf) AND senergy = (-inf, 40650) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF ghazard = {a} AND gimpuls = <521.50, inf) AND genergy = <58310, 799855) AND goimpuls = <-23.50, 64.50) AND senergy = <850, 36050) AND nbumps = <1.50, 3.50) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF goenergy = (-inf, 84) AND gimpuls = <894.50, inf) AND genergy = <66235, 1161025) AND goimpuls = <-46, 77.50) AND senergy = <650, inf) AND nbumps3 = (-inf, 2.50) AND nbumps = <1.50, 5.50) AND nbumps2 = <0.50, 3.50) THEN label = {1}\nIF goenergy = <-34.50, 96) AND gimpuls = <521.50, 1548.50) AND maxenergy = (-inf, 7500) AND genergy = <34360, 207270) AND goimpuls = <-22.50, inf) AND nbumps = <1.50, inf) THEN label = {1}\nIF goenergy = (-inf, 135.50) AND gimpuls = <378, inf) AND genergy = <32635, 622815) AND goimpuls = (-inf, 10.50) AND senergy = (-inf, 36050) AND nbumps = <1.50, inf) THEN label = {1}\nIF goenergy = (-inf, 106.50) AND gimpuls = <306, 542) AND genergy = <19245, 81890) AND senergy = <750, 12050) AND nbumps = <1.50, 3.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = (-inf, -1.50) AND gimpuls = <153.50, 289) AND genergy = (-inf, 37085) AND senergy = (-inf, 40500) AND nbumps3 = (-inf, 3.50) AND nbumps = <1.50, inf) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-65.50, 27) AND gimpuls = <98.50, 346) AND goimpuls = <-70.50, 8.50) AND genergy = (-inf, 64310) AND senergy = <2350, inf) AND nbumps3 = (-inf, 3.50) AND nbumps2 = <0.50, inf) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-50.50, inf) AND gimpuls = <1328.50, inf) AND genergy = (-inf, 1062020) AND goimpuls = <-33.50, 39.50) AND senergy = <850, 38250) AND nbumps = (-inf, 7.50) THEN label = {1}\nIF goenergy = (-inf, 56.50) AND gimpuls = <1253.50, inf) AND maxenergy = (-inf, 65000) AND genergy = <52565, 716085) AND goimpuls = <-60.50, 73) AND senergy = <350, inf) AND nbumps3 = (-inf, 2.50) AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) AND nbumps = (-inf, 4.50) THEN label = {1}\nIF gimpuls = <1342, 3508) AND maxenergy = (-inf, 7500) AND genergy = <77100, inf) AND goimpuls = (-inf, 68.50) AND shift = {W} AND senergy = (-inf, 13350) AND nbumps2 = (-inf, 3.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-59.50, 45.50) AND gimpuls = <110, 762) AND genergy = <12145, 134125) AND goimpuls = <-53.50, inf) AND senergy = <550, 950) THEN label = {1}\nIF goenergy = (-inf, 128.50) AND genergy = <10495, inf) AND shift = {W} AND senergy = (-inf, 36050) AND nbumps3 = <0.50, inf) AND nbumps2 = (-inf, 4.50) AND nbumps = (-inf, 6.50) THEN label = {1}\nIF goenergy = <-78.50, inf) AND gimpuls = <32.50, inf) AND maxenergy = <250, inf) AND goimpuls = <-74.50, inf) AND senergy = <350, inf) THEN label = {1}\nIF goenergy = (-inf, 176.50) AND gimpuls = <449.50, inf) AND genergy = <49095, inf) THEN label = {1}\nIF ghazard = {a} AND goenergy = <68, 124.50) AND gimpuls = <725.50, 1445.50) AND maxenergy = (-inf, 2500) AND genergy = (-inf, 127635) AND goimpuls = <16, inf) AND senergy = (-inf, 4700) AND nbumps2 = (-inf, 1.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <15.50, 160) AND gimpuls = <133.50, 732.50) AND maxenergy = (-inf, 5500) AND genergy = <40050, 52010) AND nbumps3 = (-inf, 0.50) AND nbumps2 = (-inf, 1.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = (-inf, 152.50) AND gimpuls = <361.50, 653.50) AND maxenergy = (-inf, 7500) AND genergy = <32680, 36470) AND nbumps3 = (-inf, 0.50) THEN label = {1}\nIF goenergy = <-37.50, 124.50) AND gimpuls = <537.50, 621) AND genergy = <17635, 28105) AND shift = {W} AND nbumps = (-inf, 0.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-37.50, 181) AND gimpuls = <240, 470.50) AND genergy = <20485, 27430) AND goimpuls = <-43, inf) AND shift = {W} AND senergy = (-inf, 450) THEN label = {1}\nIF goenergy = <-55.50, 297.50) AND gimpuls = <217.50, 796) AND genergy = <13725, 49585) AND goimpuls = <-42.50, inf) AND shift = {W} AND senergy = (-inf, 1050) AND nbumps2 = (-inf, 0.50) THEN label = {1}\nIF goenergy = (-inf, -1.50) AND gimpuls = <54.50, 195.50) AND genergy = <1510, 12565) AND goimpuls = <-72.50, 28.50) AND shift = {N} AND seismoacoustic = {a} AND seismic = {a} AND senergy = (-inf, 3200) THEN label = {1}\n"
+      "IF gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1410) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1653.50) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1684) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1798) AND goimpuls = (-inf, 312) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2733) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 3146) AND genergy = (-inf, 1733075) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF senergy = (-inf, 2350) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1331) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1655.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF ghazard = {a} AND gimpuls = <334.50, 2892) AND genergy = (-inf, 318735) AND goimpuls = <31.50, inf) AND senergy = <350, inf) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1832.50) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 3146) AND genergy = (-inf, 1713980) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps5 = (-inf, 0.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND genergy = (-inf, 32675) AND senergy = (-inf, 2350) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1150.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 4500) AND gimpuls = (-inf, 769.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 123.50) AND gimpuls = (-inf, 1028.50) AND maxenergy = <1500, inf) AND genergy = <31805, 373295) AND goimpuls = <-54.50, inf) AND senergy = (-inf, 14350) AND seismic = {a} AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF genergy = (-inf, 378500) AND nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 5.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 68.50) AND gimpuls = (-inf, 901) AND genergy = <21765, inf) AND nbumps3 = (-inf, 3.50) AND nbumps2 = <1.50, 3.50) AND nbumps = <3.50, inf) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1150.50) AND senergy = (-inf, 20650) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1378) AND maxenergy = (-inf, 75000) AND goimpuls = (-inf, 312) AND nbumps4 = (-inf, 2.50) AND nbumps = (-inf, 8.50) THEN class = {0}\n",
+      "IF goenergy = <-4.50, inf) AND gimpuls = (-inf, 2185.50) AND genergy = <135285, 1505475) AND senergy = (-inf, 5750) AND nbumps2 = <0.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-0.50, 104.50) AND maxenergy = (-inf, 5500) AND goimpuls = <20.50, inf) AND genergy = <101710, inf) AND nbumps = <1.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-29.50, inf) AND goimpuls = (-inf, 6.50) AND genergy = <392530, inf) AND senergy = <7250, inf) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 3881.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF maxenergy = <1500, inf) AND gimpuls = <994.50, 1959) AND goimpuls = <-34, 95) AND genergy = (-inf, 662435) AND senergy = (-inf, 36050) AND nbumps3 = <0.50, 4.50) AND nbumps2 = <0.50, 2.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 96) AND maxenergy = <1500, inf) AND gimpuls = <712, 2257.50) AND genergy = <61250, 662435) AND goimpuls = (-inf, 95) AND nbumps3 = <0.50, inf) AND senergy = (-inf, 27350) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 96) AND maxenergy = <1500, inf) AND gimpuls = <538.50, inf) AND goimpuls = <-34, 109) AND genergy = <61250, 826925) AND senergy = (-inf, 36050) AND nbumps3 = (-inf, 4.50) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 186) AND maxenergy = <1500, inf) AND gimpuls = <538.50, inf) AND genergy = <58310, 934630) AND goimpuls = <-55, inf) AND senergy = (-inf, 40650) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF ghazard = {a} AND gimpuls = <521.50, inf) AND genergy = <58310, 799855) AND goimpuls = <-23.50, 64.50) AND senergy = <850, 36050) AND nbumps = <1.50, 3.50) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 84) AND gimpuls = <894.50, inf) AND genergy = <66235, 1161025) AND goimpuls = <-46, 77.50) AND senergy = <650, inf) AND nbumps3 = (-inf, 2.50) AND nbumps = <1.50, 5.50) AND nbumps2 = <0.50, 3.50) THEN class = {1}\n",
+      "IF goenergy = <-34.50, 96) AND gimpuls = <521.50, 1548.50) AND maxenergy = (-inf, 7500) AND genergy = <34360, 207270) AND goimpuls = <-22.50, inf) AND nbumps = <1.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 135.50) AND gimpuls = <378, inf) AND genergy = <32635, 622815) AND goimpuls = (-inf, 10.50) AND senergy = (-inf, 36050) AND nbumps = <1.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 106.50) AND gimpuls = <306, 542) AND genergy = <19245, 81890) AND senergy = <750, 12050) AND nbumps = <1.50, 3.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = (-inf, -1.50) AND gimpuls = <153.50, 289) AND genergy = (-inf, 37085) AND senergy = (-inf, 40500) AND nbumps3 = (-inf, 3.50) AND nbumps = <1.50, inf) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-65.50, 27) AND gimpuls = <98.50, 346) AND goimpuls = <-70.50, 8.50) AND genergy = (-inf, 64310) AND senergy = <2350, inf) AND nbumps3 = (-inf, 3.50) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-50.50, inf) AND gimpuls = <1328.50, inf) AND genergy = (-inf, 1062020) AND goimpuls = <-33.50, 39.50) AND senergy = <850, 38250) AND nbumps = (-inf, 7.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 56.50) AND gimpuls = <1253.50, inf) AND maxenergy = (-inf, 65000) AND genergy = <52565, 716085) AND goimpuls = <-60.50, 73) AND senergy = <350, inf) AND nbumps3 = (-inf, 2.50) AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) AND nbumps = (-inf, 4.50) THEN class = {1}\n",
+      "IF gimpuls = <1342, 3508) AND maxenergy = (-inf, 7500) AND genergy = <77100, inf) AND goimpuls = (-inf, 68.50) AND shift = {W} AND senergy = (-inf, 13350) AND nbumps2 = (-inf, 3.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-59.50, 45.50) AND gimpuls = <110, 762) AND genergy = <12145, 134125) AND goimpuls = <-53.50, inf) AND senergy = <550, 950) THEN class = {1}\n",
+      "IF goenergy = (-inf, 128.50) AND genergy = <10495, inf) AND shift = {W} AND senergy = (-inf, 36050) AND nbumps3 = <0.50, inf) AND nbumps2 = (-inf, 4.50) AND nbumps = (-inf, 6.50) THEN class = {1}\n",
+      "IF goenergy = <-78.50, inf) AND gimpuls = <32.50, inf) AND maxenergy = <250, inf) AND goimpuls = <-74.50, inf) AND senergy = <350, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 176.50) AND gimpuls = <449.50, inf) AND genergy = <49095, inf) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <68, 124.50) AND gimpuls = <725.50, 1445.50) AND maxenergy = (-inf, 2500) AND genergy = (-inf, 127635) AND goimpuls = <16, inf) AND senergy = (-inf, 4700) AND nbumps2 = (-inf, 1.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <15.50, 160) AND gimpuls = <133.50, 732.50) AND maxenergy = (-inf, 5500) AND genergy = <40050, 52010) AND nbumps3 = (-inf, 0.50) AND nbumps2 = (-inf, 1.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = (-inf, 152.50) AND gimpuls = <361.50, 653.50) AND maxenergy = (-inf, 7500) AND genergy = <32680, 36470) AND nbumps3 = (-inf, 0.50) THEN class = {1}\n",
+      "IF goenergy = <-37.50, 124.50) AND gimpuls = <537.50, 621) AND genergy = <17635, 28105) AND shift = {W} AND nbumps = (-inf, 0.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-37.50, 181) AND gimpuls = <240, 470.50) AND genergy = <20485, 27430) AND goimpuls = <-43, inf) AND shift = {W} AND senergy = (-inf, 450) THEN class = {1}\n",
+      "IF goenergy = <-55.50, 297.50) AND gimpuls = <217.50, 796) AND genergy = <13725, 49585) AND goimpuls = <-42.50, inf) AND shift = {W} AND senergy = (-inf, 1050) AND nbumps2 = (-inf, 0.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 7.50) AND gimpuls = <54.50, 2085.50) AND genergy = <1510, 569300) AND goimpuls = <-72.50, 28.50) AND senergy = (-inf, 115450) AND seismoacoustic = {a} AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 3.50) THEN class = {1}\n"
      ]
     }
    ],
@@ -411,22 +1243,81 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "### RSS Measure generated rules"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 17,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
-      "IF genergy = (-inf, 126350) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1210) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1410) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1485) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1653.50) AND goimpuls = (-inf, 96.50) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1752) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1822) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN label = {0}\nIF gimpuls = (-inf, 2733) AND genergy = (-inf, 1026530) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 2733) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF genergy = (-inf, 1733075) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 650) THEN label = {0}\nIF maxenergy = (-inf, 550) AND goimpuls = (-inf, 312) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 650) AND gimpuls = (-inf, 1210) AND senergy = (-inf, 1550) THEN label = {0}\nIF maxenergy = (-inf, 650) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 233.50) THEN label = {0}\nIF gimpuls = (-inf, 1141.50) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = (-inf, 1141.50) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = (-inf, 1372) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1655.50) AND genergy = (-inf, 1006585) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1760.50) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = (-inf, 2892) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN label = {0}\nIF nbumps2 = (-inf, 0.50) THEN label = {0}\nIF gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 2.50) THEN label = {0}\nIF maxenergy = (-inf, 750) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 96.50) AND genergy = (-inf, 703425) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 850) AND gimpuls = (-inf, 2888) AND goimpuls = (-inf, 96) THEN label = {0}\nIF genergy = (-inf, 31245) AND nbumps3 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 105.50) AND genergy = (-inf, 31245) AND senergy = (-inf, 4400) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF goenergy = (-inf, 105.50) AND gimpuls = (-inf, 664.50) AND senergy = (-inf, 27100) AND nbumps = (-inf, 3.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF genergy = (-inf, 31245) AND goimpuls = (-inf, 233.50) AND senergy = (-inf, 24700) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 105.50) AND nbumps4 = (-inf, 0.50) AND nbumps = (-inf, 5.50) THEN label = {0}\nIF genergy = (-inf, 31245) AND goimpuls = (-inf, 105.50) AND senergy = (-inf, 27650) THEN label = {0}\nIF gimpuls = (-inf, 664.50) AND goimpuls = (-inf, 105.50) AND nbumps3 = (-inf, 3.50) AND nbumps4 = (-inf, 2.50) AND nbumps2 = (-inf, 4) THEN label = {0}\nIF goenergy = (-inf, 105.50) AND maxenergy = (-inf, 7500) AND genergy = (-inf, 44750) AND senergy = (-inf, 13700) THEN label = {0}\nIF gimpuls = (-inf, 1414) AND genergy = (-inf, 48545) AND goimpuls = (-inf, 233.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND goimpuls = (-inf, 96) AND senergy = (-inf, 1950) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF gimpuls = (-inf, 1836) AND goimpuls = (-inf, 233.50) AND nbumps3 = (-inf, 0.50) AND nbumps5 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 1500) AND genergy = (-inf, 531845) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND genergy = (-inf, 61125) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 6.50) THEN label = {0}\nIF goenergy = (-inf, 94.50) AND gimpuls = (-inf, 698) AND genergy = <45830, 105885) AND goimpuls = <-41.50, inf) AND senergy = <3950, 29200) THEN label = {0}\nIF gimpuls = (-inf, 2068.50) AND goimpuls = (-inf, 233.50) AND senergy = (-inf, 4400) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF goimpuls = (-inf, 96.50) AND nbumps3 = (-inf, 1.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN label = {0}\nIF gimpuls = (-inf, 1139.50) AND nbumps3 = (-inf, 1.50) AND nbumps5 = (-inf, 0.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1139.50) AND genergy = (-inf, 366505) AND nbumps3 = (-inf, 2.50) AND nbumps5 = (-inf, 0.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1655) AND genergy = (-inf, 1505475) AND nbumps = (-inf, 4.50) THEN label = {0}\nIF gimpuls = (-inf, 2185.50) AND genergy = (-inf, 1505475) AND goimpuls = (-inf, 96) AND senergy = (-inf, 5750) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1328) AND senergy = (-inf, 85450) AND nbumps2 = (-inf, 3.50) THEN label = {0}\nIF goenergy = (-inf, 87.50) AND maxenergy = (-inf, 4500) AND goimpuls = (-inf, 96) AND senergy = (-inf, 12000) THEN label = {0}\nIF gimpuls = <1148.50, inf) AND genergy = (-inf, 189505) AND goimpuls = <-17.50, 107) AND senergy = <8950, inf) THEN label = {0}\nIF goenergy = <-88.50, inf) AND gimpuls = (-inf, 2917) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN label = {0}\nIF goenergy = (-inf, 104.50) AND goimpuls = (-inf, 96.50) AND seismic = {a} AND nbumps3 = (-inf, 3.50) AND senergy = (-inf, 20650) THEN label = {0}\nIF gimpuls = <521.50, inf) AND genergy = <57680, inf) THEN label = {1}\nIF goenergy = (-inf, 123) AND senergy = <550, inf) THEN label = {1}\nIF ghazard = {a} AND goenergy = <68.50, 105.50) AND gimpuls = <483, inf) AND genergy = <46530, 51605) AND nbumps = (-inf, 1.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = <7, 58) AND gimpuls = <396, 836) AND genergy = <34315, 43280) AND goimpuls = <-21.50, 28.50) AND nbumps = (-inf, 0.50) THEN label = {1}\nIF ghazard = {a} AND goenergy = (-inf, 160) AND gimpuls = <362.50, 732.50) AND maxenergy = (-inf, 850) AND genergy = <32680, 66275) AND senergy = (-inf, 1350) THEN label = {1}\nIF goenergy = <14.50, 297.50) AND gimpuls = <133.50, 797) AND maxenergy = (-inf, 1500) AND genergy = <27275, 52010) AND nbumps3 = (-inf, 0.50) THEN label = {1}\nIF goenergy = <-37.50, 122) AND gimpuls = <537.50, 796) AND genergy = <16805, 29510) AND goimpuls = <-36.50, inf) AND senergy = (-inf, 250) THEN label = {1}\nIF ghazard = {a} AND goenergy = <-37.50, inf) AND gimpuls = <240, 473.50) AND genergy = <20485, 25310) AND goimpuls = <-43, inf) AND shift = {W} AND senergy = (-inf, 450) THEN label = {1}\nIF goenergy = <-55.50, 124.50) AND gimpuls = <194.50, inf) AND genergy = <9060, inf) AND goimpuls = <-60.50, inf) AND nbumps2 = (-inf, 4.50) THEN label = {1}\n"
+      "IF genergy = (-inf, 126350) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1210) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1410) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1485) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1653.50) AND goimpuls = (-inf, 96.50) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1752) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1822) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2733) AND genergy = (-inf, 1026530) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2733) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF genergy = (-inf, 1733075) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 650) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 550) AND goimpuls = (-inf, 312) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 650) AND gimpuls = (-inf, 1210) AND senergy = (-inf, 1550) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 650) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 233.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1141.50) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1141.50) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1372) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1655.50) AND genergy = (-inf, 1006585) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1760.50) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2892) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF nbumps2 = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 750) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 96.50) AND genergy = (-inf, 703425) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 850) AND gimpuls = (-inf, 2888) AND goimpuls = (-inf, 96) THEN class = {0}\n",
+      "IF genergy = (-inf, 31245) AND nbumps3 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 105.50) AND genergy = (-inf, 31245) AND senergy = (-inf, 4400) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 105.50) AND gimpuls = (-inf, 664.50) AND senergy = (-inf, 27100) AND nbumps = (-inf, 3.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF genergy = (-inf, 31245) AND goimpuls = (-inf, 233.50) AND senergy = (-inf, 24700) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 105.50) AND nbumps4 = (-inf, 0.50) AND nbumps = (-inf, 5.50) THEN class = {0}\n",
+      "IF genergy = (-inf, 31245) AND goimpuls = (-inf, 105.50) AND senergy = (-inf, 27650) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 664.50) AND goimpuls = (-inf, 105.50) AND nbumps3 = (-inf, 3.50) AND nbumps4 = (-inf, 2.50) AND nbumps2 = (-inf, 4) THEN class = {0}\n",
+      "IF goenergy = (-inf, 105.50) AND maxenergy = (-inf, 7500) AND genergy = (-inf, 44750) AND senergy = (-inf, 13700) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1414) AND genergy = (-inf, 48545) AND goimpuls = (-inf, 233.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND goimpuls = (-inf, 96) AND senergy = (-inf, 1950) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1836) AND goimpuls = (-inf, 233.50) AND nbumps3 = (-inf, 0.50) AND nbumps5 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 1500) AND genergy = (-inf, 531845) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND genergy = (-inf, 61125) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 6.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 94.50) AND gimpuls = (-inf, 698) AND genergy = <45830, 105885) AND goimpuls = <-41.50, inf) AND senergy = <3950, 29200) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2068.50) AND goimpuls = (-inf, 233.50) AND senergy = (-inf, 4400) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF goimpuls = (-inf, 96.50) AND nbumps3 = (-inf, 1.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1139.50) AND nbumps3 = (-inf, 1.50) AND nbumps5 = (-inf, 0.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1139.50) AND genergy = (-inf, 366505) AND nbumps3 = (-inf, 2.50) AND nbumps5 = (-inf, 0.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1655) AND genergy = (-inf, 1505475) AND nbumps = (-inf, 4.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2185.50) AND genergy = (-inf, 1505475) AND goimpuls = (-inf, 96) AND senergy = (-inf, 5750) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1328) AND senergy = (-inf, 85450) AND nbumps2 = (-inf, 3.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 87.50) AND maxenergy = (-inf, 4500) AND goimpuls = (-inf, 96) AND senergy = (-inf, 12000) THEN class = {0}\n",
+      "IF genergy = (-inf, 189505) AND goimpuls = (-inf, 312) AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF goenergy = <-88.50, inf) AND gimpuls = (-inf, 2917) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = (-inf, 104.50) AND goimpuls = (-inf, 96.50) AND seismic = {a} AND nbumps3 = (-inf, 3.50) AND senergy = (-inf, 20650) THEN class = {0}\n",
+      "IF gimpuls = <521.50, inf) AND genergy = <57680, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 123) AND senergy = <550, inf) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <68.50, 105.50) AND gimpuls = <483, inf) AND genergy = <46530, 51605) AND nbumps = (-inf, 1.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <7, 58) AND gimpuls = <396, 836) AND genergy = <34315, 43280) AND goimpuls = <-21.50, 28.50) AND nbumps = (-inf, 0.50) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = (-inf, 160) AND gimpuls = <362.50, 732.50) AND maxenergy = (-inf, 850) AND genergy = <32680, 66275) AND senergy = (-inf, 1350) THEN class = {1}\n",
+      "IF goenergy = <14.50, 297.50) AND gimpuls = <133.50, 797) AND maxenergy = (-inf, 1500) AND genergy = <27275, 52010) AND nbumps3 = (-inf, 0.50) THEN class = {1}\n",
+      "IF goenergy = <-37.50, 122) AND gimpuls = <537.50, 796) AND genergy = <16805, 29510) AND goimpuls = <-36.50, inf) AND senergy = (-inf, 250) THEN class = {1}\n",
+      "IF ghazard = {a} AND goenergy = <-37.50, inf) AND gimpuls = <240, 473.50) AND genergy = <20485, 25310) AND goimpuls = <-43, inf) AND shift = {W} AND senergy = (-inf, 450) THEN class = {1}\n",
+      "IF goenergy = <-55.50, 124.50) AND gimpuls = <194.50, inf) AND genergy = <9060, inf) AND goimpuls = <-60.50, inf) AND nbumps2 = (-inf, 4.50) THEN class = {1}\n"
      ]
     }
    ],
@@ -436,15 +1327,15 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Stratified K-Folds cross-validation"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 19,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -489,23 +1380,40 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "Rules characteristics "
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 38,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "time_total_s                     2.165153\ntime_growing_s                   2.956999\ntime_pruning_s                   0.562653\nrules_count                    166.400000\nconditions_per_rule              4.951229\ninduced_conditions_per_rule     13.649359\navg_rule_coverage                0.168386\navg_rule_precision               0.919191\navg_rule_quality                 0.486175\npvalue                           0.045394\nFDR_pvalue                       0.049264\nFWER_pvalue                      0.585424\nfraction_significant             0.808201\nfraction_FDR_significant         0.789743\nfraction_FWER_significant        0.639193\ndtype: float64"
+      "text/plain": [
+       "time_total_s                     1.843947\n",
+       "time_growing_s                   1.635322\n",
+       "time_pruning_s                   0.174192\n",
+       "rules_count                    166.400000\n",
+       "conditions_per_rule              4.947738\n",
+       "induced_conditions_per_rule     13.622816\n",
+       "avg_rule_coverage                0.168832\n",
+       "avg_rule_precision               0.919178\n",
+       "avg_rule_quality                 0.486174\n",
+       "pvalue                           0.045063\n",
+       "FDR_pvalue                       0.048888\n",
+       "FWER_pvalue                      0.579658\n",
+       "fraction_significant             0.809541\n",
+       "fraction_FDR_significant         0.791608\n",
+       "fraction_FWER_significant        0.640006\n",
+       "dtype: float64"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -513,23 +1421,49 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "Rules evaluation (average)"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 39,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "Accuracy                       0.899071\nMAE                            0.100929\nKappa                          0.047367\nBalanced accuracy              0.535887\nLogistic loss                  3.486010\nPrecision                      3.486010\nSensitivity                    0.117647\nSpecificity                    0.954127\nNPV                            0.939956\nPPV                            0.197777\npsep                           0.140239\nFall-out                       0.045873\nYouden's J statistic           0.071774\nLift                           3.013186\nF-measure                      0.073023\nFowlkes-Mallows index          0.901979\nFalse positive                11.100000\nFalse negative                15.000000\nTrue positive                  2.000000\nTrue negative                230.300000\nRules per example             23.878503\nVoting conflicts             103.400000\nNegative voting conflicts      7.400000\nGeometric mean                 0.180079\ndtype: float64"
+      "text/plain": [
+       "Accuracy                       0.899071\n",
+       "MAE                            0.100929\n",
+       "Kappa                          0.047367\n",
+       "Balanced accuracy              0.535887\n",
+       "Logistic loss                  3.637862\n",
+       "Precision                      3.637862\n",
+       "Sensitivity                    0.117647\n",
+       "Specificity                    0.954127\n",
+       "NPV                            0.939956\n",
+       "PPV                            0.197777\n",
+       "psep                           0.140239\n",
+       "Fall-out                       0.045873\n",
+       "Youden's J statistic           0.071774\n",
+       "Lift                           3.013186\n",
+       "F-measure                      0.073023\n",
+       "Fowlkes-Mallows index          0.901979\n",
+       "False positive                11.100000\n",
+       "False negative                15.000000\n",
+       "True positive                  2.000000\n",
+       "True negative                230.300000\n",
+       "Rules per example             23.960549\n",
+       "Voting conflicts             110.800000\n",
+       "Negative voting conflicts      7.400000\n",
+       "Geometric mean                 0.180079\n",
+       "dtype: float64"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -537,24 +1471,65 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "Confusion matrix (average)"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 37,
+   "execution_count": 9,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "       0     1\n0  230.3  11.1\n1   15.0   2.0",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>0</th>\n      <th>1</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>230.3</td>\n      <td>11.1</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>15.0</td>\n      <td>2.0</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>230.3</td>\n",
+       "      <td>11.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>15.0</td>\n",
+       "      <td>2.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       0     1\n",
+       "0  230.3  11.1\n",
+       "1   15.0   2.0"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -562,24 +1537,24 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Hyperparameters tuning\n",
     "\n",
     "This one gonna take a while..."
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 40,
+   "execution_count": 10,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "stream",
      "name": "stdout",
+     "output_type": "stream",
      "text": [
-      "Best BAC: 0.522949 using {'induction_measure': <Measures.WeightedLaplace: 'WeightedLaplace'>, 'min_rule_covered': 7, 'pruning_measure': <Measures.Correlation: 'Correlation'>, 'voting_measure': <Measures.WeightedLaplace: 'WeightedLaplace'>}\n"
+      "Best BAC: 0.638397 using {'induction_measure': <Measures.WeightedLaplace: 'WeightedLaplace'>, 'minsupp_new': 5, 'pruning_measure': <Measures.RSS: 'RSS'>, 'voting_measure': <Measures.WeightedLaplace: 'WeightedLaplace'>}\n"
      ]
     }
    ],
@@ -596,11 +1571,11 @@
     "\n",
     "# define models and parameters\n",
     "model = RuleClassifier()\n",
-    "min_rule_covered = range(3, 15, 2)\n",
+    "minsupp_new = range(3, 15, 2)\n",
     "measures_choice = [Measures.C2, Measures.RSS, Measures.WeightedLaplace, Measures.Correlation]\n",
     "# define grid search\n",
     "grid = {\n",
-    "    'min_rule_covered': min_rule_covered, \n",
+    "    'minsupp_new': minsupp_new, \n",
     "    'induction_measure': measures_choice, \n",
     "    'pruning_measure': measures_choice, \n",
     "    'voting_measure': measures_choice\n",
@@ -614,17 +1589,17 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "## Building model with tuned hyperparameters\n",
     "\n",
     "### Split dataset to train and test (80%/20%)."
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 41,
+   "execution_count": 18,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -637,35 +1612,47 @@
     "x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=True)\n",
     "\n",
     "\n",
-    "clf = RuleClassifier(\n",
-    "    min_rule_covered=7,\n",
-    "    induction_measure=Measures.WeightedLaplace,\n",
-    "    pruning_measure=Measures.Correlation,\n",
-    "    voting_measure=Measures.WeightedLaplace,\n",
-    ")\n",
+    "clf = RuleClassifier(**grid_result.best_params_)\n",
     "clf.fit(x_train, y_train)\n",
     "ruleset = clf.model\n",
     "ruleset_stats = get_ruleset_stats('Best', ruleset)"
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "Rules evaluation"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 42,
+   "execution_count": 19,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "time_total_s                    0.420254\ntime_growing_s                  0.559084\ntime_pruning_s                  0.106422\nrules_count                    38.000000\nconditions_per_rule             4.289474\ninduced_conditions_per_rule    13.921053\navg_rule_coverage               0.329832\navg_rule_precision              0.722841\navg_rule_quality                2.962379\npvalue                          0.015023\nFDR_pvalue                      0.015570\nFWER_pvalue                     0.034304\nfraction_significant            0.894737\nfraction_FDR_significant        0.894737\nfraction_FWER_significant       0.868421\ndtype: float64"
+      "text/plain": [
+       "time_total_s                    0.145316\n",
+       "time_growing_s                  0.122759\n",
+       "time_pruning_s                  0.016378\n",
+       "rules_count                    23.000000\n",
+       "conditions_per_rule             3.000000\n",
+       "induced_conditions_per_rule    10.869565\n",
+       "avg_rule_coverage               0.608633\n",
+       "avg_rule_precision              0.861028\n",
+       "avg_rule_quality                1.214700\n",
+       "pvalue                          0.000219\n",
+       "FDR_pvalue                      0.000219\n",
+       "FWER_pvalue                     0.000221\n",
+       "fraction_significant            1.000000\n",
+       "fraction_FDR_significant        1.000000\n",
+       "fraction_FWER_significant       1.000000\n",
+       "dtype: float64"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -673,31 +1660,98 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
     "### Validate model on test dataset"
-   ],
-   "cell_type": "markdown",
-   "metadata": {}
+   ]
   },
   {
    "cell_type": "code",
-   "execution_count": 43,
+   "execution_count": 20,
    "metadata": {},
    "outputs": [
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "Accuracy                       0.876209\nMAE                            0.123791\nKappa                          0.303411\nBalanced accuracy              0.746612\nLogistic loss                  4.275674\nPrecision                      4.275674\nSensitivity                    0.600000\nSpecificity                    0.893224\nNPV                            0.973154\nPPV                            0.257143\npsep                           0.230297\nFall-out                       0.106776\nYouden's J statistic           0.493224\nLift                           4.431429\nF-measure                      0.360000\nFowlkes-Mallows index          0.871226\nFalse positive                52.000000\nFalse negative                12.000000\nTrue positive                 18.000000\nTrue negative                435.000000\nRules per example             12.618956\nVoting conflicts             207.000000\nNegative voting conflicts     69.000000\nGeometric mean                 0.732075\ndtype: float64"
+      "text/plain": [
+       "Accuracy                       0.891683\n",
+       "MAE                            0.108317\n",
+       "Kappa                          0.097281\n",
+       "Balanced accuracy              0.539967\n",
+       "Logistic loss                  3.904148\n",
+       "Precision                      3.904148\n",
+       "Sensitivity                    0.121951\n",
+       "Specificity                    0.957983\n",
+       "NPV                            0.926829\n",
+       "PPV                            0.200000\n",
+       "psep                           0.126829\n",
+       "Fall-out                       0.042017\n",
+       "Youden's J statistic           0.079934\n",
+       "Lift                           2.521951\n",
+       "F-measure                      0.151515\n",
+       "Fowlkes-Mallows index          0.890544\n",
+       "False positive                20.000000\n",
+       "False negative                36.000000\n",
+       "True positive                  5.000000\n",
+       "True negative                456.000000\n",
+       "Rules per example             14.073501\n",
+       "Voting conflicts             405.000000\n",
+       "Negative voting conflicts     21.000000\n",
+       "Geometric mean                 0.341800\n",
+       "dtype: float64"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     },
     {
-     "output_type": "display_data",
      "data": {
-      "text/plain": "     0   1\n0  435  52\n1   12  18",
-      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>0</th>\n      <th>1</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>435</td>\n      <td>52</td>\n    </tr>\n    <tr>\n      <th>1</th>\n      <td>12</td>\n      <td>18</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>456</td>\n",
+       "      <td>20</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>36</td>\n",
+       "      <td>5</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "     0   1\n",
+       "0  456  20\n",
+       "1   36   5"
+      ]
      },
-     "metadata": {}
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -708,5 +1762,27 @@
     "display(pd.DataFrame(confusion_matrix))"
    ]
   }
- ]
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "env",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.10"
+  },
+  "orig_nbformat": 2
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
 }

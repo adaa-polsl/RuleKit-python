@@ -1,0 +1,5 @@
+
+What's new in RuleKit version 1.7.0
+=========
+
+TEST
