@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survival &mdash; rulekit v1.7.0 1.7.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=030dc6f6"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Parameters" href="params.html" />
+    <link rel="prev" title="Regression" href="regression.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v1.7.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">Whats new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../autodoc.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../autodoc.html#rulekit.main.RuleKit"><code class="docutils literal notranslate"><span class="pre">RuleKit</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html">Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Survival</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rulekit.survival.SurvivalRules"><code class="docutils literal notranslate"><span class="pre">SurvivalRules</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.fit"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.get_coverage_matrix"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.get_coverage_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.get_metadata_routing"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.get_metadata_routing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.get_params"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.predict"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.score"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.SurvivalRules.set_params"><code class="docutils literal notranslate"><span class="pre">SurvivalRules.set_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.fit"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.get_coverage_matrix"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.get_coverage_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.get_metadata_routing"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.get_metadata_routing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.get_params"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.get_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.predict"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.predict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.score"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules.set_params"><code class="docutils literal notranslate"><span class="pre">ExpertSurvivalRules.set_params()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="params.html">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rules.html">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">Statistics</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v1.7.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../autodoc.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">Survival</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/autodoc/survival.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="survival">
+<h1>Survival<a class="headerlink" href="#survival" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rulekit.survival.</span></span><span class="sig-name descname"><span class="pre">SurvivalRules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survival_time_attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minsupp_new</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_growing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_pruning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_uncovered_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_best_candidate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complementary_conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rule_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rule_covered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.survival.SurvivalRules" title="Link to this definition"></a></dt>
+<dd><p>Survival model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>survival_time_attr</strong> (<em>str</em>) – name of column containing survival time data (use when data passed to model is padnas
+dataframe).</p></li>
+<li><p><strong>minsupp_new</strong> (<em>int = 5</em>) – positive integer representing minimum number of previously uncovered examples to be
+covered by a new rule (positive examples for classification problems); default: 5</p></li>
+<li><p><strong>max_growing</strong> (<em>int = 0.0</em>) – non-negative integer representing maximum number of conditions which can be added to
+the rule in the growing phase  (use this parameter for large datasets if execution time
+is prohibitive); 0 indicates no limit; default: 0,</p></li>
+<li><p><strong>enable_pruning</strong> (<em>bool = True</em>) – enable or disable pruning, default is True.</p></li>
+<li><p><strong>ignore_missing</strong> (<em>bool = False</em>) – boolean telling whether missing values should be ignored (by default, a missing value
+of given attribute is always considered as not fulfilling the condition build upon that
+attribute); default: False.</p></li>
+<li><p><strong>max_uncovered_fraction</strong> (<em>float = 0.0</em>) – Floating-point number from [0,1] interval representing maximum fraction of examples
+that may remain uncovered by the rule set, default: 0.0.</p></li>
+<li><p><strong>select_best_candidate</strong> (<em>bool = False</em>) – Flag determining if best candidate should be selected from growing phase;
+default: False.</p></li>
+<li><p><strong>complementary_conditions</strong> (<em>bool = False</em>) – If enabled, complementary conditions in the form a = !{value} for nominal attributes
+are supported.</p></li>
+<li><p><strong>max_rule_count</strong> (<em>int = 0</em>) – Maximum number of rules to be generated (for classification data sets it applies
+to a single class); 0 indicates no limit.</p></li>
+<li><p><strong>min_rule_covered</strong> (<em>int = None</em>) – <p>alias to <cite>minsupp_new</cite>. Parameter is deprecated and will be removed in the next major
+version, use <cite>minsupp_new</cite></p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.7.0: </span>Use parameter <cite>minsupp_new</cite> instead.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#rulekit.survival.SurvivalRules" title="rulekit.survival.SurvivalRules"><span class="pre">SurvivalRules</span></a></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.fit" title="Link to this definition"></a></dt>
+<dd><p>Train model on given dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – survival status</p></li>
+<li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter
+was specified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#rulekit.survival.SurvivalRules" title="rulekit.survival.SurvivalRules">SurvivalRules</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.get_coverage_matrix">
+<span class="sig-name descname"><span class="pre">get_coverage_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.get_coverage_matrix" title="Link to this definition"></a></dt>
+<dd><p>Calculates coverage matrix for ruleset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – dataset</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>coverage_matrix</strong> – Each row of the matrix represent single example from dataset and every column represent
+on rule from rule set. Value 1 in the matrix cell means that rule covered certain
+example, value 0 means that it doesn’t.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.get_metadata_routing">
+<span class="sig-name descname"><span class="pre">get_metadata_routing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.get_metadata_routing" title="Link to this definition"></a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Scikit-learn metadata routing is not supported yet.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.get_params" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>deep</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – Parameter for scikit-learn compatibility. Not used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>hyperparameters</strong> – Dictionary containing model hyperparameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform prediction and return estimated survival function for each example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – Each row represent single example from dataset and contains estimated survival function
+for that example. Estimated survival function is returned as a dictionary containing
+times and corresponding probabilities.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.score" title="Link to this definition"></a></dt>
+<dd><p>Return the Integrated Brier Score on the given dataset and labels
+(event status indicator).</p>
+<p>Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference
+between true event status at time T and predicted event status at that time;
+the Integrated Brier score summarizes the prediction error over all observations and over
+all times in a test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – survival status</p></li>
+<li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was
+specified</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>score</strong> – Integrated Brier Score of self.predict(values) wrt. labels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.SurvivalRules.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#rulekit.survival.SurvivalRules.set_params" title="Link to this definition"></a></dt>
+<dd><p>Set models hyperparameters. Parameters are the same as in constructor.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rulekit.survival.</span></span><span class="sig-name descname"><span class="pre">ExpertSurvivalRules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">survival_time_attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minsupp_new</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_growing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_pruning</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_uncovered_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_best_candidate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complementary_conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extend_using_preferred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extend_using_automatic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">induce_using_preferred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">induce_using_automatic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preferred_conditions_per_rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preferred_attributes_per_rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rule_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_rule_covered</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules" title="Link to this definition"></a></dt>
+<dd><p>Expert Survival model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minsupp_new</strong> (<em>int = 5</em>) – positive integer representing minimum number of previously uncovered examples to be
+covered by a new rule (positive examples for classification problems); default: 5</p></li>
+<li><p><strong>survival_time_attr</strong> (<em>str</em>) – name of column containing survival time data (use when data passed to model is pandas
+dataframe).</p></li>
+<li><p><strong>min_rule_covered</strong> (<em>int = None</em>) – positive integer representing minimum number of previously uncovered examples to be
+covered by a new rule (positive examples for classification problems); default: 5</p></li>
+<li><p><strong>max_growing</strong> (<em>int = 0.0</em>) – non-negative integer representing maximum number of conditions which can be added to
+the rule in the growing phase (use this parameter for large datasets if execution time
+is prohibitive); 0 indicates no limit; default: 0,</p></li>
+<li><p><strong>enable_pruning</strong> (<em>bool = True</em>) – enable or disable pruning, default is True.</p></li>
+<li><p><strong>ignore_missing</strong> (<em>bool = False</em>) – boolean telling whether missing values should be ignored (by default, a missing value
+of given attribute is always considered as not fulfilling the condition build upon that
+attribute); default: False.</p></li>
+<li><p><strong>max_uncovered_fraction</strong> (<em>float = 0.0</em>) – Floating-point number from [0,1] interval representing maximum fraction of examples
+that may remain uncovered by the rule set, default: 0.0.</p></li>
+<li><p><strong>select_best_candidate</strong> (<em>bool = False</em>) – Flag determining if best candidate should be selected from growing phase;
+default: False.</p></li>
+<li><p><strong>complementary_conditions</strong> (<em>bool = False</em>) – If enabled, complementary conditions in the form a = !{value} for nominal attributes
+are supported.</p></li>
+<li><p><strong>max_rule_count</strong> (<em>int = 0</em>) – Maximum number of rules to be generated (for classification data sets it applies
+to a single class); 0 indicates no limit.</p></li>
+<li><p><strong>extend_using_preferred</strong> (<em>bool = False</em>) – boolean indicating whether initial rules should be extended with a use of preferred
+conditions and attributes; default is False</p></li>
+<li><p><strong>extend_using_automatic</strong> (<em>bool = False</em>) – boolean indicating whether initial rules should be extended with a use of automatic
+conditions and attributes; default is False</p></li>
+<li><p><strong>induce_using_preferred</strong> (<em>bool = False</em>) – boolean indicating whether new rules should be induced with a use of preferred
+conditions and attributes; default is False</p></li>
+<li><p><strong>induce_using_automatic</strong> (<em>bool = False</em>) – boolean indicating whether new rules should be induced with a use of automatic
+conditions and attributes; default is False</p></li>
+<li><p><strong>preferred_conditions_per_rule</strong> (<em>int = None</em>) – maximum number of preferred conditions per rule; default: unlimited,</p></li>
+<li><p><strong>preferred_attributes_per_rule</strong> (<em>int = None</em>) – maximum number of preferred attributes per rule; default: unlimited.</p></li>
+<li><p><strong>min_rule_covered</strong> – <p>alias to <cite>minsupp_new</cite>. Parameter is deprecated and will be removed in the next major
+version, use <cite>minsupp_new</cite></p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.7.0: </span>Use parameter <cite>minsupp_new</cite> instead.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_preferred_conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert_forbidden_conditions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules" title="rulekit.survival.ExpertSurvivalRules"><span class="pre">ExpertSurvivalRules</span></a></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.fit" title="Link to this definition"></a></dt>
+<dd><p>Train model on given dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
+<li><p><strong>labels</strong> (<em>Data</em>) – survival status</p></li>
+<li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was
+specified.</p></li>
+<li><p><strong>expert_rules</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of initial rules, either passed as a list of strings representing rules or as list
+of tuples where first
+element is name of the rule and second one is rule string.</p></li>
+<li><p><strong>expert_preferred_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – multiset of preferred conditions (used also for specifying preferred attributes by
+using special value Any). Either passed as a list of strings representing rules or as
+list of tuples where first element is name of the rule and second one is rule string.</p></li>
+<li><p><strong>expert_forbidden_conditions</strong> (<em>List</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – set of forbidden conditions (used also for specifying forbidden attributes by using
+special valye Any). Either passed as a list of strings representing rules or as list
+of tuples where first element is name of the rule and second one is rule string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#rulekit.survival.ExpertSurvivalRules" title="rulekit.survival.ExpertSurvivalRules">ExpertSurvivalRules</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.get_coverage_matrix">
+<span class="sig-name descname"><span class="pre">get_coverage_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.get_coverage_matrix" title="Link to this definition"></a></dt>
+<dd><p>Calculates coverage matrix for ruleset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – dataset</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>coverage_matrix</strong> – Each row of the matrix represent single example from dataset and every column represent
+on rule from rule set. Value 1 in the matrix cell means that rule covered certain
+example, value 0 means that it doesn’t.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.get_metadata_routing">
+<span class="sig-name descname"><span class="pre">get_metadata_routing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.get_metadata_routing" title="Link to this definition"></a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Scikit-learn metadata routing is not supported yet.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotImplementedError</strong> – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.get_params" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>deep</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – Parameter for scikit-learn compatibility. Not used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>hyperparameters</strong> – Dictionary containing model hyperparameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.predict" title="Link to this definition"></a></dt>
+<dd><p>Perform prediction and return estimated survival function for each example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – Each row represent single example from dataset and contains estimated survival function
+for that example. Estimated survival function is returned as a dictionary containing
+times and corresponding probabilities.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">survival_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.score" title="Link to this definition"></a></dt>
+<dd><p>Return the Integrated Brier Score on the given dataset and labels
+(event status indicator).</p>
+<p>Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference
+between true event status at time T and predicted event status at that time;
+the Integrated Brier score summarizes the prediction error over all observations and over
+all times in a test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – attributes</p></li>
+<li><p><strong>labels</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – survival status</p></li>
+<li><p><strong>survival_time</strong> (<a class="reference internal" href="params.html#rulekit.operator.Data" title="rulekit.operator.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a>) – data about survival time. Could be omitted when <em>survival_time_attr</em> parameter was
+specified</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>score</strong> – Integrated Brier Score of self.predict(values) wrt. labels.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rulekit.survival.ExpertSurvivalRules.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#rulekit.survival.ExpertSurvivalRules.set_params" title="Link to this definition"></a></dt>
+<dd><p>Set models hyperparameters. Parameters are the same as in constructor.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="regression.html" class="btn btn-neutral float-left" title="Regression" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="params.html" class="btn btn-neutral float-right" title="Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
