@@ -41,7 +41,7 @@ from sklearn.datasets import load_iris
 X, y = load_iris(return_X_y=True)
  
 clf = RuleClassifier()
-clf.fit(x, y)
+clf.fit(X, y)
 prediction = clf.predict(X)
  
 print(prediction)
