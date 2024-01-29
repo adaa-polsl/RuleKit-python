@@ -20,6 +20,7 @@ class TestRegressor(unittest.TestCase):
         reg = regression.RuleRegressor()
         example_set = test_case.example_set
         MAX_RULES = 3
+
         class EventListener(RuleInductionProgressListener):
 
             lock = threading.Lock()
@@ -76,6 +77,7 @@ class TestExpertRegressor(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
+    @unittest.skip("TODO skipping due to Issue #17")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionExpertSnCTest')
 

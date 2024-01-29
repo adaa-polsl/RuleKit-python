@@ -103,6 +103,7 @@ celerybeat.pid
 .env
 .venv
 env/
+test-pypi/
 venv/
 ENV/
 env.bak/

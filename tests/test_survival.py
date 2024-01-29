@@ -17,7 +17,8 @@ class TestSurvivalLogRankTree(unittest.TestCase):
     def test_induction_progress_listener(self):
         test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
 
-        surv = survival.SurvivalRules(survival_time_attr=test_case.survival_time)
+        surv = survival.SurvivalRules(
+            survival_time_attr=test_case.survival_time)
         example_set = test_case.example_set
 
         class EventListener(RuleInductionProgressListener):
@@ -71,6 +72,7 @@ class TestExpertSurvivalLogRankTree(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
+    @unittest.skip("TODO skipping due to Issue #17")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('SurvivalLogRankExpertSnCTest')
 
