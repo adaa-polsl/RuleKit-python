@@ -112,7 +112,8 @@ class RuleRegressor(BaseOperator):
             first_label = labels[0]
         if not isinstance(first_label, Number):
             raise ValueError(
-                'DecisionTreeRegressor requires lables values to be numeric')
+                f'{self.__class__.__name__} requires lables values to be numeric'
+            )
 
     def fit(self, values: Data, labels: Data) -> RuleRegressor:  # pylint: disable=arguments-differ
         """Train model on given dataset.

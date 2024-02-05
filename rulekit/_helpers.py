@@ -175,6 +175,17 @@ def set_attribute_role(example_set, attribute: str, role: str) -> object:
     return role_setter.apply(example_set)
 
 
+def _sanitize_dataset_columns(
+    data: pd.DataFrame
+) -> pd.DataFrame:
+    for column_index in range(data.shape[1]):
+        if data.iloc[:, column_index].dtypes.name == 'bool':
+            # ExampleSet class that RuleKit internally uses does not
+            # support boolean columns at the moment (see Issue #18)
+            data.iloc[:, column_index] = data.iloc[:, column_index].astype(str)
+    return data
+
+
 def create_example_set(
     values: Union[pd.DataFrame, np.ndarray],
     labels: Union[pd.Series, np.ndarray] = None,
@@ -201,6 +212,7 @@ def create_example_set(
     attributes_names = None
     label_name = None
     if isinstance(values, pd.DataFrame):
+        values = _sanitize_dataset_columns(values)
         attributes_names = values.columns.values
         values = values.to_numpy()
     if isinstance(labels, pd.Series):

@@ -1,5 +1,7 @@
 import unittest
 import threading
+import numpy as np
+import pandas as pd
 
 from rulekit.main import RuleKit
 from rulekit import regression
@@ -70,6 +72,19 @@ class TestRegressor(unittest.TestCase):
             assert_score_is_greater(tree.predict(
                 example_set.values), example_set.labels, 0.7)
 
+    def test_fit_and_predict_on_boolean_columns(self):
+        test_case = get_test_cases('RegressionSnCTest')[0]
+        params = test_case.induction_params
+        clf = regression.RuleRegressor(**params)
+        X, y = test_case.example_set.values, test_case.example_set.labels
+        X['boolean_column'] = np.random.randint(low=0, high=2, size=X.shape[0]).astype(bool)
+        clf.fit(X, y)
+        clf.predict(X)
+
+        y = pd.Series(y)
+        clf.fit(X, y)
+        clf.predict(X)
+
 
 class TestExpertRegressor(unittest.TestCase):
 
@@ -77,7 +92,7 @@ class TestExpertRegressor(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("TODO skipping due to Issue #17")
+    @unittest.skip("TODO skipping due to Issue #19")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionExpertSnCTest')
 

@@ -192,10 +192,17 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
     def _prepare_labels(self, labels: Data) -> Data:
         if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
+            if labels.dtypes.name == 'bool':
+                return labels.astype(str)
             if isinstance(labels.iloc[0], Number):
                 self._remap_to_numeric = True
                 return labels.astype(str)
         else:
+            if (
+                isinstance(labels[0], bool) or
+                (isinstance(labels, np.ndarray) and labels.dtype.name == 'bool')
+            ):
+                return list(map(str, labels))
             if isinstance(labels[0], Number):
                 self._remap_to_numeric = True
                 return list(map(str, labels))

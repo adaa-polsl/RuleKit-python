@@ -1,5 +1,7 @@
 import unittest
 import threading
+import numpy as np
+import pandas as pd
 
 from rulekit.main import RuleKit
 from rulekit import survival
@@ -65,6 +67,22 @@ class TestSurvivalLogRankTree(unittest.TestCase):
             actual = list(map(lambda e: str(e), model.rules))
             assert_rules_are_equals(expected, actual)
 
+    def test_fit_and_predict_on_boolean_columns(self):
+        test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
+        params = test_case.induction_params
+        clf = survival.SurvivalRules(
+            **params, survival_time_attr=test_case.survival_time
+        )
+        X, y = test_case.example_set.values, test_case.example_set.labels
+        X['boolean_column'] = np.random.randint(
+            low=0, high=2, size=X.shape[0]).astype(bool)
+        clf.fit(X, y)
+        clf.predict(X)
+
+        y = pd.Series(y)
+        clf.fit(X, y)
+        clf.predict(X)
+
 
 class TestExpertSurvivalLogRankTree(unittest.TestCase):
 
@@ -72,7 +90,7 @@ class TestExpertSurvivalLogRankTree(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("TODO skipping due to Issue #17")
+    @unittest.skip("TODO skipping due to Issue #19")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('SurvivalLogRankExpertSnCTest')
 

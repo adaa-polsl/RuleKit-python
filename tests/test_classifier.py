@@ -12,7 +12,12 @@ from sklearn.datasets import load_iris
 from sklearn import metrics
 import numpy as np
 
-from tests.utils import get_test_cases, assert_rules_are_equals, assert_accuracy_is_greater
+from tests.utils import (
+    dir_path,
+    get_test_cases,
+    assert_rules_are_equals,
+    assert_accuracy_is_greater,
+)
 
 
 class TestClassifier(unittest.TestCase):
@@ -152,7 +157,7 @@ class TestClassifier(unittest.TestCase):
     def test_predict_proba(self):
         test_case = get_test_cases('ClassificationSnCTest')[0]
         params = test_case.induction_params
-        clf = classification.ExpertRuleClassifier(**params)
+        clf = classification.RuleClassifier(**params)
         example_set = test_case.example_set
         clf.fit(
             example_set.values,
@@ -173,6 +178,24 @@ class TestClassifier(unittest.TestCase):
             res.max() <= 1 and res.min() >= 0,
             'Predicted probabilities should be in range [0, 1]'
         )
+
+    def test_fit_and_predict_on_boolean_columns(self):
+        test_case = get_test_cases('ClassificationSnCTest')[0]
+        params = test_case.induction_params
+        clf = classification.RuleClassifier(**params)
+        X, y = test_case.example_set.values, test_case.example_set.labels
+        X['boolean_column'] = np.random.randint(
+            low=0, high=2, size=X.shape[0]).astype(bool)
+        clf.fit(X, y)
+        clf.predict(X)
+
+        y = y.astype(bool)
+        clf.fit(X, y)
+        clf.predict(X)
+
+        y = pd.Series(y)
+        clf.fit(X, y)
+        clf.predict(X)
 
 
 class TestExperClassifier(unittest.TestCase):
@@ -220,6 +243,46 @@ class TestExperClassifier(unittest.TestCase):
         self.assertTrue(
             res.max() <= 1 and res.min() >= 0,
             'Predicted probabilities should be in range [0, 1]'
+        )
+
+    # Issue #17
+    def test_left_open_intervals_in_expert_induction(self):
+        df = pd.DataFrame(arff.loadarff(
+            f'{dir_path}/resources/data/seismic-bumps-train-minimal.arff')[0]
+        )
+        X = df.drop('class', axis=1)
+        y = df['class']
+
+        expert_rules = [
+            ('rule-0', 'IF [[gimpuls = <-inf, 750)]] THEN class = {0}'),
+            ('rule-1', 'IF [[gimpuls = (750, inf)]] THEN class = {1}')
+        ]
+
+        expert_preferred_conditions = [
+            ('preferred-condition-0',
+             '1: IF [[seismic = {a}]] THEN class = {0}'),
+            ('preferred-attribute-0',
+             '1: IF [[gimpuls = Any]] THEN class = {1}')
+        ]
+
+        expert_forbidden_conditions = [
+            ('forb-attribute-0',
+             '1: IF [[seismoacoustic  = Any]] THEN class = {0}'),
+            ('forb-attribute-1', 'inf: IF [[ghazard  = Any]] THEN class = {1}')
+        ]
+        clf = classification.ExpertRuleClassifier(
+            minsupp_new=8,
+            max_growing=0,
+            extend_using_preferred=True,
+            extend_using_automatic=True,
+            induce_using_preferred=True,
+            induce_using_automatic=True
+        )
+        clf.fit(
+            X, y,
+            expert_rules=expert_rules,
+            expert_preferred_conditions=expert_preferred_conditions,
+            expert_forbidden_conditions=expert_forbidden_conditions
         )
 
 
