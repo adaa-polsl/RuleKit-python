@@ -9,7 +9,7 @@ with io.open("README.md", mode="r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rulekit",
-    version='1.7.4',
+    version='1.7.5',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
