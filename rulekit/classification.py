@@ -73,7 +73,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
     def __init__(
         self,
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
         pruning_measure: Union[Measures,
                                str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -88,14 +88,14 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
         approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction'],
         approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count'],
-        min_rule_covered: Optional[int] = None,
+        min_rule_covered: Optional[float] = None,
     ):
         """
         Parameters
         ----------
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.\
             Measures.Correlation`
             measure used during induction; default measure is correlation
@@ -137,7 +137,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             data sets, results may change in future;
         approximate_bins_count: int = 100
             maximum number of bins for an attribute evaluated in the approximate induction.
-        min_rule_covered : int = None
+        min_rule_covered : float = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
 
@@ -327,7 +327,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
 
     def __init__(
         self,
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
         pruning_measure: Union[Measures,
                                str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -352,14 +352,14 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             'preferred_conditions_per_rule'],
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
-        min_rule_covered: Optional[int] = None
+        min_rule_covered: Optional[float] = None
     ):
         """
         Parameters
         ----------
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
@@ -421,7 +421,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
-        min_rule_covered : int = None
+        min_rule_covered : float = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
 
@@ -555,7 +555,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
         penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
 
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
         pruning_measure: Union[Measures,
                                str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -585,9 +585,9 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             (s) - penalty strength; Default is 0.5
         penalty_saturation: float
             the value of p_new / P at which penalty reward saturates; Default is 0.2.
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be 
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation

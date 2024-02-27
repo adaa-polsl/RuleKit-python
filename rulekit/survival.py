@@ -9,7 +9,6 @@ from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
 from ._helpers import (
     PredictionResultMapper,
-    get_rule_generator,
     create_example_set
 )
 from ._operator import BaseOperator, ExpertKnowledgeOperator, Data
@@ -21,13 +20,13 @@ class SurvivalModelsParams(BaseModel):
     """Model for validating survival models hyperparameters
     """
     survival_time_attr: Optional[str]
-    minsupp_new: Optional[int] = DEFAULT_PARAMS_VALUE['minsupp_new']
+    minsupp_new: Optional[float] = DEFAULT_PARAMS_VALUE['minsupp_new']
     max_growing: Optional[float] = DEFAULT_PARAMS_VALUE['max_growing']
     enable_pruning: Optional[bool] = DEFAULT_PARAMS_VALUE['enable_pruning']
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
     max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
-    min_rule_covered: Optional[int] = None
+    min_rule_covered: Optional[float] = None
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
 
     extend_using_preferred: Optional[bool] = None
@@ -63,9 +62,9 @@ class SurvivalRules(BaseOperator):
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is padnas
             dataframe).
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to
             the rule in the growing phase  (use this parameter for large datasets if execution time
@@ -88,7 +87,7 @@ class SurvivalRules(BaseOperator):
         max_rule_count : int = 0
             Maximum number of rules to be generated (for classification data sets it applies 
             to a single class); 0 indicates no limit.
-        min_rule_covered : int = None
+        min_rule_covered : float = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
 
@@ -239,7 +238,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
     def __init__(  # pylint: disable=super-init-not-called
         self,
         survival_time_attr: str = None,
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
         enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
@@ -256,14 +255,14 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
-        min_rule_covered: Optional[int] = None
+        min_rule_covered: Optional[float] = None
     ):
         """
         Parameters
         ----------
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is pandas
             dataframe).
@@ -309,7 +308,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
-        min_rule_covered : int = None
+        min_rule_covered : float = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
 
@@ -420,7 +419,7 @@ class ContrastSetSurvivalRules(BaseOperator):
         penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
 
         survival_time_attr: str = None,
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         max_growing: int = DEFAULT_PARAMS_VALUE['max_growing'],
         enable_pruning: bool = DEFAULT_PARAMS_VALUE['enable_pruning'],
         ignore_missing: bool = DEFAULT_PARAMS_VALUE['ignore_missing'],
@@ -446,9 +445,9 @@ class ContrastSetSurvivalRules(BaseOperator):
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is pandas
             dataframe).
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be 
-            covered by a new rule  (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to 
             the rule in the growing phase (use this parameter for large datasets if execution time

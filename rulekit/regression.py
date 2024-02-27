@@ -27,7 +27,7 @@ class RuleRegressor(BaseOperator):
 
     def __init__(
         self,
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
         pruning_measure: Union[Measures,
                                str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -40,14 +40,14 @@ class RuleRegressor(BaseOperator):
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
         mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression'],
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
-        min_rule_covered: Optional[int] = None,
+        min_rule_covered: Optional[float] = None,
     ):
         """
         Parameters
         ----------
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
@@ -82,7 +82,7 @@ class RuleRegressor(BaseOperator):
         max_rule_count : int = 0
             Maximum number of rules to be generated (for classification data sets it applies 
             to a single class); 0 indicates no limit.
-        min_rule_covered : int = None
+        min_rule_covered : float = None
             alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
             version, use `minsupp_new`
 
@@ -176,7 +176,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 
     def __init__(
         self,
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
         pruning_measure: Union[Measures,
                                str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -199,14 +199,14 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
 
-        min_rule_covered: Optional[int] = None
+        min_rule_covered: Optional[float] = None
     ):
         """
         Parameters
         ----------
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
@@ -364,7 +364,7 @@ class ContrastSetRuleRegressor(BaseOperator):
         penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
         penalty_saturation: float = DEFAULT_PARAMS_VALUE['penalty_saturation'],
 
-        minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
+        minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
         pruning_measure: Union[Measures,
                                str] = DEFAULT_PARAMS_VALUE['pruning_measure'],
@@ -392,9 +392,9 @@ class ContrastSetRuleRegressor(BaseOperator):
             (s) - penalty strength; Default is 0.5
         penalty_saturation: float
             the value of p_new / P at which penalty reward saturates; Default is 0.2.
-        minsupp_new : int = 5
-            positive integer representing minimum number of previously uncovered examples to be 
-            covered by a new rule (positive examples for classification problems); default: 5
+        minsupp_new : float = 5.0
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
+            to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
