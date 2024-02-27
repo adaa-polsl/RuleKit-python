@@ -1,0 +1,644 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Expert Rules"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This notebook presents example usage of user-guided rule induction which follows the scheme introduced by the [GuideR](https://www.sciencedirect.com/science/article/abs/pii/S0950705119300802?dgcid=coauthor) algorithm (Sikora et al, 2019).    \n",
+    "Each problem (classification, regression, survival) in addition to the basic class has an expert class, i.e. RuleClassifier and ExpertRuleClassifier. Expert classes allow you to define set of initial rules, preferred conditions and forbidden conditions.    \n",
+    "This tutorial will show you how to define rules and conditions\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Import RuleKit"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from rulekit import RuleKit\n",
+    "from rulekit.classification import RuleClassifier\n",
+    "from rulekit.params import Measures"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Classification"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Prepare dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from scipy.io import arff\n",
+    "import pandas as pd\n",
+    "\n",
+    "\n",
+    "data_df = pd.DataFrame(arff.loadarff(\"seismic-bumps.arff\")[0])\n",
+    "data_df['class'] = data_df['class'].astype(int)\n",
+    "\n",
+    "X = data_df.drop(['class'], axis=1)\n",
+    "y = data_df['class']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Define rules and conditions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "expert_rules = [\n",
+    "    ('rule-0', 'IF [[gimpuls = <-inf, 750)]] THEN class = {0}'),\n",
+    "    ('rule-1', 'IF [[gimpuls = <750, inf)]] THEN class = {1}')\n",
+    "]\n",
+    "\n",
+    "expert_preferred_conditions = [('preferred-condition-0', '1: IF [[seismic = {a}]] THEN class = {0}'), (\n",
+    "    'preferred-attribute-0', '1: IF [[gimpuls = Any]] THEN class = {1}')]\n",
+    "\n",
+    "expert_forbidden_conditions = [('forb-attribute-0', '1: IF [[seismoacoustic  = Any]] THEN class = {0}'), (\n",
+    "    'forb-attribute-1', 'inf: IF [[ghazard  = Any]] THEN class = {1}')]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Rule induction"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from rulekit.classification import ExpertRuleClassifier\n",
+    "\n",
+    "clf = ExpertRuleClassifier(\n",
+    "    minsupp_new=8,\n",
+    "    max_growing=0,\n",
+    "    extend_using_preferred=True,\n",
+    "    extend_using_automatic=True,\n",
+    "    induce_using_preferred=True,\n",
+    "    induce_using_automatic=True\n",
+    ")\n",
+    "clf.fit(\n",
+    "    X, y,\n",
+    "    expert_rules=expert_rules,\n",
+    "    expert_preferred_conditions=expert_preferred_conditions,\n",
+    "    expert_forbidden_conditions=expert_forbidden_conditions\n",
+    ")\n",
+    "ruleset = clf.model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "IF [seismic = {a}] AND gimpuls = (-inf, 521.50) AND genergy = (-inf, 32875) AND nbumps = (-inf, 0.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1427.50) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1653.50) AND genergy = (-inf, 1006585) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1752) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2733) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = <2965, inf) AND genergy = <634250, inf) AND nbumps = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1331) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1655.50) AND genergy = (-inf, 386010) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1686) AND goimpuls = (-inf, 312) AND nbumps5 = (-inf, 0.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2892) AND genergy = (-inf, 386010) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2068.50) AND goimpuls = (-inf, 312) AND genergy = (-inf, 1004565) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2184.50) AND nbumps = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 901) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 3850) AND nbumps = (-inf, 3.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND goimpuls = (-inf, 312) AND senergy = (-inf, 9600) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND goimpuls = (-inf, 312) AND senergy = (-inf, 8100) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF ghazard = {a} AND goenergy = <-40.50, 68.50) AND maxenergy = (-inf, 5500) AND gimpuls = (-inf, 901) AND goimpuls = <-39.50, inf) AND senergy = <1150, inf) AND nbumps2 = <1.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-48.50, inf) AND gimpuls = (-inf, 695.50) AND maxenergy = <2500, inf) AND goimpuls = <-54.50, inf) AND genergy = <10915, inf) AND nbumps3 = (-inf, 3.50) AND senergy = <3950, inf) AND nbumps2 = (-inf, 1.50) AND nbumps = (-inf, 6.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 5.50) THEN class = {0}\n",
+      "IF maxenergy = (-inf, 75000) AND gimpuls = (-inf, 901) AND genergy = (-inf, 378500) AND nbumps3 = (-inf, 3.50) AND nbumps4 = (-inf, 2.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 1139.50) AND goimpuls = (-inf, 312) AND senergy = (-inf, 85450) THEN class = {0}\n",
+      "IF gimpuls = <1150.50, inf) AND goimpuls = <-35.50, inf) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) AND nbumps = <1.50, inf) THEN class = {0}\n",
+      "IF goenergy = <-18.50, inf) AND gimpuls = <927, inf) AND genergy = (-inf, 508210) AND senergy = (-inf, 5750) AND nbumps2 = <1.50, inf) THEN class = {0}\n",
+      "IF senergy = (-inf, 5750) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 2489.50) AND genergy = (-inf, 318735) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF goenergy = <-36.50, inf) AND goimpuls = (-inf, 6.50) AND genergy = <392530, inf) AND senergy = <6750, inf) AND nbumps2 = (-inf, 1.50) THEN class = {0}\n",
+      "IF gimpuls = (-inf, 3881.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}\n",
+      "IF [gimpuls = <1253.50, inf)] AND goenergy = <-40.50, 87) AND maxenergy = (-inf, 7500) AND genergy = <96260, 673155) AND seismic = {b} AND seismoacoustic = {a} AND senergy = (-inf, 10000) AND nbumps = (-inf, 3.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 96) AND maxenergy = <1500, inf) AND gimpuls = <605, 1959) AND goimpuls = <-55, 95) AND genergy = <61250, 662435) AND senergy = (-inf, 36050) AND nbumps3 = <0.50, inf) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 186) AND maxenergy = <1500, inf) AND gimpuls = <538.50, inf) AND genergy = <58310, 934630) AND goimpuls = <-55, inf) AND senergy = (-inf, 40650) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF gimpuls = <521.50, inf) AND genergy = <58310, inf) AND goimpuls = <-71, inf) AND senergy = <650, inf) AND nbumps = <1.50, inf) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 97) AND gimpuls = <378, 2132) AND maxenergy = <2500, inf) AND genergy = <34880, 587745) AND goimpuls = (-inf, 95) AND senergy = <3150, 36050) AND nbumps3 = <0.50, inf) AND nbumps2 = <0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}\n",
+      "IF goenergy = (-inf, 135.50) AND gimpuls = <306, inf) AND genergy = <19245, inf) AND senergy = <550, inf) AND nbumps = <1.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, -1.50) AND gimpuls = <153.50, 289) AND genergy = <17405, 37085) AND goimpuls = <-60.50, inf) AND senergy = (-inf, 40500) AND nbumps3 = (-inf, 3.50) AND nbumps = <1.50, inf) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 131.50) AND gimpuls = <1253.50, inf) AND genergy = <54930, 1062020) AND goimpuls = <-60.50, 109) AND shift = {W} AND senergy = (-inf, 36050) AND nbumps2 = (-inf, 2.50) THEN class = {1}\n",
+      "IF gimpuls = <98.50, inf) AND senergy = <650, inf) AND nbumps2 = <0.50, inf) THEN class = {1}\n",
+      "IF goenergy = <-78.50, inf) AND gimpuls = <66, inf) AND goimpuls = <-74.50, inf) AND genergy = <3065, inf) AND senergy = <550, inf) THEN class = {1}\n",
+      "IF goenergy = (-inf, 176.50) AND gimpuls = <131, inf) AND genergy = <48545, inf) THEN class = {1}\n",
+      "IF goenergy = <-4, inf) AND gimpuls = <396, 1445.50) AND genergy = <32795, 49585) AND goimpuls = <-19, inf) AND shift = {W} AND senergy = (-inf, 350) THEN class = {1}\n",
+      "IF goenergy = <-37.50, inf) AND gimpuls = <537.50, 796) AND genergy = <16805, 32020) AND goimpuls = <-36.50, inf) AND senergy = (-inf, 250) THEN class = {1}\n",
+      "IF goenergy = <-37.50, 181) AND gimpuls = <240, 470.50) AND genergy = <19670, 40735) AND goimpuls = <-42.50, inf) AND shift = {W} THEN class = {1}\n",
+      "IF gimpuls = <54.50, inf) AND goimpuls = <-74.50, inf) AND genergy = <1510, inf) AND senergy = (-inf, 115450) THEN class = {1}\n"
+     ]
+    }
+   ],
+   "source": [
+    "for rule in ruleset.rules:\n",
+    "    print(rule)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Regression"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Prepare dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from scipy.io import arff\n",
+    "import pandas as pd\n",
+    "\n",
+    "data_df = pd.DataFrame(arff.loadarff(\"methane-train.arff\")[0])\n",
+    "\n",
+    "X = data_df.drop(['MM116_pred'], axis=1)\n",
+    "y = data_df['MM116_pred']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>MM31</th>\n",
+       "      <th>MM116</th>\n",
+       "      <th>AS038</th>\n",
+       "      <th>PG072</th>\n",
+       "      <th>PD</th>\n",
+       "      <th>BA13</th>\n",
+       "      <th>DMM116</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0.46</td>\n",
+       "      <td>1.3</td>\n",
+       "      <td>2.4</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1076.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>0.46</td>\n",
+       "      <td>1.3</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>1.9</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1076.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>0.49</td>\n",
+       "      <td>1.3</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>1.9</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1076.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>0.50</td>\n",
+       "      <td>1.3</td>\n",
+       "      <td>2.3</td>\n",
+       "      <td>1.9</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1076.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>0.54</td>\n",
+       "      <td>1.3</td>\n",
+       "      <td>2.3</td>\n",
+       "      <td>1.9</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1076.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13363</th>\n",
+       "      <td>0.64</td>\n",
+       "      <td>1.2</td>\n",
+       "      <td>2.4</td>\n",
+       "      <td>1.8</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1077.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13364</th>\n",
+       "      <td>0.59</td>\n",
+       "      <td>1.2</td>\n",
+       "      <td>2.4</td>\n",
+       "      <td>1.8</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1077.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13365</th>\n",
+       "      <td>0.60</td>\n",
+       "      <td>1.1</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>1.8</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1077.0</td>\n",
+       "      <td>-0.1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13366</th>\n",
+       "      <td>0.64</td>\n",
+       "      <td>1.1</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>1.8</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>1077.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13367</th>\n",
+       "      <td>0.65</td>\n",
+       "      <td>1.2</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>1.7</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>1077.0</td>\n",
+       "      <td>0.1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>13368 rows × 7 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       MM31  MM116  AS038  PG072   PD    BA13  DMM116\n",
+       "0      0.46    1.3    2.4    2.0  1.0  1076.0     0.0\n",
+       "1      0.46    1.3    2.2    1.9  1.0  1076.0     0.0\n",
+       "2      0.49    1.3    2.2    1.9  1.0  1076.0     0.0\n",
+       "3      0.50    1.3    2.3    1.9  1.0  1076.0     0.0\n",
+       "4      0.54    1.3    2.3    1.9  1.0  1076.0     0.0\n",
+       "...     ...    ...    ...    ...  ...     ...     ...\n",
+       "13363  0.64    1.2    2.4    1.8  1.0  1077.0     0.0\n",
+       "13364  0.59    1.2    2.4    1.8  1.0  1077.0     0.0\n",
+       "13365  0.60    1.1    2.2    1.8  1.0  1077.0    -0.1\n",
+       "13366  0.64    1.1    2.2    1.8  1.0  1077.0     0.0\n",
+       "13367  0.65    1.2    2.2    1.7  0.0  1077.0     0.1\n",
+       "\n",
+       "[13368 rows x 7 columns]"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Define rules and conditions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "expert_rules = None\n",
+    "\n",
+    "expert_preferred_conditions = [\n",
+    "    (\n",
+    "        'preferred-condition-0',\n",
+    "        '3: IF PD = <0.5, inf) THEN MM116_pred = {NaN}'\n",
+    "    ),\n",
+    "    (\n",
+    "        'preferred-condition-1',\n",
+    "        '5: IF PD = <0.5, inf) AND MM116 = (-inf, 1.0) THEN MM116_pred = {NaN}'\n",
+    "    )\n",
+    "]\n",
+    "\n",
+    "expert_forbidden_conditions = [\n",
+    "    ('forb-attribute-0', 'inf: IF DMM116 = Any THEN MM116_pred = {NaN}')\n",
+    "]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Rule induction"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from rulekit.regression import ExpertRuleRegressor\n",
+    "\n",
+    "reg = ExpertRuleRegressor(\n",
+    "    minsupp_new=5,\n",
+    "    max_growing=0,\n",
+    "    mean_based_regression=True,\n",
+    "    extend_using_preferred=True,\n",
+    "    extend_using_automatic=False,\n",
+    "    induce_using_preferred=True,\n",
+    "    induce_using_automatic=True\n",
+    ")\n",
+    "reg.fit(\n",
+    "    X, y,\n",
+    "    expert_rules=expert_rules,\n",
+    "    expert_preferred_conditions=expert_preferred_conditions,\n",
+    "    expert_forbidden_conditions=expert_forbidden_conditions\n",
+    ")\n",
+    "ruleset = reg.model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "IF MM31 = (-inf, 0.23) THEN MM116_pred = {0.40} [0.39,0.41]\n",
+      "IF MM116 = (-inf, 0.45) AND MM31 = <0.18, 0.24) THEN MM116_pred = {0.40} [0.38,0.42]\n",
+      "IF MM31 = (-inf, 0.25) THEN MM116_pred = {0.44} [0.37,0.51]\n",
+      "IF MM31 = (-inf, 0.26) THEN MM116_pred = {0.46} [0.36,0.55]\n",
+      "IF MM31 = (-inf, 0.28) THEN MM116_pred = {0.49} [0.37,0.61]\n",
+      "IF PD = (-inf, 0.50) AND MM116 = <0.25, inf) AND AS038 = <2, 2.45) AND MM31 = <0.23, inf) AND PG072 = (-inf, 1.95) AND BA13 = (-inf, 1075.50) THEN MM116_pred = {0.71} [0.50,0.93]\n",
+      "IF PD = (-inf, 0.50) AND MM116 = (-inf, 0.25) AND AS038 = <2.35, 2.45) AND MM31 = <0.19, inf) AND PG072 = <1.75, 1.95) AND BA13 = (-inf, 1075.50) THEN MM116_pred = {0.25} [0.20,0.30]\n",
+      "IF MM116 = (-inf, 0.45) AND MM31 = <0.18, inf) AND BA13 = (-inf, 1077.50) THEN MM116_pred = {0.40} [0.37,0.43]\n",
+      "IF MM116 = (-inf, 0.55) AND MM31 = (-inf, 0.32) THEN MM116_pred = {0.45} [0.39,0.51]\n",
+      "IF MM116 = (-inf, 0.55) THEN MM116_pred = {0.45} [0.39,0.52]\n",
+      "IF MM116 = <0.45, 0.65) THEN MM116_pred = {0.55} [0.49,0.61]\n",
+      "IF MM116 = <0.45, 0.75) THEN MM116_pred = {0.60} [0.49,0.71]\n",
+      "IF MM116 = <0.45, 0.85) AND MM31 = <0.25, inf) THEN MM116_pred = {0.70} [0.56,0.84]\n",
+      "IF MM116 = <0.70, inf) THEN MM116_pred = {0.97} [0.77,1.17]\n"
+     ]
+    }
+   ],
+   "source": [
+    "for rule in ruleset.rules:\n",
+    "    print(rule)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Survival"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Prepare dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from scipy.io import arff\n",
+    "import pandas as pd\n",
+    "\n",
+    "data_df = pd.DataFrame(arff.loadarff(open('bmt.arff', 'r', encoding=\"cp1252\"))[0])\n",
+    "\n",
+    "# code to fix the problem with encoding of the file\n",
+    "tmp_df = data_df.select_dtypes([object]) \n",
+    "tmp_df = tmp_df.stack().str.decode(\"cp1252\").unstack()\n",
+    "for col in tmp_df:\n",
+    "    data_df[col] = tmp_df[col]\n",
+    "    \n",
+    "data_df = data_df.replace({'?': None})\n",
+    "\n",
+    "X = data_df.drop(['survival_status'], axis=1)\n",
+    "y = data_df['survival_status']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Define rules and conditions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "expert_rules = [\n",
+    "    (\n",
+    "        'rule-0',\n",
+    "        'IF [[CD34kgx10d6 = (-inf, 10.0)]] AND [[extcGvHD = {0}]] THEN survival_status = {NaN}')\n",
+    "]\n",
+    "\n",
+    "expert_preferred_conditions = [\n",
+    "    (\n",
+    "        'attr-preferred-0',\n",
+    "        'inf: IF [CD34kgx10d6 = Any] THEN survival_status = {NaN}'\n",
+    "    )\n",
+    "]\n",
+    "\n",
+    "\n",
+    "expert_forbidden_conditions = [\n",
+    "    ('attr-forbidden-0', 'IF [ANCrecovery = Any] THEN survival_status = {NaN}')\n",
+    "]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Rule induction"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from rulekit.survival import ExpertSurvivalRules\n",
+    "\n",
+    "srv = ExpertSurvivalRules(\n",
+    "    survival_time_attr='survival_time',\n",
+    "    minsupp_new=5,\n",
+    "    max_growing=0,\n",
+    "    extend_using_preferred=False,\n",
+    "    extend_using_automatic=False,\n",
+    "    induce_using_preferred=True,\n",
+    "    induce_using_automatic=True\n",
+    ")\n",
+    "srv.fit(\n",
+    "    X, y,\n",
+    "    expert_rules=expert_rules,\n",
+    "    expert_preferred_conditions=expert_preferred_conditions,\n",
+    "    expert_forbidden_conditions=expert_forbidden_conditions\n",
+    ")\n",
+    "ruleset = srv.model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "IF [[CD34kgx10d6 = (-inf, 10)]] AND [[extcGvHD = {0}]] THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND PLTrecovery = <500142.50, inf) THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND RecipientRh = {1} AND Recipientage = <17.85, inf) THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND Relapse = {0} AND PLTrecovery = <26, inf) AND Recipientage = <14.30, inf) THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND Donorage = (-inf, 40.64) AND Gendermatch = {0} AND PLTrecovery = <26, inf) AND Recipientage = <12, 18.85) THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND Donorage = (-inf, 49.19) AND extcGvHD = {1} AND PLTrecovery = (-inf, 500142.50) AND Txpostrelapse = {0} AND CD3dCD34 = (-inf, 10.97) THEN \n",
+      "IF [CD34kgx10d6 = <11.86, inf)] AND Relapse = {0} THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND RecipientRh = {1} AND CD3dCD34 = <6.64, inf) THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND Donorage = <36.03, inf) AND Recipientageint = {2} AND CD3dCD34 = <0.94, inf) THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND PLTrecovery = <22.50, inf) THEN \n",
+      "IF [CD34kgx10d6 = <11.86, inf)] THEN \n",
+      "IF [CD34kgx10d6 = (-inf, 11.86)] AND Stemcellsource = {1} AND PLTrecovery = (-inf, 22.50) AND CD3dCD34 = <0.89, inf) AND Rbodymass = <36.50, inf) AND Recipientage = <9.20, inf) AND IIIV = {1} THEN \n"
+     ]
+    }
+   ],
+   "source": [
+    "for rule in ruleset.rules:\n",
+    "    print(rule)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "env",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.10"
+  },
+  "orig_nbformat": 2
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
