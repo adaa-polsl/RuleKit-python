@@ -59,8 +59,8 @@ class Measures(Enum):
 
 
 DEFAULT_PARAMS_VALUE = {
-    'minsupp_new': 5,
-    'min_rule_covered': 5,
+    'minsupp_new': 5.0,
+    'min_rule_covered': 5.0,
     'induction_measure': Measures.Correlation,
     'pruning_measure':  Measures.Correlation,
     'voting_measure': Measures.Correlation,
@@ -96,8 +96,8 @@ DEFAULT_PARAMS_VALUE = {
 class ModelsParams(BaseModel):
     """Model for validating models hyperparameters
     """
-    min_rule_covered: Optional[int] = None
-    minsupp_new: Optional[int] = DEFAULT_PARAMS_VALUE['minsupp_new']
+    min_rule_covered: Optional[float] = None
+    minsupp_new: Optional[float] = DEFAULT_PARAMS_VALUE['minsupp_new']
     induction_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['induction_measure']
     pruning_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['pruning_measure']
     voting_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['voting_measure']
