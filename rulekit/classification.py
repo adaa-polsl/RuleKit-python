@@ -11,13 +11,13 @@ import pandas as pd
 from jpype import JClass
 from sklearn import metrics
 
-from ._helpers import ExampleSetFactory, PredictionResultMapper
+from ._helpers import PredictionResultMapper
 from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
 from .params import (DEFAULT_PARAMS_VALUE, ContrastSetModelParams, Measures,
                      ModelsParams)
 
 
-class ClassificationParams(ModelsParams):
+class _ClassificationParams(ModelsParams):
     control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision']
     approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction']
     approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count']
@@ -60,9 +60,9 @@ class BaseClassifier:
 class RuleClassifier(BaseOperator, BaseClassifier):
     """Classification model."""
 
-    __params_class__ = ClassificationParams
+    __params_class__ = _ClassificationParams
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
@@ -182,7 +182,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
                 'utf-8') for item in self.label_unique_values]
 
     def _prepare_labels(self, labels: Data) -> Data:
-        if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
+        if isinstance(labels, (pd.DataFrame, pd.Series)):
             if labels.dtypes.name == 'bool':
                 return labels.astype(str)
             if isinstance(labels.iloc[0], Number):
@@ -245,8 +245,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             metrics_values: dict = BaseClassifier._calculate_prediction_metrics(
                 self, result_example_set)
             return (y_pred, metrics_values)
-        else:
-            return y_pred
+        return y_pred
 
     def predict_proba(
         self,
@@ -277,8 +276,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             metrics_values: dict = BaseClassifier._calculate_prediction_metrics(
                 self, result_example_set)
             return (mapped_result_example_set, metrics_values)
-        else:
-            return mapped_result_example_set
+        return mapped_result_example_set
 
     def score(self, values: Data, labels: Data) -> float:
         """Return the accuracy on the given test data and labels.
@@ -314,9 +312,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
     """Classification model using expert knowledge."""
 
-    __params_class__ = ClassificationParams
+    __params_class__ = _ClassificationParams
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
@@ -464,7 +462,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             approximate_bins_count=approximate_bins_count,
         )
 
-    def fit(  # pylint: disable=arguments-differ
+    def fit(  # pylint: disable=arguments-differ,too-many-arguments
         self,
         values: Data,
         labels: Data,
@@ -497,7 +495,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         -------
         self : ExpertRuleClassifier
         """
-        if isinstance(labels, pd.DataFrame) or isinstance(labels, pd.Series):
+        if isinstance(labels, (pd.DataFrame, pd.Series)):
             if isinstance(labels.iloc[0], Number):
                 self._remap_to_numeric = True
                 labels = labels.astype(str)
@@ -538,7 +536,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
     __params_class__ = ContrastSetModelParams
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
         max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],

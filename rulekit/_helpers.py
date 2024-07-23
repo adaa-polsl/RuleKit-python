@@ -5,7 +5,7 @@ from typing import Any, Union
 
 import numpy as np
 import pandas as pd
-from jpype import JArray, JClass, JObject, JString, java
+from jpype import JArray, JClass, JObject, java
 from jpype.pickle import JPickler, JUnpickler
 
 from .main import RuleKit
@@ -99,6 +99,7 @@ class RuleGeneratorConfigurator:
 
 
 class ExampleSetFactory():
+    """ Creates ExampleSet object from given data"""
 
     DEFAULT_LABEL_ATTRIBUTE_NAME: str = 'label'
     AUTOMATIC_ATTRIBUTES_NAMES_PREFIX: str = 'att'
@@ -118,6 +119,18 @@ class ExampleSetFactory():
         survival_time_attribute: str = None,
         contrast_attribute: str = None,
     ) -> JObject:
+        """Creates ExampleSet object from given data
+
+        Args:
+            X (Union[pd.DataFrame, np.ndarray]): Data
+            y (Union[pd.Series, np.ndarray], optional): Labels. Defaults to None.
+            survival_time_attribute (str, optional): Name of survival time attribute. 
+            Defaults to None.
+            contrast_attribute (str, optional): Name of contrast attribute. Defaults to None.
+
+        Returns:
+            JObject: ExampleSet object
+        """
         self._attributes_names = []
         self._survival_time_attribute = survival_time_attribute
         self._contrast_attribute = contrast_attribute
@@ -234,7 +247,7 @@ class PredictionResultMapper:
                 f'{PredictionResultMapper.CONFIDENCE_COLUMN_ROLE}_{label_value}'
             )
 
-            confidence_values =  [
+            confidence_values = [
                 float(predicted_example_set.getExample(
                     i).getValue(confidence_col))
                 for i in range(predicted_example_set.size())
@@ -259,9 +272,8 @@ class PredictionResultMapper:
         )
         if prediction_col.isNominal():
             return PredictionResultMapper.map_to_nominal(predicted_example_set)
-        else:
-            return PredictionResultMapper.map_to_numerical(predicted_example_set)
-        
+        return PredictionResultMapper.map_to_numerical(predicted_example_set)
+
     @staticmethod
     def map_to_nominal(predicted_example_set: JObject) -> np.ndarray:
         """Maps models predictions to nominal numpy array of strings
@@ -299,20 +311,25 @@ class PredictionResultMapper:
         )
         label_mapping = predicted_example_set.getAttributes().getLabel().getMapping()
         if remap:
-            return np.array([
-                float(str(label_mapping.mapIndex(int(predicted_example_set.getExample(i).getValue(prediction_col)))))
+            predictions: list = [
+                label_mapping.mapIndex(int(
+                    predicted_example_set.getExample(
+                        i).getValue(prediction_col)
+                ))
                 for i in range(predicted_example_set.size())
-            ])
-        else:
-            return np.array([
-                float(predicted_example_set.getExample(
-                    i).getValue(prediction_col))
-                for i in range(predicted_example_set.size())
-            ])
+            ]
+            predictions = list(map(lambda x: float(str(x)), predictions))
+            return np.array(predictions)
+        return np.array([
+            float(
+                predicted_example_set.getExample(i).getValue(prediction_col)
+            )
+            for i in range(predicted_example_set.size())
+        ])
 
-    @staticmethod
+    @ staticmethod
     def map_survival(predicted_example_set) -> np.ndarray:
-        """Maps survival models predictions to numpy array. Used as alternative to `map` method 
+        """Maps survival models predictions to numpy array. Used as alternative to `map` method
         used in survival analysis
 
         Args:
@@ -334,13 +351,15 @@ class PredictionResultMapper:
                 float(example_estimator[i])
                 for i in range(len(example_estimator) - 1) if i % 2 == 0
             ]
-            probabilities = [float(example_estimator[i])
-                             for i in range(len(example_estimator)) if i % 2 != 0]
+            probabilities = [
+                float(example_estimator[i])
+                for i in range(len(example_estimator)) if i % 2 != 0
+            ]
             estimator = {'times': times, 'probabilities': probabilities}
             estimators.append(estimator)
         return np.array(estimators)
 
-    @staticmethod
+    @ staticmethod
     def _get_column_by_role(predicted_example_set: JObject, role: str) -> JObject:
         return predicted_example_set.getAttributes().getColumnByRole(role)
 
@@ -349,7 +368,7 @@ class ModelSerializer:
     """Class for serializing models
     """
 
-    @staticmethod
+    @ staticmethod
     def serialize(real_model: object) -> bytes:
         """Serialize Java ruleset object.
 
@@ -362,7 +381,7 @@ class ModelSerializer:
         in_memory_file.close()
         return serialized_bytes
 
-    @staticmethod
+    @ staticmethod
     def deserialize(serialized_bytes: bytes) -> object:
         """Deserialize Java ruleset object from bytes.
 

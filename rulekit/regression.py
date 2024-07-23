@@ -1,19 +1,18 @@
-"""Module contaiing classes for regression analysis and prediction.
+"""Module containing classes for regression analysis and prediction.
 """
 from __future__ import annotations
-from typing import Optional, Union, Iterable
+
 from numbers import Number
+from typing import Iterable, Optional, Union
+
 import numpy as np
 import pandas as pd
 from sklearn import metrics
+
 from ._helpers import PredictionResultMapper
-from ._operator import BaseOperator, ExpertKnowledgeOperator, Data
-from .params import (
-    Measures,
-    DEFAULT_PARAMS_VALUE,
-    ModelsParams,
-    ContrastSetModelParams
-)
+from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
+from .params import (DEFAULT_PARAMS_VALUE, ContrastSetModelParams, Measures,
+                     ModelsParams)
 
 
 class _RegressionParams(ModelsParams):
@@ -25,7 +24,7 @@ class RuleRegressor(BaseOperator):
 
     __params_class__ = _RegressionParams
 
-    def __init__(
+    def __init__( # pylint: disable=too-many-arguments
         self,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
@@ -174,7 +173,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 
     __params_class__ = _RegressionParams
 
-    def __init__(
+    def __init__( # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
@@ -304,7 +303,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             max_rule_count=max_rule_count,
         )
 
-    def fit(  # pylint: disable=arguments-differ
+    def fit(  # pylint: disable=arguments-differ,too-many-arguments
         self,
         values: Data,
         labels: Data,
@@ -356,7 +355,7 @@ class ContrastSetRuleRegressor(BaseOperator):
 
     __params_class__ = ContrastSetModelParams
 
-    def __init__(
+    def __init__( # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
         max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],

@@ -144,18 +144,35 @@ class BaseOperator:
                 '"fit" method must be called before calling this method')
         example_set = ExampleSetFactory().make(values)
         covering_info = self.model.covering(example_set)
-        if isinstance(values, pd.Series) or isinstance(values, pd.DataFrame):
+        if isinstance(values, (pd.Series, pd.DataFrame)):
             values = values.to_numpy()
         result = []
         for i in range(len(values)):
-            row_result: list[int] = []
-            for item in covering_info:
-                value = 0 if item is None or not i in item else 1
-                row_result.append(value)
+            row_result: list[int] = [
+                0 if item is None or not i in item else 1
+                for item in covering_info
+            ]
             result.append(np.array(row_result))
         return np.array(result)
 
     def add_event_listener(self, listener: RuleInductionProgressListener):
+        """Add event listener object to the operator which allows to monitor 
+        rule induction progress.
+
+        Example:
+            >>> from rulekit.events import RuleInductionProgressListener
+            >>> from rulekit.classification import RuleClassifier
+            >>>
+            >>> class MyEventListener(RuleInductionProgressListener):
+            >>>     def on_new_rule(self, rule):
+            >>>         print('Do something with new rule', rule)
+            >>>
+            >>> operator = RuleClassifier()
+            >>> operator.add_event_listener(MyEventListener())
+
+        Args:
+            listener (RuleInductionProgressListener): listener object
+        """
         command_listener = command_listener_factory(listener)
         self._rule_generator.addOperatorListener(command_listener)
 
@@ -180,7 +197,7 @@ class ExpertKnowledgeOperator(BaseOperator):
     """Base class for expert rule induction operator
     """
 
-    def fit(  # pylint: disable=missing-function-docstring
+    def fit(  # pylint: disable=missing-function-docstring,too-many-arguments
         self,
         values: Data,
         labels: Data,

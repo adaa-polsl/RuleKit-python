@@ -1,6 +1,5 @@
 """Contains constants and classes for specyfing models parameters
 """
-import sys
 from enum import Enum
 from typing import Optional
 

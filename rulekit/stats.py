@@ -36,7 +36,7 @@ class RuleStatistics:
                f'N = {self.N}, weight = {self.weight}, pvalue = {self.pvalue})'
 
 
-class RuleSetStatistics:
+class RuleSetStatistics: # pylint: disable=too-many-instance-attributes
     """Statistics for ruleset.
 
     Attributes

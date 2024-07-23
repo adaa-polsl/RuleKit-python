@@ -1,12 +1,13 @@
 """Contains classes for initializing RuleKit Java backend
 """
-import os
 import glob
 import logging
-import zipfile
+import os
 import re
+import zipfile
 from enum import Enum
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import PIPE, STDOUT, Popen
+
 import jpype
 import jpype.imports
 
@@ -42,12 +43,12 @@ class RuleKit:
     @staticmethod
     def _detect_jre_type():
         try:
-            output = Popen(["java", "-version"], stderr=STDOUT, stdout=PIPE)
-            output = str(output.communicate()[0])
-            if 'openjdk' in output:
-                RuleKit._jre_type = JRE_Type.OPEN_JDK
-            else:
-                RuleKit._jre_type = JRE_Type.ORACLE
+            with Popen(["java", "-version"], stderr=STDOUT, stdout=PIPE) as output:
+                output = str(output.communicate()[0])
+                if 'openjdk' in output:
+                    RuleKit._jre_type = JRE_Type.OPEN_JDK
+                else:
+                    RuleKit._jre_type = JRE_Type.ORACLE
         except FileNotFoundError as error:
             raise RuntimeError(
                 'RuletKit requires java JRE to be installed (version 1.8.0 recommended)'
@@ -122,17 +123,17 @@ If you're running this package for the first time you need to download RuleKit j
 
     @staticmethod
     def _read_versions():
-        jar_archive = zipfile.ZipFile(RuleKit._rulekit_jar_file_path, 'r')
-        try:
-            manifest_file_content: str = jar_archive.read(
-                'META-INF/MANIFEST.MF').decode('utf-8')
-            RuleKit.version = re.findall(
-                r'Implementation-Version: \S+\r', manifest_file_content)[0].split(' ')[1]
-        except Exception as error:
-            RuleKit._logger.error(
-                'Failed to read RuleKit versions from jar file')
-            RuleKit._logger.error(error)
-            raise error
+        with zipfile.ZipFile(RuleKit._rulekit_jar_file_path, 'r') as jar_archive:
+            try:
+                manifest_file_content: str = jar_archive.read(
+                    'META-INF/MANIFEST.MF').decode('utf-8')
+                RuleKit.version = re.findall(
+                    r'Implementation-Version: \S+\r', manifest_file_content)[0].split(' ')[1]
+            except Exception as error:
+                RuleKit._logger.error(
+                    'Failed to read RuleKit versions from jar file')
+                RuleKit._logger.error(error)
+                raise error
 
     @staticmethod
     def _launch_jvm(initial_heap_size: int, max_heap_size: int):

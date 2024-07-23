@@ -14,6 +14,7 @@ from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
 from .params import DEFAULT_PARAMS_VALUE, ContrastSetModelParams
 from .rules import RuleSet
 
+_DEFAULT_SURVIVAL_TIME_ATTR: str = 'survival_time'
 
 class SurvivalModelsParams(BaseModel):
     """Model for validating survival models hyperparameters
@@ -42,7 +43,7 @@ class SurvivalRules(BaseOperator):
 
     __params_class__ = SurvivalModelsParams
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(  # pylint: disable=super-init-not-called,too-many-arguments
         self,
         survival_time_attr: str = None,
         minsupp_new: int = DEFAULT_PARAMS_VALUE['minsupp_new'],
@@ -119,12 +120,17 @@ class SurvivalRules(BaseOperator):
         return BaseOperator.set_params(self, **kwargs)
 
     @staticmethod
-    def _append_survival_time_columns(values, survival_time) -> str:
+    def _append_survival_time_columns(
+        values,
+        survival_time: Union[pd.Series, np.ndarray, list]
+    ) -> Optional[str]:
+        survival_time_attr: str = _DEFAULT_SURVIVAL_TIME_ATTR
         if isinstance(values, pd.Series):
             if survival_time.name is None:
-                survival_time.name = 'survival_time'
+                survival_time.name = survival_time_attr
+            else:
+                survival_time_attr = survival_time.name
             values[survival_time.name] = survival_time
-            return survival_time.name
         elif isinstance(values, np.ndarray):
             np.append(values, survival_time, axis=1)
         elif isinstance(values, list):
@@ -134,9 +140,9 @@ class SurvivalRules(BaseOperator):
             raise ValueError(
                 'Data values must be instance of either pandas DataFrame, numpy array or list'
             )
-        return ''
+        return survival_time_attr
 
-    def _prepare_survival_attribute(self, survival_time: Data, values: Data) -> str:
+    def _prepare_survival_attribute(self, survival_time: Optional[Data], values: Data) -> str:
         if self.survival_time_attr is None and survival_time is None:
             raise ValueError(
                 'No "survival_time" attribute name was specified. ' +
@@ -145,8 +151,7 @@ class SurvivalRules(BaseOperator):
         if survival_time is not None:
             return SurvivalRules._append_survival_time_columns(
                 values, survival_time)
-        else:
-            return self.survival_time_attr
+        return self.survival_time_attr
 
     def fit(self, values: Data, labels: Data, survival_time: Data = None) -> SurvivalRules:  # pylint: disable=arguments-differ
         """Train model on given dataset.
@@ -234,7 +239,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     __params_class__ = SurvivalModelsParams
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(  # pylint: disable=super-init-not-called,too-many-arguments,too-many-locals
         self,
         survival_time_attr: str = None,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
@@ -344,7 +349,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         self.survival_time_attr = kwargs['survival_time_attr']
         return ExpertKnowledgeOperator.set_params(self, **kwargs)
 
-    def fit(  # pylint: disable=arguments-differ
+    def fit(  # pylint: disable=arguments-differ,too-many-arguments
         self,
         values: Data,
         labels: Data,
@@ -409,7 +414,7 @@ class ContrastSetSurvivalRules(BaseOperator):
 
     __params_class__ = SurvivalContrastSetModelParams
 
-    def __init__(  # pylint: disable=super-init-not-called
+    def __init__(  # pylint: disable=super-init-not-called,too-many-arguments
         self,
         minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
         max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
