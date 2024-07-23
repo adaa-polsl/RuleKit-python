@@ -1,18 +1,17 @@
 """Module contaiing classes for survival analysis and prediction.
 """
 from __future__ import annotations
-from typing import Optional, Union, Iterable
+
+from typing import Iterable, Optional, Union
+
 import numpy as np
 import pandas as pd
 from jpype import JClass
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
-from ._helpers import (
-    PredictionResultMapper,
-    create_example_set
-)
-from ._operator import BaseOperator, ExpertKnowledgeOperator, Data
-from .params import ContrastSetModelParams, DEFAULT_PARAMS_VALUE
+from ._helpers import ExampleSetFactory, PredictionResultMapper
+from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
+from .params import DEFAULT_PARAMS_VALUE, ContrastSetModelParams
 from .rules import RuleSet
 
 
@@ -215,8 +214,8 @@ class SurvivalRules(BaseOperator):
 
         survival_time_attribute = self._prepare_survival_attribute(
             survival_time, values)
-        example_set = create_example_set(
-            values, labels,  survival_time_attribute=survival_time_attribute)
+        example_set = ExampleSetFactory().make(
+            values, labels, survival_time_attribute=survival_time_attribute)
 
         predicted_example_set = self.model._java_object.apply(  # pylint: disable=protected-access
             example_set

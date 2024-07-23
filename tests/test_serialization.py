@@ -1,22 +1,24 @@
-import unittest
-
-import sys
 import os
 import shutil
+import sys
+import unittest
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(f'{dir_path}/..')
 
-from rulekit.main import RuleKit
-from rulekit import classification
-import sklearn.tree as scikit
-from sklearn.datasets import load_iris, load_diabetes
-from sklearn import metrics
 import io
-import time
 import pickle
-from rulekit.classification import RuleClassifier, ExpertRuleClassifier
-from rulekit.regression import RuleRegressor, ExpertRuleRegressor
-from rulekit.survival import SurvivalRules, ExpertSurvivalRules
+import time
+
+import sklearn.tree as scikit
+from sklearn import metrics
+from sklearn.datasets import load_diabetes, load_iris
+
+from rulekit import classification
+from rulekit.classification import ExpertRuleClassifier, RuleClassifier
+from rulekit.main import RuleKit
+from rulekit.regression import ExpertRuleRegressor, RuleRegressor
+from rulekit.survival import ExpertSurvivalRules, SurvivalRules
 
 
 class TestModelSerialization(unittest.TestCase):
@@ -115,7 +117,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_survival_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = SurvivalRules(minsupp_new=10, survival_time_attr='')
+        model = SurvivalRules(minsupp_new=10, survival_time_attr='att1')
         model.fit(x, y)
         prediction = model.predict(x)
 
@@ -129,7 +131,7 @@ class TestModelSerialization(unittest.TestCase):
     def test_expert_survival_serialization(self):
         x, y = load_iris(return_X_y=True)
 
-        model = ExpertSurvivalRules(minsupp_new=10, survival_time_attr='')
+        model = ExpertSurvivalRules(minsupp_new=10, survival_time_attr='att1')
         model.fit(x, y)
         prediction = model.predict(x)
 

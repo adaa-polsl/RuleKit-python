@@ -1,22 +1,19 @@
 """Contains base classes for rule induction operators
 """
 from __future__ import annotations
-from typing import Union, Any, Optional
+
+from typing import Any, Optional, Union
+
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
+from ._helpers import (ExampleSetFactory, ModelSerializer,
+                       PredictionResultMapper, RuleGeneratorConfigurator,
+                       get_rule_generator)
+from .events import RuleInductionProgressListener, command_listener_factory
 from .main import RuleKit
-from ._helpers import (
-    RuleGeneratorConfigurator,
-    PredictionResultMapper,
-    create_example_set,
-    get_rule_generator,
-    ModelSerializer,
-)
-from .rules import RuleSet, Rule
-from .events import RuleInductionProgressListener, command_proxy_client_factory
-
+from .rules import Rule, RuleSet
 
 Data = Union[np.ndarray, pd.DataFrame, list]
 
@@ -46,8 +43,10 @@ class BaseOperator:
         example_set,
         contrast_attribute: Optional[str]
     ) -> None:
+        if contrast_attribute is None:
+            return
         contrast_attribute_instance = example_set.getAttributes().get(contrast_attribute)
-        if contrast_attribute is not None and contrast_attribute_instance.isNumerical():
+        if contrast_attribute_instance.isNumerical():
             raise ValueError(
                 'Contrast set attributes must be a nominal attribute while ' +
                 f'"{contrast_attribute}" is a numerical one.'
@@ -66,7 +65,7 @@ class BaseOperator:
         survival_time_attribute: str = None,
         contrast_attribute: str = None,
     ) -> BaseOperator:
-        example_set = create_example_set(
+        example_set = ExampleSetFactory().make(
             values,
             labels,
             survival_time_attribute=survival_time_attribute,
@@ -82,7 +81,7 @@ class BaseOperator:
         if self.model is None:
             raise ValueError(
                 '"fit" method must be called before calling this method')
-        example_set = create_example_set(values)
+        example_set = ExampleSetFactory().make(values)
         return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
 
     def get_params(self, deep: bool = True) -> dict[str, Any]:  # pylint: disable=unused-argument
@@ -103,8 +102,8 @@ class BaseOperator:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = self._get_rule_generator()
         self._sanitize_parameters(kwargs)
-        params: BaseModel = self.__params_class__( # pylint: disable=not-callable
-            **kwargs)  
+        params: BaseModel = self.__params_class__(  # pylint: disable=not-callable
+            **kwargs)
         params_dict: dict = params.model_dump()
         self._params = {
             key: value for key, value in params_dict.items()
@@ -143,7 +142,8 @@ class BaseOperator:
         if self.model is None:
             raise ValueError(
                 '"fit" method must be called before calling this method')
-        covering_info = self.model.covering(create_example_set(values))
+        example_set = ExampleSetFactory().make(values)
+        covering_info = self.model.covering(example_set)
         if isinstance(values, pd.Series) or isinstance(values, pd.DataFrame):
             values = values.to_numpy()
         result = []
@@ -156,8 +156,8 @@ class BaseOperator:
         return np.array(result)
 
     def add_event_listener(self, listener: RuleInductionProgressListener):
-        command_proxy = command_proxy_client_factory(listener)
-        self._rule_generator.addOperatorCommandProxy(command_proxy)
+        command_listener = command_listener_factory(listener)
+        self._rule_generator.addOperatorListener(command_listener)
 
     def __getstate__(self) -> dict:
         state = self.__dict__.copy()
@@ -191,7 +191,7 @@ class ExpertKnowledgeOperator(BaseOperator):
         expert_preferred_conditions: list[Union[str, Rule]] = None,
         expert_forbidden_conditions: list[Union[str, Rule]] = None
     ) -> ExpertKnowledgeOperator:
-        example_set = create_example_set(
+        example_set = ExampleSetFactory().make(
             values,
             labels,
             survival_time_attribute=survival_time_attribute,
@@ -209,13 +209,20 @@ class ExpertKnowledgeOperator(BaseOperator):
 
     def _get_rule_generator(self) -> RuleGeneratorConfigurator:
         return get_rule_generator(expert=True)
-    
+
     def _configure_expert_parameters(
         self,
-        expert_rules: list[Union[str, Rule]] = None,
-        expert_preferred_conditions: list[Union[str, Rule]] = None,
-        expert_forbidden_conditions: list[Union[str, Rule]] = None
+        expert_rules: Optional[list[Union[str, Rule]]] = None,
+        expert_preferred_conditions: Optional[list[Union[str, Rule]]] = None,
+        expert_forbidden_conditions: Optional[list[Union[str, Rule]]] = None
     ) -> None:
+        if expert_rules is None:
+            expert_rules = []
+        if expert_preferred_conditions is None:
+            expert_preferred_conditions = []
+        if expert_forbidden_conditions is None:
+            expert_forbidden_conditions = []
+
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         configurator._configure_simple_parameter(  # pylint: disable=protected-access
             'use_expert', True)
@@ -234,14 +241,12 @@ class ExpertKnowledgeOperator(BaseOperator):
 
     def _sanitize_expert_parameter(
         self,
-        expert_parameter: list[tuple[str, str]]
+        expert_parameter: Optional[list[tuple[str, str]]]
     ) -> list[tuple[str, str]]:
         if expert_parameter is None:
             return None
         sanitized_parameter: list[tuple[str, str]] = []
         for item in expert_parameter:
             item_id, item_value = item
-            # RuleKit originally used XML for specifying parameters, use special xml characters
-            item_value = item_value.replace('<', '&lt;').replace('>', '&gt;')
             sanitized_parameter.append((item_id, item_value))
         return sanitized_parameter

@@ -1,4 +1,5 @@
 from typing import Any
+
 from jpype import JImplements, JOverride
 
 from .rules import Rule
@@ -20,11 +21,12 @@ class RuleInductionProgressListener:
         return False
 
 
-def command_proxy_client_factory(listener: RuleInductionProgressListener) -> Any:
-    from adaa.analytics.rules.operator import ICommandProxyClient  # pylint: disable=import-outside-toplevel
+def command_listener_factory(listener: RuleInductionProgressListener) -> Any:
+    from adaa.analytics.rules.logic.rulegenerator import \
+        ICommandListener  # pylint: disable=import-outside-toplevel
 
-    @JImplements(ICommandProxyClient)
-    class CommandProxyClient:
+    @JImplements(ICommandListener)
+    class CommandListener:
 
         @JOverride
         def onNewRule(self, rule):
@@ -39,4 +41,4 @@ def command_proxy_client_factory(listener: RuleInductionProgressListener) -> Any
             return listener.should_stop()
             # return False
 
-    return CommandProxyClient()
+    return CommandListener()

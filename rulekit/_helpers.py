@@ -1,20 +1,16 @@
 """Contains helper functions and classes
 """
-from typing import Union, Any
-from warnings import warn
 import io
-from jpype import JClass, JString, JObject, JArray, java
-from jpype.pickle import JPickler, JUnpickler
+from typing import Any, Union
+
 import numpy as np
 import pandas as pd
+from jpype import JArray, JClass, JObject, JString, java
+from jpype.pickle import JPickler, JUnpickler
 
-from .params import (
-    Measures,
-    CONTRAST_ATTR_ROLE,
-    SURVIVAL_TIME_ATTR_ROLE
-)
-from .rules import Rule
 from .main import RuleKit
+from .params import Measures
+from .rules import Rule
 
 
 def get_rule_generator(expert: bool = False) -> Any:
@@ -27,24 +23,10 @@ def get_rule_generator(expert: bool = False) -> Any:
         Any: RuleGenerator instance
     """
     RuleKit.init()
-    OperatorDocumentation = JClass(  # pylint: disable=invalid-name
-        'com.rapidminer.tools.documentation.OperatorDocumentation')
-    OperatorDescription = JClass(  # pylint: disable=invalid-name
-        'com.rapidminer.operator.OperatorDescription'
+    RuleGenerator = JClass(  # pylint: disable=invalid-name
+        'adaa.analytics.rules.logic.rulegenerator.RuleGenerator'
     )
-    Mockito = JClass('org.mockito.Mockito')  # pylint: disable=invalid-name
-    path: str = 'adaa.analytics.rules.operator.'
-    if expert:
-        path += 'ExpertRuleGenerator'
-    else:
-        path += 'RuleGenerator'
-    RuleGenerator = JClass(path)  # pylint: disable=invalid-name
-    documentation = Mockito.mock(OperatorDocumentation.class_)
-    description = Mockito.mock(OperatorDescription.class_)
-    Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
-    Mockito.when(description.getOperatorDocumentation()
-                 ).thenReturn(documentation, None)
-    return RuleGenerator(description)
+    return RuleGenerator(expert)
 
 
 class RuleGeneratorConfigurator:
@@ -103,19 +85,6 @@ class RuleGeneratorConfigurator:
                 self.rule_generator.setParameter(param_name, param_value)
 
     def _configure_rule_generator(self, **kwargs: dict[str, Any]):
-        if 'min_rule_covered' in kwargs and kwargs.get('min_rule_covered', None) is not None:
-            # backward compatibility
-            # TODO remove in version 2.0.0
-            warn(
-                '"min_rule_covered" parameter was renamed to "minsupp_new" and is now ' +
-                'deprecated, "minsupp_new" instead. "min_rule_covered" parameter will be removed' +
-                ' in next major version of the package. ',
-                DeprecationWarning,
-                stacklevel=6
-            )
-            kwargs['minsupp_new'] = kwargs['min_rule_covered']
-            del kwargs['min_rule_covered']
-
         if kwargs.get('induction_measure') == Measures.LogRank or \
                 kwargs.get('pruning_measure') == Measures.LogRank or \
                 kwargs.get('voting_measure') == Measures.LogRank:
@@ -129,119 +98,120 @@ class RuleGeneratorConfigurator:
             self._configure_simple_parameter(param_name, param_value)
 
 
-def set_attributes_names(example_set, attributes_names: list[str]):
-    """Sets attributes names
+class ExampleSetFactory():
 
-    Args:
-        example_set (_type_): ExampleSet
-        attributes_names (list[str]): attributes names
-    """
-    for index, name in enumerate(attributes_names):
-        example_set.getAttributes().get(f'att{index + 1}').setName(name)
+    DEFAULT_LABEL_ATTRIBUTE_NAME: str = 'label'
+    AUTOMATIC_ATTRIBUTES_NAMES_PREFIX: str = 'att'
 
+    def __init__(self) -> None:
+        self._attributes_names: list[str] = None
+        self._label_name: str = None
+        self._survival_time_attribute: str = None
+        self._contrast_attribute: str = None
+        self._X: np.ndarray = None
+        self._y: np.ndarray = None
 
-def set_attribute_role(example_set, attribute: str, role: str) -> object:
-    """Set attribute special role
+    def make(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+        y: Union[pd.Series, np.ndarray] = None,
+        survival_time_attribute: str = None,
+        contrast_attribute: str = None,
+    ) -> JObject:
+        self._attributes_names = []
+        self._survival_time_attribute = survival_time_attribute
+        self._contrast_attribute = contrast_attribute
+        self._sanitize_X(X)
+        self._sanitize_y(y)
+        self._validate_X()
+        self._validate_y()
+        return self._create_example_set()
 
-    Args:
-        example_set (_type_): ExampleSet
-        attribute (str): attribute name
-        role (str): attribute role
+    def _sanitize_y(
+        self,
+        y: Union[pd.Series, np.ndarray, list]
+    ):
+        if y is None:
+            return
+        elif isinstance(y, pd.Series):
+            self._label_name = y.name
+            self._attributes_names.append(self._label_name)
+            self._y = y.to_numpy()
+        elif isinstance(y, list):
+            self._label_name = self.DEFAULT_LABEL_ATTRIBUTE_NAME
+            self._attributes_names.append(self._label_name)
+            self._y = np.array(y)
+        elif isinstance(y, np.ndarray):
+            self._label_name = self.DEFAULT_LABEL_ATTRIBUTE_NAME
+            self._attributes_names.append(self._label_name)
+            self._y = y
+        else:
+            raise ValueError(
+                f'Invalid y type: {str(type(y))}. ' +
+                'Supported types are: 1 dimensional numpy array or pandas Series object.'
+            )
 
-    Returns:
-        object: _description_
-    """
-    OperatorDocumentation = JClass(  # pylint: disable=invalid-name
-        'com.rapidminer.tools.documentation.OperatorDocumentation'
-    )
-    OperatorDescription = JClass(  # pylint: disable=invalid-name
-        'com.rapidminer.operator.OperatorDescription'
-    )
-    Mockito = JClass('org.mockito.Mockito')  # pylint: disable=invalid-name
-    ChangeAttributeRole = JClass(  # pylint: disable=invalid-name
-        'com.rapidminer.operator.preprocessing.filter.ChangeAttributeRole'
-    )
+    def _sanitize_X(
+        self,
+        X: Union[pd.DataFrame, np.ndarray],
+    ) -> tuple[np.ndarray, np.ndarray]:
+        if isinstance(X, pd.DataFrame):
+            self._attributes_names = X.columns.tolist()
+            self._X = X.to_numpy()
+        elif isinstance(X, np.ndarray):
+            self._attributes_names = [
+                f'{self.AUTOMATIC_ATTRIBUTES_NAMES_PREFIX}{index + 1}'
+                for index in range(X.shape[1])
+            ]
+            self._X = X
+        else:
+            raise ValueError(
+                f'Invalid X type: {str(type(X))}. ' +
+                'Supported types are: 2 dimensional numpy array or pandas DataFrame object.'
+            )
 
-    documentation = Mockito.mock(OperatorDocumentation.class_)
-    description = Mockito.mock(OperatorDescription.class_)
-    Mockito.when(documentation.getShortName()).thenReturn(JString(''), None)
-    Mockito.when(description.getOperatorDocumentation()
-                 ).thenReturn(documentation, None)
-    role_setter = ChangeAttributeRole(description)
-    role_setter.setParameter(
-        ChangeAttributeRole.PARAMETER_NAME, attribute)
-    role_setter.setParameter(
-        ChangeAttributeRole.PARAMETER_TARGET_ROLE, role)
-    return role_setter.apply(example_set)
+    def _validate_X(self):
+        if len(self._X.shape) != 2:
+            raise ValueError(
+                'X must be a 2 dimensional numpy array or pandas DataFrame object. ' +
+                f'Its current shape is: {str(self._X.shape)}'
+            )
 
+    def _validate_y(self):
+        if self._y is not None and len(self._y.shape) != 1:
+            raise ValueError(
+                'y must be a 1 dimensional numpy array or pandas DataFrame object. ' +
+                f'Its current shape is: {str(self._y.shape)}'
+            )
 
-def _sanitize_dataset_columns(
-    data: pd.DataFrame
-) -> pd.DataFrame:
-    for column_index in range(data.shape[1]):
-        if data.iloc[:, column_index].dtypes.name == 'bool':
-            # ExampleSet class that RuleKit internally uses does not
-            # support boolean columns at the moment (see Issue #18)
-            data.iloc[:, column_index] = data.iloc[:, column_index].astype(str)
-    return data
+    def _create_example_set(self) -> JObject:
+        data: JObject = self._prepare_data()
+        args: list = [
+            data,
+            self._attributes_names,
+            self._label_name,
+            self._survival_time_attribute,
+            self._contrast_attribute
+        ]
+        DataTable = JClass(  # pylint: disable=invalid-name
+            'adaa.analytics.rules.data.DataTable'
+        )
+        return DataTable(*args)
 
-
-def create_example_set(
-    values: Union[pd.DataFrame, np.ndarray],
-    labels: Union[pd.Series, np.ndarray] = None,
-    numeric_labels: bool = False,
-    survival_time_attribute: str = None,
-    contrast_attribute: str = None,
-) -> object:
-    """Creates Java RapidMiner ExampleSet object instance
-
-    Args:
-        values (Union[pd.DataFrame, np.ndarray]): Attributes values
-        labels (Union[pd.Series, np.ndarray], optional): Labels. Defaults to None.
-        numeric_labels (bool, optional): Whether labels are numerical or not . Defaults to False.
-        survival_time_attribute (str, optional): Name of special survival time attribute. Used 
-            for survival analysis Defaults to None.
-        contrast_attribute (str, optional): Name of special contrast attribute. Used 
-            for contrast sets analysis Defaults to None.
-
-    Returns:
-        object: ExampleSet object instance
-    """
-    if labels is None:
-        labels = ['' if not numeric_labels else 0] * len(values)
-    attributes_names = None
-    label_name = None
-    if isinstance(values, pd.DataFrame):
-        values = _sanitize_dataset_columns(values)
-        attributes_names = values.columns.values
-        values = values.to_numpy()
-    if isinstance(labels, pd.Series):
-        label_name = labels.name
-        labels = labels.to_numpy()
-    values = JObject(values, JArray('java.lang.Object', 2))
-    labels = JObject(labels, JArray('java.lang.Object', 1))
-    ExampleSetFactory = JClass(  # pylint: disable=invalid-name
-        'com.rapidminer.example.ExampleSetFactory'
-    )
-    example_set = ExampleSetFactory.createExampleSet(values, labels)
-    if attributes_names is not None:
-        set_attributes_names(example_set, attributes_names)
-    if label_name is not None:
-        example_set.getAttributes().get('label').setName(label_name)
-    if survival_time_attribute is not None:
-        if survival_time_attribute == '':
-            survival_time_attribute = f'att{example_set.getAttributes().size()}'
-        example_set = set_attribute_role(
-            example_set, survival_time_attribute, SURVIVAL_TIME_ATTR_ROLE)
-    if contrast_attribute is not None:
-        example_set = set_attribute_role(
-            example_set, contrast_attribute, CONTRAST_ATTR_ROLE)
-    return example_set
+    def _prepare_data(self) -> JObject:
+        if self._y is None:
+            data = self._X
+        else:
+            data = np.hstack((self._X.astype(object), self._y.reshape(-1, 1)))
+        return JObject(data, JArray('java.lang.Object', 2))
 
 
 class PredictionResultMapper:
     """Maps prediction results to numpy array
     """
+
+    PREDICTION_COLUMN_ROLE: str = 'prediction'
+    CONFIDENCE_COLUMN_ROLE: str = 'confidence'
 
     @staticmethod
     def map_confidence(
@@ -257,24 +227,24 @@ class PredictionResultMapper:
         Returns:
             np.ndarray: numpy array with mapped confidence values
         """
-        confidence_attributes_names = list(
-            map(lambda val: f'confidence_{val}', label_unique_values))
-        prediction = []
-        row_reader = predicted_example_set.getExampleTable().getDataRowReader()
-        confidence_attributes = []
-        for name in confidence_attributes_names:
-            confidence_attributes.append(
-                predicted_example_set.getAttributes().get(name))
-        while row_reader.hasNext():
-            row = row_reader.next()
-            value = []
-            for attribute in confidence_attributes:
-                value.append(attribute.getValue(row))
-            prediction.append(np.array(value))
-        return np.array(prediction)
+        confidence_matrix: list[list[float]] = []
+        for label_value in label_unique_values:
+            confidence_col: JObject = PredictionResultMapper._get_column_by_role(
+                predicted_example_set,
+                f'{PredictionResultMapper.CONFIDENCE_COLUMN_ROLE}_{label_value}'
+            )
+
+            confidence_values =  [
+                float(predicted_example_set.getExample(
+                    i).getValue(confidence_col))
+                for i in range(predicted_example_set.size())
+            ]
+
+            confidence_matrix.append(confidence_values)
+        return np.array(confidence_matrix, dtype=float).T
 
     @staticmethod
-    def map(predicted_example_set) -> np.ndarray:
+    def map(predicted_example_set: JObject) -> np.ndarray:
         """Maps models predictions to numpy array
 
         Args:
@@ -283,14 +253,17 @@ class PredictionResultMapper:
         Returns:
             np.ndarray: numpy array containing predictions
         """
-        attribute = predicted_example_set.getAttributes().get('prediction')
-        if attribute.isNominal():
+        prediction_col: JObject = PredictionResultMapper._get_column_by_role(
+            predicted_example_set,
+            PredictionResultMapper.PREDICTION_COLUMN_ROLE
+        )
+        if prediction_col.isNominal():
             return PredictionResultMapper.map_to_nominal(predicted_example_set)
         else:
             return PredictionResultMapper.map_to_numerical(predicted_example_set)
-
+        
     @staticmethod
-    def map_to_nominal(predicted_example_set) -> np.ndarray:
+    def map_to_nominal(predicted_example_set: JObject) -> np.ndarray:
         """Maps models predictions to nominal numpy array of strings
 
         Args:
@@ -299,20 +272,19 @@ class PredictionResultMapper:
         Returns:
             np.ndarray: numpy array containing predictions
         """
-        prediction: list[str] = []
-        row_reader = predicted_example_set.getExampleTable().getDataRowReader()
-        attribute = predicted_example_set.getAttributes().get('prediction')
-        label_mapping = attribute.getMapping()
-        while row_reader.hasNext():
-            row = row_reader.next()
-            value_index = row.get(attribute)
-            value = label_mapping.mapIndex(round(value_index))
-            prediction.append(value)
-        prediction = [str(e) for e in prediction]
-        return np.array(prediction).astype(np.unicode_)
+        prediction_col: JObject = PredictionResultMapper._get_column_by_role(
+            predicted_example_set,
+            PredictionResultMapper.PREDICTION_COLUMN_ROLE
+        )
+
+        return np.array([
+            str(predicted_example_set.getExample(
+                i).getNominalValue(prediction_col))
+            for i in range(predicted_example_set.size())
+        ], dtype=str)
 
     @staticmethod
-    def map_to_numerical(predicted_example_set, remap: bool = True) -> np.ndarray:
+    def map_to_numerical(predicted_example_set: JObject, remap: bool = True) -> np.ndarray:
         """Maps models predictions to numerical numpy array
 
         Args:
@@ -321,19 +293,22 @@ class PredictionResultMapper:
         Returns:
             np.ndarray: numpy array containing predictions
         """
-        prediction = []
-        row_reader = predicted_example_set.getExampleTable().getDataRowReader()
-        attribute = predicted_example_set.getAttributes().get('prediction')
+        prediction_col: JObject = PredictionResultMapper._get_column_by_role(
+            predicted_example_set,
+            PredictionResultMapper.PREDICTION_COLUMN_ROLE
+        )
         label_mapping = predicted_example_set.getAttributes().getLabel().getMapping()
-        while row_reader.hasNext():
-            row = row_reader.next()
-            if remap:
-                value = int(attribute.getValue(row))
-                value = float(str(label_mapping.mapIndex(value)))
-            else:
-                value = float(attribute.getValue(row))
-            prediction.append(value)
-        return np.array(prediction)
+        if remap:
+            return np.array([
+                float(str(label_mapping.mapIndex(int(predicted_example_set.getExample(i).getValue(prediction_col)))))
+                for i in range(predicted_example_set.size())
+            ])
+        else:
+            return np.array([
+                float(predicted_example_set.getExample(
+                    i).getValue(prediction_col))
+                for i in range(predicted_example_set.size())
+            ])
 
     @staticmethod
     def map_survival(predicted_example_set) -> np.ndarray:
@@ -364,6 +339,10 @@ class PredictionResultMapper:
             estimator = {'times': times, 'probabilities': probabilities}
             estimators.append(estimator)
         return np.array(estimators)
+
+    @staticmethod
+    def _get_column_by_role(predicted_example_set: JObject, role: str) -> JObject:
+        return predicted_example_set.getAttributes().getColumnByRole(role)
 
 
 class ModelSerializer:

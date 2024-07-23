@@ -1,16 +1,16 @@
+import io
 import os
 import re
 from typing import Union
 from xml.etree import ElementTree
+
 import pandas as pd
+from jpype import JClass
 from scipy.io.arff import loadarff
 from sklearn import metrics
-from jpype import JClass
 
-
-from rulekit._helpers import create_example_set
+from rulekit._helpers import ExampleSetFactory
 from rulekit.rules import Rule
-
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -38,14 +38,17 @@ class ExampleSetWrapper:
     def __init__(self, values, labels):
         self.values = values
         self.labels = labels
-        self.example_set = create_example_set(values, labels)
+        self.example_set = ExampleSetFactory().make(values, labels)
 
     def get_data(self) -> tuple:
         return self.values, self.labels
 
 
 def load_arff_to_example_set(path: str, label_attribute: str) -> ExampleSetWrapper:
-    arff_data_frame = pd.DataFrame(loadarff(path)[0])
+    with open(path, 'r') as file:
+        content = file.read().replace('"', "'")
+        arff_file = io.StringIO(content)
+    arff_data_frame = pd.DataFrame(loadarff(arff_file)[0])
 
     attributes_names = []
     for column_name in arff_data_frame.columns:
@@ -106,10 +109,7 @@ class TestCase:
     @property
     def reference_report(self) -> TestReport:
         if self._reference_report is None:
-            ExampleSetMetaData = JClass(
-                'com.rapidminer.operator.ports.metadata.ExampleSetMetaData')
-            reader = TestReportReader(f'{self.report_file_path}.txt', ExampleSetMetaData(
-                self._example_set.example_set))
+            reader = TestReportReader(f'{self.report_file_path}.txt')
             self._reference_report = reader.read()
             reader.close()
         return self._reference_report
@@ -171,7 +171,8 @@ class TestConfigParser:
             rule_name: str = element.attrib['name']
             rule_content: str = element.text
             # RuleKit originally used XML for specifying parameters and uses special xml characters
-            rule_content = rule_content.replace('&lt;', '<').replace('&gt;', '>')
+            rule_content = rule_content.replace(
+                '&lt;', '<').replace('&gt;', '>')
             expert_rules.append((rule_name, rule_content))
         return expert_rules if len(expert_rules) > 0 else None
 
@@ -310,9 +311,12 @@ class TestCaseFactory:
                     test_case.survival_time = data_set_config.survival_time
                     if expert_rules is not None or preferred_conditions is not None or forbidden_conditions is not None:
                         test_case.knowledge = Knowledge()
-                        test_case.knowledge.expert_rules = expert_rules
-                        test_case.knowledge.expert_forbidden_conditions = forbidden_conditions
-                        test_case.knowledge.expert_preferred_conditions = preferred_conditions
+                        if expert_rules is not None:
+                            test_case.knowledge.expert_rules = expert_rules
+                        if forbidden_conditions is not None:
+                            test_case.knowledge.expert_forbidden_conditions = forbidden_conditions
+                        if preferred_conditions is not None:
+                            test_case.knowledge.expert_preferred_conditions = preferred_conditions
                     test_cases.append(test_case)
         return test_cases
 
@@ -323,8 +327,7 @@ def get_rule_string(rule) -> str:
 
 class TestReportReader:
 
-    def __init__(self, file_name: str, example_set_meta_data):
-        self.example_set_meta_data = example_set_meta_data
+    def __init__(self, file_name: str):
         self.file_name = file_name
         self._file = open(file_name, encoding='utf-8', mode='r')
 
@@ -385,22 +388,21 @@ If you're running tests for the first time you need to download resources folder
     return TestCaseFactory().make(configs, f'{REPORTS_IN_DIRECTORY_PATH}/{class_name}/')
 
 
-def _get_rule_string(rule: Rule) -> str:
-    return re.sub(r'(\\[[^\\]]*\\]$)|(\\([^\\)]*\\)$)', '', str(rule))
-
-
 def assert_rules_are_equals(expected: list[str], actual: list[str]):
     def sanitize_rule_string(rule_string: str) -> str:
         return re.sub(r'(\t)|(\n)|(\[[^\]]*\]$)', '', rule_string)
+
+    expected = list(map(lambda e: sanitize_rule_string(e), expected))
+    actual = list(map(lambda e: sanitize_rule_string(e), actual))
 
     if len(expected) != len(actual):
         raise AssertionError(
             f'Rulesets have different number of rules, actual: {len(actual)}, expected: {len(expected)}')
     dictionary = {}
     for rule in expected:
-        dictionary[sanitize_rule_string(rule)] = 0
+        dictionary[rule] = 0
     for rule in actual:
-        key = sanitize_rule_string(rule)
+        key = rule
         if key in dictionary:
             dictionary[key] = dictionary[key] + 1
         else:

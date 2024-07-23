@@ -1,12 +1,12 @@
 """Contains constants and classes for specyfing models parameters
 """
+import sys
 from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
-SURVIVAL_TIME_ATTR_ROLE: str = "survival_time"
-CONTRAST_ATTR_ROLE: str = "contrast_attribute"
-
+MAX_INT: int = 2147483647 # max integer value in Java
 
 class Measures(Enum):
     # pylint: disable=invalid-name
@@ -76,13 +76,13 @@ DEFAULT_PARAMS_VALUE = {
     'approximate_bins_count': 100,
     'mean_based_regression': True,
 
-    'extend_using_preferred': None,
-    'extend_using_automatic': None,
-    'induce_using_preferred': None,
-    'induce_using_automatic': None,
-    'consider_other_classes': None,
-    'preferred_conditions_per_rule': None,
-    'preferred_attributes_per_rule': None,
+    'extend_using_preferred': False,
+    'extend_using_automatic': False,
+    'induce_using_preferred': False,
+    'induce_using_automatic': False,
+    'consider_other_classes': False,
+    'preferred_conditions_per_rule': MAX_INT,
+    'preferred_attributes_per_rule': MAX_INT,
 
     # Contrast sets
     'minsupp_all': (0.8, 0.5, 0.2, 0.1),

@@ -1,26 +1,20 @@
 """Module contaiing classes for classification analysis and prediction.
 """
 from __future__ import annotations
-from numbers import Number
-from typing import Union, Optional, Iterable
+
 from enum import Enum
+from numbers import Number
+from typing import Iterable, Optional, Union
+
 import numpy as np
 import pandas as pd
-from sklearn import metrics
 from jpype import JClass
+from sklearn import metrics
 
-from ._helpers import PredictionResultMapper
-from .params import (
-    Measures,
-    ModelsParams,
-    DEFAULT_PARAMS_VALUE,
-    ContrastSetModelParams
-)
-from ._operator import (
-    Data,
-    BaseOperator,
-    ExpertKnowledgeOperator,
-)
+from ._helpers import ExampleSetFactory, PredictionResultMapper
+from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
+from .params import (DEFAULT_PARAMS_VALUE, ContrastSetModelParams, Measures,
+                     ModelsParams)
 
 
 class ClassificationParams(ModelsParams):
@@ -43,14 +37,14 @@ class BaseClassifier:
 
     def _init_classification_rule_performance(self):
         self.ClassificationRulesPerformance = JClass(  # pylint: disable=invalid-name
-            'adaa.analytics.rules.logic.quality.ClassificationRulesPerformance'
+            'adaa.analytics.rules.logic.performance.ClassificationRulesPerformance'
         )
 
     def _calculate_metric(self, example_set, metric_type) -> float:
         classification_rules_performance = self.ClassificationRulesPerformance(
             metric_type.value)
-        classification_rules_performance.startCounting(example_set, True)
-        return classification_rules_performance.getMikroAverage()
+        metric = classification_rules_performance.countExample(example_set)
+        return metric.getValue()
 
     def _calculate_prediction_metrics(self, example_set) -> dict[str, float]:
         return {
@@ -59,9 +53,6 @@ class BaseClassifier:
             ),
             'voting_conflicts': self._calculate_metric(
                 example_set, BaseClassifier.MetricTypes.VotingConflicts
-            ),
-            'negative_voting_conflicts': self._calculate_metric(
-                example_set, BaseClassifier.MetricTypes.NegativeVotingConflicts
             ),
         }
 
@@ -202,10 +193,10 @@ class RuleClassifier(BaseOperator, BaseClassifier):
                 isinstance(labels[0], bool) or
                 (isinstance(labels, np.ndarray) and labels.dtype.name == 'bool')
             ):
-                return list(map(str, labels))
+                return np.array(list(map(str, labels)))
             if isinstance(labels[0], Number):
                 self._remap_to_numeric = True
-                return list(map(str, labels))
+                return np.array(list(map(str, labels)))
         return labels
 
     def fit(self, values: Data, labels: Data) -> RuleClassifier:  # pylint: disable=arguments-differ
@@ -249,13 +240,13 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             will be returned with first element being prediction and second one being metrics.
         """
         result_example_set = BaseOperator.predict(self, values)
-        mapped_result_example_set = self._map_result(result_example_set)
+        y_pred = self._map_result(result_example_set)
         if return_metrics:
             metrics_values: dict = BaseClassifier._calculate_prediction_metrics(
                 self, result_example_set)
-            return (mapped_result_example_set, metrics_values)
+            return (y_pred, metrics_values)
         else:
-            return mapped_result_example_set
+            return y_pred
 
     def predict_proba(
         self,
