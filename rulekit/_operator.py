@@ -1,22 +1,19 @@
 """Contains base classes for rule induction operators
 """
 from __future__ import annotations
-from typing import Union, Any, Optional
+
+from typing import Any, Optional, Union
+
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
-from .main import RuleKit
-from ._helpers import (
-    RuleGeneratorConfigurator,
-    PredictionResultMapper,
-    create_example_set,
-    get_rule_generator,
-    ModelSerializer,
-)
-from .rules import RuleSet, Rule
+from ._helpers import (ModelSerializer, PredictionResultMapper,
+                       RuleGeneratorConfigurator, create_example_set,
+                       get_rule_generator)
 from .events import RuleInductionProgressListener, command_proxy_client_factory
-
+from .main import RuleKit
+from .rules import Rule, RuleSet
 
 Data = Union[np.ndarray, pd.DataFrame, list]
 
@@ -241,7 +238,5 @@ class ExpertKnowledgeOperator(BaseOperator):
         sanitized_parameter: list[tuple[str, str]] = []
         for item in expert_parameter:
             item_id, item_value = item
-            # RuleKit originally used XML for specifying parameters, use special xml characters
-            item_value = item_value.replace('<', '&lt;').replace('>', '&gt;')
             sanitized_parameter.append((item_id, item_value))
         return sanitized_parameter
