@@ -1,6 +1,7 @@
-import setuptools
-import os
 import io
+import os
+
+import setuptools
 
 current_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -9,7 +10,7 @@ with io.open("README.md", mode="r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rulekit",
-    version='1.7.6',
+    version='1.7.14.0',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
