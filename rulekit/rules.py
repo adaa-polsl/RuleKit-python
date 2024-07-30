@@ -1,9 +1,12 @@
 """Contains classes representing rules and rulesets.
 """
 from typing import Union
+
 import numpy as np
+
 from .params import Measures
-from .stats import RuleStatistics, RuleSetStatistics
+from .stats import RuleSetStatistics
+from .stats import RuleStatistics
 
 
 class Rule:
@@ -248,8 +251,8 @@ class RuleSet:
         -------
         count: dict
             Significance of the rule set with false discovery rate correction. Dictionary contains
-            two fields: *fraction* (fraction of rules significant at assumed level) and *p* 
-            (average p-value of all rules).
+            two fields: *fraction* (fraction of rules significant at assumed level) and *p*
+             (average p-value of all rules).
         """
         significance = self._java_object.calculateSignificanceFDR(alpha)
         return {
@@ -262,9 +265,9 @@ class RuleSet:
         Returns
         -------
         count: dict
-            Significance of the rule set with familiy-wise error rate correction. Dictionary 
-            contains two fields: *fraction* (fraction of rules significant at assumed level) 
-            and *p* (average p-value of all rules).
+            Significance of the rule set with familiy-wise error rate correction. Dictionary
+             contains two fields: *fraction* (fraction of rules significant at assumed level)
+             and *p* (average p-value of all rules).
         """
         significance = self._java_object.calculateSignificanceFWER(alpha)
         return {

@@ -2,19 +2,26 @@
 """
 from __future__ import annotations
 
-from typing import Iterable, Optional, Union
+from typing import Iterable
+from typing import Optional
+from typing import Union
 
 import numpy as np
 import pandas as pd
 from jpype import JClass
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
-from ._helpers import ExampleSetFactory, PredictionResultMapper
-from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
-from .params import DEFAULT_PARAMS_VALUE, ContrastSetModelParams
+from ._helpers import ExampleSetFactory
+from ._helpers import PredictionResultMapper
+from ._operator import BaseOperator
+from ._operator import Data
+from ._operator import ExpertKnowledgeOperator
+from .params import ContrastSetModelParams
+from .params import DEFAULT_PARAMS_VALUE
 from .rules import RuleSet
 
 _DEFAULT_SURVIVAL_TIME_ATTR: str = 'survival_time'
+
 
 class SurvivalModelsParams(BaseModel):
     """Model for validating survival models hyperparameters
@@ -61,8 +68,8 @@ class SurvivalRules(BaseOperator):
             name of column containing survival time data (use when data passed to model is padnas
             dataframe).
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to
             the rule in the growing phase  (use this parameter for large datasets if execution time
@@ -70,21 +77,21 @@ class SurvivalRules(BaseOperator):
         enable_pruning : bool = True
             enable or disable pruning, default is True.
         ignore_missing : bool = False
-            boolean telling whether missing values should be ignored (by default, a missing value 
-            of given attribute is always considered as not fulfilling the condition build upon that
+            boolean telling whether missing values should be ignored (by default, a missing value
+             of given attribute is always considered as not fulfilling the condition build upon that
             attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples 
-            that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples
+             that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; 
-            default: False.
+            Flag determining if best candidate should be selected from growing phase;
+             default: False.
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         """
         self._params = None
         self._rule_generator = None
@@ -154,8 +161,8 @@ class SurvivalRules(BaseOperator):
         labels : :class:`rulekit.operator.Data`
             survival status
         survival_time: :class:`rulekit.operator.Data`
-            data about survival time. Could be omitted when *survival_time_attr* parameter 
-            was specified.
+            data about survival time. Could be omitted when *survival_time_attr* parameter
+             was specified.
 
         Returns
         -------
@@ -178,19 +185,19 @@ class SurvivalRules(BaseOperator):
         -------
         result : np.ndarray
             Each row represent single example from dataset and contains estimated survival function
-            for that example. Estimated survival function is returned as a dictionary containing 
-            times and corresponding probabilities.
+            for that example. Estimated survival function is returned as a dictionary containing
+             times and corresponding probabilities.
         """
         return PredictionResultMapper.map_survival(super().predict(values))
 
     def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
-        """Return the Integrated Brier Score on the given dataset and labels 
-        (event status indicator).
+        """Return the Integrated Brier Score on the given dataset and labels
+         (event status indicator).
 
-        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference 
-        between true event status at time T and predicted event status at that time; 
-        the Integrated Brier score summarizes the prediction error over all observations and over
-        all times in a test set.
+        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference
+         between true event status at time T and predicted event status at that time;
+         the Integrated Brier score summarizes the prediction error over all observations and over
+         all times in a test set.
 
         Parameters
         ----------
@@ -221,7 +228,8 @@ class SurvivalRules(BaseOperator):
             'adaa.analytics.rules.logic.performance.IntegratedBrierScore'
         )
         integrated_brier_score = IntegratedBrierScore()
-        ibs = integrated_brier_score.countExample(predicted_example_set).getValue()
+        ibs = integrated_brier_score.countExample(
+            predicted_example_set).getValue()
         return float(ibs)
 
 
@@ -255,8 +263,8 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         Parameters
         ----------
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is pandas
             dataframe).
@@ -271,17 +279,17 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             of given attribute is always considered as not fulfilling the condition build upon that
             attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples 
-            that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples
+             that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; 
-            default: False.
+            Flag determining if best candidate should be selected from growing phase;
+             default: False.
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
 
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
@@ -290,11 +298,11 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             boolean indicating whether initial rules should be extended with a use of automatic
             conditions and attributes; default is False
         induce_using_preferred : bool = False
-            boolean indicating whether new rules should be induced with a use of preferred 
-            conditions and attributes; default is False
+            boolean indicating whether new rules should be induced with a use of preferred
+             conditions and attributes; default is False
         induce_using_automatic : bool = False
-            boolean indicating whether new rules should be induced with a use of automatic 
-            conditions and attributes; default is False
+            boolean indicating whether new rules should be induced with a use of automatic
+             conditions and attributes; default is False
         preferred_conditions_per_rule : int = None
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
@@ -356,12 +364,12 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             of tuples where first
             element is name of the rule and second one is rule string.
         expert_preferred_conditions : List[Union[str, Tuple[str, str]]]
-            multiset of preferred conditions (used also for specifying preferred attributes by 
-            using special value Any). Either passed as a list of strings representing rules or as
+            multiset of preferred conditions (used also for specifying preferred attributes by
+             using special value Any). Either passed as a list of strings representing rules or as
             list of tuples where first element is name of the rule and second one is rule string.
         expert_forbidden_conditions : List[Union[str, Tuple[str, str]]]
-            set of forbidden conditions (used also for specifying forbidden attributes by using 
-            special valye Any). Either passed as a list of strings representing rules or as list
+            set of forbidden conditions (used also for specifying forbidden attributes by using
+             special valye Any). Either passed as a list of strings representing rules or as list
             of tuples where first element is name of the rule and second one is rule string.
 
         Returns
@@ -430,21 +438,21 @@ class ContrastSetSurvivalRules(BaseOperator):
             name of column containing survival time data (use when data passed to model is pandas
             dataframe).
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         max_growing : int = 0.0
-            non-negative integer representing maximum number of conditions which can be added to 
-            the rule in the growing phase (use this parameter for large datasets if execution time
+            non-negative integer representing maximum number of conditions which can be added to
+             the rule in the growing phase (use this parameter for large datasets if execution time
             is prohibitive); 0 indicates no limit; default: 0,
         enable_pruning : bool = True
             enable or disable pruning, default is True.
         ignore_missing : bool = False
-            boolean telling whether missing values should be ignored (by default, a missing value 
-            of given attribute is always considered as not fulfilling the condition build upon that
+            boolean telling whether missing values should be ignored (by default, a missing value
+             of given attribute is always considered as not fulfilling the condition build upon that
             attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples 
-            that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples
+             that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
             Flag determining if best candidate should be selected from growing phase;
             default: False.
@@ -452,8 +460,8 @@ class ContrastSetSurvivalRules(BaseOperator):
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         """
         self._params = None
         self._rule_generator = None
@@ -498,11 +506,11 @@ class ContrastSetSurvivalRules(BaseOperator):
             attributes
         labels : :class:`rulekit.operator.Data`
             survival status
-        contrast_attribute: str 
+        contrast_attribute: str
             group attribute
         survival_time: :class:`rulekit.operator.Data`
-            data about survival time. Could be omitted when *survival_time_attr* parameter 
-            was specified.
+            data about survival time. Could be omitted when *survival_time_attr* parameter
+             was specified.
 
         Returns
         -------
@@ -529,19 +537,19 @@ class ContrastSetSurvivalRules(BaseOperator):
         -------
         result : np.ndarray
             Each row represent single example from dataset and contains estimated survival function
-            for that example. Estimated survival function is returned as a dictionary containing 
-            times and corresponding probabilities.
+            for that example. Estimated survival function is returned as a dictionary containing
+             times and corresponding probabilities.
         """
         return PredictionResultMapper.map_survival(super().predict(values))
 
     def score(self, values: Data, labels: Data, survival_time: Data = None) -> float:
-        """Return the Integrated Brier Score on the given dataset and 
-        labels(event status indicator).
+        """Return the Integrated Brier Score on the given dataset and
+         labels(event status indicator).
 
         Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference
-        between true event status at time T and predicted event status at that time; 
-        the Integrated Brier score summarizes the prediction error over all observations and 
-        over all times in a test set.
+        between true event status at time T and predicted event status at that time;
+         the Integrated Brier score summarizes the prediction error over all observations and
+         over all times in a test set.
 
         Parameters
         ----------

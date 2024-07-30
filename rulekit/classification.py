@@ -4,17 +4,24 @@ from __future__ import annotations
 
 from enum import Enum
 from numbers import Number
-from typing import Iterable, TypedDict, Union
+from typing import Iterable
+from typing import TypedDict
+from typing import Union
 
 import numpy as np
 import pandas as pd
-from jpype import JClass, JObject
+from jpype import JClass
+from jpype import JObject
 from sklearn import metrics
 
 from ._helpers import PredictionResultMapper
-from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
-from .params import (DEFAULT_PARAMS_VALUE, ContrastSetModelParams, Measures,
-                     ModelsParams)
+from ._operator import BaseOperator
+from ._operator import Data
+from ._operator import ExpertKnowledgeOperator
+from .params import ContrastSetModelParams
+from .params import DEFAULT_PARAMS_VALUE
+from .params import Measures
+from .params import ModelsParams
 
 
 class ClassificationPredictionMetrics(TypedDict):
@@ -38,8 +45,8 @@ class BaseClassifier:
     """:meta private:"""
 
     def __init__(self):
-        self._ClassificationRulesPerformance: JClass = None # pylint: disable=invalid-name
-        self._NegativeVotingConflictsPerformance : JClass = None # pylint: disable=invalid-name
+        self._ClassificationRulesPerformance: JClass = None  # pylint: disable=invalid-name
+        self._NegativeVotingConflictsPerformance: JClass = None  # pylint: disable=invalid-name
         self._init_classification_rule_performance_classes()
 
     class MetricTypes(Enum):
@@ -54,7 +61,8 @@ class BaseClassifier:
         )
 
     def _calculate_metric(self, example_set: JObject, metric_type: MetricTypes) -> float:
-        metric: JObject = self._ClassificationRulesPerformance(metric_type.value)
+        metric: JObject = self._ClassificationRulesPerformance(
+            metric_type.value)
         metric_value = float(metric.countExample(example_set).getValue())
         return metric_value
 
@@ -96,15 +104,16 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         Parameters
         ----------
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems);
+             default: 5,
         induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.\
             Measures.Correlation`
             measure used during induction; default measure is correlation
         pruning_measure : Union[:class:`rulekit.params.Measures`, str] = \
             :class:`rulekit.params.Measures.Correlation`
-            measure used during pruning. Could be user defined (string), for example  
-            :code:`2 * p / n`; default measure is correlation
+            measure used during pruning. Could be user defined (string), for example
+             :code:`2 * p / n`; default measure is correlation
         voting_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
@@ -116,8 +125,8 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             enable or disable pruning, default is True.
         ignore_missing : bool = False
             boolean telling whether missing values should be ignored (by default, a missing value
-            of given attribute is always cconsidered as not fulfilling the condition build upon 
-            that attribute); default: False.
+            of given attribute is always cconsidered as not fulfilling the condition build upon
+             that attribute); default: False.
         max_uncovered_fraction : float = 0.0
             Floating-point number from [0,1] interval representing maximum fraction of examples
             that may remain uncovered by the rule set, default: 0.0.
@@ -128,11 +137,11 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         control_apriori_precision : bool = True
-            When inducing classification rules, verify if candidate precision is higher than 
-            apriori precision of the investigated class.
+            When inducing classification rules, verify if candidate precision is higher than
+             apriori precision of the investigated class.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         approximate_induction: bool = False
             Use an approximate induction heuristic which does not check all possible splits;
             note: this is an experimental feature and currently works only for classification
@@ -234,14 +243,14 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             attributes
 
         return_metrics: bool = False
-            Optional flag. If set to *True* method will calculate some additional model metrics. 
-            Method will then return tuple instead of just predicted labels.
+            Optional flag. If set to *True* method will calculate some additional model metrics.
+             Method will then return tuple instead of just predicted labels.
 
         Returns
         -------
         result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
-            If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple 
-            will be returned with first element being prediction and second one being metrics.
+            If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple
+             will be returned with first element being prediction and second one being metrics.
         """
         result_example_set = BaseOperator.predict(self, values)
         y_pred = self._map_result(result_example_set)
@@ -264,15 +273,14 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             attributes
 
         return_metrics: bool = False
-            Optional flag. If set to *True* method will calculate some additional model metrics. 
-            Method will then return tuple instead of just probabilities.
+            Optional flag. If set to *True* method will calculate some additional model metrics.
+             Method will then return tuple instead of just probabilities.
 
         Returns
         -------
         result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
             If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
-            a tuple will be returned with first element being prediction and second one being 
-            metrics.
+            a tuple will be returned with first element being prediction and second one being metrics.
         """
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_confidence(result_example_set)
@@ -350,15 +358,15 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         Parameters
         ----------
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
         pruning_measure : Union[:class:`rulekit.params.Measures`, str] = \
             :class:`rulekit.params.Measures.Correlation`
-            measure used during pruning. Could be user defined (string), for example  
-            :code:`2 * p / n`; default measure is correlation
+            measure used during pruning. Could be user defined (string), for example
+             :code:`2 * p / n`; default measure is correlation
         voting_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
@@ -370,23 +378,23 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             enable or disable pruning, default is True.
         ignore_missing : bool = False
             boolean telling whether missing values should be ignored (by default, a missing value
-            of given attribute is always considered as not fulfilling the condition build upon 
-            that attribute); default: False.
+            of given attribute is always considered as not fulfilling the condition build upon
+             that attribute); default: False.
         max_uncovered_fraction : float = 0.0
             Floating-point number from [0,1] interval representing maximum fraction of examples
             that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; default: 
-            False.
+            Flag determining if best candidate should be selected from growing phase; default:
+             False.
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         control_apriori_precision : bool = True
-            When inducing classification rules, verify if candidate precision is higher than 
-            apriori precision of the investigated class.
+            When inducing classification rules, verify if candidate precision is higher than
+             apriori precision of the investigated class.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         approximate_induction: bool = False
             Use an approximate induction heuristic which does not check all possible splits;
             note: this is an experimental feature and currently works only for classification
@@ -398,14 +406,14 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             boolean indicating whether initial rules should be extended with a use of preferred
             conditions and attributes; default is False
         extend_using_automatic : bool = False
-            boolean indicating whether initial rules should be extended with a use of automatic 
-            conditions and attributes; default is False
+            boolean indicating whether initial rules should be extended with a use of automatic
+             conditions and attributes; default is False
         induce_using_preferred : bool = False
-            boolean indicating whether new rules should be induced with a use of preferred 
-            conditions and attributes; default is False
+            boolean indicating whether new rules should be induced with a use of preferred
+             conditions and attributes; default is False
         induce_using_automatic : bool = False
-            boolean indicating whether new rules should be induced with a use of automatic 
-            conditions and attributes; default is False
+            boolean indicating whether new rules should be induced with a use of automatic
+             conditions and attributes; default is False
         consider_other_classes : bool = False
             boolean indicating whether automatic induction should be performed for classes for
               which no user's knowledge has been defined (classification only); default is False.
@@ -483,8 +491,8 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             using special value Any). Either passed as a list of strings representing rules or as
             list of tuples where first element is name of the rule and second one is rule string.
         expert_forbidden_conditions : List[Union[str, Tuple[str, str]]]
-            set of forbidden conditions (used also for specifying forbidden attributes by using 
-            special valye Any). Either passed as a list of strings representing rules or as list
+            set of forbidden conditions (used also for specifying forbidden attributes by using
+             special valye Any). Either passed as a list of strings representing rules or as list
             of tuples where first element is name of the rule and second one is rule string.
         Returns
         -------
@@ -570,15 +578,15 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         penalty_saturation: float
             the value of p_new / P at which penalty reward saturates; Default is 0.2.
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
         pruning_measure : Union[:class:`rulekit.params.Measures`, str] = \
             :class:`rulekit.params.Measures.Correlation`
-            measure used during pruning. Could be user defined (string), for example  
-            :code:`2 * p / n`; default measure is correlation
+            measure used during pruning. Could be user defined (string), for example
+             :code:`2 * p / n`; default measure is correlation
         voting_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
@@ -590,23 +598,23 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             enable or disable pruning, default is True.
         ignore_missing : bool = False
             boolean telling whether missing values should be ignored (by default, a missing value
-            of given attribute is always considered as not fulfilling the condition build upon 
-            that attribute); default: False.
+            of given attribute is always considered as not fulfilling the condition build upon
+             that attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples 
-            that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples
+             that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; 
-            default: False.
+            Flag determining if best candidate should be selected from growing phase;
+             default: False.
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         control_apriori_precision : bool = True
-            When inducing classification rules, verify if candidate precision is higher than 
-            apriori precision of the investigated class.
+            When inducing classification rules, verify if candidate precision is higher than
+             apriori precision of the investigated class.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         approximate_induction: bool = False
             Use an approximate induction heuristic which does not check all possible splits;
             note: this is an experimental feature and currently works only for classification
@@ -669,7 +677,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             attributes
         labels : :class:`rulekit.operator.Data`
             labels
-        contrast_attribute: str 
+        contrast_attribute: str
             group attribute
         Returns
         -------
@@ -701,8 +709,8 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             attributes
 
         return_metrics: bool = False
-            Optional flag. If set to *True* method will calculate some additional model metrics. 
-            Method will then return tuple instead of just predicted labels.
+            Optional flag. If set to *True* method will calculate some additional model metrics.
+             Method will then return tuple instead of just predicted labels.
 
         Returns
         -------
@@ -725,14 +733,14 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
             attributes
 
         return_metrics: bool = False
-            Optional flag. If set to *True* method will calculate some additional model metrics. 
-            Method will then return tuple instead of just probabilities.
+            Optional flag. If set to *True* method will calculate some additional model metrics.
+             Method will then return tuple instead of just probabilities.
 
         Returns
         -------
         result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
             If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
-            a tuple will be returned with first element being prediction and second one being 
+            a tuple will be returned with first element being prediction and second one being
             metrics.
         """
         return RuleClassifier.predict_proba(self, values, return_metrics)

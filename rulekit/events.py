@@ -2,15 +2,16 @@
 """
 from typing import Any
 
-from jpype import JImplements, JOverride
+from jpype import JImplements
+from jpype import JOverride
 
 from .rules import Rule
 
 
 class RuleInductionProgressListener:
     """Base class for rule induction progress listeners. To use it, subclass it
-    and implement some of the its methods. Then instantiate it and pass it to 
-    `add_event_listener` method of the operator.
+    and implement some of the its methods. Then instantiate it and pass it to
+     `add_event_listener` method of the operator.
     """
 
     def on_new_rule(self, rule: Rule):
@@ -35,8 +36,8 @@ class RuleInductionProgressListener:
         """
 
     def should_stop(self) -> bool:
-        """Method which allows to stop rule induction process at given moment. This method is 
-        called each time a ruleset coverage changed. If it returns `True`, rule induction process
+        """Method which allows to stop rule induction process at given moment. This method is
+         called each time a ruleset coverage changed. If it returns `True`, rule induction process
         will be stopped if it return `False` it will continue.
 
         Returns:

@@ -2,18 +2,24 @@
 """
 from __future__ import annotations
 
-from typing import Any, Optional, Union
+from typing import Any
+from typing import Optional
+from typing import Union
 
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
-from ._helpers import (ExampleSetFactory, ModelSerializer,
-                       PredictionResultMapper, RuleGeneratorConfigurator,
-                       get_rule_generator)
-from .events import RuleInductionProgressListener, command_listener_factory
+from ._helpers import ExampleSetFactory
+from ._helpers import get_rule_generator
+from ._helpers import ModelSerializer
+from ._helpers import PredictionResultMapper
+from ._helpers import RuleGeneratorConfigurator
+from .events import command_listener_factory
+from .events import RuleInductionProgressListener
 from .main import RuleKit
-from .rules import Rule, RuleSet
+from .rules import Rule
+from .rules import RuleSet
 
 Data = Union[np.ndarray, pd.DataFrame, list]
 
@@ -136,8 +142,8 @@ class BaseOperator:
         -------
         coverage_matrix : np.ndarray
             Each row of the matrix represent single example from dataset and every column represent
-            on rule from rule set. Value 1 in the matrix cell means that rule covered certain 
-            example, value 0 means that it doesn't.
+            on rule from rule set. Value 1 in the matrix cell means that rule covered certain
+             example, value 0 means that it doesn't.
         """
         if self.model is None:
             raise ValueError(
@@ -156,8 +162,8 @@ class BaseOperator:
         return np.array(result)
 
     def add_event_listener(self, listener: RuleInductionProgressListener):
-        """Add event listener object to the operator which allows to monitor 
-        rule induction progress.
+        """Add event listener object to the operator which allows to monitor
+         rule induction progress.
 
         Example:
             >>> from rulekit.events import RuleInductionProgressListener

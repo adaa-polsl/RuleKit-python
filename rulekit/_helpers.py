@@ -1,12 +1,17 @@
 """Contains helper functions and classes
 """
 import io
-from typing import Any, Union
+from typing import Any
+from typing import Union
 
 import numpy as np
 import pandas as pd
-from jpype import JArray, JClass, JObject, java
-from jpype.pickle import JPickler, JUnpickler
+from jpype import JArray
+from jpype import java
+from jpype import JClass
+from jpype import JObject
+from jpype.pickle import JPickler
+from jpype.pickle import JUnpickler
 
 from .main import RuleKit
 from .params import Measures
@@ -17,7 +22,8 @@ def get_rule_generator(expert: bool = False) -> Any:
     """Factory for Java RuleGenerator class object
 
     Args:
-        expert (bool, optional): Whether expert induction is enables. Defaults to False.
+        expert (bool, optional): Whether expert induction is enables.
+         Defaults to False.
 
     Returns:
         Any: RuleGenerator instance
@@ -124,8 +130,8 @@ class ExampleSetFactory():
         Args:
             X (Union[pd.DataFrame, np.ndarray]): Data
             y (Union[pd.Series, np.ndarray], optional): Labels. Defaults to None.
-            survival_time_attribute (str, optional): Name of survival time attribute. 
-            Defaults to None.
+            survival_time_attribute (str, optional): Name of survival time attribute.
+             Defaults to None.
             contrast_attribute (str, optional): Name of contrast attribute. Defaults to None.
 
         Returns:
@@ -327,7 +333,7 @@ class PredictionResultMapper:
             for i in range(predicted_example_set.size())
         ])
 
-    @ staticmethod
+    @staticmethod
     def map_survival(predicted_example_set) -> np.ndarray:
         """Maps survival models predictions to numpy array. Used as alternative to `map` method
         used in survival analysis
@@ -359,7 +365,7 @@ class PredictionResultMapper:
             estimators.append(estimator)
         return np.array(estimators)
 
-    @ staticmethod
+    @staticmethod
     def _get_column_by_role(predicted_example_set: JObject, role: str) -> JObject:
         return predicted_example_set.getAttributes().getColumnByRole(role)
 
@@ -368,7 +374,7 @@ class ModelSerializer:
     """Class for serializing models
     """
 
-    @ staticmethod
+    @staticmethod
     def serialize(real_model: object) -> bytes:
         """Serialize Java ruleset object.
 
@@ -381,7 +387,7 @@ class ModelSerializer:
         in_memory_file.close()
         return serialized_bytes
 
-    @ staticmethod
+    @staticmethod
     def deserialize(serialized_bytes: bytes) -> object:
         """Deserialize Java ruleset object from bytes.
 

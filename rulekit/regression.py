@@ -3,16 +3,21 @@
 from __future__ import annotations
 
 from numbers import Number
-from typing import Iterable, Optional, Union
+from typing import Iterable
+from typing import Union
 
 import numpy as np
 import pandas as pd
 from sklearn import metrics
 
 from ._helpers import PredictionResultMapper
-from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
-from .params import (DEFAULT_PARAMS_VALUE, ContrastSetModelParams, Measures,
-                     ModelsParams)
+from ._operator import BaseOperator
+from ._operator import Data
+from ._operator import ExpertKnowledgeOperator
+from .params import ContrastSetModelParams
+from .params import DEFAULT_PARAMS_VALUE
+from .params import Measures
+from .params import ModelsParams
 
 
 class _RegressionParams(ModelsParams):
@@ -24,7 +29,7 @@ class RuleRegressor(BaseOperator):
 
     __params_class__ = _RegressionParams
 
-    def __init__( # pylint: disable=too-many-arguments
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
@@ -44,15 +49,15 @@ class RuleRegressor(BaseOperator):
         Parameters
         ----------
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
         pruning_measure : Union[:class:`rulekit.params.Measures`, str] = \
             :class:`rulekit.params.Measures.Correlation`
-            measure used during pruning. Could be user defined (string), for example  
-            :code:`2 * p / n`; default measure is correlation
+            measure used during pruning. Could be user defined (string), for example
+             :code:`2 * p / n`; default measure is correlation
         voting_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
@@ -67,19 +72,19 @@ class RuleRegressor(BaseOperator):
             of given attribute is always considered as not fulfilling the condition build upon that
             attribute); default: False.
         max_uncovered_fraction : float = 0.0
-            Floating-point number from [0,1] interval representing maximum fraction of examples 
-            that may remain uncovered by the rule set, default: 0.0.
+            Floating-point number from [0,1] interval representing maximum fraction of examples
+             that may remain uncovered by the rule set, default: 0.0.
         select_best_candidate : bool = False
-            Flag determining if best candidate should be selected from growing phase; 
-            default: False.
+            Flag determining if best candidate should be selected from growing phase;
+             default: False.
         complementary_conditions : bool = False
             If enabled, complementary conditions in the form a = !{value} for nominal attributes
             are supported.
         mean_based_regression : bool = True
             Enable fast induction of mean-based regression rules instead of default median-based.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         """
         super().__init__(
             minsupp_new=minsupp_new,
@@ -165,7 +170,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
 
     __params_class__ = _RegressionParams
 
-    def __init__( # pylint: disable=too-many-arguments,too-many-locals
+    def __init__(   # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_new: float = DEFAULT_PARAMS_VALUE['minsupp_new'],
         induction_measure: Measures = DEFAULT_PARAMS_VALUE['induction_measure'],
@@ -194,22 +199,22 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         Parameters
         ----------
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
         pruning_measure : Union[:class:`rulekit.params.Measures`, str] = \
             :class:`rulekit.params.Measures.Correlation`
-            measure used during pruning. Could be user defined (string), for example  
-            :code:`2 * p / n`; default measure is correlation
+            measure used during pruning. Could be user defined (string), for example
+             :code:`2 * p / n`; default measure is correlation
         voting_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during voting; default measure is correlation
         max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to
-            the rule in the growing phase (use this parameter for large datasets if execution time 
-            is prohibitive); 0 indicates no limit; default: 0,
+            the rule in the growing phase (use this parameter for large datasets if execution time
+             is prohibitive); 0 indicates no limit; default: 0,
         enable_pruning : bool = True
             enable or disable pruning, default is True.
         ignore_missing : bool = False
@@ -228,8 +233,8 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         mean_based_regression : bool = True
             Enable fast induction of mean-based regression rules instead of default median-based.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
 
         extend_using_preferred : bool = False
             boolean indicating whether initial rules should be extended with a use of preferred
@@ -307,13 +312,13 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             set of initial rules, either passed as a list of strings representing rules or as list
             of tuples where first element is name of the rule and second one is rule string.
         expert_preferred_conditions : List[Union[str, Tuple[str, str]]]
-            multiset of preferred conditions (used also for specifying preferred attributes by 
-            using special value Any). Either passed as a list of strings representing rules or as 
-            list of tuples where first element is name of the rule and second one is rule string.
+            multiset of preferred conditions (used also for specifying preferred attributes by
+             using special value Any). Either passed as a list of strings representing rules or as
+             list of tuples where first element is name of the rule and second one is rule string.
         expert_forbidden_conditions : List[Union[str, Tuple[str, str]]]
-            set of forbidden conditions (used also for specifying forbidden attributes by using 
-            special valye Any). Either passed as a list of strings representing rules or as list 
-            of tuples where first element is name of the rule and second one is rule string.
+            set of forbidden conditions (used also for specifying forbidden attributes by using
+             special valye Any). Either passed as a list of strings representing rules or as list
+             of tuples where first element is name of the rule and second one is rule string.
         Returns
         -------
         self : ExpertRuleRegressor
@@ -337,7 +342,7 @@ class ContrastSetRuleRegressor(BaseOperator):
 
     __params_class__ = ContrastSetModelParams
 
-    def __init__( # pylint: disable=too-many-arguments,too-many-locals
+    def __init__(  # pylint: disable=too-many-arguments,too-many-locals
         self,
         minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
         max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
@@ -374,8 +379,8 @@ class ContrastSetRuleRegressor(BaseOperator):
         penalty_saturation: float
             the value of p_new / P at which penalty reward saturates; Default is 0.2.
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples 
-            to be covered by a new rule (positive examples for classification problems); default: 5,
+            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+             to be covered by a new rule (positive examples for classification problems); default: 5,
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
@@ -393,8 +398,8 @@ class ContrastSetRuleRegressor(BaseOperator):
         enable_pruning : bool = True
             enable or disable pruning, default is True.
         ignore_missing : bool = False
-            boolean telling whether missing values should be ignored (by default, a missing value 
-            of given attribute is always considered as not fulfilling the condition build upon that
+            boolean telling whether missing values should be ignored (by default, a missing value
+             of given attribute is always considered as not fulfilling the condition build upon that
             attribute); default: False.
         max_uncovered_fraction : float = 0.0
             Floating-point number from [0,1] interval representing maximum fraction of examples
@@ -408,8 +413,8 @@ class ContrastSetRuleRegressor(BaseOperator):
         mean_based_regression : bool = True
             Enable fast induction of mean-based regression rules instead of default median-based.
         max_rule_count : int = 0
-            Maximum number of rules to be generated (for classification data sets it applies 
-            to a single class); 0 indicates no limit.
+            Maximum number of rules to be generated (for classification data sets it applies
+             to a single class); 0 indicates no limit.
         """
         super().__init__(
             minsupp_all=minsupp_all,
@@ -441,7 +446,7 @@ class ContrastSetRuleRegressor(BaseOperator):
             attributes
         labels : :class:`rulekit.operator.Data`
             target values
-        contrast_attribute: str 
+        contrast_attribute: str
             group attribute
         Returns
         -------

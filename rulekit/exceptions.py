@@ -10,7 +10,7 @@ class RuleKitJavaException(Exception):
     Example:
         >>> from rulekit import RuleKit
         >>> from rulekit.classification import RuleClassifier
-        >>> 
+        >>>
         >>> clf = RuleClassifier()
         >>> try:
         >>>     clf.fit(X, y)

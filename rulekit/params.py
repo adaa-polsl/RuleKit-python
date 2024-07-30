@@ -5,7 +5,8 @@ from typing import Optional
 
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
-MAX_INT: int = 2147483647 # max integer value in Java
+MAX_INT: int = 2147483647  # max integer value in Java
+
 
 class Measures(Enum):
     # pylint: disable=invalid-name

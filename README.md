@@ -1,5 +1,12 @@
+[![Coverage Status](./badges/coverage-badge.svg?dummy=8484744)](./reports/coverage/index.html)
+[![Tests Status](./badges/test-badge.svg?dummy=8484744)](./reports/junit/report.html)
+[![Flake8 Status](./badges/flake8-badge.svg?dummy=8484744)](./reports/flake8/index.html)
+![PyPI](https://img.shields.io/pypi/v/rulekit?label=pypi%20package)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/rulekit)
+
 # Rulekit
- 
+
+
 This package is python wrapper for [RuleKit](https://github.com/adaa-polsl/RuleKit) library - a versatile tool for rule learning. 
  
 Based on a sequential covering induction algorithm, it is suitable for classification, regression, and survival problems.

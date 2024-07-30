@@ -1,6 +1,5 @@
 """Contains classes for initializing RuleKit Java backend
 """
-import glob
 import logging
 import os
 import re

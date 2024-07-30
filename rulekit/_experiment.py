@@ -1,5 +1,5 @@
-"""Module containing class for running experiments using legacy Java RuleKit CLI. For more
-details see  `documentation \
+"""Module containing class for running experiments using legacy
+Java RuleKit CLI. For more details see  `documentation \
 <https://github.com/adaa-polsl/RuleKit/wiki/7-Library-API#71-running-an-experiment
 """
 from jpype import JClass
