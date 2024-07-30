@@ -7,17 +7,12 @@ Based on a sequential covering induction algorithm, it is suitable for classific
 ## Installation
  
 > **NOTE**: 
-This package is a wrapper for Java library, it requires Java (version 1.8.0 tested) to be installed on the computer. Both Open JDK and Oracle implementations are supported.
+This package is a wrapper for Java library, it requires Java Development Kit in version 8 (version 1.8.0 tested) to be installed on the computer. Both Open JDK and Oracle implementations are supported.
 ## 
  
 ```bash
 pip install rulekit
- 
-# after installation
-python -m rulekit download_jar
 ```
- 
-The second command will fetch the latest RuleKit library jar file from its Github releases page. It is required to use this package.
  
 ## Running tests
  
@@ -34,9 +29,9 @@ python -m unittest discover ./tests
 ## Sample usage
  
 ```python
-from rulekit import RuleKit
-from rulekit.classification import RuleClassifier
 from sklearn.datasets import load_iris
+
+from rulekit.classification import RuleClassifier
  
 X, y = load_iris(return_X_y=True)
  
@@ -51,3 +46,6 @@ print(prediction)
  
 Full documentation is available [here](https://adaa-polsl.github.io/RuleKit-python/)
 
+## Licensing
+
+The software is publicly available under [GNU AGPL-3.0](https://github.com/adaa-polsl/RuleKit-python/blob/main/LICENSE) license. Any derivative work obtained under this license must be licensed under the AGPL if this derivative work is distributed to a third party. For commercial projects that require the ability to distribute RuleKit code as part of a program that cannot be distributed under the AGPL, it may be possible to obtain an appropriate license from the authors.

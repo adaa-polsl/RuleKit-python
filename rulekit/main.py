@@ -11,6 +11,9 @@ from subprocess import PIPE, STDOUT, Popen
 import jpype
 import jpype.imports
 
+__VERSION__ = '2.1.16.0'
+__RULEKIT_RELEASE_VERSION__ = '2.1.16'
+
 
 class JRE_Type(Enum):  # pylint: disable=invalid-name
     """:meta private:"""
@@ -33,7 +36,7 @@ class RuleKit:
         version of RuleKit jar used by wrapper (not equal to python package version).
     """
     version: str
-    _logger = None
+    _logger: logging.Logger = None
     _jar_dir_path: str
     _class_path: str
     _rulekit_jar_file_path: str
@@ -95,10 +98,10 @@ class RuleKit:
         RuleKit._jar_dir_path = f"{current_path}/jar"
         class_path_separator = os.pathsep
         try:
-            jars_paths: list[str] = glob.glob(f"{RuleKit._jar_dir_path}/*.jar")
-            RuleKit._rulekit_jar_file_path = list(
-                filter(lambda path: 'rulekit' in os.path.basename(path), jars_paths)
-            )[0]
+            jar_file_name: str = f'rulekit-{__RULEKIT_RELEASE_VERSION__}-all.jar'
+            RuleKit._rulekit_jar_file_path = os.path.join(
+                RuleKit._jar_dir_path, jar_file_name)
+            jars_paths: list[str] = [RuleKit._rulekit_jar_file_path]
             if rulekit_jar_file_path is not None:
                 jars_paths.remove(RuleKit._rulekit_jar_file_path)
                 jars_paths.append(rulekit_jar_file_path)

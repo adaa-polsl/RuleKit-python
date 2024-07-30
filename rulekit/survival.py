@@ -26,7 +26,6 @@ class SurvivalModelsParams(BaseModel):
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
     max_uncovered_fraction: Optional[float] = DEFAULT_PARAMS_VALUE['max_uncovered_fraction']
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
-    min_rule_covered: Optional[float] = None
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
 
     extend_using_preferred: Optional[bool] = None
@@ -54,7 +53,6 @@ class SurvivalRules(BaseOperator):
         select_best_candidate: bool = DEFAULT_PARAMS_VALUE['select_best_candidate'],
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
-        min_rule_covered: Optional[int] = None
     ):
         """
         Parameters
@@ -87,12 +85,6 @@ class SurvivalRules(BaseOperator):
         max_rule_count : int = 0
             Maximum number of rules to be generated (for classification data sets it applies 
             to a single class); 0 indicates no limit.
-        min_rule_covered : float = None
-            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
-            version, use `minsupp_new`
-
-            .. deprecated:: 1.7.0
-                Use parameter `minsupp_new` instead.
         """
         self._params = None
         self._rule_generator = None
@@ -100,7 +92,6 @@ class SurvivalRules(BaseOperator):
         self.set_params(
             survival_time_attr=survival_time_attr,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,
@@ -227,11 +218,11 @@ class SurvivalRules(BaseOperator):
         )
 
         IntegratedBrierScore = JClass(  # pylint: disable=invalid-name
-            'adaa.analytics.rules.logic.quality.IntegratedBrierScore'
+            'adaa.analytics.rules.logic.performance.IntegratedBrierScore'
         )
         integrated_brier_score = IntegratedBrierScore()
-        integrated_brier_score.startCounting(predicted_example_set, True)
-        return integrated_brier_score.getMikroAverage()
+        ibs = integrated_brier_score.countExample(predicted_example_set).getValue()
+        return float(ibs)
 
 
 class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
@@ -259,7 +250,6 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
-        min_rule_covered: Optional[float] = None
     ):
         """
         Parameters
@@ -270,9 +260,6 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         survival_time_attr : str
             name of column containing survival time data (use when data passed to model is pandas
             dataframe).
-        min_rule_covered : int = 5
-            positive integer representing minimum number of previously uncovered examples to be 
-            covered by a new rule (positive examples for classification problems); default: 5
         max_growing : int = 0.0
             non-negative integer representing maximum number of conditions which can be added to
             the rule in the growing phase (use this parameter for large datasets if execution time
@@ -312,12 +299,6 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
-        min_rule_covered : float = None
-            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
-            version, use `minsupp_new`
-
-            .. deprecated:: 1.7.0
-                Use parameter `minsupp_new` instead.
         """
         self._params = None
         self._rule_generator = None
@@ -325,7 +306,6 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         self.set_params(
             survival_time_attr=survival_time_attr,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             max_growing=max_growing,
             enable_pruning=enable_pruning,
             ignore_missing=ignore_missing,

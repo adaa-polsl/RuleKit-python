@@ -4,17 +4,28 @@ from __future__ import annotations
 
 from enum import Enum
 from numbers import Number
-from typing import Iterable, Optional, Union
+from typing import Iterable, TypedDict, Union
 
 import numpy as np
 import pandas as pd
-from jpype import JClass
+from jpype import JClass, JObject
 from sklearn import metrics
 
 from ._helpers import PredictionResultMapper
 from ._operator import BaseOperator, Data, ExpertKnowledgeOperator
 from .params import (DEFAULT_PARAMS_VALUE, ContrastSetModelParams, Measures,
                      ModelsParams)
+
+
+class ClassificationPredictionMetrics(TypedDict):
+    """Stores additional metrics for classification prediction.
+
+    Fields:
+        * rules_per_example (float): Average number of rules per example.
+        * voting_conflicts (_type_): Number of voting conflicts.
+    """
+    rules_per_example: float
+    voting_conflicts: float
 
 
 class _ClassificationParams(ModelsParams):
@@ -27,7 +38,9 @@ class BaseClassifier:
     """:meta private:"""
 
     def __init__(self):
-        self._init_classification_rule_performance()
+        self._ClassificationRulesPerformance: JClass = None # pylint: disable=invalid-name
+        self._NegativeVotingConflictsPerformance : JClass = None # pylint: disable=invalid-name
+        self._init_classification_rule_performance_classes()
 
     class MetricTypes(Enum):
         """:meta private:"""
@@ -35,26 +48,25 @@ class BaseClassifier:
         VotingConflicts = 2  # pylint: disable=invalid-name
         NegativeVotingConflicts = 3  # pylint: disable=invalid-name
 
-    def _init_classification_rule_performance(self):
-        self.ClassificationRulesPerformance = JClass(  # pylint: disable=invalid-name
+    def _init_classification_rule_performance_classes(self):
+        self._ClassificationRulesPerformance = JClass(  # pylint: disable=invalid-name
             'adaa.analytics.rules.logic.performance.ClassificationRulesPerformance'
         )
 
-    def _calculate_metric(self, example_set, metric_type) -> float:
-        classification_rules_performance = self.ClassificationRulesPerformance(
-            metric_type.value)
-        metric = classification_rules_performance.countExample(example_set)
-        return metric.getValue()
+    def _calculate_metric(self, example_set: JObject, metric_type: MetricTypes) -> float:
+        metric: JObject = self._ClassificationRulesPerformance(metric_type.value)
+        metric_value = float(metric.countExample(example_set).getValue())
+        return metric_value
 
-    def _calculate_prediction_metrics(self, example_set) -> dict[str, float]:
-        return {
-            'rules_per_example': self._calculate_metric(
+    def _calculate_prediction_metrics(self, example_set) -> ClassificationPredictionMetrics:
+        return ClassificationPredictionMetrics(
+            rules_per_example=self._calculate_metric(
                 example_set, BaseClassifier.MetricTypes.RulesPerExample
             ),
-            'voting_conflicts': self._calculate_metric(
+            voting_conflicts=self._calculate_metric(
                 example_set, BaseClassifier.MetricTypes.VotingConflicts
             ),
-        }
+        )
 
 
 class RuleClassifier(BaseOperator, BaseClassifier):
@@ -79,7 +91,6 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
         approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction'],
         approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count'],
-        min_rule_covered: Optional[float] = None,
     ):
         """
         Parameters
@@ -128,17 +139,10 @@ class RuleClassifier(BaseOperator, BaseClassifier):
             data sets, results may change in future;
         approximate_bins_count: int = 100
             maximum number of bins for an attribute evaluated in the approximate induction.
-        min_rule_covered : float = None
-            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
-            version, use `minsupp_new`
-
-            .. deprecated:: 1.7.0
-                Use parameter `minsupp_new` instead.
         """
         BaseOperator.__init__(
             self,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
             voting_measure=voting_measure,
@@ -221,7 +225,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         self,
         values: Data,
         return_metrics: bool = False
-    ) -> Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]:
+    ) -> Union[np.ndarray, tuple[np.ndarray, ClassificationPredictionMetrics]]:
         """Perform prediction and returns predicted labels.
 
         Parameters
@@ -235,7 +239,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
             If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple 
             will be returned with first element being prediction and second one being metrics.
         """
@@ -251,7 +255,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         self,
         values: Data,
         return_metrics: bool = False
-    ) -> Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]:
+    ) -> Union[np.ndarray, tuple[np.ndarray, ClassificationPredictionMetrics]]:
         """Perform prediction and returns class probabilities for each example.
 
         Parameters
@@ -265,7 +269,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
             If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
             a tuple will be returned with first element being prediction and second one being 
             metrics.
@@ -304,7 +308,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
     def __setstate__(self, state: dict):
         BaseOperator.__setstate__(self, state)
-        self._init_classification_rule_performance()
+        self._init_classification_rule_performance_classes()
         self.label_unique_values = state['label_unique_values']
         self._remap_to_numeric = state['_remap_to_numeric']
 
@@ -341,7 +345,6 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             'preferred_conditions_per_rule'],
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
-        min_rule_covered: Optional[float] = None
     ):
         """
         Parameters
@@ -410,18 +413,11 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
-        min_rule_covered : float = None
-            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
-            version, use `minsupp_new`
-
-            .. deprecated:: 1.7.0
-                Use parameter `minsupp_new` instead.
         """
         self._remap_to_numeric = False
         RuleClassifier.__init__(
             self,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
             voting_measure=voting_measure,
@@ -439,7 +435,6 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         ExpertKnowledgeOperator.__init__(
             self,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
             voting_measure=voting_measure,
@@ -518,7 +513,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         self,
         values: Data,
         return_metrics: bool = False
-    ) -> Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]:
+    ) -> Union[np.ndarray, tuple[np.ndarray, ClassificationPredictionMetrics]]:
         return RuleClassifier.predict(self, values, return_metrics)
 
     def __getstate__(self) -> dict:
@@ -697,7 +692,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         self,
         values: Data,
         return_metrics: bool = False
-    ) -> Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]:
+    ) -> Union[np.ndarray, tuple[np.ndarray, ClassificationPredictionMetrics]]:
         """Perform prediction and returns predicted labels.
 
         Parameters
@@ -711,7 +706,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
             If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple
             will be returned with first element being prediction and second one being metrics.
         """
@@ -721,7 +716,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         self,
         values: Data,
         return_metrics: bool = False
-    ) -> Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]:
+    ) -> Union[np.ndarray, tuple[np.ndarray, ClassificationPredictionMetrics]]:
         """Perform prediction and returns class probabilities for each example.
 
         Parameters
@@ -735,7 +730,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, dict[str, float]]]
+        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
             If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
             a tuple will be returned with first element being prediction and second one being 
             metrics.
@@ -768,7 +763,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
     def __setstate__(self, state: dict):
         BaseOperator.__setstate__(self, state)
-        self._init_classification_rule_performance()
+        self._init_classification_rule_performance_classes()
         self.label_unique_values = state['label_unique_values']
         self._remap_to_numeric = state['_remap_to_numeric']
         self.contrast_attribute = state['contrast_attribute']

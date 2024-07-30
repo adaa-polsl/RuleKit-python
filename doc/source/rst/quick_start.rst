@@ -13,11 +13,8 @@ Installation
 .. code-block:: bash
 
     pip install rulekit
-    python -m rulekit download_jar
 
 .. note::
-   Second command will download `RuleKit <https://github.com/adaa-polsl/RuleKit/>`__ jar
-   file from github releases. This step is required to use this package.
 
 To check if everything was installed correctly call:
 
@@ -39,9 +36,9 @@ Now we are finally ready to use rulekit package and its models.
     from rulekit import RuleKit
     from rulekit.classification import RuleClassifier
 
-    iris=datasets.load_iris()
-    X=iris.data
-    y=iris.target
+    iris = datasets.load_iris()
+    X = iris.data
+    y = iris.target
 
     classifier = RuleClassifier()
     classifier.fit(X, y)
@@ -53,8 +50,8 @@ Now we are finally ready to use rulekit package and its models.
     print('Accuracy: ', accuracy_score(y, prediction))
     
 
-As you may noticed, training and using rulekit models is the same as in scikit learn. This 
-mean you can use scikit: metrics, cross-validation, hyper-parameters tuning etc. with ease. 
+As you may noticed, training and usage of rulekit models is the same as in scikit learn. This 
+mean you easily can use scikit: metrics, cross-validation, hyper-parameters tuning etc.
 
 
 For more examples head to :doc:`Tutorials <./tutorials>` section.

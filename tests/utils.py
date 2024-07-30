@@ -231,17 +231,9 @@ class TestConfigParser:
         test_config.parameter_configs = self._parse_test_parameters_sets(
             element
         )
-        self._fix_depracated_params(test_config.parameter_configs)
         test_config.datasets = self._parse_data_sets(element)
         test_config.name = element.attrib['name']
         return test_config
-
-    def _fix_depracated_params(self, parameter_configs: dict[str, dict[str, object]]):
-        for config in parameter_configs.values():
-            if 'min_rule_covered' in config:
-                # "min_rule_covered" parameter was renamed to "minsupp_new"
-                config['minsupp_new'] = config['min_rule_covered']
-                del config['min_rule_covered']
 
     def parse(self, file_path: str) -> dict[str, TestConfig]:
         self.tests_configs = {}
@@ -264,15 +256,21 @@ class TestCaseFactory:
             params: dict[str, object],
             data_set_config: DataSetConfig) -> TestCase:
         test_case = TestCase()
-        self.fix_params_typing(params)
+        self._fix_params_typing(params)
+        self._fix_deprecated_params(params)
         test_case.induction_params = params
         test_case.data_set_file_path = f'{DATA_IN_DIRECTORY_PATH}/{data_set_config.train_file_name}'
         test_case.label_attribute = data_set_config.label_attribute
         test_case.name = test_case_name
         test_case.param_config = params
         return test_case
+    
+    def _fix_deprecated_params(self, params: dict[str, object]):
+        deprecated_minsupp_new_name = 'min_rule_covered'
+        if deprecated_minsupp_new_name in params:
+            params['minsupp_new'] = params.pop(deprecated_minsupp_new_name)
 
-    def fix_params_typing(self, params: dict):
+    def _fix_params_typing(self, params: dict):
         for key, value in params.items():
             if value == 'false':
                 params[key] = False

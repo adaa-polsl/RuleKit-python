@@ -39,7 +39,6 @@ class RuleRegressor(BaseOperator):
         complementary_conditions: bool = DEFAULT_PARAMS_VALUE['complementary_conditions'],
         mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression'],
         max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count'],
-        min_rule_covered: Optional[float] = None,
     ):
         """
         Parameters
@@ -81,16 +80,9 @@ class RuleRegressor(BaseOperator):
         max_rule_count : int = 0
             Maximum number of rules to be generated (for classification data sets it applies 
             to a single class); 0 indicates no limit.
-        min_rule_covered : float = None
-            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
-            version, use `minsupp_new`
-
-            .. deprecated:: 1.7.0
-                Use parameter `minsupp_new` instead.
         """
         super().__init__(
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
             voting_measure=voting_measure,
@@ -197,8 +189,6 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             'preferred_conditions_per_rule'],
         preferred_attributes_per_rule: int = DEFAULT_PARAMS_VALUE[
             'preferred_attributes_per_rule'],
-
-        min_rule_covered: Optional[float] = None
     ):
         """
         Parameters
@@ -257,17 +247,10 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             maximum number of preferred conditions per rule; default: unlimited,
         preferred_attributes_per_rule : int = None
             maximum number of preferred attributes per rule; default: unlimited.
-        min_rule_covered : int = None
-            alias to `minsupp_new`. Parameter is deprecated and will be removed in the next major
-            version, use `minsupp_new`
-
-            .. deprecated:: 1.7.0
-                Use parameter `minsupp_new` instead.
         """
         RuleRegressor.__init__(
             self,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
             voting_measure=voting_measure,
@@ -283,7 +266,6 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
         ExpertKnowledgeOperator.__init__(
             self,
             minsupp_new=minsupp_new,
-            min_rule_covered=min_rule_covered,
             induction_measure=induction_measure,
             pruning_measure=pruning_measure,
             voting_measure=voting_measure,
