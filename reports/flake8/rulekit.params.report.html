@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: rulekit\params.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="rulekit.params.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\params.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  7
+               </span>
+               <strong>E501:</strong> line too long (85 > 79 characters)
+               
+                  (and 6 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l99">
+                  <tt><i>99</i>     <span class="n">induction_measure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Measures</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induction_measure&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l100">
+                  <tt><i>100</i>     <span class="n">pruning_measure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Measures</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;pruning_measure&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l105">
+                  <tt><i>105</i>     <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l106">
+                  <tt><i>106</i>     <span class="n">select_best_candidate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l107">
+                  <tt><i>107</i>     <span class="n">complementary_conditions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l126">
+                  <tt><i>126</i>     <span class="n">penalty_strength</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;penalty_strength&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.params.source.html#l127">
+                  <tt><i>127</i>     <span class="n">penalty_saturation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;penalty_saturation&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

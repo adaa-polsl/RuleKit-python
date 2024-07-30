@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>rulekit\params.py - flake8 annotated source</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <h1>
+            <a href="rulekit.params.report.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\params.py source
+            </a>
+         </h1>
+
+         <div id="doc">
+            <div id="l1"
+               class="code sev- "><tt><i>1</i> <span class="sd">&quot;&quot;&quot;Contains constants and classes for specyfing models parameters</span></tt>
+            </div>
+            <div id="l2"
+               class="code sev- "><tt><i>2</i> <span class="sd">&quot;&quot;&quot;</span></tt>
+            </div>
+            <div id="l3"
+               class="code sev- "><tt><i>3</i> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span></tt>
+            </div>
+            <div id="l4"
+               class="code sev- "><tt><i>4</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span></tt>
+            </div>
+            <div id="l5"
+               class="code sev- "><tt><i>5</i> &nbsp;</tt>
+            </div>
+            <div id="l6"
+               class="code sev- "><tt><i>6</i> <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>  <span class="c1"># pylint: disable=no-name-in-module</span></tt>
+            </div>
+            <div id="l7"
+               class="code sev- "><tt><i>7</i> &nbsp;</tt>
+            </div>
+            <div id="l8"
+               class="code sev- "><tt><i>8</i> <span class="n">MAX_INT</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2147483647</span>  <span class="c1"># max integer value in Java</span></tt>
+            </div>
+            <div id="l9"
+               class="code sev- "><tt><i>9</i> &nbsp;</tt>
+            </div>
+            <div id="l10"
+               class="code sev- "><tt><i>10</i> &nbsp;</tt>
+            </div>
+            <div id="l11"
+               class="code sev- "><tt><i>11</i> <span class="k">class</span> <span class="nc">Measures</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span></tt>
+            </div>
+            <div id="l12"
+               class="code sev- "><tt><i>12</i>     <span class="c1"># pylint: disable=invalid-name</span></tt>
+            </div>
+            <div id="l13"
+               class="code sev- "><tt><i>13</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Enum for different measures used during induction, pruning and voting.</span></tt>
+            </div>
+            <div id="l14"
+               class="code sev- "><tt><i>14</i> &nbsp;</tt>
+            </div>
+            <div id="l15"
+               class="code sev- "><tt><i>15</i> <span class="sd">    You can ream more about each measure and its implementation</span></tt>
+            </div>
+            <div id="l16"
+               class="code sev- "><tt><i>16</i> <span class="sd">    #41-rule-quality&gt;`_ .</span></tt>
+            </div>
+            <div id="l17"
+               class="code sev- "><tt><i>17</i> <span class="sd">    `here &lt;https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation</span></tt>
+            </div>
+            <div id="l18"
+               class="code sev- "><tt><i>18</i> <span class="sd">    &quot;&quot;&quot;</span></tt>
+            </div>
+            <div id="l19"
+               class="code sev- "><tt><i>19</i>     <span class="n">Accuracy</span> <span class="o">=</span> <span class="s1">&#39;Accuracy&#39;</span></tt>
+            </div>
+            <div id="l20"
+               class="code sev- "><tt><i>20</i>     <span class="n">BinaryEntropy</span> <span class="o">=</span> <span class="s1">&#39;BinaryEntropy&#39;</span></tt>
+            </div>
+            <div id="l21"
+               class="code sev- "><tt><i>21</i>     <span class="n">C1</span> <span class="o">=</span> <span class="s1">&#39;C1&#39;</span></tt>
+            </div>
+            <div id="l22"
+               class="code sev- "><tt><i>22</i>     <span class="n">C2</span> <span class="o">=</span> <span class="s1">&#39;C2&#39;</span></tt>
+            </div>
+            <div id="l23"
+               class="code sev- "><tt><i>23</i>     <span class="n">CFoil</span> <span class="o">=</span> <span class="s1">&#39;CFoil&#39;</span></tt>
+            </div>
+            <div id="l24"
+               class="code sev- "><tt><i>24</i>     <span class="n">CN2Significnce</span> <span class="o">=</span> <span class="s1">&#39;CN2Significnce&#39;</span></tt>
+            </div>
+            <div id="l25"
+               class="code sev- "><tt><i>25</i>     <span class="n">Correlation</span> <span class="o">=</span> <span class="s1">&#39;Correlation&#39;</span></tt>
+            </div>
+            <div id="l26"
+               class="code sev- "><tt><i>26</i>     <span class="n">Coverage</span> <span class="o">=</span> <span class="s1">&#39;Coverage&#39;</span></tt>
+            </div>
+            <div id="l27"
+               class="code sev- "><tt><i>27</i>     <span class="n">FBayesianConfirmation</span> <span class="o">=</span> <span class="s1">&#39;FBayesianConfirmation&#39;</span></tt>
+            </div>
+            <div id="l28"
+               class="code sev- "><tt><i>28</i>     <span class="n">FMeasure</span> <span class="o">=</span> <span class="s1">&#39;FMeasure&#39;</span></tt>
+            </div>
+            <div id="l29"
+               class="code sev- "><tt><i>29</i>     <span class="n">FullCoverage</span> <span class="o">=</span> <span class="s1">&#39;FullCoverage&#39;</span></tt>
+            </div>
+            <div id="l30"
+               class="code sev- "><tt><i>30</i>     <span class="n">GeoRSS</span> <span class="o">=</span> <span class="s1">&#39;GeoRSS&#39;</span></tt>
+            </div>
+            <div id="l31"
+               class="code sev- "><tt><i>31</i>     <span class="n">GMeasure</span> <span class="o">=</span> <span class="s1">&#39;GMeasure&#39;</span></tt>
+            </div>
+            <div id="l32"
+               class="code sev- "><tt><i>32</i>     <span class="n">InformationGain</span> <span class="o">=</span> <span class="s1">&#39;InformationGain&#39;</span></tt>
+            </div>
+            <div id="l33"
+               class="code sev- "><tt><i>33</i>     <span class="n">JMeasure</span> <span class="o">=</span> <span class="s1">&#39;JMeasure&#39;</span></tt>
+            </div>
+            <div id="l34"
+               class="code sev- "><tt><i>34</i>     <span class="n">Kappa</span> <span class="o">=</span> <span class="s1">&#39;Kappa&#39;</span></tt>
+            </div>
+            <div id="l35"
+               class="code sev- "><tt><i>35</i>     <span class="n">Klosgen</span> <span class="o">=</span> <span class="s1">&#39;Klosgen&#39;</span></tt>
+            </div>
+            <div id="l36"
+               class="code sev- "><tt><i>36</i>     <span class="n">Laplace</span> <span class="o">=</span> <span class="s1">&#39;Laplace&#39;</span></tt>
+            </div>
+            <div id="l37"
+               class="code sev- "><tt><i>37</i>     <span class="n">Lift</span> <span class="o">=</span> <span class="s1">&#39;Lift&#39;</span></tt>
+            </div>
+            <div id="l38"
+               class="code sev- "><tt><i>38</i>     <span class="n">LogicalSufficiency</span> <span class="o">=</span> <span class="s1">&#39;LogicalSufficiency&#39;</span></tt>
+            </div>
+            <div id="l39"
+               class="code sev- "><tt><i>39</i>     <span class="n">LogRank</span> <span class="o">=</span> <span class="s1">&#39;LogRank&#39;</span></tt>
+            </div>
+            <div id="l40"
+               class="code sev- "><tt><i>40</i>     <span class="n">MEstimate</span> <span class="o">=</span> <span class="s1">&#39;MEstimate&#39;</span></tt>
+            </div>
+            <div id="l41"
+               class="code sev- "><tt><i>41</i>     <span class="n">MutualSupport</span> <span class="o">=</span> <span class="s1">&#39;MutualSupport&#39;</span></tt>
+            </div>
+            <div id="l42"
+               class="code sev- "><tt><i>42</i>     <span class="n">Novelty</span> <span class="o">=</span> <span class="s1">&#39;Novelty&#39;</span></tt>
+            </div>
+            <div id="l43"
+               class="code sev- "><tt><i>43</i>     <span class="n">OddsRatio</span> <span class="o">=</span> <span class="s1">&#39;OddsRatio&#39;</span></tt>
+            </div>
+            <div id="l44"
+               class="code sev- "><tt><i>44</i>     <span class="n">OneWaySupport</span> <span class="o">=</span> <span class="s1">&#39;OneWaySupport&#39;</span></tt>
+            </div>
+            <div id="l45"
+               class="code sev- "><tt><i>45</i>     <span class="n">PawlakDependencyFactor</span> <span class="o">=</span> <span class="s1">&#39;PawlakDependencyFactor&#39;</span></tt>
+            </div>
+            <div id="l46"
+               class="code sev- "><tt><i>46</i>     <span class="n">Precision</span> <span class="o">=</span> <span class="s1">&#39;Precision&#39;</span></tt>
+            </div>
+            <div id="l47"
+               class="code sev- "><tt><i>47</i>     <span class="n">Q2</span> <span class="o">=</span> <span class="s1">&#39;Q2&#39;</span></tt>
+            </div>
+            <div id="l48"
+               class="code sev- "><tt><i>48</i>     <span class="n">RelativeRisk</span> <span class="o">=</span> <span class="s1">&#39;RelativeRisk&#39;</span></tt>
+            </div>
+            <div id="l49"
+               class="code sev- "><tt><i>49</i>     <span class="n">Ripper</span> <span class="o">=</span> <span class="s1">&#39;Ripper&#39;</span></tt>
+            </div>
+            <div id="l50"
+               class="code sev- "><tt><i>50</i>     <span class="n">RSS</span> <span class="o">=</span> <span class="s1">&#39;RSS&#39;</span></tt>
+            </div>
+            <div id="l51"
+               class="code sev- "><tt><i>51</i>     <span class="n">RuleInterest</span> <span class="o">=</span> <span class="s1">&#39;RuleInterest&#39;</span></tt>
+            </div>
+            <div id="l52"
+               class="code sev- "><tt><i>52</i>     <span class="n">SBayesian</span> <span class="o">=</span> <span class="s1">&#39;SBayesian&#39;</span></tt>
+            </div>
+            <div id="l53"
+               class="code sev- "><tt><i>53</i>     <span class="n">Sensitivity</span> <span class="o">=</span> <span class="s1">&#39;Sensitivity&#39;</span></tt>
+            </div>
+            <div id="l54"
+               class="code sev- "><tt><i>54</i>     <span class="n">Specificity</span> <span class="o">=</span> <span class="s1">&#39;Specificity&#39;</span></tt>
+            </div>
+            <div id="l55"
+               class="code sev- "><tt><i>55</i>     <span class="n">TwoWaySupport</span> <span class="o">=</span> <span class="s1">&#39;TwoWaySupport&#39;</span></tt>
+            </div>
+            <div id="l56"
+               class="code sev- "><tt><i>56</i>     <span class="n">WeightedLaplace</span> <span class="o">=</span> <span class="s1">&#39;WeightedLaplace&#39;</span></tt>
+            </div>
+            <div id="l57"
+               class="code sev- "><tt><i>57</i>     <span class="n">WeightedRelativeAccuracy</span> <span class="o">=</span> <span class="s1">&#39;WeightedRelativeAccuracy&#39;</span></tt>
+            </div>
+            <div id="l58"
+               class="code sev- "><tt><i>58</i>     <span class="n">YAILS</span> <span class="o">=</span> <span class="s1">&#39;YAILS&#39;</span></tt>
+            </div>
+            <div id="l59"
+               class="code sev- "><tt><i>59</i> &nbsp;</tt>
+            </div>
+            <div id="l60"
+               class="code sev- "><tt><i>60</i> &nbsp;</tt>
+            </div>
+            <div id="l61"
+               class="code sev- "><tt><i>61</i> <span class="n">DEFAULT_PARAMS_VALUE</span> <span class="o">=</span> <span class="p">{</span></tt>
+            </div>
+            <div id="l62"
+               class="code sev- "><tt><i>62</i>     <span class="s1">&#39;minsupp_new&#39;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span></tt>
+            </div>
+            <div id="l63"
+               class="code sev- "><tt><i>63</i>     <span class="s1">&#39;induction_measure&#39;</span><span class="p">:</span> <span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span></tt>
+            </div>
+            <div id="l64"
+               class="code sev- "><tt><i>64</i>     <span class="s1">&#39;pruning_measure&#39;</span><span class="p">:</span>  <span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span></tt>
+            </div>
+            <div id="l65"
+               class="code sev- "><tt><i>65</i>     <span class="s1">&#39;voting_measure&#39;</span><span class="p">:</span> <span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span></tt>
+            </div>
+            <div id="l66"
+               class="code sev- "><tt><i>66</i>     <span class="s1">&#39;max_growing&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span></tt>
+            </div>
+            <div id="l67"
+               class="code sev- "><tt><i>67</i>     <span class="s1">&#39;enable_pruning&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span></tt>
+            </div>
+            <div id="l68"
+               class="code sev- "><tt><i>68</i>     <span class="s1">&#39;ignore_missing&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l69"
+               class="code sev- "><tt><i>69</i>     <span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span></tt>
+            </div>
+            <div id="l70"
+               class="code sev- "><tt><i>70</i>     <span class="s1">&#39;select_best_candidate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l71"
+               class="code sev- "><tt><i>71</i>     <span class="s1">&#39;complementary_conditions&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l72"
+               class="code sev- "><tt><i>72</i>     <span class="s1">&#39;control_apriori_precision&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span></tt>
+            </div>
+            <div id="l73"
+               class="code sev- "><tt><i>73</i>     <span class="s1">&#39;max_rule_count&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span></tt>
+            </div>
+            <div id="l74"
+               class="code sev- "><tt><i>74</i>     <span class="s1">&#39;approximate_induction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l75"
+               class="code sev- "><tt><i>75</i>     <span class="s1">&#39;approximate_bins_count&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span></tt>
+            </div>
+            <div id="l76"
+               class="code sev- "><tt><i>76</i>     <span class="s1">&#39;mean_based_regression&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span></tt>
+            </div>
+            <div id="l77"
+               class="code sev- "><tt><i>77</i> &nbsp;</tt>
+            </div>
+            <div id="l78"
+               class="code sev- "><tt><i>78</i>     <span class="s1">&#39;extend_using_preferred&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l79"
+               class="code sev- "><tt><i>79</i>     <span class="s1">&#39;extend_using_automatic&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l80"
+               class="code sev- "><tt><i>80</i>     <span class="s1">&#39;induce_using_preferred&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l81"
+               class="code sev- "><tt><i>81</i>     <span class="s1">&#39;induce_using_automatic&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l82"
+               class="code sev- "><tt><i>82</i>     <span class="s1">&#39;consider_other_classes&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span></tt>
+            </div>
+            <div id="l83"
+               class="code sev- "><tt><i>83</i>     <span class="s1">&#39;preferred_conditions_per_rule&#39;</span><span class="p">:</span> <span class="n">MAX_INT</span><span class="p">,</span></tt>
+            </div>
+            <div id="l84"
+               class="code sev- "><tt><i>84</i>     <span class="s1">&#39;preferred_attributes_per_rule&#39;</span><span class="p">:</span> <span class="n">MAX_INT</span><span class="p">,</span></tt>
+            </div>
+            <div id="l85"
+               class="code sev- "><tt><i>85</i> &nbsp;</tt>
+            </div>
+            <div id="l86"
+               class="code sev- "><tt><i>86</i>     <span class="c1"># Contrast sets</span></tt>
+            </div>
+            <div id="l87"
+               class="code sev- "><tt><i>87</i>     <span class="s1">&#39;minsupp_all&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span></tt>
+            </div>
+            <div id="l88"
+               class="code sev- "><tt><i>88</i>     <span class="s1">&#39;max_neg2pos&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span></tt>
+            </div>
+            <div id="l89"
+               class="code sev- "><tt><i>89</i>     <span class="s1">&#39;max_passes_count&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span></tt>
+            </div>
+            <div id="l90"
+               class="code sev- "><tt><i>90</i>     <span class="s1">&#39;penalty_strength&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span></tt>
+            </div>
+            <div id="l91"
+               class="code sev- "><tt><i>91</i>     <span class="s1">&#39;penalty_saturation&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span></tt>
+            </div>
+            <div id="l92"
+               class="code sev- "><tt><i>92</i> <span class="p">}</span></tt>
+            </div>
+            <div id="l93"
+               class="code sev- "><tt><i>93</i> &nbsp;</tt>
+            </div>
+            <div id="l94"
+               class="code sev- "><tt><i>94</i> &nbsp;</tt>
+            </div>
+            <div id="l95"
+               class="code sev- "><tt><i>95</i> <span class="k">class</span> <span class="nc">ModelsParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span></tt>
+            </div>
+            <div id="l96"
+               class="code sev- "><tt><i>96</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for validating models hyperparameters</span></tt>
+            </div>
+            <div id="l97"
+               class="code sev- "><tt><i>97</i> <span class="sd">    &quot;&quot;&quot;</span></tt>
+            </div>
+            <div id="l98"
+               class="code sev- "><tt><i>98</i>     <span class="n">minsupp_new</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;minsupp_new&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l99"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (85 > 79 characters)</li>
+               
+               </ul><tt><i>99</i>     <span class="n">induction_measure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Measures</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induction_measure&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l100"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (81 > 79 characters)</li>
+               
+               </ul><tt><i>100</i>     <span class="n">pruning_measure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Measures</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;pruning_measure&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l101"
+               class="code sev- "><tt><i>101</i>     <span class="n">voting_measure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Measures</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;voting_measure&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l102"
+               class="code sev- "><tt><i>102</i>     <span class="n">max_growing</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_growing&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l103"
+               class="code sev- "><tt><i>103</i>     <span class="n">enable_pruning</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;enable_pruning&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l104"
+               class="code sev- "><tt><i>104</i>     <span class="n">ignore_missing</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;ignore_missing&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l105"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (92 > 79 characters)</li>
+               
+               </ul><tt><i>105</i>     <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l106"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (89 > 79 characters)</li>
+               
+               </ul><tt><i>106</i>     <span class="n">select_best_candidate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l107"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (95 > 79 characters)</li>
+               
+               </ul><tt><i>107</i>     <span class="n">complementary_conditions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l108"
+               class="code sev- "><tt><i>108</i>     <span class="n">max_rule_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_rule_count&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l109"
+               class="code sev- "><tt><i>109</i>     <span class="n">minsupp_all</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l110"
+               class="code sev- "><tt><i>110</i> &nbsp;</tt>
+            </div>
+            <div id="l111"
+               class="code sev- "><tt><i>111</i>     <span class="n">extend_using_preferred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l112"
+               class="code sev- "><tt><i>112</i>     <span class="n">extend_using_automatic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l113"
+               class="code sev- "><tt><i>113</i>     <span class="n">induce_using_preferred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l114"
+               class="code sev- "><tt><i>114</i>     <span class="n">induce_using_automatic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l115"
+               class="code sev- "><tt><i>115</i>     <span class="n">consider_other_classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l116"
+               class="code sev- "><tt><i>116</i>     <span class="n">preferred_conditions_per_rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l117"
+               class="code sev- "><tt><i>117</i>     <span class="n">preferred_attributes_per_rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></tt>
+            </div>
+            <div id="l118"
+               class="code sev- "><tt><i>118</i> &nbsp;</tt>
+            </div>
+            <div id="l119"
+               class="code sev- "><tt><i>119</i> &nbsp;</tt>
+            </div>
+            <div id="l120"
+               class="code sev- "><tt><i>120</i> <span class="k">class</span> <span class="nc">ContrastSetModelParams</span><span class="p">(</span><span class="n">ModelsParams</span><span class="p">):</span></tt>
+            </div>
+            <div id="l121"
+               class="code sev- "><tt><i>121</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Model for validating contrast set models hyperparameters</span></tt>
+            </div>
+            <div id="l122"
+               class="code sev- "><tt><i>122</i> <span class="sd">    &quot;&quot;&quot;</span></tt>
+            </div>
+            <div id="l123"
+               class="code sev- "><tt><i>123</i>     <span class="n">minsupp_all</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;minsupp_all&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l124"
+               class="code sev- "><tt><i>124</i>     <span class="n">max_neg2pos</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_neg2pos&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l125"
+               class="code sev- "><tt><i>125</i>     <span class="n">max_passes_count</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_passes_count&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l126"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (80 > 79 characters)</li>
+               
+               </ul><tt><i>126</i>     <span class="n">penalty_strength</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;penalty_strength&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l127"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (84 > 79 characters)</li>
+               
+               </ul><tt><i>127</i>     <span class="n">penalty_saturation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;penalty_saturation&#39;</span><span class="p">]</span></tt>
+            </div>
+            
+         </div>
+      </div>
+   </body>
+</html>

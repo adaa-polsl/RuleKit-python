@@ -1,4 +1,6 @@
 # pylint: disable=missing-module-docstring
-from .main import RuleKit  # pylint: disable=unused-import
+from .main import __VERSION__
+from .main import RuleKit
 
+__VERSION__
 RuleKit

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: rulekit\_operator.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="rulekit._operator.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\_operator.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  13
+               </span>
+               <strong>E501:</strong> line too long (89 > 79 characters)
+               
+                  (and 8 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l48">
+                  <tt><i>48</i>         <span class="n">contrast_attribute_instance</span> <span class="o">=</span> <span class="n">example_set</span><span class="o">.</span><span class="n">getAttributes</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">contrast_attribute</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l56">
+                  <tt><i>56</i>         <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;minsupp_all&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;minsupp_all&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l80">
+                  <tt><i>80</i>     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>  <span class="c1"># pylint: disable=missing-function-docstring</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l85">
+                  <tt><i>85</i>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_java_object</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">example_set</span><span class="p">)</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l87">
+                  <tt><i>87</i>     <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unused-argument</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l102">
+                  <tt><i>102</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set models hyperparameters. Parameters are the same as in constructor.&quot;&quot;&quot;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (82 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l105">
+                  <tt><i>105</i>         <span class="n">params</span><span class="p">:</span> <span class="n">BaseModel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__params_class__</span><span class="p">(</span>  <span class="c1"># pylint: disable=not-callable</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l138">
+                  <tt><i>138</i> <span class="sd">            Each row of the matrix represent single example from dataset and every column represent</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l139">
+                  <tt><i>139</i> <span class="sd">            on rule from rule set. Value 1 in the matrix cell means that rule covered certain</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l244">
+                  <tt><i>244</i>         <span class="n">configurator</span><span class="o">.</span><span class="n">_configure_simple_parameter</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l246">
+                  <tt><i>246</i>         <span class="n">configurator</span><span class="o">.</span><span class="n">_configure_expert_parameter</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l250">
+                  <tt><i>250</i>         <span class="n">configurator</span><span class="o">.</span><span class="n">_configure_expert_parameter</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit._operator.source.html#l254">
+                  <tt><i>254</i>         <span class="n">configurator</span><span class="o">.</span><span class="n">_configure_expert_parameter</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E713">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E713:</strong> test for membership should be 'not in'
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="rulekit._operator.source.html#l152">
+                  <tt><i>152</i>                 <span class="mi">0</span> <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">item</span> <span class="k">else</span> <span class="mi">1</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

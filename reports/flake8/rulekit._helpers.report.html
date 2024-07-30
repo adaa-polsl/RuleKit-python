@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: rulekit\_helpers.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="rulekit._helpers.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\_helpers.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  18
+               </span>
+               <strong>E501:</strong> line too long (82 > 79 characters)
+               
+                  (and 11 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (82 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l59">
+                  <tt><i>59</i>                         <span class="n">JObject</span><span class="p">([</span><span class="n">rule_name</span><span class="p">,</span> <span class="n">rule</span><span class="p">],</span> <span class="n">JArray</span><span class="p">(</span><span class="s1">&#39;java.lang.String&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l64">
+                  <tt><i>64</i>                         <span class="n">JObject</span><span class="p">([</span><span class="n">rule_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">)],</span> <span class="n">JArray</span><span class="p">(</span><span class="s1">&#39;java.lang.String&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (83 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l68">
+                  <tt><i>68</i>                         <span class="n">JObject</span><span class="p">([</span><span class="n">rule</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rule</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">JArray</span><span class="p">(</span><span class="s1">&#39;java.lang.String&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l79">
+                  <tt><i>79</i>     <span class="k">def</span> <span class="nf">_configure_measure_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">param_value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Measures</span><span class="p">]):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l93">
+                  <tt><i>93</i>         <span class="k">for</span> <span class="n">measure_param_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;induction_measure&#39;</span><span class="p">,</span> <span class="s1">&#39;pruning_measure&#39;</span><span class="p">,</span> <span class="s1">&#39;voting_measure&#39;</span><span class="p">]:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l127">
+                  <tt><i>127</i> <span class="sd">            y (Union[pd.Series, np.ndarray], optional): Labels. Defaults to None.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l128">
+                  <tt><i>128</i> <span class="sd">            survival_time_attribute (str, optional): Name of survival time attribute.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l130">
+                  <tt><i>130</i> <span class="sd">            contrast_attribute (str, optional): Name of contrast attribute. Defaults to None.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l165">
+                  <tt><i>165</i>                 <span class="s1">&#39;Supported types are: 1 dimensional numpy array or pandas Series object.&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l184">
+                  <tt><i>184</i>                 <span class="s1">&#39;Supported types are: 2 dimensional numpy array or pandas DataFrame object.&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l190">
+                  <tt><i>190</i>                 <span class="s1">&#39;X must be a 2 dimensional numpy array or pandas DataFrame object. &#39;</span> <span class="o">+</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l197">
+                  <tt><i>197</i>                 <span class="s1">&#39;y must be a 1 dimensional numpy array or pandas DataFrame object. &#39;</span> <span class="o">+</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l246">
+                  <tt><i>246</i>             <span class="n">confidence_col</span><span class="p">:</span> <span class="n">JObject</span> <span class="o">=</span> <span class="n">PredictionResultMapper</span><span class="o">.</span><span class="n">_get_column_by_role</span><span class="p">(</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l248">
+                  <tt><i>248</i>                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">PredictionResultMapper</span><span class="o">.</span><span class="n">CONFIDENCE_COLUMN_ROLE</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">label_value</span><span class="si">}</span><span class="s1">&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l300">
+                  <tt><i>300</i>     <span class="k">def</span> <span class="nf">map_to_numerical</span><span class="p">(</span><span class="n">predicted_example_set</span><span class="p">:</span> <span class="n">JObject</span><span class="p">,</span> <span class="n">remap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l313">
+                  <tt><i>313</i>         <span class="n">label_mapping</span> <span class="o">=</span> <span class="n">predicted_example_set</span><span class="o">.</span><span class="n">getAttributes</span><span class="p">()</span><span class="o">.</span><span class="n">getLabel</span><span class="p">()</span><span class="o">.</span><span class="n">getMapping</span><span class="p">()</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l333">
+                  <tt><i>333</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps survival models predictions to numpy array. Used as alternative to `map` method</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (82 > 79 characters):</p>
+               
+               <a href="rulekit._helpers.source.html#l364">
+                  <tt><i>364</i>     <span class="k">def</span> <span class="nf">_get_column_by_role</span><span class="p">(</span><span class="n">predicted_example_set</span><span class="p">:</span> <span class="n">JObject</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JObject</span><span class="p">:</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>
