@@ -6,9 +6,10 @@ import os
 import re
 import zipfile
 from enum import Enum
-from subprocess import PIPE, STDOUT, Popen
+from subprocess import PIPE
+from subprocess import Popen
+from subprocess import STDOUT
 
-import jpype
 import jpype.imports
 
 __VERSION__ = '2.1.16.0'
@@ -22,9 +23,9 @@ class JRE_Type(Enum):  # pylint: disable=invalid-name
 
 
 class RuleKit:
-    """Class used for initializing RuleKit. It starts JVM underhood and setups it with jars. 
+    """Class used for initializing RuleKit. It starts JVM underhood and setups it with jars.
 
-    .. note:: Since version 1.7.0 there is no need to manually initialize RuleKit. 
+    .. note:: Since version 1.7.0 there is no need to manually initialize RuleKit.
     You may just skip the **RuleKit.init()** line. However in certain scenarios when
     you want use a custom RuleKit jar file or modify Java VM parameters, this class
     can be used.
@@ -65,9 +66,9 @@ class RuleKit:
     ):
         """Initialize package.
 
-        This method configure and starts JVM and load RuleKit jar file. 
+        This method configure and starts JVM and load RuleKit jar file.
 
-        .. note:: Since version 1.7.0 it don't have to be called before using any operator class. 
+        .. note:: Since version 1.7.0 it don't have to be called before using any operator class.
         However in certain scenarios when you want use a custom RuleKit jar file or modify Java VM
         parameters, this method can be used.
 
@@ -80,7 +81,7 @@ class RuleKit:
         rulekit_jar_file_path : str
             Path to the RuleKit jar file. This parameters.
             .. note::
-                You probably don't need to use this parameter unless you want to use 
+                You probably don't need to use this parameter unless you want to use
                 your own custom version of RuleKit jar file. Otherwise leave it as it
                 is and the package will use the official RuleKit release jar file.
 
