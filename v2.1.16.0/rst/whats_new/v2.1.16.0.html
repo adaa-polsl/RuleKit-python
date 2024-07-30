@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What’s new in RuleKit version 2.1.16.0? &mdash; rulekit v2.1.16.0 2.1.16.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=3da0b471"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tutorials" href="../tutorials.html" />
+    <link rel="prev" title="What’s new" href="../whats_new.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v2.1.16.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../whats_new.html">Whats new</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">v2.1.16.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.-RuleKit-and-RapidMiner-part-ways-💔">1. RuleKit and RapidMiner part ways 💔</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.-⚠️-BREAKING-CHANGE-min_rule_covered-algorithm-parameter-was-removed">2. ⚠️ <strong>BREAKING CHANGE</strong> <code class="docutils literal notranslate"><span class="pre">min_rule_covered</span></code> algorithm parameter was removed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#3.-⚠️-BREAKING-CHANGE-The-classification-metric-negative_voting_conflicts-is-no-longer-available">3. ⚠️ <strong>BREAKING CHANGE</strong> The classification metric <code class="docutils literal notranslate"><span class="pre">negative_voting_conflicts</span></code> is no longer available</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#4.-🕰️-DEPRECATION-download_jar-command-is-now-deprecated">4. 🕰️ <strong>DEPRECATION</strong> <code class="docutils literal notranslate"><span class="pre">download_jar</span></code> command is now deprecated</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v2.1.16.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../whats_new.html">What’s new</a></li>
+      <li class="breadcrumb-item active">What’s new in RuleKit version 2.1.16.0?</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/whats_new/v2.1.16.0.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="What's-new-in-RuleKit-version-2.1.16.0?">
+<h1>What’s new in RuleKit version 2.1.16.0?<a class="headerlink" href="#What's-new-in-RuleKit-version-2.1.16.0?" title="Link to this heading"></a></h1>
+<section id="1.-RuleKit-and-RapidMiner-part-ways-💔">
+<h2>1. RuleKit and RapidMiner part ways 💔<a class="headerlink" href="#1.-RuleKit-and-RapidMiner-part-ways-💔" title="Link to this heading"></a></h2>
+<p>RuleKit has been using the RapidMiner Java API for various tasks, such as loading data, measuring model performance, etc., since its beginning. From major version 2 RuleKit finally parted ways with RuleMiner. This is mainly due to the recent work of our contributors: <a class="reference external" href="https://github.com/wgorkaemag">Wojciech Górka</a> and <a class="reference external" href="https://github.com/mkalisch">Mateusz Kalisch</a>.</p>
+<p>This change brings many benefits and other changes such as: * a huge reduction in the jar file of the RuleKit java package (from 131MB to 40.9MB). * now the jar file is small enough to fit into the Python package distribution, which means there is no longer a need to download it in an extra step.</p>
+<p>Although the license has remained the same (<a class="reference external" href="https://github.com/adaa-polsl/RuleKit/blob/master/LICENSE">GNU AGPL-3.0 license</a>), for commercial projects that require the ability to distribute RuleKit code as part of a program that cannot be distributed under the AGPL, it may be possible to obtain an appropriate license from the authors. Feel free to contact us!</p>
+</section>
+<section id="2.-⚠️-BREAKING-CHANGE-min_rule_covered-algorithm-parameter-was-removed">
+<h2>2. ⚠️ <strong>BREAKING CHANGE</strong> <code class="docutils literal notranslate"><span class="pre">min_rule_covered</span></code> algorithm parameter was removed<a class="headerlink" href="#2.-⚠️-BREAKING-CHANGE-min_rule_covered-algorithm-parameter-was-removed" title="Link to this heading"></a></h2>
+<p>Up to this version this parameter was marked as deprecated and its usage only resulted in warning. Now it was completely removed which might be a breaking change.</p>
+</section>
+<section id="3.-⚠️-BREAKING-CHANGE-The-classification-metric-negative_voting_conflicts-is-no-longer-available">
+<h2>3. ⚠️ <strong>BREAKING CHANGE</strong> The classification metric <code class="docutils literal notranslate"><span class="pre">negative_voting_conflicts</span></code> is no longer available<a class="headerlink" href="#3.-⚠️-BREAKING-CHANGE-The-classification-metric-negative_voting_conflicts-is-no-longer-available" title="Link to this heading"></a></h2>
+<p>As of this version, the metric returned from the <code class="docutils literal notranslate"><span class="pre">RuleClassifier.predict</span></code> method with <code class="docutils literal notranslate"><span class="pre">return_metrics=True</span></code> no longer includes the <code class="docutils literal notranslate"><span class="pre">negative_voting_conflicts</span></code> metric.</p>
+<p>In fact, there was no way to calculate this metric without access to the true values of the labels. The <code class="docutils literal notranslate"><span class="pre">predict</span></code> method does not take labels as an argument, so previous results for this metric were unfortunately incorrect.</p>
+<p>If you really need to calculate this specific metrics you still can but it requires more effort to do so. Here is an example how you can achieve it using currently available API:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+
+<span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">()</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">prediction</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># 1. Group rules by decision class based on their conclusions</span>
+<span class="n">rule_decision_class_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^.+THEN .+ = {(.+)}$&quot;</span><span class="p">)</span>
+
+<span class="n">grouped_rules</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">rules</span><span class="p">):</span>
+    <span class="n">rule_decision_class</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">rule_decision_class_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">rule</span><span class="p">))</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">grouped_rules</span><span class="p">[</span><span class="n">rule_decision_class</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="c1"># 2. Get rules covering each example</span>
+<span class="n">coverage_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">get_coverage_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># 3. Group coverages of the rules with the same decision class</span>
+<span class="n">grouped_coverage_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">coverage_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">grouped_rules</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">rule_indices</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">grouped_rules</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+    <span class="n">grouped_coverage_matrix</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+        <span class="n">coverage_matrix</span><span class="p">[:,</span> <span class="n">rule_indices</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+<span class="n">grouped_coverage_matrix</span><span class="p">[</span><span class="n">grouped_coverage_matrix</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># 4. Find examples with voting conflicts</span>
+<span class="n">voting_conflicts_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">coverage_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+
+<span class="c1"># 5. Find examples with negative voting conflicts (where predicted class</span>
+<span class="c1"># is not equal to actual class)</span>
+<span class="n">negative_conflicts_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">voting_conflicts_mask</span><span class="p">[</span>
+    <span class="n">y</span> <span class="o">!=</span> <span class="n">prediction</span>
+<span class="p">]</span>
+<span class="n">negative_conflicts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">negative_conflicts_mask</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of negative voting conflicts: &#39;</span><span class="p">,</span> <span class="n">negative_conflicts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Number of negative voting conflicts:  4
+</pre></div></div>
+</div>
+<p>Not so simple, right?</p>
+<p>Perhaps in the future we will add an API to calculate this indicator in a more user-friendly way.</p>
+</section>
+<section id="4.-🕰️-DEPRECATION-download_jar-command-is-now-deprecated">
+<h2>4. 🕰️ <strong>DEPRECATION</strong> <code class="docutils literal notranslate"><span class="pre">download_jar</span></code> command is now deprecated<a class="headerlink" href="#4.-🕰️-DEPRECATION-download_jar-command-is-now-deprecated" title="Link to this heading"></a></h2>
+<p>Due to the removal of RapidMiner’s dependencies from the RuleKit Java package, its jar file size has decreased significantly. Now it’s small enough to fit into the Python package distribution. There is no need to download it in an extra step using this command as before:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">rulekit</span> <span class="n">download_jar</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-cyan-intense-fg ansi-bold">  Cell </span><span class="ansi-green-intense-fg ansi-bold">In[2], line 1</span>
+<span class="ansi-yellow-intense-fg ansi-bold">    python -m rulekit download_jar</span>
+<span class="ansi-white-intense-fg ansi-bold">              ^</span>
+<span class="ansi-red-intense-fg ansi-bold">SyntaxError</span><span class="ansi-red-intense-fg ansi-bold">:</span> invalid syntax
+
+</pre></div></div>
+</div>
+<p>This command will now do nothing and generate a warning. It will be completely removed in the next major version 3.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../whats_new.html" class="btn btn-neutral float-left" title="What’s new" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

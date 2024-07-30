@@ -1,0 +1,159 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# What's new in RuleKit version 2.1.16.0?"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 1. RuleKit and RapidMiner part ways 💔\n",
+    "\n",
+    "RuleKit has been using the RapidMiner Java API for various tasks, such as loading data, measuring model performance, etc., since its beginning. From major version 2 RuleKit finally parted ways with RuleMiner. This is mainly due to the recent work of our contributors: [Wojciech Górka](https://github.com/wgorkaemag) and [Mateusz Kalisch](https://github.com/mkalisch). \n",
+    "\n",
+    "This change brings many benefits and other changes such as:\n",
+    "* a huge reduction in the jar file of the RuleKit java package (from 131MB to 40.9MB).\n",
+    "* now the jar file is small enough to fit into the Python package distribution, which means there is no longer a need to download it in an extra step.\n",
+    "\n",
+    "Although the license has remained the same ([GNU AGPL-3.0 license](https://github.com/adaa-polsl/RuleKit/blob/master/LICENSE)), for commercial projects that require the ability to distribute RuleKit code as part of a program that cannot be distributed under the AGPL, it may be possible to obtain an appropriate license from the authors. Feel free to contact us! \n",
+    "\n",
+    "### 2. ⚠️ **BREAKING CHANGE** `min_rule_covered` algorithm parameter was removed \n",
+    "\n",
+    "Up to this version this parameter was marked as deprecated and its usage only resulted in warning. Now it was completely removed which might be a breaking change.\n",
+    "\n",
+    "### 3. ⚠️ **BREAKING CHANGE** The classification metric `negative_voting_conflicts` is no longer available\n",
+    "\n",
+    "As of this version, the metric returned from the `RuleClassifier.predict` method with `return_metrics=True` no longer includes the `negative_voting_conflicts` metric.\n",
+    "\n",
+    "In fact, there was no way to calculate this metric without access to the true values of the labels. The `predict` method does not take labels as an argument, so previous results for this metric were unfortunately incorrect.\n",
+    "\n",
+    "If you really need to calculate this specific metrics you still can but it requires more effort to do so. Here is an example how you can achieve it using currently available API:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import re\n",
+    "from collections import defaultdict\n",
+    "import numpy as np\n",
+    "from sklearn.datasets import load_iris\n",
+    "\n",
+    "from rulekit.classification import RuleClassifier\n",
+    "\n",
+    "X, y = load_iris(return_X_y=True)\n",
+    "\n",
+    "clf = RuleClassifier()\n",
+    "clf.fit(X, y)\n",
+    "\n",
+    "prediction: np.ndarray = clf.predict(X)\n",
+    "\n",
+    "# 1. Group rules by decision class based on their conclusions\n",
+    "rule_decision_class_regex = re.compile(\"^.+THEN .+ = {(.+)}$\")\n",
+    "\n",
+    "grouped_rules: dict[str, list[int]] = defaultdict(lambda: [])\n",
+    "for i, rule in enumerate(clf.model.rules):\n",
+    "    rule_decision_class: str = rule_decision_class_regex.search(\n",
+    "        str(rule)).group(1)\n",
+    "    grouped_rules[rule_decision_class].append(i)\n",
+    "\n",
+    "# 2. Get rules covering each example\n",
+    "coverage_matrix: np.ndarray = clf.get_coverage_matrix(X)\n",
+    "\n",
+    "# 3. Group coverages of the rules with the same decision class\n",
+    "grouped_coverage_matrix: np.ndarray = np.zeros(\n",
+    "    shape=(coverage_matrix.shape[0], len(grouped_rules.keys()))\n",
+    ")\n",
+    "for i, rule_indices in enumerate(grouped_rules.values()):\n",
+    "    grouped_coverage_matrix[:, i] = np.sum(\n",
+    "        coverage_matrix[:, rule_indices], axis=1\n",
+    "    )\n",
+    "grouped_coverage_matrix[grouped_coverage_matrix > 0] = 1\n",
+    "\n",
+    "# 4. Find examples with voting conflicts\n",
+    "voting_conflicts_mask: np.ndarray = np.sum(coverage_matrix, axis=1) > 1\n",
+    "\n",
+    "# 5. Find examples with negative voting conflicts (where predicted class\n",
+    "# is not equal to actual class)\n",
+    "negative_conflicts_mask: np.ndarray = voting_conflicts_mask[\n",
+    "    y != prediction\n",
+    "]\n",
+    "negative_conflicts: int = np.sum(negative_conflicts_mask)\n",
+    "print('Number of negative voting conflicts: ', negative_conflicts)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Not so simple, right? \n",
+    "\n",
+    "Perhaps in the future we will add an API to calculate this indicator in a more user-friendly way."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "vscode": {
+     "languageId": "plaintext"
+    }
+   },
+   "source": [
+    "### 4. 🕰️ **DEPRECATION** `download_jar` command is now deprecated\n",
+    "\n",
+    "Due to the removal of RapidMiner's dependencies from the RuleKit Java package, its jar file size has decreased significantly. Now it's small enough to fit into the Python package distribution. There is no need to download it in an extra step using this command as before:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "vscode": {
+     "languageId": "bat"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "python -m rulekit download_jar"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "vscode": {
+     "languageId": "bat"
+    }
+   },
+   "source": [
+    "This command will now do nothing and generate a warning. It will be completely removed in the next major version 3."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "env",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
