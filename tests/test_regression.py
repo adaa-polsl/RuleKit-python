@@ -8,8 +8,9 @@ from rulekit import regression
 from rulekit.events import RuleInductionProgressListener
 from rulekit.main import RuleKit
 from rulekit.rules import Rule
-from tests.utils import (assert_rules_are_equals, assert_score_is_greater,
-                         get_test_cases)
+from tests.utils import assert_rules_are_equals
+from tests.utils import assert_score_is_greater
+from tests.utils import get_test_cases
 
 
 class TestRegressor(unittest.TestCase):
@@ -59,7 +60,6 @@ class TestRegressor(unittest.TestCase):
         self.assertEqual(rules_count, MAX_RULES)
         self.assertEqual(rules_count, listener.on_progress_calls_count)
 
-    @unittest.skip('This test is already broken in main RuleKit repository for v1.7.14')
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionSnCTest')
 
