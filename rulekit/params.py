@@ -59,7 +59,7 @@ class Measures(Enum):
 
 
 DEFAULT_PARAMS_VALUE = {
-    'minsupp_new': 5.0,
+    'minsupp_new': 0.05,
     'induction_measure': Measures.Correlation,
     'pruning_measure':  Measures.Correlation,
     'voting_measure': Measures.Correlation,
@@ -73,7 +73,7 @@ DEFAULT_PARAMS_VALUE = {
     'max_rule_count': 0,
     'approximate_induction': False,
     'approximate_bins_count': 100,
-    'mean_based_regression': True,
+    'mean_based_regression': False,
 
     'extend_using_preferred': False,
     'extend_using_automatic': False,
