@@ -73,7 +73,7 @@ DEFAULT_PARAMS_VALUE = {
     'max_rule_count': 0,
     'approximate_induction': False,
     'approximate_bins_count': 100,
-    'mean_based_regression': False,
+    'mean_based_regression': True,
 
     'extend_using_preferred': False,
     'extend_using_automatic': False,
