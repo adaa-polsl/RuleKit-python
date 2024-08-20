@@ -14,6 +14,7 @@ from ._helpers import PredictionResultMapper
 from ._operator import BaseOperator
 from ._operator import Data
 from ._operator import ExpertKnowledgeOperator
+from ._problem_types import ProblemType
 from .params import ContrastSetModelParams
 from .params import DEFAULT_PARAMS_VALUE
 from .params import Measures
@@ -163,6 +164,9 @@ class RuleRegressor(BaseOperator):
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
         return PredictionResultMapper.map_to_numerical(predicted_example_set, remap=False)
+
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.REGRESSION
 
 
 class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
@@ -336,6 +340,9 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
     def predict(self, values: Data) -> np.ndarray:
         return self._map_result(ExpertKnowledgeOperator.predict(self, values))
 
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.REGRESSION
+
 
 class ContrastSetRuleRegressor(BaseOperator):
     """Contrast set regression model."""
@@ -499,3 +506,6 @@ class ContrastSetRuleRegressor(BaseOperator):
     def __setstate__(self, state: dict):
         BaseOperator.__setstate__(self, state)
         self.contrast_attribute = state['contrast_attribute']
+
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.CONTRAST_REGRESSION

@@ -2,6 +2,8 @@
 """
 from __future__ import annotations
 
+from abc import ABC
+from abc import abstractmethod
 from typing import Any
 from typing import Optional
 from typing import Union
@@ -15,6 +17,7 @@ from ._helpers import get_rule_generator
 from ._helpers import ModelSerializer
 from ._helpers import PredictionResultMapper
 from ._helpers import RuleGeneratorConfigurator
+from ._problem_types import ProblemType
 from .events import command_listener_factory
 from .events import RuleInductionProgressListener
 from .main import RuleKit
@@ -24,7 +27,7 @@ from .rules import RuleSet
 Data = Union[np.ndarray, pd.DataFrame, list]
 
 
-class BaseOperator:
+class BaseOperator(ABC):
     """Base class for rule induction operator
     """
 
@@ -71,7 +74,7 @@ class BaseOperator:
         survival_time_attribute: str = None,
         contrast_attribute: str = None,
     ) -> BaseOperator:
-        example_set = ExampleSetFactory().make(
+        example_set = ExampleSetFactory(self._get_problem_type()).make(
             values,
             labels,
             survival_time_attribute=survival_time_attribute,
@@ -87,7 +90,7 @@ class BaseOperator:
         if self.model is None:
             raise ValueError(
                 '"fit" method must be called before calling this method')
-        example_set = ExampleSetFactory().make(values)
+        example_set = ExampleSetFactory(self._get_problem_type()).make(values)
         return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
 
     def get_params(self, deep: bool = True) -> dict[str, Any]:  # pylint: disable=unused-argument
@@ -148,7 +151,7 @@ class BaseOperator:
         if self.model is None:
             raise ValueError(
                 '"fit" method must be called before calling this method')
-        example_set = ExampleSetFactory().make(values)
+        example_set = ExampleSetFactory(self._get_problem_type()).make(values)
         covering_info = self.model.covering(example_set)
         if isinstance(values, (pd.Series, pd.DataFrame)):
             values = values.to_numpy()
@@ -198,8 +201,12 @@ class BaseOperator:
     def _get_rule_generator(self) -> RuleGeneratorConfigurator:
         return get_rule_generator()
 
+    @abstractmethod
+    def _get_problem_type(self) -> ProblemType:
+        pass
 
-class ExpertKnowledgeOperator(BaseOperator):
+
+class ExpertKnowledgeOperator(BaseOperator, ABC):
     """Base class for expert rule induction operator
     """
 
@@ -214,7 +221,7 @@ class ExpertKnowledgeOperator(BaseOperator):
         expert_preferred_conditions: list[Union[str, Rule]] = None,
         expert_forbidden_conditions: list[Union[str, Rule]] = None
     ) -> ExpertKnowledgeOperator:
-        example_set = ExampleSetFactory().make(
+        example_set = ExampleSetFactory(self._get_problem_type()).make(
             values,
             labels,
             survival_time_attribute=survival_time_attribute,

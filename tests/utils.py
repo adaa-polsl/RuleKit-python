@@ -5,12 +5,11 @@ from typing import Union
 from xml.etree import ElementTree
 
 import pandas as pd
-from jpype import JClass
 from scipy.io.arff import loadarff
 from sklearn import metrics
 
 from rulekit._helpers import ExampleSetFactory
-from rulekit.rules import Rule
+from rulekit._problem_types import ProblemType
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -35,16 +34,16 @@ def _fix_missing_values(column) -> None:
 
 class ExampleSetWrapper:
 
-    def __init__(self, values, labels):
+    def __init__(self, values, labels, problem_type: ProblemType):
         self.values = values
         self.labels = labels
-        self.example_set = ExampleSetFactory().make(values, labels)
+        self.example_set = ExampleSetFactory(problem_type).make(values, labels)
 
     def get_data(self) -> tuple:
         return self.values, self.labels
 
 
-def load_arff_to_example_set(path: str, label_attribute: str) -> ExampleSetWrapper:
+def load_arff_to_example_set(path: str, label_attribute: str, problem_type: ProblemType) -> ExampleSetWrapper:
     with open(path, 'r') as file:
         content = file.read().replace('"', "'")
         arff_file = io.StringIO(content)
@@ -61,7 +60,7 @@ def load_arff_to_example_set(path: str, label_attribute: str) -> ExampleSetWrapp
     for column in values:
         _fix_missing_values(values[column])
     _fix_missing_values(labels)
-    return ExampleSetWrapper(values, labels)
+    return ExampleSetWrapper(values, labels, problem_type)
 
 
 def get_dataset_path(name: str) -> str:
@@ -85,12 +84,13 @@ class TestReport:
 
 class TestCase:
 
-    def __init__(self):
+    def __init__(self, problem_type: ProblemType):
         self.param_config: dict[str, object] = None
         self._reference_report: TestReport = None
         self._example_set: ExampleSetWrapper = None
         self.induction_params: dict = None
         self.knowledge: Knowledge = None
+        self.problem_type: ProblemType = problem_type
 
         self.name: str = None
         self.data_set_file_path: str = None
@@ -103,7 +103,10 @@ class TestCase:
     def example_set(self) -> ExampleSetWrapper:
         if self._example_set is None:
             self._example_set = load_arff_to_example_set(
-                self.data_set_file_path, self.label_attribute)
+                self.data_set_file_path,
+                self.label_attribute,
+                self.problem_type
+            )
         return self._example_set
 
     @property
@@ -254,8 +257,10 @@ class TestCaseFactory:
             self,
             test_case_name: str,
             params: dict[str, object],
-            data_set_config: DataSetConfig) -> TestCase:
-        test_case = TestCase()
+            data_set_config: DataSetConfig,
+            problem_type: ProblemType
+    ) -> TestCase:
+        test_case = TestCase(problem_type)
         self._fix_params_typing(params)
         self._fix_deprecated_params(params)
         test_case.induction_params = params
@@ -264,7 +269,7 @@ class TestCaseFactory:
         test_case.name = test_case_name
         test_case.param_config = params
         return test_case
-    
+
     def _fix_deprecated_params(self, params: dict[str, object]):
         deprecated_minsupp_new_name = 'min_rule_covered'
         if deprecated_minsupp_new_name in params:
@@ -281,7 +286,12 @@ class TestCaseFactory:
             if not 'measure' in key:
                 params[key] = int(float(value))
 
-    def make(self, tests_configs: dict[str, TestConfig], report_dir_path: str) -> list[TestCase]:
+    def make(
+        self,
+        tests_configs: dict[str, TestConfig],
+        report_dir_path: str,
+        problem_type: ProblemType
+    ) -> list[TestCase]:
         test_cases = []
         for key in tests_configs.keys():
             test_config = tests_configs[key]
@@ -297,8 +307,12 @@ class TestCaseFactory:
                                                                                           None)
                     forbidden_conditions = test_config.parameter_configs[config_name].pop('expert_forbidden_conditions',
                                                                                           None)
-                    test_case = self._make_test_case(test_case_name,
-                                                     test_config.parameter_configs[config_name], data_set_config)
+                    test_case = self._make_test_case(
+                        test_case_name,
+                        test_config.parameter_configs[config_name],
+                        data_set_config,
+                        problem_type
+                    )
                     if 'use_report' in params:
                         report_file_name = params['use_report']
                         test_case.using_existing_report_file = True
@@ -382,8 +396,27 @@ Test resources directory dosen't exist. Check if 'tests/resources/' directory ex
 If you're running tests for the first time you need to download resources folder from RuleKit repository by running:
     python tests/resources.py download
         ''')
+    problem_type: ProblemType = _get_problem_type_from_test_case_class_name(
+        class_name
+    )
     configs = TestConfigParser().parse(f'{TEST_CONFIG_PATH}/{class_name}.xml')
-    return TestCaseFactory().make(configs, f'{REPORTS_IN_DIRECTORY_PATH}/{class_name}/')
+    return TestCaseFactory().make(
+        configs,
+        f'{REPORTS_IN_DIRECTORY_PATH}/{class_name}/',
+        problem_type
+    )
+
+
+def _get_problem_type_from_test_case_class_name(class_name: str) -> ProblemType:
+    class_name = class_name.lower()
+    if 'regression' in class_name:
+        return ProblemType.REGRESSION
+    elif 'survival' in class_name:
+        return ProblemType.SURVIVAL
+    elif 'classification' in class_name:
+        return ProblemType.CLASSIFICATION
+    raise Exception(
+        f'Unknown problem type for test case class name: {class_name}')
 
 
 def assert_rules_are_equals(expected: list[str], actual: list[str]):

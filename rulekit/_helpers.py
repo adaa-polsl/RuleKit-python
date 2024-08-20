@@ -13,6 +13,7 @@ from jpype import JObject
 from jpype.pickle import JPickler
 from jpype.pickle import JUnpickler
 
+from ._problem_types import ProblemType
 from .main import RuleKit
 from .params import Measures
 from .rules import Rule
@@ -110,7 +111,8 @@ class ExampleSetFactory():
     DEFAULT_LABEL_ATTRIBUTE_NAME: str = 'label'
     AUTOMATIC_ATTRIBUTES_NAMES_PREFIX: str = 'att'
 
-    def __init__(self) -> None:
+    def __init__(self, problem_type: ProblemType) -> None:
+        self._problem_type: ProblemType = problem_type
         self._attributes_names: list[str] = None
         self._label_name: str = None
         self._survival_time_attribute: str = None
@@ -215,7 +217,27 @@ class ExampleSetFactory():
         DataTable = JClass(  # pylint: disable=invalid-name
             'adaa.analytics.rules.data.DataTable'
         )
-        return DataTable(*args)
+        try:
+            table = DataTable(*args)
+            if (self._y is not None):
+                ExampleSetFactory = JClass(
+                    'adaa.analytics.rules.logic.representation.exampleset.ExampleSetFactory')
+                factory = ExampleSetFactory(2)
+                example_set = factory.create(table)
+                return example_set
+            else:
+                return table
+        except Exception as error:
+            from rulekit.exceptions import RuleKitJavaException
+            RuleKitJavaException(error).print_java_stack_trace()
+            raise error
+
+    def _wrap_training_example_set(self, example_set: JObject) -> JObject:
+        # training dataset must be wrapped in additional classes for rule induction to work properly
+        ExampleSetFactory = JClass(
+            'adaa.analytics.rules.logic.representation.exampleset.ExampleSetFactory')
+        factory: JObject = ExampleSetFactory(self._problem_type.value)
+        return factory.create(example_set)
 
     def _prepare_data(self) -> JObject:
         if self._y is None:

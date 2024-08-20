@@ -16,6 +16,7 @@ from ._helpers import PredictionResultMapper
 from ._operator import BaseOperator
 from ._operator import Data
 from ._operator import ExpertKnowledgeOperator
+from ._problem_types import ProblemType
 from .params import ContrastSetModelParams
 from .params import DEFAULT_PARAMS_VALUE
 from .rules import RuleSet
@@ -232,6 +233,9 @@ class SurvivalRules(BaseOperator):
             predicted_example_set).getValue()
         return float(ibs)
 
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.SURVIVAL
+
 
 class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
     """Expert Survival model."""
@@ -390,6 +394,9 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
 
     def predict(self, values: Data) -> np.ndarray:
         return PredictionResultMapper.map_survival(ExpertKnowledgeOperator.predict(self, values))
+
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.SURVIVAL
 
 
 class SurvivalContrastSetModelParams(ContrastSetModelParams, SurvivalModelsParams):
@@ -567,3 +574,6 @@ class ContrastSetSurvivalRules(BaseOperator):
             Integrated Brier Score of self.predict(values) wrt. labels.
         """
         return SurvivalRules.score(self, values, labels, survival_time=survival_time)
+
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.CONTRAST_SURVIVAL

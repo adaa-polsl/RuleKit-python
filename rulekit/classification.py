@@ -18,6 +18,7 @@ from ._helpers import PredictionResultMapper
 from ._operator import BaseOperator
 from ._operator import Data
 from ._operator import ExpertKnowledgeOperator
+from ._problem_types import ProblemType
 from .params import ContrastSetModelParams
 from .params import DEFAULT_PARAMS_VALUE
 from .params import Measures
@@ -320,6 +321,9 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         self.label_unique_values = state['label_unique_values']
         self._remap_to_numeric = state['_remap_to_numeric']
 
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.CLASSIFICATION
+
 
 class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
     """Classification model using expert knowledge."""
@@ -532,6 +536,9 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
     def __setstate__(self, state: dict):
         BaseOperator.__setstate__(self, state)
         self._remap_to_numeric = state['_remap_to_numeric']
+
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.CLASSIFICATION
 
 
 class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
@@ -775,3 +782,6 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         self.label_unique_values = state['label_unique_values']
         self._remap_to_numeric = state['_remap_to_numeric']
         self.contrast_attribute = state['contrast_attribute']
+
+    def _get_problem_type(self) -> ProblemType:
+        return ProblemType.CONTRAST_CLASSIFICATION

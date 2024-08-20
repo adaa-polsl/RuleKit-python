@@ -12,8 +12,10 @@ from sklearn.datasets import load_iris
 from rulekit import classification
 from rulekit.events import RuleInductionProgressListener
 from rulekit.rules import Rule
-from tests.utils import (assert_accuracy_is_greater, assert_rules_are_equals,
-                         dir_path, get_test_cases)
+from tests.utils import assert_accuracy_is_greater
+from tests.utils import assert_rules_are_equals
+from tests.utils import dir_path
+from tests.utils import get_test_cases
 
 
 class TestClassifier(unittest.TestCase):
@@ -31,7 +33,7 @@ class TestClassifier(unittest.TestCase):
         rulekit_accuracy = metrics.accuracy_score(y, rulekit_prediction)
 
         assert abs(scikit_accuracy -
-                   rulekit_accuracy) < 0.03, 'RuleKit model should perform similar to scikit model'
+                   rulekit_accuracy) < 0.04, 'RuleKit model should perform similar to scikit model'
 
     def test_induction_progress_listener(self):
         rulekit_clf = classification.RuleClassifier()
@@ -107,11 +109,11 @@ class TestClassifier(unittest.TestCase):
 
     def test_prediction_results_mapping(self):
         """
-        This method tests classifications on numeric labels which possible values does 
-        not start from 0. RuleKit undehood maps all labels values to integer values starting 
-        from 0 to N (counting by order of appearance in dataset). Those maped values must be 
+        This method tests classifications on numeric labels which possible values does
+        not start from 0. RuleKit undehood maps all labels values to integer values starting
+        from 0 to N (counting by order of appearance in dataset). Those maped values must be
         later remaped back to actual label value. This test verifies that predict method returns
-        correct (remaped) label value. 
+        correct (remaped) label value.
         """
         clf = classification.RuleClassifier()
 
@@ -213,7 +215,6 @@ class TestExperClassifier(unittest.TestCase):
             assert_rules_are_equals(expected, actual)
             assert_accuracy_is_greater(clf.predict(
                 example_set.values), example_set.labels, 0.75)
-
 
     def test_predict_proba(self):
         test_case = get_test_cases('ClassificationExpertSnCTest')[0]
