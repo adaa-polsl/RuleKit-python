@@ -218,7 +218,7 @@ class SurvivalRules(BaseOperator):
 
         survival_time_attribute = self._prepare_survival_attribute(
             survival_time, values)
-        example_set = ExampleSetFactory().make(
+        example_set = ExampleSetFactory(self._get_problem_type()).make(
             values, labels, survival_time_attribute=survival_time_attribute)
 
         predicted_example_set = self.model._java_object.apply(  # pylint: disable=protected-access
