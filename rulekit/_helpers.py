@@ -33,7 +33,8 @@ def get_rule_generator(expert: bool = False) -> Any:
     RuleGenerator = JClass(  # pylint: disable=invalid-name
         'adaa.analytics.rules.logic.rulegenerator.RuleGenerator'
     )
-    return RuleGenerator(expert)
+    rule_generator = RuleGenerator(expert)
+    return rule_generator
 
 
 class RuleGeneratorConfigurator:
@@ -178,6 +179,8 @@ class ExampleSetFactory():
     ) -> tuple[np.ndarray, np.ndarray]:
         if isinstance(X, pd.DataFrame):
             self._attributes_names = X.columns.tolist()
+            # replace nan values with None
+            X = X.where(pd.notnull(X), None)
             self._X = X.to_numpy()
         elif isinstance(X, np.ndarray):
             self._attributes_names = [
@@ -243,8 +246,9 @@ class ExampleSetFactory():
         if self._y is None:
             data = self._X
         else:
-            data = np.hstack((self._X.astype(object), self._y.reshape(-1, 1)))
-        return JObject(data, JArray('java.lang.Object', 2))
+            data = np.hstack((self._X, self._y.reshape(-1, 1)))
+        java_data = JObject(data, JArray('java.lang.Object', 2))
+        return java_data
 
 
 class PredictionResultMapper:

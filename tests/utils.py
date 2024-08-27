@@ -1,6 +1,7 @@
 import io
 import os
 import re
+from io import StringIO
 from typing import Union
 from xml.etree import ElementTree
 
@@ -423,8 +424,8 @@ def assert_rules_are_equals(expected: list[str], actual: list[str]):
     def sanitize_rule_string(rule_string: str) -> str:
         return re.sub(r'(\t)|(\n)|(\[[^\]]*\]$)', '', rule_string)
 
-    expected = list(map(lambda e: sanitize_rule_string(e), expected))
-    actual = list(map(lambda e: sanitize_rule_string(e), actual))
+    expected = list(map(sanitize_rule_string, expected))
+    actual = list(map(sanitize_rule_string, actual))
 
     if len(expected) != len(actual):
         raise AssertionError(
@@ -439,11 +440,11 @@ def assert_rules_are_equals(expected: list[str], actual: list[str]):
         else:
             raise AssertionError(
                 'Actual ruleset contains rules not present in expected ruleset')
-    for key in dictionary.keys():
-        if dictionary[key] == 0:
+    for value in dictionary.values():
+        if value == 0:
             raise AssertionError(
                 'Ruleset are not equal, some rules are missing')
-        elif dictionary[key] > 1:
+        elif value > 1:
             raise AssertionError('Somes rules were duplicated')
 
 

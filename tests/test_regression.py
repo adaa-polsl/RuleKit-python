@@ -1,3 +1,4 @@
+import os
 import threading
 import unittest
 
@@ -5,12 +6,32 @@ import numpy as np
 import pandas as pd
 
 from rulekit import regression
+from rulekit.arff import read_arff
 from rulekit.events import RuleInductionProgressListener
 from rulekit.main import RuleKit
+from rulekit.params import Measures
 from rulekit.rules import Rule
 from tests.utils import assert_rules_are_equals
 from tests.utils import assert_score_is_greater
+from tests.utils import dir_path
 from tests.utils import get_test_cases
+
+
+def print_rulekit_rules_from_jar_result(file):
+    lines = file.readlines()
+    tmp = []
+    start = False
+    for line in lines:
+        if start:
+            tmp.append(line)
+        if line.strip() == 'Rules:':
+            start = True
+        if line.strip() == 'Attribute ranking (by count):':
+            break
+
+    print('\nRuleKit jar rules:')
+    for rule in tmp:
+        print(rule.strip())
 
 
 class TestRegressor(unittest.TestCase):
@@ -89,6 +110,34 @@ class TestRegressor(unittest.TestCase):
         clf.fit(X, y)
         clf.predict(X)
 
+    def test_cholesterol(self):
+        resources_dir: str = os.path.join(dir_path, 'additional_resources')
+        df: pd.DataFrame = read_arff(
+            os.path.join(resources_dir, 'cholesterol.arff')
+        )
+        X, y = df.drop('class', axis=1), df['class']
+
+        # Run experiment using python API
+        reg = regression.RuleRegressor(
+            minsupp_new=0.05,
+            max_uncovered_fraction=0.0,
+            max_growing=0.0,
+            induction_measure=Measures.Accuracy,
+            pruning_measure=Measures.Accuracy,
+            voting_measure=Measures.Accuracy,
+            ignore_missing=False,
+            select_best_candidate=False,
+            complementary_conditions=True,
+            max_rule_count=0
+        )
+        reg.fit(X, y)
+        actual_rules: list[str] = list(map(str, reg.model.rules))
+        expected_rules: list[str] = [
+            'IF trestbps = (-inf, 149) THEN class = {244.84} [192.73,296.96]',
+            'IF trestbps = <122, inf) THEN class = {250.80} [201.79,299.80]'
+        ]
+        self.assertEqual(actual_rules, expected_rules)
+
 
 class TestExpertRegressor(unittest.TestCase):
 
@@ -96,7 +145,6 @@ class TestExpertRegressor(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("TODO skipping due to Issue #19")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('RegressionExpertSnCTest')
 
