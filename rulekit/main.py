@@ -8,8 +8,11 @@ from enum import Enum
 from subprocess import PIPE
 from subprocess import Popen
 from subprocess import STDOUT
+from typing import Optional
 
 import jpype.imports
+
+from rulekit._logging import _RuleKitJavaLoggerConfig
 
 __VERSION__ = '2.1.17.0'
 __RULEKIT_RELEASE_VERSION__ = '2.1.17'
@@ -41,6 +44,7 @@ class RuleKit:
     _class_path: str
     _rulekit_jar_file_path: str
     _jre_type: JRE_Type
+    _java_logger_config: Optional[_RuleKitJavaLoggerConfig] = None
     initialized: bool = False
 
     @staticmethod
@@ -152,3 +156,33 @@ If you're running this package for the first time you need to download RuleKit j
                 params.append(f'-Xmx{max_heap_size}m')
             jpype.startJVM(jpype.getDefaultJVMPath(), *
                            params, convertStrings=False)
+
+    @staticmethod
+    def configure_java_logger(
+        log_file_path: str,
+        verbosity_level: int = 1,
+    ):
+        """Enable Java debug logging. You probably don't need to use this
+        method unless you want too deep dive into the process of rules inductions
+         or your're debugging some issues.
+
+
+        Args:
+            log_file_path (str): Path to the file where logs will be stored
+            verbosity_level (int, optional): Verbosity level.
+                Minimum value is 1, maximum value is 2, default value is 1.
+        """
+        RuleKit._java_logger_config = _RuleKitJavaLoggerConfig(
+            verbosity_level=verbosity_level,
+            log_file_path=log_file_path
+        )
+
+    @staticmethod
+    def get_java_logger_config() -> Optional[_RuleKitJavaLoggerConfig]:
+        """Returns the Java logger configuration configured using `configure_java_logger`
+        method
+
+        Returns:
+            Optional[_RuleKitJavaLoggerConfig]: Java logger configuration
+        """
+        return RuleKit._java_logger_config

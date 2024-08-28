@@ -3,6 +3,7 @@
 import io
 import json
 from typing import Any
+from typing import Optional
 from typing import Union
 
 import numpy as np
@@ -14,11 +15,12 @@ from jpype import JObject
 from jpype.pickle import JPickler
 from jpype.pickle import JUnpickler
 
-from ._problem_types import ProblemType
-from .main import RuleKit
-from .params import Measures
-from .rules import Rule
+from rulekit._logging import _RuleKitJavaLoggerConfig
+from rulekit._problem_types import ProblemType
 from rulekit.exceptions import RuleKitMisconfigurationException
+from rulekit.main import RuleKit
+from rulekit.params import Measures
+from rulekit.rules import Rule
 
 
 def get_rule_generator(expert: bool = False) -> Any:
@@ -55,6 +57,7 @@ class RuleGeneratorConfigurator:
         """
         self._configure_rule_generator(**params)
         self._validate_rule_generator_parameters(**params)
+        self._configure_java_logging()
         return self.rule_generator
 
     def _configure_expert_parameter(self, param_name: str, param_value: Any):
@@ -154,6 +157,16 @@ class RuleGeneratorConfigurator:
                 java_parameters=java_params,
                 python_parameters=python_parameters
             )
+
+    def _configure_java_logging(self):
+        logger_config: Optional[_RuleKitJavaLoggerConfig] = RuleKit.get_java_logger_config(
+        )
+        if logger_config is None:
+            return
+        self.rule_generator.configureLogger(
+            logger_config.log_file_path,
+            logger_config.verbosity_level
+        )
 
 
 class ExampleSetFactory():
