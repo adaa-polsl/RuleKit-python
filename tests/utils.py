@@ -6,11 +6,11 @@ from typing import Union
 from xml.etree import ElementTree
 
 import pandas as pd
-from scipy.io.arff import loadarff
 from sklearn import metrics
 
 from rulekit._helpers import ExampleSetFactory
 from rulekit._problem_types import ProblemType
+from rulekit.arff import read_arff
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -48,7 +48,7 @@ def load_arff_to_example_set(path: str, label_attribute: str, problem_type: Prob
     with open(path, 'r') as file:
         content = file.read().replace('"', "'")
         arff_file = io.StringIO(content)
-    arff_data_frame = pd.DataFrame(loadarff(arff_file)[0])
+    arff_data_frame = read_arff(arff_file)
 
     attributes_names = []
     for column_name in arff_data_frame.columns:

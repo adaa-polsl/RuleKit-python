@@ -122,7 +122,8 @@ class ModelsParams(BaseModel):
 class ContrastSetModelParams(ModelsParams):
     """Model for validating contrast set models hyperparameters
     """
-    minsupp_all: Optional[str] = DEFAULT_PARAMS_VALUE['minsupp_all']
+    minsupp_all: Tuple[float, float, float,
+                       float] = DEFAULT_PARAMS_VALUE['minsupp_all']
     max_neg2pos: Optional[float] = DEFAULT_PARAMS_VALUE['max_neg2pos']
     max_passes_count: Optional[int] = DEFAULT_PARAMS_VALUE['max_passes_count']
     penalty_strength: Optional[float] = DEFAULT_PARAMS_VALUE['penalty_strength']

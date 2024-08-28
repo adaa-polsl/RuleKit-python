@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from numbers import Number
-from typing import Iterable
+from typing import Tuple
 from typing import Union
 
 import numpy as np
@@ -351,7 +351,8 @@ class ContrastSetRuleRegressor(BaseOperator):
 
     def __init__(  # pylint: disable=too-many-arguments,too-many-locals
         self,
-        minsupp_all: Iterable[float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
+        minsupp_all: Tuple[float, float, float,
+                           float] = DEFAULT_PARAMS_VALUE['minsupp_all'],
         max_neg2pos: float = DEFAULT_PARAMS_VALUE['max_neg2pos'],
         max_passes_count: int = DEFAULT_PARAMS_VALUE['max_passes_count'],
         penalty_strength: float = DEFAULT_PARAMS_VALUE['penalty_strength'],
@@ -374,7 +375,7 @@ class ContrastSetRuleRegressor(BaseOperator):
         """
         Parameters
         ----------
-        minsupp_all: Iterable[float]
+        minsupp_all: Tuple[float, float, float, float]
             a minimum positive support of a contrast set (p/P). When multiple values are specified,
             a metainduction is performed; Default and recommended sequence is: 0.8, 0.5, 0.2, 0.1
         max_neg2pos: float
