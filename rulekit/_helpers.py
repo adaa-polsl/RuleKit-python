@@ -1,6 +1,7 @@
 """Contains helper functions and classes
 """
 import io
+import json
 from typing import Any
 from typing import Union
 
@@ -17,6 +18,7 @@ from ._problem_types import ProblemType
 from .main import RuleKit
 from .params import Measures
 from .rules import Rule
+from rulekit.exceptions import RuleKitMisconfigurationException
 
 
 def get_rule_generator(expert: bool = False) -> Any:
@@ -45,13 +47,14 @@ class RuleGeneratorConfigurator:
         self.rule_generator = rule_generator
         self.LogRank = None  # pylint: disable=invalid-name
 
-    def configure(self, **kwargs: dict[str, Any]) -> Any:
+    def configure(self, **params: dict[str, Any]) -> Any:
         """Configures RuleGenerator instance with given induction parameters
 
         Returns:
             Any: configured RuleGenerator instance
         """
-        self._configure_rule_generator(**kwargs)
+        self._configure_rule_generator(**params)
+        self._validate_rule_generator_parameters(**params)
         return self.rule_generator
 
     def _configure_expert_parameter(self, param_name: str, param_value: Any):
@@ -79,6 +82,8 @@ class RuleGeneratorConfigurator:
         if param_value is not None:
             if isinstance(param_value, bool):
                 param_value = (str(param_value)).lower()
+            elif isinstance(param_value, tuple):
+                param_value = ' '.join(list(map(str, param_value)))
             elif not isinstance(param_value, str):
                 param_value = str(param_value)
             self.rule_generator.setParameter(param_name, param_value)
@@ -104,6 +109,51 @@ class RuleGeneratorConfigurator:
                 measure_param_name, measure_param_value)
         for param_name, param_value in kwargs.items():
             self._configure_simple_parameter(param_name, param_value)
+
+    def _validate_rule_generator_parameters(self, **python_parameters: dict[str, Any]):
+        """Validate whether operator parameters configuration is properly passed to the
+        java RuleGenerator class. Otherwise, it raises an error.
+
+        Args:
+            python_parameters (dict[str, Any]): parameters values configured for the
+                operator in Python
+
+        Raises:
+            ValueError: If failed to retrieve RuleGenerator parameters JSON
+            RuleKitMisconfigurationException: If Java and Python parameters do not match
+        """
+        python_parameters = dict(python_parameters)
+        for param_name, param_value in python_parameters.items():
+            # convert measures to strings values for comparison
+            if isinstance(param_value, Measures):
+                python_parameters[param_name] = param_value.value
+            # convert booleans to lowercase strings for comparison
+            elif isinstance(param_value, bool):
+                python_parameters[param_name] = str(param_value).lower()
+            # normalize tuples to strings for comparison
+            elif isinstance(param_value, tuple):
+                value = ' '.join(list(map(str, param_value)))
+                python_parameters[param_name] = value
+            # convert numbers to strings for comparison
+            elif isinstance(param_value, (int, float)):
+                python_parameters[param_name] = str(param_value)
+        java_params_json: str = str(
+            self.rule_generator.getParamsAsJsonString())
+        try:
+            java_params: dict[str, Any] = json.loads(java_params_json)
+        except json.JSONDecodeError as error:
+            raise ValueError(
+                'Failed to decode RuleGenerator parameters JSON') from error
+        # select only values that are used by Python wrapper
+        java_params = {
+            param_name: str(java_params[param_name])
+            for param_name in python_parameters.keys()
+        }
+        if java_params != python_parameters:
+            raise RuleKitMisconfigurationException(
+                java_parameters=java_params,
+                python_parameters=python_parameters
+            )
 
 
 class ExampleSetFactory():
@@ -246,7 +296,7 @@ class ExampleSetFactory():
         if self._y is None:
             data = self._X
         else:
-            data = np.hstack((self._X, self._y.reshape(-1, 1)))
+            data = np.hstack((self._X.astype(object), self._y.reshape(-1, 1)))
         java_data = JObject(data, JArray('java.lang.Object', 2))
         return java_data
 

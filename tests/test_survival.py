@@ -1,13 +1,15 @@
-import unittest
 import threading
+import unittest
+
 import numpy as np
 import pandas as pd
 
-from rulekit.main import RuleKit
 from rulekit import survival
-from rulekit.rules import Rule
 from rulekit.events import RuleInductionProgressListener
-from tests.utils import get_test_cases, assert_rules_are_equals
+from rulekit.main import RuleKit
+from rulekit.rules import Rule
+from tests.utils import assert_rules_are_equals
+from tests.utils import get_test_cases
 
 
 class TestSurvivalLogRankTree(unittest.TestCase):
@@ -64,7 +66,7 @@ class TestSurvivalLogRankTree(unittest.TestCase):
             tree.fit(example_set.values, example_set.labels)
             model = tree.model
             expected = test_case.reference_report.rules
-            actual = list(map(lambda e: str(e), model.rules))
+            actual = list(map(str, model.rules))
             assert_rules_are_equals(expected, actual)
 
     def test_fit_and_predict_on_boolean_columns(self):
@@ -91,7 +93,6 @@ class TestExpertSurvivalLogRankTree(unittest.TestCase):
     def setUpClass(cls):
         RuleKit.init()
 
-    @unittest.skip("TODO skipping due to Issue #19")
     def test_compare_with_java_results(self):
         test_cases = get_test_cases('SurvivalLogRankExpertSnCTest')
 
@@ -107,7 +108,7 @@ class TestExpertSurvivalLogRankTree(unittest.TestCase):
                      expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
             model = tree.model
             expected = test_case.reference_report.rules
-            actual = list(map(lambda e: str(e), model.rules))
+            actual = list(map(str, model.rules))
             assert_rules_are_equals(expected, actual)
 
 

@@ -11,8 +11,8 @@ from subprocess import STDOUT
 
 import jpype.imports
 
-__VERSION__ = '2.1.16.0'
-__RULEKIT_RELEASE_VERSION__ = '2.1.16'
+__VERSION__ = '2.1.17.0'
+__RULEKIT_RELEASE_VERSION__ = '2.1.17'
 
 
 class JRE_Type(Enum):  # pylint: disable=invalid-name

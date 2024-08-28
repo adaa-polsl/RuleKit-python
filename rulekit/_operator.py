@@ -61,12 +61,6 @@ class BaseOperator(ABC):
                 f'"{contrast_attribute}" is a numerical one.'
             )
 
-    def _sanitize_parameters(self, params: dict[str, Any]) -> None:
-        if params.get('minsupp_all', None) is not None and len(params['minsupp_all']) > 0:
-            params['minsupp_all'] = ' '.join(
-                [str(e) for e in params['minsupp_all']]
-            )
-
     def fit(  # pylint: disable=missing-function-docstring
         self,
         values: Data,
@@ -110,7 +104,6 @@ class BaseOperator(ABC):
     def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = self._get_rule_generator()
-        self._sanitize_parameters(kwargs)
         params: BaseModel = self.__params_class__(  # pylint: disable=not-callable
             **kwargs)
         params_dict: dict = params.model_dump()

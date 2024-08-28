@@ -36,13 +36,13 @@ class SurvivalModelsParams(BaseModel):
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
 
-    extend_using_preferred: Optional[bool] = None
-    extend_using_automatic: Optional[bool] = None
-    induce_using_preferred: Optional[bool] = None
-    induce_using_automatic: Optional[bool] = None
-    consider_other_classes: Optional[bool] = None
-    preferred_conditions_per_rule: Optional[int] = None
-    preferred_attributes_per_rule: Optional[int] = None
+    extend_using_preferred: Optional[bool] = DEFAULT_PARAMS_VALUE['extend_using_preferred']
+    extend_using_automatic: Optional[bool] = DEFAULT_PARAMS_VALUE['extend_using_automatic']
+    induce_using_preferred: Optional[bool] = DEFAULT_PARAMS_VALUE['induce_using_preferred']
+    induce_using_automatic: Optional[bool] = DEFAULT_PARAMS_VALUE['induce_using_automatic']
+    consider_other_classes: Optional[bool] = DEFAULT_PARAMS_VALUE['consider_other_classes']
+    preferred_conditions_per_rule: Optional[int] = DEFAULT_PARAMS_VALUE['preferred_conditions_per_rule']
+    preferred_attributes_per_rule: Optional[int] = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']
 
 
 class SurvivalRules(BaseOperator):
