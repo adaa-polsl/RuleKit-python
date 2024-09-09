@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classification &mdash; rulekit v1.7.14.0 1.7.14.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=ae32a88c"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Regression" href="regression.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v1.7.14.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">Whats new</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Summary-of-the-dataset">Summary of the dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Decision-class-distribution">Decision class distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Import-RuleKit">Import RuleKit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Helper-function-for-calculating-metrics">Helper function for calculating metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Rule-induction-on-full-dataset">Rule induction on full dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#C2-Measure-generated-rules">C2 Measure generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Correlation-Measure-generated-rules">Correlation Measure generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#RSS-Measure-generated-rules">RSS Measure generated rules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Stratified-K-Folds-cross-validation">Stratified K-Folds cross-validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Hyperparameters-tuning">Hyperparameters tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Building-model-with-tuned-hyperparameters">Building model with tuned hyperparameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Split-dataset-to-train-and-test-(80%/20%).">Split dataset to train and test (80%/20%).</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Validate-model-on-test-dataset">Validate model on test dataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="survival.html">Survival</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expert_rules.html">Expert Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v1.7.14.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Classification</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/tutorials/classification.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Classification">
+<h1>Classification<a class="headerlink" href="#Classification" title="Link to this heading"></a></h1>
+<p>This notebook presents example usage of package for solving classification problem on <code class="docutils literal notranslate"><span class="pre">seismic-bumps</span></code> dataset. You can download dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/seismic-bumps/seismic-bumps.arff">here</a>.</p>
+<div class="line-block">
+<div class="line">This tutorial will cover topics such as:</div>
+<div class="line">- training model</div>
+<div class="line">- changing model hyperparameters</div>
+<div class="line">- hyperparameters tuning</div>
+<div class="line">- calculating metrics for model</div>
+<div class="line">- getting RuleKit inbuilt</div>
+</div>
+<section id="Summary-of-the-dataset">
+<h2>Summary of the dataset<a class="headerlink" href="#Summary-of-the-dataset" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">arff</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df_full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arff</span><span class="o">.</span><span class="n">loadarff</span><span class="p">(</span><span class="s1">&#39;./seismic-bumps.arff&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df_full</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>genergy</th>
+      <th>gimpuls</th>
+      <th>goenergy</th>
+      <th>goimpuls</th>
+      <th>nbumps</th>
+      <th>nbumps2</th>
+      <th>nbumps3</th>
+      <th>nbumps4</th>
+      <th>nbumps5</th>
+      <th>nbumps6</th>
+      <th>nbumps7</th>
+      <th>nbumps89</th>
+      <th>senergy</th>
+      <th>maxenergy</th>
+      <th>class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>2.584000e+03</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.0</td>
+      <td>2584.0</td>
+      <td>2584.0</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>9.024252e+04</td>
+      <td>538.579334</td>
+      <td>12.375774</td>
+      <td>4.508901</td>
+      <td>0.859520</td>
+      <td>0.393576</td>
+      <td>0.392802</td>
+      <td>0.067724</td>
+      <td>0.004644</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>4975.270898</td>
+      <td>4278.850619</td>
+      <td>0.065789</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>2.292005e+05</td>
+      <td>562.652536</td>
+      <td>80.319051</td>
+      <td>63.166556</td>
+      <td>1.364616</td>
+      <td>0.783772</td>
+      <td>0.769710</td>
+      <td>0.279059</td>
+      <td>0.068001</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>20450.833222</td>
+      <td>19357.454882</td>
+      <td>0.247962</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000e+02</td>
+      <td>2.000000</td>
+      <td>-96.000000</td>
+      <td>-96.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>1.166000e+04</td>
+      <td>190.000000</td>
+      <td>-37.000000</td>
+      <td>-36.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>2.548500e+04</td>
+      <td>379.000000</td>
+      <td>-6.000000</td>
+      <td>-6.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>5.283250e+04</td>
+      <td>669.000000</td>
+      <td>38.000000</td>
+      <td>30.250000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2600.000000</td>
+      <td>2000.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.595650e+06</td>
+      <td>4518.000000</td>
+      <td>1245.000000</td>
+      <td>838.000000</td>
+      <td>9.000000</td>
+      <td>8.000000</td>
+      <td>7.000000</td>
+      <td>3.000000</td>
+      <td>1.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>402000.000000</td>
+      <td>400000.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="Decision-class-distribution">
+<h3>Decision class distribution<a class="headerlink" href="#Decision-class-distribution" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">groups</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">groups</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/rst_tutorials_classification_5_0.png" src="../../_images/rst_tutorials_classification_5_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Import-RuleKit">
+<h2>Import RuleKit<a class="headerlink" href="#Import-RuleKit" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Helper-function-for-calculating-metrics">
+<h2>Helper function for calculating metrics<a class="headerlink" href="#Helper-function-for-calculating-metrics" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sklearn.tree</span> <span class="k">as</span> <span class="nn">scikit</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MultiLabelBinarizer</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">df_full</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;class&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_prediction_metrics</span><span class="p">(</span><span class="n">measure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">sensitivity</span> <span class="o">=</span> <span class="n">tp</span>  <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span>
+    <span class="n">specificity</span> <span class="o">=</span> <span class="n">tn</span>  <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span>
+    <span class="n">npv</span> <span class="o">=</span> <span class="n">tn</span>  <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span>
+    <span class="n">ppv</span> <span class="o">=</span> <span class="n">tp</span>  <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span>
+
+    <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Measure&#39;</span><span class="p">:</span> <span class="n">measure</span><span class="p">,</span>
+        <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;MAE&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Kappa&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">cohen_kappa_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Balanced accuracy&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Logistic loss&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Precision&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Sensitivity&#39;</span><span class="p">:</span> <span class="n">sensitivity</span><span class="p">,</span>
+        <span class="s1">&#39;Specificity&#39;</span><span class="p">:</span> <span class="n">specificity</span><span class="p">,</span>
+        <span class="s1">&#39;NPV&#39;</span><span class="p">:</span> <span class="n">npv</span><span class="p">,</span>
+        <span class="s1">&#39;PPV&#39;</span><span class="p">:</span> <span class="n">ppv</span><span class="p">,</span>
+        <span class="s1">&#39;psep&#39;</span><span class="p">:</span> <span class="n">ppv</span> <span class="o">+</span> <span class="n">npv</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;Fall-out&#39;</span><span class="p">:</span> <span class="n">fp</span>  <span class="o">/</span> <span class="p">(</span><span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">),</span>
+        <span class="s2">&quot;Youden&#39;s J statistic&quot;</span><span class="p">:</span> <span class="n">sensitivity</span> <span class="o">+</span> <span class="n">specificity</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;Lift&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)),</span>
+        <span class="s1">&#39;F-measure&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">),</span>
+        <span class="s1">&#39;Fowlkes-Mallows index&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">fowlkes_mallows_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;False positive&#39;</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span>
+        <span class="s1">&#39;False negative&#39;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span>
+        <span class="s1">&#39;True positive&#39;</span><span class="p">:</span> <span class="n">tp</span><span class="p">,</span>
+        <span class="s1">&#39;True negative&#39;</span><span class="p">:</span> <span class="n">tn</span><span class="p">,</span>
+        <span class="s1">&#39;Rules per example&#39;</span><span class="p">:</span> <span class="n">classification_metrics</span><span class="p">[</span><span class="s1">&#39;rules_per_example&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;Voting conflicts&#39;</span><span class="p">:</span> <span class="n">classification_metrics</span><span class="p">[</span><span class="s1">&#39;voting_conflicts&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;Negative voting conflicts&#39;</span><span class="p">:</span> <span class="n">classification_metrics</span><span class="p">[</span><span class="s1">&#39;negative_voting_conflicts&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;Geometric mean&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">specificity</span> <span class="o">*</span> <span class="n">sensitivity</span><span class="p">),</span>
+        <span class="s1">&#39;Geometric mean&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">specificity</span> <span class="o">*</span> <span class="n">sensitivity</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span><span class="n">dictionary</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Measure&#39;</span><span class="p">),</span> <span class="n">confusion_matrix</span>
+
+<span class="k">def</span> <span class="nf">get_ruleset_stats</span><span class="p">(</span><span class="n">measure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([{</span><span class="s1">&#39;Measure&#39;</span><span class="p">:</span> <span class="n">measure</span><span class="p">,</span> <span class="o">**</span><span class="n">model</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">}],</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Measure&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Rule-induction-on-full-dataset">
+<h2>Rule induction on full dataset<a class="headerlink" href="#Rule-induction-on-full-dataset" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+<span class="c1"># C2</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+    <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+    <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+    <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">c2_ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">prediction_metric</span><span class="p">,</span> <span class="n">c2_confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+<span class="n">model_stats</span> <span class="o">=</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Correlation</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+    <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span>
+    <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span>
+    <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">corr_ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">tmp</span><span class="p">,</span> <span class="n">corr_confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;Correlation&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+<span class="n">prediction_metric</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">prediction_metric</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+<span class="n">model_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">model_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;Correlation&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="p">)])</span>
+
+<span class="c1"># RSS</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+    <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span>
+    <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span>
+    <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">rss_ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">rss_confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;RSS&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+<span class="n">prediction_metric</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">prediction_metric</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+<span class="n">model_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">model_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;RSS&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="p">)])</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">model_stats</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">prediction_metric</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion matrix - C2&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">c2_confusion_matrix</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion matrix - Correlation&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">corr_confusion_matrix</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion matrix - RSS&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rss_confusion_matrix</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time_total_s</th>
+      <th>time_growing_s</th>
+      <th>time_pruning_s</th>
+      <th>rules_count</th>
+      <th>conditions_per_rule</th>
+      <th>induced_conditions_per_rule</th>
+      <th>avg_rule_coverage</th>
+      <th>avg_rule_precision</th>
+      <th>avg_rule_quality</th>
+      <th>pvalue</th>
+      <th>FDR_pvalue</th>
+      <th>FWER_pvalue</th>
+      <th>fraction_significant</th>
+      <th>fraction_FDR_significant</th>
+      <th>fraction_FWER_significant</th>
+    </tr>
+    <tr>
+      <th>Measure</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C2</th>
+      <td>3.784658</td>
+      <td>3.268134</td>
+      <td>0.394257</td>
+      <td>178</td>
+      <td>5.005618</td>
+      <td>14.382022</td>
+      <td>0.141539</td>
+      <td>0.916631</td>
+      <td>0.479177</td>
+      <td>0.058208</td>
+      <td>0.063738</td>
+      <td>0.884413</td>
+      <td>0.769663</td>
+      <td>0.752809</td>
+      <td>0.561798</td>
+    </tr>
+    <tr>
+      <th>Correlation</th>
+      <td>3.130663</td>
+      <td>2.592273</td>
+      <td>0.492708</td>
+      <td>58</td>
+      <td>6.000000</td>
+      <td>54.293103</td>
+      <td>0.401149</td>
+      <td>0.692328</td>
+      <td>0.189074</td>
+      <td>0.028175</td>
+      <td>0.029145</td>
+      <td>0.080958</td>
+      <td>0.896552</td>
+      <td>0.896552</td>
+      <td>0.879310</td>
+    </tr>
+    <tr>
+      <th>RSS</th>
+      <td>3.186367</td>
+      <td>2.761221</td>
+      <td>0.402097</td>
+      <td>60</td>
+      <td>4.216667</td>
+      <td>46.200000</td>
+      <td>0.599639</td>
+      <td>0.851306</td>
+      <td>0.333375</td>
+      <td>0.006559</td>
+      <td>0.006685</td>
+      <td>0.013799</td>
+      <td>0.966667</td>
+      <td>0.950000</td>
+      <td>0.916667</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Accuracy</th>
+      <th>MAE</th>
+      <th>Kappa</th>
+      <th>Balanced accuracy</th>
+      <th>Logistic loss</th>
+      <th>Precision</th>
+      <th>Sensitivity</th>
+      <th>Specificity</th>
+      <th>NPV</th>
+      <th>PPV</th>
+      <th>...</th>
+      <th>F-measure</th>
+      <th>Fowlkes-Mallows index</th>
+      <th>False positive</th>
+      <th>False negative</th>
+      <th>True positive</th>
+      <th>True negative</th>
+      <th>Rules per example</th>
+      <th>Voting conflicts</th>
+      <th>Negative voting conflicts</th>
+      <th>Geometric mean</th>
+    </tr>
+    <tr>
+      <th>Measure</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C2</th>
+      <td>0.968266</td>
+      <td>0.031734</td>
+      <td>0.682882</td>
+      <td>0.777962</td>
+      <td>1.143800</td>
+      <td>1.143800</td>
+      <td>0.558824</td>
+      <td>0.997100</td>
+      <td>0.969782</td>
+      <td>0.931373</td>
+      <td>...</td>
+      <td>0.698529</td>
+      <td>0.966199</td>
+      <td>7</td>
+      <td>75</td>
+      <td>95</td>
+      <td>2407</td>
+      <td>25.193885</td>
+      <td>837.0</td>
+      <td>57.0</td>
+      <td>0.746460</td>
+    </tr>
+    <tr>
+      <th>Correlation</th>
+      <td>0.916409</td>
+      <td>0.083591</td>
+      <td>0.323665</td>
+      <td>0.662717</td>
+      <td>3.012937</td>
+      <td>3.012937</td>
+      <td>0.370588</td>
+      <td>0.954847</td>
+      <td>0.955638</td>
+      <td>0.366279</td>
+      <td>...</td>
+      <td>0.368421</td>
+      <td>0.912555</td>
+      <td>109</td>
+      <td>107</td>
+      <td>63</td>
+      <td>2305</td>
+      <td>23.266641</td>
+      <td>1846.0</td>
+      <td>160.0</td>
+      <td>0.594857</td>
+    </tr>
+    <tr>
+      <th>RSS</th>
+      <td>0.923762</td>
+      <td>0.076238</td>
+      <td>0.225132</td>
+      <td>0.590099</td>
+      <td>2.747910</td>
+      <td>2.747910</td>
+      <td>0.205882</td>
+      <td>0.974316</td>
+      <td>0.945718</td>
+      <td>0.360825</td>
+      <td>...</td>
+      <td>0.262172</td>
+      <td>0.922288</td>
+      <td>62</td>
+      <td>135</td>
+      <td>35</td>
+      <td>2352</td>
+      <td>35.978328</td>
+      <td>1843.0</td>
+      <td>82.0</td>
+      <td>0.447878</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 24 columns</p>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Confusion matrix - C2
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2407</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>75</td>
+      <td>95</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Confusion matrix - Correlation
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2305</td>
+      <td>109</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>107</td>
+      <td>63</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Confusion matrix - RSS
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2352</td>
+      <td>62</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>135</td>
+      <td>35</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="C2-Measure-generated-rules">
+<h3>C2 Measure generated rules<a class="headerlink" href="#C2-Measure-generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">c2_ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF gimpuls = (-inf, 32.50) THEN class = {0}
+IF gimpuls = (-inf, 54.50) AND senergy = (-inf, 3700) THEN class = {0}
+IF gimpuls = (-inf, 54.50) AND genergy = &lt;1865, inf) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND goimpuls = (-inf, -0.50) AND genergy = (-inf, 13675) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND genergy = (-inf, 17640) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF genergy = &lt;1635, 13675) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND senergy = (-inf, 650) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND maxenergy = (-inf, 950) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND goimpuls = (-inf, -5.50) AND genergy = (-inf, 13675) AND senergy = (-inf, 2200) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND senergy = (-inf, 2200) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND maxenergy = (-inf, 3500) AND genergy = (-inf, 17640) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND maxenergy = (-inf, 3500) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND nbumps3 = (-inf, 0.50) AND senergy = (-inf, 25000) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 772.50) AND genergy = (-inf, 17640) AND nbumps3 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = (-inf, 772.50) AND genergy = &lt;1865, 17640) AND senergy = (-inf, 4400) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 217) AND genergy = &lt;1865, inf) AND goimpuls = (-inf, -5.50) AND nbumps4 = (-inf, 0.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 68) AND genergy = &lt;1865, 17640) AND senergy = (-inf, 25000) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF ghazard = {c} THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 536) AND genergy = (-inf, 18585) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND genergy = (-inf, 18585) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF maxenergy = (-inf, 950) AND gimpuls = (-inf, 536) AND genergy = (-inf, 18585) THEN class = {0}
+IF gimpuls = (-inf, 536) AND genergy = &lt;1865, 18585) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 27100) THEN class = {0}
+IF goenergy = &lt;297.50, inf) THEN class = {0}
+IF senergy = &lt;115450, inf) THEN class = {0}
+IF genergy = &lt;1789250, inf) THEN class = {0}
+IF gimpuls = (-inf, 786) AND genergy = &lt;1865, 18810) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 27100) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND genergy = (-inf, 51290) AND goimpuls = (-inf, -0.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 184.50) AND goimpuls = (-inf, 27.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND genergy = (-inf, 51290) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-73.50, inf) AND goimpuls = (-inf, -0.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-73.50, inf) AND goimpuls = (-inf, 96.50) AND shift = {N} AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-55.50, inf) AND goimpuls = (-inf, 96.50) AND shift = {N} AND senergy = (-inf, 2150) THEN class = {0}
+IF goimpuls = &lt;-70.50, 96.50) AND genergy = &lt;4640, inf) AND shift = {N} AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = &lt;135, inf) AND goimpuls = (-inf, 230.50) AND genergy = &lt;9110, inf) AND shift = {N} AND senergy = (-inf, 2150) THEN class = {0}
+IF genergy = &lt;9110, inf) AND shift = {N} AND senergy = &lt;2400, 9500) AND nbumps3 = (-inf, 1.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 395) AND genergy = (-inf, 19310) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 786) AND genergy = (-inf, 19310) AND senergy = (-inf, 650) THEN class = {0}
+IF goenergy = &lt;-54.50, inf) AND genergy = &lt;10915, 19310) AND goimpuls = &lt;-50.50, 230.50) AND nbumps2 = (-inf, 1.50) AND nbumps = &lt;0.50, inf) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 786) AND genergy = (-inf, 19510) AND senergy = (-inf, 650) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 392.50) AND genergy = (-inf, 20525) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, 118) AND genergy = (-inf, 20525) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND seismoacoustic = {a} AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 319.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 118) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, 118) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 118) AND gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, 120.50) AND gimpuls = (-inf, 395.50) AND maxenergy = (-inf, 350) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 120.50) AND gimpuls = (-inf, 449.50) AND maxenergy = (-inf, 350) AND genergy = (-inf, 32875) THEN class = {0}
+IF goenergy = &lt;-84.50, 120.50) AND gimpuls = (-inf, 449.50) AND maxenergy = (-inf, 350) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 449.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 537.50) AND genergy = (-inf, 25125) AND goimpuls = (-inf, 27.50) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, 114.50) AND gimpuls = (-inf, 537.50) AND maxenergy = (-inf, 350) AND genergy = (-inf, 31790) THEN class = {0}
+IF goenergy = &lt;-84.50, 114.50) AND genergy = (-inf, 31790) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;116.50, inf) AND gimpuls = (-inf, 788.50) AND genergy = &lt;20930, 31790) THEN class = {0}
+IF goenergy = &lt;-84.50, 114.50) AND genergy = (-inf, 32770) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 87.50) AND gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 87.50) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 87.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;-84.50, 87.50) AND genergy = (-inf, 1674705) AND goimpuls = (-inf, 96) AND senergy = (-inf, 550) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;57, inf) AND gimpuls = (-inf, 514.50) AND goimpuls = &lt;-1.50, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND gimpuls = &lt;523, 1342.50) AND goimpuls = &lt;17.50, inf) AND genergy = &lt;46870, inf) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goenergy = &lt;29.50, 104.50) AND gimpuls = &lt;522, 2168) AND senergy = (-inf, 250) THEN class = {0}
+IF goenergy = &lt;-19, inf) AND goimpuls = &lt;4.50, 312) AND genergy = &lt;4455, 34260) AND nbumps = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;8.50, inf) AND gimpuls = &lt;523, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 250) THEN class = {0}
+IF genergy = &lt;36470, 42165) AND goimpuls = &lt;5.50, inf) AND senergy = (-inf, 550) THEN class = {0}
+IF goenergy = &lt;119.50, inf) AND gimpuls = &lt;516, 1210) AND goimpuls = (-inf, 118.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = &lt;144.50, 1210) AND genergy = &lt;42430, inf) AND goimpuls = &lt;59.50, inf) AND senergy = (-inf, 250) THEN class = {0}
+IF gimpuls = &lt;813.50, 1427.50) AND goimpuls = &lt;104.50, inf) AND senergy = (-inf, 350) THEN class = {0}
+IF gimpuls = (-inf, 319) AND genergy = &lt;1865, 19670) AND goimpuls = (-inf, -6.50) AND senergy = (-inf, 9600) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 362.50) AND goimpuls = (-inf, -0.50) AND senergy = (-inf, 650) THEN class = {0}
+IF goenergy = &lt;-44.50, inf) AND gimpuls = &lt;324.50, inf) AND genergy = (-inf, 32770) AND goimpuls = (-inf, 105.50) AND nbumps = &lt;0.50, 1.50) THEN class = {0}
+IF goenergy = &lt;-73.50, 14.50) AND gimpuls = (-inf, 1342.50) AND genergy = &lt;36280, inf) AND senergy = (-inf, 650) THEN class = {0}
+IF goimpuls = &lt;-6.50, inf) AND genergy = &lt;49585, inf) AND senergy = (-inf, 650) AND nbumps = &lt;0.50, inf) THEN class = {0}
+IF goenergy = &lt;-54.50, inf) AND genergy = (-inf, 64725) AND senergy = &lt;650, 750) THEN class = {0}
+IF goenergy = &lt;-33.50, inf) AND maxenergy = (-inf, 950) AND gimpuls = (-inf, 537.50) AND genergy = (-inf, 25125) AND goimpuls = &lt;-41.50, -0.50) THEN class = {0}
+IF goenergy = &lt;-84.50, 114.50) AND gimpuls = (-inf, 587.50) AND genergy = (-inf, 27275) AND nbumps3 = (-inf, 0.50) AND senergy = (-inf, 25250) THEN class = {0}
+IF goenergy = (-inf, 114.50) AND genergy = &lt;1865, 28515) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goenergy = (-inf, -20.50) AND gimpuls = (-inf, 537.50) AND genergy = &lt;20610, 28515) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF genergy = (-inf, 28515) AND nbumps = &lt;5.50, inf) THEN class = {0}
+IF maxenergy = (-inf, 3500) AND genergy = &lt;20270, 28515) AND goimpuls = (-inf, -8.50) AND nbumps2 = &lt;0.50, 1.50) THEN class = {0}
+IF genergy = &lt;3260, 28515) AND senergy = &lt;8500, inf) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-36.50, inf) AND genergy = (-inf, 28515) AND senergy = &lt;5050, inf) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;-53.50, 40.50) AND genergy = &lt;20560, 29105) AND nbumps2 = &lt;0.50, inf) THEN class = {0}
+IF goenergy = (-inf, 14.50) AND maxenergy = (-inf, 550) AND gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-40.50, 28.50) AND gimpuls = (-inf, 2168) AND genergy = &lt;40210, inf) AND senergy = (-inf, 850) AND seismic = {a} THEN class = {0}
+IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 362.50) AND genergy = &lt;1865, inf) AND goimpuls = (-inf, 66.50) AND senergy = (-inf, 7500) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96) AND genergy = &lt;1865, inf) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goenergy = &lt;17.50, inf) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 66.50) AND nbumps2 = (-inf, 0.50) AND nbumps = &lt;0.50, inf) THEN class = {0}
+IF gimpuls = (-inf, 1210) AND genergy = &lt;7815, inf) AND senergy = &lt;1500, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1252.50) AND goimpuls = (-inf, 96) AND genergy = &lt;1865, inf) AND senergy = (-inf, 7500) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1342.50) AND goimpuls = &lt;-54.50, inf) AND genergy = &lt;7870, inf) AND senergy = &lt;1500, inf) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goenergy = &lt;-40.50, 31.50) AND gimpuls = (-inf, 1485) AND genergy = &lt;44960, inf) AND senergy = (-inf, 5500) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = &lt;1441.50, inf) AND genergy = (-inf, 117575) THEN class = {0}
+IF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1752) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 0.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goimpuls = &lt;-40.50, inf) AND genergy = &lt;422215, inf) AND seismoacoustic = {a} AND senergy = &lt;2500, inf) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF genergy = &lt;29945, 31245) THEN class = {0}
+IF goenergy = &lt;-33.50, inf) AND genergy = &lt;29155, 31615) AND goimpuls = (-inf, 105.50) AND nbumps3 = (-inf, 1.50) THEN class = {0}
+IF genergy = &lt;31805, 32680) THEN class = {0}
+IF goenergy = (-inf, 158.50) AND maxenergy = (-inf, 650) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96.50) THEN class = {0}
+IF genergy = &lt;32925, 34315) THEN class = {0}
+IF maxenergy = (-inf, 750) AND genergy = &lt;35480, 45240) AND nbumps = &lt;0.50, inf) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;-27.50, inf) AND maxenergy = (-inf, 750) AND gimpuls = (-inf, 2056) AND genergy = (-inf, 715465) AND senergy = &lt;850, inf) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 305.50) AND goimpuls = (-inf, 17.50) AND senergy = (-inf, 2300) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 305.50) AND maxenergy = (-inf, 3500) AND goimpuls = (-inf, -5.50) THEN class = {0}
+IF gimpuls = (-inf, 305.50) AND genergy = &lt;29195, inf) AND goimpuls = (-inf, 96) AND senergy = (-inf, 9850) THEN class = {0}
+IF senergy = &lt;71000, inf) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 88.50) AND gimpuls = (-inf, 1141.50) AND maxenergy = (-inf, 7500) AND genergy = &lt;1865, inf) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-72.50, inf) AND gimpuls = (-inf, 1372) AND genergy = &lt;55365, inf) AND senergy = &lt;1500, inf) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 87.50) AND genergy = (-inf, 1733075) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = &lt;-32.50, inf) AND gimpuls = (-inf, 2681) AND genergy = &lt;173815, 1026530) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;0.50, 87.50) AND maxenergy = &lt;550, 850) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;-29.50, inf) AND gimpuls = &lt;259.50, inf) AND maxenergy = &lt;550, inf) AND genergy = (-inf, 39305) AND goimpuls = &lt;-39.50, inf) AND senergy = (-inf, 4400) AND nbumps3 = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-18.50, 105.50) AND genergy = &lt;9110, 39695) AND goimpuls = &lt;-41.50, inf) AND nbumps3 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 361.50) AND maxenergy = (-inf, 3500) AND senergy = &lt;3250, inf) THEN class = {0}
+IF goenergy = &lt;-37.50, inf) AND gimpuls = (-inf, 361.50) AND maxenergy = (-inf, 35000) AND genergy = &lt;38315, inf) AND senergy = &lt;950, inf) THEN class = {0}
+IF goenergy = &lt;-18.50, inf) AND gimpuls = &lt;334.50, 804.50) AND maxenergy = &lt;550, inf) AND genergy = (-inf, 44750) AND senergy = (-inf, 25150) AND nbumps2 = &lt;0.50, 3.50) THEN class = {0}
+IF senergy = &lt;1250, 1550) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF genergy = &lt;44780, 45255) THEN class = {0}
+IF goenergy = (-inf, 158.50) AND senergy = &lt;1150, 1650) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF genergy = &lt;46690, 48545) THEN class = {0}
+IF goenergy = (-inf, 68) AND gimpuls = (-inf, 769.50) AND genergy = &lt;43280, 49095) AND nbumps3 = (-inf, 3.50) THEN class = {0}
+IF goenergy = (-inf, 95.50) AND gimpuls = (-inf, 514.50) AND goimpuls = &lt;-7, 96.50) AND genergy = &lt;40245, inf) AND nbumps3 = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-73.50, inf) AND gimpuls = (-inf, 514.50) AND maxenergy = &lt;550, 8500) AND genergy = &lt;49265, 108000) THEN class = {0}
+IF goenergy = &lt;-53.50, inf) AND gimpuls = (-inf, 1836) AND nbumps3 = (-inf, 0.50) AND nbumps4 = &lt;0.50, inf) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF maxenergy = (-inf, 1500) AND gimpuls = &lt;673.50, 1210) AND senergy = &lt;1700, inf) THEN class = {0}
+IF goenergy = &lt;-84.50, inf) AND gimpuls = (-inf, 1245.50) AND genergy = &lt;49585, 58435) AND goimpuls = (-inf, 96.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF ghazard = {a} AND goenergy = (-inf, 68.50) AND gimpuls = &lt;526, 606) AND genergy = &lt;17700, inf) AND senergy = (-inf, 9550) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF goenergy = &lt;-43.50, 87.50) AND senergy = (-inf, 3150) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 1.50) AND nbumps = &lt;1.50, inf) THEN class = {0}
+IF goenergy = (-inf, 120.50) AND gimpuls = (-inf, 1029.50) AND genergy = &lt;58515, 61125) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = &lt;393.50, 725.50) AND genergy = &lt;81935, inf) AND nbumps3 = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;11.50, 68.50) AND maxenergy = (-inf, 2500) AND gimpuls = &lt;556, inf) AND genergy = (-inf, 1482055) AND nbumps2 = &lt;0.50, inf) THEN class = {0}
+IF goenergy = (-inf, 28.50) AND gimpuls = &lt;354, 791.50) AND genergy = &lt;81505, 366505) AND nbumps3 = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-31.50, 104.50) AND gimpuls = &lt;325, 2068.50) AND goimpuls = (-inf, 50.50) AND senergy = (-inf, 5750) AND nbumps3 = (-inf, 1.50) AND nbumps2 = &lt;0.50, 1.50) THEN class = {0}
+IF goenergy = &lt;-9.50, inf) AND gimpuls = &lt;938.50, 2902.50) AND maxenergy = (-inf, 3500) AND genergy = &lt;80845, 508210) AND nbumps = &lt;0.50, inf) THEN class = {0}
+IF senergy = &lt;5050, 5750) THEN class = {0}
+IF gimpuls = &lt;887.50, 977) AND goimpuls = (-inf, -6.50) AND senergy = (-inf, 85450) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;-38.50, inf) AND gimpuls = &lt;813.50, 1151) AND maxenergy = &lt;3500, inf) AND goimpuls = (-inf, 89.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-27.50, inf) AND genergy = &lt;123990, 544010) AND senergy = (-inf, 17850) AND nbumps = &lt;3.50, inf) THEN class = {0}
+IF goenergy = (-inf, 68.50) AND maxenergy = &lt;7500, inf) AND genergy = (-inf, 189505) AND goimpuls = &lt;32.50, inf) THEN class = {0}
+IF goenergy = &lt;-29.50, inf) AND gimpuls = (-inf, 2078.50) AND goimpuls = (-inf, -5.50) AND genergy = &lt;138665, inf) AND senergy = &lt;3250, inf) AND nbumps2 = (-inf, 1.50) AND nbumps = &lt;1.50, inf) THEN class = {0}
+IF goenergy = &lt;-15.50, 53.50) AND gimpuls = (-inf, 2917) AND goimpuls = &lt;-7.50, inf) AND nbumps3 = (-inf, 1.50) AND senergy = &lt;7500, inf) THEN class = {0}
+IF goenergy = &lt;-88.50, 87.50) AND genergy = (-inf, 1713980) AND goimpuls = (-inf, 89.50) AND senergy = (-inf, 18500) AND nbumps3 = (-inf, 4.50) AND nbumps2 = (-inf, 3.50) THEN class = {0}
+IF goenergy = &lt;22.50, inf) AND gimpuls = &lt;364, inf) AND genergy = (-inf, 144410) AND nbumps3 = &lt;3.50, inf) THEN class = {1}
+IF gimpuls = &lt;364, inf) AND goimpuls = (-inf, 21.50) AND nbumps3 = &lt;3.50, inf) AND senergy = &lt;10150, inf) THEN class = {1}
+IF goenergy = &lt;-15, inf) AND goimpuls = (-inf, 44.50) AND senergy = &lt;13850, inf) AND nbumps3 = (-inf, 3.50) AND nbumps = &lt;5.50, inf) THEN class = {1}
+IF gimpuls = &lt;2208.50, 2361.50) AND genergy = &lt;493095, inf) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF gimpuls = &lt;3011, inf) AND genergy = (-inf, 1005720) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF gimpuls = &lt;1328, 1361.50) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF goenergy = (-inf, -29.50) AND gimpuls = &lt;1328, inf) AND goimpuls = &lt;-29, -14.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-10.50, inf) AND gimpuls = &lt;1328, 1443.50) AND goimpuls = &lt;-1, inf) AND nbumps2 = (-inf, 1.50) THEN class = {1}
+IF gimpuls = &lt;1328, 2109) AND maxenergy = (-inf, 7500) AND goimpuls = (-inf, -5.50) AND genergy = (-inf, 642325) AND senergy = &lt;850, 9350) AND seismoacoustic = {a} AND nbumps = (-inf, 3.50) THEN class = {1}
+IF gimpuls = &lt;1394.50, 2004) AND goimpuls = &lt;-25, 13) AND genergy = &lt;393900, inf) AND senergy = (-inf, 38250) AND nbumps2 = &lt;0.50, inf) AND nbumps = &lt;1.50, 3.50) THEN class = {1}
+IF gimpuls = &lt;1747.50, 3018) AND goimpuls = &lt;-25, 20.50) AND nbumps3 = (-inf, 1.50) AND senergy = (-inf, 32750) THEN class = {1}
+IF goenergy = &lt;-16.50, inf) AND gimpuls = &lt;1831, 2945.50) AND genergy = &lt;254130, 1133675) AND seismic = {b} AND senergy = &lt;1600, 32750) THEN class = {1}
+IF maxenergy = (-inf, 25000) AND gimpuls = &lt;364, inf) AND goimpuls = &lt;1.50, inf) AND nbumps3 = &lt;1.50, 4.50) AND senergy = &lt;4300, inf) AND nbumps = &lt;4.50, 6.50) THEN class = {1}
+IF gimpuls = &lt;740.50, 887.50) AND goimpuls = (-inf, 9) AND nbumps = &lt;2.50, inf) THEN class = {1}
+IF gimpuls = &lt;764.50, 1288.50) AND genergy = &lt;61240, 213225) AND goimpuls = &lt;-22.50, 58.50) AND senergy = (-inf, 27350) AND nbumps3 = (-inf, 1.50) AND nbumps = &lt;2.50, inf) THEN class = {1}
+IF gimpuls = &lt;379, 484) AND goimpuls = (-inf, 12.50) AND senergy = (-inf, 10350) AND nbumps = &lt;2.50, inf) THEN class = {1}
+IF goenergy = (-inf, -4.50) AND maxenergy = &lt;3500, inf) AND goimpuls = &lt;-50, inf) AND genergy = (-inf, 52070) AND senergy = &lt;5750, 15200) AND nbumps = &lt;2.50, 5.50) AND nbumps2 = (-inf, 2.50) THEN class = {1}
+IF goenergy = (-inf, 123.50) AND goimpuls = &lt;-70.50, 32.50) AND seismoacoustic = {a} AND senergy = (-inf, 27350) AND nbumps = &lt;2.50, 4.50) THEN class = {1}
+IF goenergy = &lt;-30.50, inf) AND gimpuls = &lt;1139.50, 1270.50) AND goimpuls = (-inf, 105) AND genergy = &lt;54930, 220205) AND senergy = (-inf, 38250) AND nbumps3 = (-inf, 1.50) THEN class = {1}
+IF goenergy = &lt;-51, inf) AND gimpuls = &lt;754.50, 1048) AND goimpuls = (-inf, 62.50) AND genergy = (-inf, 99210) AND senergy = (-inf, 201650) AND nbumps = &lt;1.50, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {1}
+IF goenergy = (-inf, 144) AND gimpuls = &lt;361.50, 728.50) AND maxenergy = &lt;450, inf) AND genergy = &lt;32455, inf) AND goimpuls = &lt;-12.50, 8.50) AND senergy = (-inf, 7600) AND nbumps2 = &lt;0.50, inf) AND nbumps = (-inf, 2.50) THEN class = {1}
+IF ghazard = {a} AND gimpuls = &lt;160, 256) AND maxenergy = (-inf, 4500) AND genergy = (-inf, 21865) AND nbumps = &lt;1.50, inf) THEN class = {1}
+IF goenergy = (-inf, 106.50) AND gimpuls = &lt;110, 649.50) AND genergy = (-inf, 46930) AND senergy = (-inf, 40500) AND nbumps = &lt;1.50, 2.50) THEN class = {1}
+IF gimpuls = &lt;110, inf) AND senergy = &lt;550, inf) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF goenergy = &lt;-78.50, inf) AND gimpuls = &lt;32.50, 237.50) AND maxenergy = &lt;3500, inf) AND goimpuls = &lt;-74.50, 68.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) AND nbumps = (-inf, 4.50) THEN class = {1}
+IF gimpuls = &lt;767.50, 813.50) AND genergy = (-inf, 75455) AND goimpuls = &lt;1, inf) AND senergy = (-inf, 1300) AND nbumps = (-inf, 1.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = (-inf, 106.50) AND gimpuls = &lt;131, 735) AND maxenergy = (-inf, 350) AND genergy = &lt;48545, 66335) AND goimpuls = &lt;-72, inf) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;5.50, inf) AND gimpuls = &lt;396, 732.50) AND genergy = &lt;40050, 50765) AND goimpuls = (-inf, 79.50) AND senergy = (-inf, 350) THEN class = {1}
+IF goenergy = &lt;-37.50, 152.50) AND gimpuls = &lt;571, 651) AND genergy = &lt;20840, 36590) AND nbumps = (-inf, 0.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-22, 33.50) AND gimpuls = &lt;361.50, 525.50) AND genergy = &lt;25145, 42200) AND goimpuls = &lt;-27.50, 8.50) AND nbumps = (-inf, 0.50) THEN class = {1}
+IF goenergy = &lt;-45.50, inf) AND gimpuls = &lt;380.50, 542.50) AND genergy = &lt;17635, 21260) AND shift = {W} AND nbumps = (-inf, 0.50) THEN class = {1}
+IF gimpuls = &lt;240, 324.50) AND genergy = &lt;18585, 25665) AND goimpuls = &lt;-49.50, 37.50) AND shift = {W} AND senergy = (-inf, 3350) AND nbumps = (-inf, 2.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-59.50, -10.50) AND gimpuls = &lt;88, 269.50) AND maxenergy = (-inf, 4500) AND goimpuls = &lt;-42.50, 4.50) AND genergy = &lt;4565, 21365) THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+<section id="Correlation-Measure-generated-rules">
+<h3>Correlation Measure generated rules<a class="headerlink" href="#Correlation-Measure-generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">corr_ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1410) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1653.50) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1684) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1798) AND goimpuls = (-inf, 312) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 2733) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = (-inf, 3146) AND genergy = (-inf, 1733075) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF senergy = (-inf, 2350) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1331) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1655.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF ghazard = {a} AND gimpuls = &lt;334.50, 2892) AND genergy = (-inf, 318735) AND goimpuls = &lt;31.50, inf) AND senergy = &lt;350, inf) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1832.50) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 3146) AND genergy = (-inf, 1713980) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps5 = (-inf, 0.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND genergy = (-inf, 32675) AND senergy = (-inf, 2350) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1150.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF maxenergy = (-inf, 4500) AND gimpuls = (-inf, 769.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF goenergy = (-inf, 123.50) AND gimpuls = (-inf, 1028.50) AND maxenergy = &lt;1500, inf) AND genergy = &lt;31805, 373295) AND goimpuls = &lt;-54.50, inf) AND senergy = (-inf, 14350) AND seismic = {a} AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF genergy = (-inf, 378500) AND nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 5.50) THEN class = {0}
+IF goenergy = (-inf, 68.50) AND gimpuls = (-inf, 901) AND genergy = &lt;21765, inf) AND nbumps3 = (-inf, 3.50) AND nbumps2 = &lt;1.50, 3.50) AND nbumps = &lt;3.50, inf) THEN class = {0}
+IF gimpuls = (-inf, 1150.50) AND senergy = (-inf, 20650) THEN class = {0}
+IF gimpuls = (-inf, 1378) AND maxenergy = (-inf, 75000) AND goimpuls = (-inf, 312) AND nbumps4 = (-inf, 2.50) AND nbumps = (-inf, 8.50) THEN class = {0}
+IF goenergy = &lt;-4.50, inf) AND gimpuls = (-inf, 2185.50) AND genergy = &lt;135285, 1505475) AND senergy = (-inf, 5750) AND nbumps2 = &lt;0.50, inf) THEN class = {0}
+IF goenergy = &lt;-0.50, 104.50) AND maxenergy = (-inf, 5500) AND goimpuls = &lt;20.50, inf) AND genergy = &lt;101710, inf) AND nbumps = &lt;1.50, inf) THEN class = {0}
+IF goenergy = &lt;-29.50, inf) AND goimpuls = (-inf, 6.50) AND genergy = &lt;392530, inf) AND senergy = &lt;7250, inf) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 3881.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF maxenergy = &lt;1500, inf) AND gimpuls = &lt;994.50, 1959) AND goimpuls = &lt;-34, 95) AND genergy = (-inf, 662435) AND senergy = (-inf, 36050) AND nbumps3 = &lt;0.50, 4.50) AND nbumps2 = &lt;0.50, 2.50) THEN class = {1}
+IF goenergy = (-inf, 96) AND maxenergy = &lt;1500, inf) AND gimpuls = &lt;712, 2257.50) AND genergy = &lt;61250, 662435) AND goimpuls = (-inf, 95) AND nbumps3 = &lt;0.50, inf) AND senergy = (-inf, 27350) AND nbumps2 = &lt;0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}
+IF goenergy = (-inf, 96) AND maxenergy = &lt;1500, inf) AND gimpuls = &lt;538.50, inf) AND goimpuls = &lt;-34, 109) AND genergy = &lt;61250, 826925) AND senergy = (-inf, 36050) AND nbumps3 = (-inf, 4.50) AND nbumps2 = &lt;0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}
+IF goenergy = (-inf, 186) AND maxenergy = &lt;1500, inf) AND gimpuls = &lt;538.50, inf) AND genergy = &lt;58310, 934630) AND goimpuls = &lt;-55, inf) AND senergy = (-inf, 40650) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF ghazard = {a} AND gimpuls = &lt;521.50, inf) AND genergy = &lt;58310, 799855) AND goimpuls = &lt;-23.50, 64.50) AND senergy = &lt;850, 36050) AND nbumps = &lt;1.50, 3.50) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF goenergy = (-inf, 84) AND gimpuls = &lt;894.50, inf) AND genergy = &lt;66235, 1161025) AND goimpuls = &lt;-46, 77.50) AND senergy = &lt;650, inf) AND nbumps3 = (-inf, 2.50) AND nbumps = &lt;1.50, 5.50) AND nbumps2 = &lt;0.50, 3.50) THEN class = {1}
+IF goenergy = &lt;-34.50, 96) AND gimpuls = &lt;521.50, 1548.50) AND maxenergy = (-inf, 7500) AND genergy = &lt;34360, 207270) AND goimpuls = &lt;-22.50, inf) AND nbumps = &lt;1.50, inf) THEN class = {1}
+IF goenergy = (-inf, 135.50) AND gimpuls = &lt;378, inf) AND genergy = &lt;32635, 622815) AND goimpuls = (-inf, 10.50) AND senergy = (-inf, 36050) AND nbumps = &lt;1.50, inf) THEN class = {1}
+IF goenergy = (-inf, 106.50) AND gimpuls = &lt;306, 542) AND genergy = &lt;19245, 81890) AND senergy = &lt;750, 12050) AND nbumps = &lt;1.50, 3.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = (-inf, -1.50) AND gimpuls = &lt;153.50, 289) AND genergy = (-inf, 37085) AND senergy = (-inf, 40500) AND nbumps3 = (-inf, 3.50) AND nbumps = &lt;1.50, inf) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-65.50, 27) AND gimpuls = &lt;98.50, 346) AND goimpuls = &lt;-70.50, 8.50) AND genergy = (-inf, 64310) AND senergy = &lt;2350, inf) AND nbumps3 = (-inf, 3.50) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-50.50, inf) AND gimpuls = &lt;1328.50, inf) AND genergy = (-inf, 1062020) AND goimpuls = &lt;-33.50, 39.50) AND senergy = &lt;850, 38250) AND nbumps = (-inf, 7.50) THEN class = {1}
+IF goenergy = (-inf, 56.50) AND gimpuls = &lt;1253.50, inf) AND maxenergy = (-inf, 65000) AND genergy = &lt;52565, 716085) AND goimpuls = &lt;-60.50, 73) AND senergy = &lt;350, inf) AND nbumps3 = (-inf, 2.50) AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) AND nbumps = (-inf, 4.50) THEN class = {1}
+IF gimpuls = &lt;1342, 3508) AND maxenergy = (-inf, 7500) AND genergy = &lt;77100, inf) AND goimpuls = (-inf, 68.50) AND shift = {W} AND senergy = (-inf, 13350) AND nbumps2 = (-inf, 3.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-59.50, 45.50) AND gimpuls = &lt;110, 762) AND genergy = &lt;12145, 134125) AND goimpuls = &lt;-53.50, inf) AND senergy = &lt;550, 950) THEN class = {1}
+IF goenergy = (-inf, 128.50) AND genergy = &lt;10495, inf) AND shift = {W} AND senergy = (-inf, 36050) AND nbumps3 = &lt;0.50, inf) AND nbumps2 = (-inf, 4.50) AND nbumps = (-inf, 6.50) THEN class = {1}
+IF goenergy = &lt;-78.50, inf) AND gimpuls = &lt;32.50, inf) AND maxenergy = &lt;250, inf) AND goimpuls = &lt;-74.50, inf) AND senergy = &lt;350, inf) THEN class = {1}
+IF goenergy = (-inf, 176.50) AND gimpuls = &lt;449.50, inf) AND genergy = &lt;49095, inf) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;68, 124.50) AND gimpuls = &lt;725.50, 1445.50) AND maxenergy = (-inf, 2500) AND genergy = (-inf, 127635) AND goimpuls = &lt;16, inf) AND senergy = (-inf, 4700) AND nbumps2 = (-inf, 1.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;15.50, 160) AND gimpuls = &lt;133.50, 732.50) AND maxenergy = (-inf, 5500) AND genergy = &lt;40050, 52010) AND nbumps3 = (-inf, 0.50) AND nbumps2 = (-inf, 1.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = (-inf, 152.50) AND gimpuls = &lt;361.50, 653.50) AND maxenergy = (-inf, 7500) AND genergy = &lt;32680, 36470) AND nbumps3 = (-inf, 0.50) THEN class = {1}
+IF goenergy = &lt;-37.50, 124.50) AND gimpuls = &lt;537.50, 621) AND genergy = &lt;17635, 28105) AND shift = {W} AND nbumps = (-inf, 0.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-37.50, 181) AND gimpuls = &lt;240, 470.50) AND genergy = &lt;20485, 27430) AND goimpuls = &lt;-43, inf) AND shift = {W} AND senergy = (-inf, 450) THEN class = {1}
+IF goenergy = &lt;-55.50, 297.50) AND gimpuls = &lt;217.50, 796) AND genergy = &lt;13725, 49585) AND goimpuls = &lt;-42.50, inf) AND shift = {W} AND senergy = (-inf, 1050) AND nbumps2 = (-inf, 0.50) THEN class = {1}
+IF goenergy = (-inf, 7.50) AND gimpuls = &lt;54.50, 2085.50) AND genergy = &lt;1510, 569300) AND goimpuls = &lt;-72.50, 28.50) AND senergy = (-inf, 115450) AND seismoacoustic = {a} AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 3.50) THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+<section id="RSS-Measure-generated-rules">
+<h3>RSS Measure generated rules<a class="headerlink" href="#RSS-Measure-generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rss_ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF genergy = (-inf, 126350) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1210) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1410) AND goimpuls = (-inf, 233.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1485) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1653.50) AND goimpuls = (-inf, 96.50) AND genergy = (-inf, 1006585) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1752) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1822) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 550) THEN class = {0}
+IF gimpuls = (-inf, 2733) AND genergy = (-inf, 1026530) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 2733) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF genergy = (-inf, 1733075) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 650) THEN class = {0}
+IF maxenergy = (-inf, 550) AND goimpuls = (-inf, 312) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 650) AND gimpuls = (-inf, 1210) AND senergy = (-inf, 1550) THEN class = {0}
+IF maxenergy = (-inf, 650) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 233.50) THEN class = {0}
+IF gimpuls = (-inf, 1141.50) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = (-inf, 1141.50) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = (-inf, 1372) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1655.50) AND genergy = (-inf, 1006585) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1760.50) AND goimpuls = (-inf, 96) AND nbumps3 = (-inf, 3.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = (-inf, 2892) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) THEN class = {0}
+IF nbumps2 = (-inf, 0.50) THEN class = {0}
+IF gimpuls = (-inf, 1210) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF maxenergy = (-inf, 750) AND gimpuls = (-inf, 1732) AND goimpuls = (-inf, 96.50) AND genergy = (-inf, 703425) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 850) AND gimpuls = (-inf, 2888) AND goimpuls = (-inf, 96) THEN class = {0}
+IF genergy = (-inf, 31245) AND nbumps3 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 105.50) AND genergy = (-inf, 31245) AND senergy = (-inf, 4400) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = (-inf, 105.50) AND gimpuls = (-inf, 664.50) AND senergy = (-inf, 27100) AND nbumps = (-inf, 3.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF genergy = (-inf, 31245) AND goimpuls = (-inf, 233.50) AND senergy = (-inf, 24700) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 105.50) AND nbumps4 = (-inf, 0.50) AND nbumps = (-inf, 5.50) THEN class = {0}
+IF genergy = (-inf, 31245) AND goimpuls = (-inf, 105.50) AND senergy = (-inf, 27650) THEN class = {0}
+IF gimpuls = (-inf, 664.50) AND goimpuls = (-inf, 105.50) AND nbumps3 = (-inf, 3.50) AND nbumps4 = (-inf, 2.50) AND nbumps2 = (-inf, 4) THEN class = {0}
+IF goenergy = (-inf, 105.50) AND maxenergy = (-inf, 7500) AND genergy = (-inf, 44750) AND senergy = (-inf, 13700) THEN class = {0}
+IF gimpuls = (-inf, 1414) AND genergy = (-inf, 48545) AND goimpuls = (-inf, 233.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND goimpuls = (-inf, 96) AND senergy = (-inf, 1950) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1836) AND goimpuls = (-inf, 233.50) AND nbumps3 = (-inf, 0.50) AND nbumps5 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND maxenergy = (-inf, 1500) AND genergy = (-inf, 531845) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND genergy = (-inf, 61125) AND goimpuls = (-inf, 96.50) AND nbumps = (-inf, 6.50) THEN class = {0}
+IF goenergy = (-inf, 94.50) AND gimpuls = (-inf, 698) AND genergy = &lt;45830, 105885) AND goimpuls = &lt;-41.50, inf) AND senergy = &lt;3950, 29200) THEN class = {0}
+IF gimpuls = (-inf, 2068.50) AND goimpuls = (-inf, 233.50) AND senergy = (-inf, 4400) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF goimpuls = (-inf, 96.50) AND nbumps3 = (-inf, 1.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1139.50) AND nbumps3 = (-inf, 1.50) AND nbumps5 = (-inf, 0.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND gimpuls = (-inf, 1139.50) AND genergy = (-inf, 366505) AND nbumps3 = (-inf, 2.50) AND nbumps5 = (-inf, 0.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1655) AND genergy = (-inf, 1505475) AND nbumps = (-inf, 4.50) THEN class = {0}
+IF gimpuls = (-inf, 2185.50) AND genergy = (-inf, 1505475) AND goimpuls = (-inf, 96) AND senergy = (-inf, 5750) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = (-inf, 87.50) AND gimpuls = (-inf, 1328) AND senergy = (-inf, 85450) AND nbumps2 = (-inf, 3.50) THEN class = {0}
+IF goenergy = (-inf, 87.50) AND maxenergy = (-inf, 4500) AND goimpuls = (-inf, 96) AND senergy = (-inf, 12000) THEN class = {0}
+IF genergy = (-inf, 189505) AND goimpuls = (-inf, 312) AND nbumps4 = (-inf, 1.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF goenergy = &lt;-88.50, inf) AND gimpuls = (-inf, 2917) AND goimpuls = (-inf, 312) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = (-inf, 104.50) AND goimpuls = (-inf, 96.50) AND seismic = {a} AND nbumps3 = (-inf, 3.50) AND senergy = (-inf, 20650) THEN class = {0}
+IF gimpuls = &lt;521.50, inf) AND genergy = &lt;57680, inf) THEN class = {1}
+IF goenergy = (-inf, 123) AND senergy = &lt;550, inf) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;68.50, 105.50) AND gimpuls = &lt;483, inf) AND genergy = &lt;46530, 51605) AND nbumps = (-inf, 1.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;7, 58) AND gimpuls = &lt;396, 836) AND genergy = &lt;34315, 43280) AND goimpuls = &lt;-21.50, 28.50) AND nbumps = (-inf, 0.50) THEN class = {1}
+IF ghazard = {a} AND goenergy = (-inf, 160) AND gimpuls = &lt;362.50, 732.50) AND maxenergy = (-inf, 850) AND genergy = &lt;32680, 66275) AND senergy = (-inf, 1350) THEN class = {1}
+IF goenergy = &lt;14.50, 297.50) AND gimpuls = &lt;133.50, 797) AND maxenergy = (-inf, 1500) AND genergy = &lt;27275, 52010) AND nbumps3 = (-inf, 0.50) THEN class = {1}
+IF goenergy = &lt;-37.50, 122) AND gimpuls = &lt;537.50, 796) AND genergy = &lt;16805, 29510) AND goimpuls = &lt;-36.50, inf) AND senergy = (-inf, 250) THEN class = {1}
+IF ghazard = {a} AND goenergy = &lt;-37.50, inf) AND gimpuls = &lt;240, 473.50) AND genergy = &lt;20485, 25310) AND goimpuls = &lt;-43, inf) AND shift = {W} AND senergy = (-inf, 450) THEN class = {1}
+IF goenergy = &lt;-55.50, 124.50) AND gimpuls = &lt;194.50, inf) AND genergy = &lt;9060, inf) AND goimpuls = &lt;-60.50, inf) AND nbumps2 = (-inf, 4.50) THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Stratified-K-Folds-cross-validation">
+<h2>Stratified K-Folds cross-validation<a class="headerlink" href="#Stratified-K-Folds-cross-validation" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+
+<span class="n">N_SPLITS</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c2_ruleset_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">c2_prediction_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">c2_confusion_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+
+<span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+        <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+        <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+        <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">c2_ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+    <span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tmp</span><span class="p">,</span> <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+
+    <span class="n">c2_prediction_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">c2_prediction_metrics</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+    <span class="n">c2_ruleset_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">c2_ruleset_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">c2_ruleset</span><span class="p">)])</span>
+    <span class="n">c2_confusion_matrix</span> <span class="o">+=</span> <span class="n">confusion_matrix</span>
+
+<span class="n">c2_confusion_matrix</span> <span class="o">/=</span> <span class="n">N_SPLITS</span>
+</pre></div>
+</div>
+</div>
+<p>Rules characteristics</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c2_ruleset_stats</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+time_total_s                     1.843947
+time_growing_s                   1.635322
+time_pruning_s                   0.174192
+rules_count                    166.400000
+conditions_per_rule              4.947738
+induced_conditions_per_rule     13.622816
+avg_rule_coverage                0.168832
+avg_rule_precision               0.919178
+avg_rule_quality                 0.486174
+pvalue                           0.045063
+FDR_pvalue                       0.048888
+FWER_pvalue                      0.579658
+fraction_significant             0.809541
+fraction_FDR_significant         0.791608
+fraction_FWER_significant        0.640006
+dtype: float64
+</pre></div></div>
+</div>
+<p>Rules evaluation (average)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c2_prediction_metrics</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy                       0.899071
+MAE                            0.100929
+Kappa                          0.047367
+Balanced accuracy              0.535887
+Logistic loss                  3.637862
+Precision                      3.637862
+Sensitivity                    0.117647
+Specificity                    0.954127
+NPV                            0.939956
+PPV                            0.197777
+psep                           0.140239
+Fall-out                       0.045873
+Youden&#39;s J statistic           0.071774
+Lift                           3.013186
+F-measure                      0.073023
+Fowlkes-Mallows index          0.901979
+False positive                11.100000
+False negative                15.000000
+True positive                  2.000000
+True negative                230.300000
+Rules per example             23.960549
+Voting conflicts             110.800000
+Negative voting conflicts      7.400000
+Geometric mean                 0.180079
+dtype: float64
+</pre></div></div>
+</div>
+<p>Confusion matrix (average)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">c2_confusion_matrix</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>230.3</td>
+      <td>11.1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>15.0</td>
+      <td>2.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Hyperparameters-tuning">
+<h2>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Link to this heading"></a></h2>
+<p>This one gonna take a while…</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+<span class="c1"># define dataset</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">N_SPLITS</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># define models and parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">()</span>
+<span class="n">minsupp_new</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">measures_choice</span> <span class="o">=</span> <span class="p">[</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span> <span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span> <span class="n">Measures</span><span class="o">.</span><span class="n">WeightedLaplace</span><span class="p">,</span> <span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">]</span>
+<span class="c1"># define grid search</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;minsupp_new&#39;</span><span class="p">:</span> <span class="n">minsupp_new</span><span class="p">,</span>
+    <span class="s1">&#39;induction_measure&#39;</span><span class="p">:</span> <span class="n">measures_choice</span><span class="p">,</span>
+    <span class="s1">&#39;pruning_measure&#39;</span><span class="p">:</span> <span class="n">measures_choice</span><span class="p">,</span>
+    <span class="s1">&#39;voting_measure&#39;</span><span class="p">:</span> <span class="n">measures_choice</span>
+<span class="p">}</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">N_SPLITS</span><span class="p">)</span>
+<span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">)</span>
+<span class="n">grid_result</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="c1"># summarize results</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best BAC: </span><span class="si">%f</span><span class="s2"> using </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">grid_result</span><span class="o">.</span><span class="n">best_score_</span><span class="p">,</span> <span class="n">grid_result</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best BAC: 0.638397 using {&#39;induction_measure&#39;: &lt;Measures.WeightedLaplace: &#39;WeightedLaplace&#39;&gt;, &#39;minsupp_new&#39;: 5, &#39;pruning_measure&#39;: &lt;Measures.RSS: &#39;RSS&#39;&gt;, &#39;voting_measure&#39;: &lt;Measures.WeightedLaplace: &#39;WeightedLaplace&#39;&gt;}
+</pre></div></div>
+</div>
+</section>
+<section id="Building-model-with-tuned-hyperparameters">
+<h2>Building model with tuned hyperparameters<a class="headerlink" href="#Building-model-with-tuned-hyperparameters" title="Link to this heading"></a></h2>
+<section id="Split-dataset-to-train-and-test-(80%/20%).">
+<h3>Split dataset to train and test (80%/20%).<a class="headerlink" href="#Split-dataset-to-train-and-test-(80%/20%)." title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">grid_result</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">ruleset_stats</span> <span class="o">=</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;Best&#39;</span><span class="p">,</span> <span class="n">ruleset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Rules evaluation</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">ruleset_stats</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+time_total_s                    0.145316
+time_growing_s                  0.122759
+time_pruning_s                  0.016378
+rules_count                    23.000000
+conditions_per_rule             3.000000
+induced_conditions_per_rule    10.869565
+avg_rule_coverage               0.608633
+avg_rule_precision              0.861028
+avg_rule_quality                1.214700
+pvalue                          0.000219
+FDR_pvalue                      0.000219
+FWER_pvalue                     0.000221
+fraction_significant            1.000000
+fraction_FDR_significant        1.000000
+fraction_FWER_significant       1.000000
+dtype: float64
+</pre></div></div>
+</div>
+</section>
+<section id="Validate-model-on-test-dataset">
+<h3>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">prediction_metrics</span><span class="p">,</span> <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;Best&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">prediction_metrics</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy                       0.891683
+MAE                            0.108317
+Kappa                          0.097281
+Balanced accuracy              0.539967
+Logistic loss                  3.904148
+Precision                      3.904148
+Sensitivity                    0.121951
+Specificity                    0.957983
+NPV                            0.926829
+PPV                            0.200000
+psep                           0.126829
+Fall-out                       0.042017
+Youden&#39;s J statistic           0.079934
+Lift                           2.521951
+F-measure                      0.151515
+Fowlkes-Mallows index          0.890544
+False positive                20.000000
+False negative                36.000000
+True positive                  5.000000
+True negative                456.000000
+Rules per example             14.073501
+Voting conflicts             405.000000
+Negative voting conflicts     21.000000
+Geometric mean                 0.341800
+dtype: float64
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>456</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>36</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="regression.html" class="btn btn-neutral float-right" title="Regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
