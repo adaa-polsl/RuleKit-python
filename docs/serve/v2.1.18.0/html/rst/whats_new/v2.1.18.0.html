@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What’s new in RuleKit version 2.1.18.0? &mdash; rulekit v2.1.18.0 2.1.18.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=fa6651ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tutorials" href="../tutorials.html" />
+    <link rel="prev" title="What’s new" href="../whats_new.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v2.1.18.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../whats_new.html">Whats new</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">v2.1.18.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#1.-Add-utility-function-for-reading-.arff-files.">1. Add utility function for reading .arff files.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#2.-Add-ability-to-write-verbose-rule-induction-process-logs-to-the-file.">2. Add ability to write verbose rule induction process logs to the file.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#3.-Add-validation-of-the-models-parameters-configuration.">3. Add validation of the models parameters configuration.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Fixed-issues">Fixed issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v2.1.18.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../whats_new.html">What’s new</a></li>
+      <li class="breadcrumb-item active">What’s new in RuleKit version 2.1.18.0?</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/whats_new/v2.1.18.0.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="What's-new-in-RuleKit-version-2.1.18.0?">
+<h1>What’s new in RuleKit version 2.1.18.0?<a class="headerlink" href="#What's-new-in-RuleKit-version-2.1.18.0?" title="Link to this heading"></a></h1>
+<p>This release mainly focuses on fixing various inconsistencies between this package and the original Java RuleKit v2 library.</p>
+<section id="1.-Add-utility-function-for-reading-.arff-files.">
+<h2>1. Add utility function for reading .arff files.<a class="headerlink" href="#1.-Add-utility-function-for-reading-.arff-files." title="Link to this heading"></a></h2>
+<p>The ARFF file format was originally created by the Machine Learning Project at the University of Waikato’s Department of Computer Science for use with Weka machine learning software. This format, once popular, has now become rather niche. However, some older but popular public benchmark datasets are still available as arff files.</p>
+<p>Modern Python hovewer lacks a good package for reading such files. Most exsiting examples on the internet are using <code class="docutils literal notranslate"><span class="pre">scipy.io.arff</span></code> package. However, this package has some drawbacks that can be problematic (they certainly were in our own experiments). First of all, it does not read the data as pandas DataFrames. Although the returned data can be easily converted into a DataFrame, it still fails to properly encode string columns, leaving them as bytes. We also encountered problems parsing empty
+values, especially in numeric columns.</p>
+<p>After encountering all these problems and drinking considerable amounts of coffee ☕ to fix all sorts of strange bugs they caused, we decided to add a custom function for reading arff files to this package. It is not a completely new implementation and uses <code class="docutils literal notranslate"><span class="pre">scipy.io.arff</span></code>. It fixes the previously mentioned problems, and also returns a ready-to-use pandas DataFrame compatible with the models available in this package. Example below.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">rulekit.arff</span> <span class="kn">import</span> <span class="n">read_arff</span>
+
+<span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">read_arff</span><span class="p">(</span><span class="s1">&#39;./tests/additional_resources/cholesterol.arff&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">FileNotFoundError</span>                         Traceback (most recent call last)
+Cell <span class="ansi-green-intense-fg ansi-bold">In[1], line 4</span>
+<span class="ansi-green-fg">      1</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> <span class="ansi-bold" style="color: rgb(0,0,255)">pandas</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> <span class="ansi-bold" style="color: rgb(0,0,255)">pd</span>
+<span class="ansi-green-fg">      2</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> <span class="ansi-bold" style="color: rgb(0,0,255)">rulekit</span><span class="ansi-bold" style="color: rgb(0,0,255)">.</span><span class="ansi-bold" style="color: rgb(0,0,255)">arff</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> read_arff
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 4</span> df: pd<span style="color: rgb(98,98,98)">.</span>DataFrame <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">read_arff</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">./tests/additional_resources/cholesterol.arff</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">&#39;</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-intense-fg ansi-bold">~\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\lib\site-packages\rulekit\arff.py:25</span>, in <span class="ansi-cyan-fg">read_arff</span><span class="ansi-blue-intense-fg ansi-bold">(file_path_or_file, encoding)</span>
+<span class="ansi-green-fg">     11</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">read_arff</span>(file_path_or_file: Union[<span style="color: rgb(0,135,0)">str</span>, io<span style="color: rgb(98,98,98)">.</span>IOBase], encoding: <span style="color: rgb(0,135,0)">str</span> <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">utf-8</span><span style="color: rgb(175,0,0)">&#34;</span>) <span style="color: rgb(98,98,98)">-</span><span style="color: rgb(98,98,98)">&gt;</span> pd<span style="color: rgb(98,98,98)">.</span>DataFrame:
+<span class="ansi-green-fg">     12</span> <span style="color: rgb(188,188,188)">    </span><span style="color: rgb(175,0,0)">&#34;&#34;&#34;Reads an .arff file and returns a pandas DataFrame.</span>
+<span class="ansi-green-fg">     13</span>
+<span class="ansi-green-fg">     14</span> <span style="color: rgb(175,0,0)">    This function offers a more convenient interface to read .arff files</span>
+<span class="ansi-green-intense-fg ansi-bold">   (...)</span>
+<span class="ansi-green-fg">     23</span> <span style="color: rgb(175,0,0)">        pd.DataFrame: pandas DataFrame with the data</span>
+<span class="ansi-green-fg">     24</span> <span style="color: rgb(175,0,0)">    &#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 25</span>     df <span style="color: rgb(98,98,98)">=</span> pd<span style="color: rgb(98,98,98)">.</span>DataFrame(<span class="ansi-yellow-bg">arff</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">loadarff</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">file_path_or_file</span><span class="ansi-yellow-bg">)</span>[<span style="color: rgb(98,98,98)">0</span>])
+<span class="ansi-green-fg">     26</span>     <span style="color: rgb(95,135,135)"># code to change encoding of the file</span>
+<span class="ansi-green-fg">     27</span>     decoded_df: pd<span style="color: rgb(98,98,98)">.</span>DataFrame <span style="color: rgb(98,98,98)">=</span> df<span style="color: rgb(98,98,98)">.</span>select_dtypes([np<span style="color: rgb(98,98,98)">.</span>object_])
+
+File <span class="ansi-green-intense-fg ansi-bold">~\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\lib\site-packages\scipy\io\arff\_arffread.py:802</span>, in <span class="ansi-cyan-fg">loadarff</span><span class="ansi-blue-intense-fg ansi-bold">(f)</span>
+<span class="ansi-green-fg">    800</span>     ofile <span style="color: rgb(98,98,98)">=</span> f
+<span class="ansi-green-fg">    801</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 802</span>     ofile <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">open</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">f</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    803</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">    804</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> _loadarff(ofile)
+
+<span class="ansi-red-intense-fg ansi-bold">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;./tests/additional_resources/cholesterol.arff&#39;
+</pre></div></div>
+</div>
+</section>
+<section id="2.-Add-ability-to-write-verbose-rule-induction-process-logs-to-the-file.">
+<h2>2. Add ability to write verbose rule induction process logs to the file.<a class="headerlink" href="#2.-Add-ability-to-write-verbose-rule-induction-process-logs-to-the-file." title="Link to this heading"></a></h2>
+<p>The original RuleKit provides detailed logs of the entire rule induction process. Such logs may not be of interest to the average user, but may be of value to others. They can also be helpful in the debugging process (they certainly were for us).</p>
+<p>To configure such logs you can use <code class="docutils literal notranslate"><span class="pre">RuleKit</span></code> class:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit</span> <span class="kn">import</span> <span class="n">RuleKit</span>
+
+<span class="n">RuleKit</span><span class="o">.</span><span class="n">configure_java_logger</span><span class="p">(</span>
+    <span class="n">log_file_path</span><span class="o">=</span><span class="s1">&#39;./java.logs&#39;</span><span class="p">,</span>
+    <span class="n">verbosity_level</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="c1"># train your model later</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="3.-Add-validation-of-the-models-parameters-configuration.">
+<h2>3. Add validation of the models parameters configuration.<a class="headerlink" href="#3.-Add-validation-of-the-models-parameters-configuration." title="Link to this heading"></a></h2>
+<p>This package acts as a wrapper for the original RuleKit library written in Java, offering an analogous but more Python-like API. However, this architecture has led to many bugs in the past. Most of them were due to differences between the parameter values of models configured in Python and their values set in Java. In this version, we have added automatic validation, which compares the parameter values configured by the user with those configured in Java and reports the corresponding
+<code class="docutils literal notranslate"><span class="pre">rulekit.exceptions.RuleKitMisconfigurationException</span></code> exception. However, this exception <strong>should not</strong> occur during normal use of this package and was added mainly to make debugging easier and prevent such bugs in the future.</p>
+</section>
+<section id="Fixed-issues">
+<h2>Fixed issues<a class="headerlink" href="#Fixed-issues" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Inconsistent results of induction for survival <a class="reference external" href="https://github.com/adaa-polsl/RuleKit-python/issues/22">#22</a></p></li>
+<li><p>Fixed numerous inconsistencies between this package and the original Java RuleKit v2 library.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../whats_new.html" class="btn btn-neutral float-left" title="What’s new" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

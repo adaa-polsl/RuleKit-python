@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\doc\doc_env"
+VIRTUAL_ENV="C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

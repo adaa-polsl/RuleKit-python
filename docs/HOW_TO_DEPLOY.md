@@ -23,32 +23,13 @@ python -m twine upload  dist/*
 > Make sure you installed docs dependencies in **SEPARATE** virtual env and activated it
 
 In `docs` directory call call:
+
 ```bash
-make.bat <VERSION>
+build.py <VERSION_NUMBER>
 ```
 e.g. 
 ```bash
-make.bat 2.18.0.0
-```
-1. Rename directory `/doc/build/html` to `/doc/build/v{CURRENT_VERSION}`.
-
-2. Change branch to `docs` and copy `/doc/build/v{CURRENT_VERSION}` directory to the root repo directory.
-
-3. Go to `index.html` file in the root repo directory and add modify versions list manually:
-```html
-    <li class="toctree-l1">
-    <!--Remove "(latest)" from the previous version item and add it to the currently latest version item -->
-    <a class="reference internal" href="v1.7.6/index.html"
-        >v.1.7.6</a 
-
-    >
-    </li>
-    <li class="toctree-l1">
-    <!-- Update href to match your folder path -->
-    <a class="reference internal" href="v1.7.14.0/index.html"
-        >v.1.7.14.0 (latest)</a
-    >
-    </li>
+build.py 2.18.0.0
 ```
 
 ### 3. Update badges

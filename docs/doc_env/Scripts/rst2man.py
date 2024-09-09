@@ -1,4 +1,4 @@
-#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\doc\doc_env\Scripts\python.exe
+#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\Scripts\python.exe
 # Author:
 # Contact: grubert@users.sf.net
 # Copyright: This module has been placed in the public domain.

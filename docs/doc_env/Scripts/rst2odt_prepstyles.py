@@ -1,4 +1,4 @@
-#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\doc\doc_env\Scripts\python.exe
+#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\Scripts\python.exe
 # Copyright: This module has been placed in the public domain.
 """
 Adapt a word-processor-generated styles.odt for odtwriter use:

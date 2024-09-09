@@ -1,4 +1,4 @@
-#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\doc\doc_env\Scripts\python.exe
+#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\Scripts\python.exe
 # $Id: rst2html4.py 9115 2022-07-28 17:06:24Z milde $
 # Author: David Goodger <goodger@python.org>
 # Copyright: This module has been placed in the public domain.

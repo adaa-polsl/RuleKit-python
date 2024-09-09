@@ -1,4 +1,4 @@
-#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\doc\doc_env\Scripts\python.exe
+#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\Scripts\python.exe
 # :Copyright: © 2015 Günter Milde.
 # :License: Released under the terms of the `2-Clause BSD license`_, in short:
 #
