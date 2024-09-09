@@ -1,0 +1,9 @@
+Jinja2<3.1
+Sphinx==7.2.6
+sphinx-rtd-theme==2.0.0
+nbsphinx==0.9.3
+sphinx-copybutton==0.5.2
+ipykernel==5.5.0
+pandoc~=2.3
+../
+
