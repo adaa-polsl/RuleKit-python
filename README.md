@@ -1,8 +1,8 @@
 [![Coverage Status](https://adaa-polsl.github.io/RuleKit-python/badges/coverage-badge.svg?dummy=8484744)](https://adaa-polsl.github.io/RuleKit-python/reports/coverage/index.html)
 [![Tests Status](https://adaa-polsl.github.io/RuleKit-python/badges/test-badge.svg?dummy=8484744)](https://adaa-polsl.github.io/RuleKit-python/reports/junit/report.html)
 [![Flake8 Status](https://adaa-polsl.github.io/RuleKit-python/badges/flake8-badge.svg?dummy=8484744)](https://adaa-polsl.github.io/RuleKit-python/reports/flake8/index.html)
-![PyPI](https://img.shields.io/pypi/v/rulekit?label=pypi%20package)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/rulekit)
+[![PyPI](https://img.shields.io/pypi/v/rulekit?label=pypi%20package)](https://pypi.org/project/rulekit/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/rulekit)](https://pypi.org/project/rulekit/)
 
 # Rulekit
 
