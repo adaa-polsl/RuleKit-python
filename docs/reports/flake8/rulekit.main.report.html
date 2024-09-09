@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: rulekit\main.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="rulekit.main.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\main.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  20
+               </span>
+               <strong>E501:</strong> line too long (92 > 79 characters)
+               
+                  (and 12 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l28">
+                  <tt><i>28</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class used for initializing RuleKit. It starts JVM underhood and setups it with jars.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (82 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l30">
+                  <tt><i>30</i> <span class="sd">    .. note:: Since version 1.7.0 there is no need to manually initialize RuleKit.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l31">
+                  <tt><i>31</i> <span class="sd">    You may just skip the **RuleKit.init()** line. However in certain scenarios when</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (83 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l32">
+                  <tt><i>32</i> <span class="sd">    you want use a custom RuleKit jar file or modify Java VM parameters, this class</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l39">
+                  <tt><i>39</i> <span class="sd">        version of RuleKit jar used by wrapper (not equal to python package version).</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (83 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l53">
+                  <tt><i>53</i>             <span class="k">with</span> <span class="n">Popen</span><span class="p">([</span><span class="s2">&quot;java&quot;</span><span class="p">,</span> <span class="s2">&quot;-version&quot;</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (88 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l61">
+                  <tt><i>61</i>                 <span class="s1">&#39;RuletKit requires java JRE to be installed (version 1.8.0 recommended)&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l74">
+                  <tt><i>74</i> <span class="sd">        .. note:: Since version 1.7.0 it don&#39;t have to be called before using any operator class.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l75">
+                  <tt><i>75</i> <span class="sd">        However in certain scenarios when you want use a custom RuleKit jar file or modify Java VM</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l87">
+                  <tt><i>87</i> <span class="sd">                You probably don&#39;t need to use this parameter unless you want to use</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l88">
+                  <tt><i>88</i> <span class="sd">                your own custom version of RuleKit jar file. Otherwise leave it as it</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (82 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l89">
+                  <tt><i>89</i> <span class="sd">                is and the package will use the official RuleKit release jar file.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l105">
+                  <tt><i>105</i>             <span class="n">jar_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;rulekit-</span><span class="si">{</span><span class="n">__RULEKIT_RELEASE_VERSION__</span><span class="si">}</span><span class="s1">-all.jar&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l113">
+                  <tt><i>113</i>             <span class="n">RuleKit</span><span class="o">.</span><span class="n">_class_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">str</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">class_path_separator</span><span class="p">,</span><span class="w"> </span><span class="n">jars_paths</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (115 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l117">
+                  <tt><i>117</i> <span class="s1">Failed to load RuleKit jar file. Check if valid rulekit jar file is present in &quot;</span><span class="si">{</span><span class="n">RuleKit</span><span class="o">.</span><span class="n">_jar_dir_path</span><span class="si">}</span><span class="s1">&quot; directory.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l119">
+                  <tt><i>119</i> <span class="s1">If you&#39;re running this package for the first time you need to download RuleKit jar file by running:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l133">
+                  <tt><i>133</i>         <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">RuleKit</span><span class="o">.</span><span class="n">_rulekit_jar_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">jar_archive</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l138">
+                  <tt><i>138</i>                     <span class="sa">r</span><span class="s1">&#39;Implementation-Version: \S+\r&#39;</span><span class="p">,</span> <span class="n">manifest_file_content</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (81 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l166">
+                  <tt><i>166</i> <span class="sd">        method unless you want too deep dive into the process of rules inductions</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit.main.source.html#l182">
+                  <tt><i>182</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the Java logger configuration configured using `configure_java_logger`</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

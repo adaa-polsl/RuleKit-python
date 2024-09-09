@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: rulekit\survival.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="rulekit.survival.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\survival.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  104
+               </span>
+               <strong>E501:</strong> line too long (92 > 79 characters)
+               
+                  (and 21 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l35">
+                  <tt><i>35</i>     <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l36">
+                  <tt><i>36</i>     <span class="n">select_best_candidate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l37">
+                  <tt><i>37</i>     <span class="n">complementary_conditions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l39">
+                  <tt><i>39</i>     <span class="n">extend_using_preferred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;extend_using_preferred&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l40">
+                  <tt><i>40</i>     <span class="n">extend_using_automatic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;extend_using_automatic&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l41">
+                  <tt><i>41</i>     <span class="n">induce_using_preferred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induce_using_preferred&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l42">
+                  <tt><i>42</i>     <span class="n">induce_using_automatic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induce_using_automatic&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l43">
+                  <tt><i>43</i>     <span class="n">consider_other_classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;consider_other_classes&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (104 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l44">
+                  <tt><i>44</i>     <span class="n">preferred_conditions_per_rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;preferred_conditions_per_rule&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (104 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l45">
+                  <tt><i>45</i>     <span class="n">preferred_attributes_per_rule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;preferred_attributes_per_rule&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l60">
+                  <tt><i>60</i>         <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l61">
+                  <tt><i>61</i>         <span class="n">select_best_candidate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l62">
+                  <tt><i>62</i>         <span class="n">complementary_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l69">
+                  <tt><i>69</i> <span class="sd">            name of column containing survival time data (use when data passed to model is padnas</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l72">
+                  <tt><i>72</i> <span class="sd">            a minimum number (or fraction, if value &lt; 1.0) of previously uncovered examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (101 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l73">
+                  <tt><i>73</i> <span class="sd">             to be covered by a new rule (positive examples for classification problems); default: 5,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l75">
+                  <tt><i>75</i> <span class="sd">            non-negative integer representing maximum number of conditions which can be added to</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l76">
+                  <tt><i>76</i> <span class="sd">            the rule in the growing phase  (use this parameter for large datasets if execution time</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l81">
+                  <tt><i>81</i> <span class="sd">            boolean telling whether missing values should be ignored (by default, a missing value</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (100 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l82">
+                  <tt><i>82</i> <span class="sd">             of given attribute is always considered as not fulfilling the condition build upon that</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l85">
+                  <tt><i>85</i> <span class="sd">            Floating-point number from [0,1] interval representing maximum fraction of examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l88">
+                  <tt><i>88</i> <span class="sd">            Flag determining if best candidate should be selected from growing phase;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l91">
+                  <tt><i>91</i> <span class="sd">            If enabled, complementary conditions in the form a = !{value} for nominal attributes</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l94">
+                  <tt><i>94</i> <span class="sd">            Maximum number of rules to be generated (for classification data sets it applies</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l117">
+                  <tt><i>117</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set models hyperparameters. Parameters are the same as in constructor.&quot;&quot;&quot;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l140">
+                  <tt><i>140</i>                 <span class="s1">&#39;Data values must be instance of either pandas DataFrame, numpy array or list&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l144">
+                  <tt><i>144</i>     <span class="k">def</span> <span class="nf">_prepare_survival_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">survival_time</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Data</span><span class="p">],</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (127 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l155">
+                  <tt><i>155</i>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">survival_time</span><span class="p">:</span> <span class="n">Data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SurvivalRules</span><span class="p">:</span>  <span class="c1"># pylint: disable=arguments-differ</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l165">
+                  <tt><i>165</i> <span class="sd">            data about survival time. Could be omitted when *survival_time_attr* parameter</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l178">
+                  <tt><i>178</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform prediction and return estimated survival function for each example.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l188">
+                  <tt><i>188</i> <span class="sd">            Each row represent single example from dataset and contains estimated survival function</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l189">
+                  <tt><i>189</i> <span class="sd">            for that example. Estimated survival function is returned as a dictionary containing</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l194">
+                  <tt><i>194</i>     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">survival_time</span><span class="p">:</span> <span class="n">Data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l198">
+                  <tt><i>198</i> <span class="sd">        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l199">
+                  <tt><i>199</i> <span class="sd">         between true event status at time T and predicted event status at that time;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l200">
+                  <tt><i>200</i> <span class="sd">         the Integrated Brier score summarizes the prediction error over all observations and over</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l210">
+                  <tt><i>210</i> <span class="sd">            data about survival time. Could be omitted when *survival_time_attr* parameter was</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l224">
+                  <tt><i>224</i>         <span class="n">predicted_example_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_java_object</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l245">
+                  <tt><i>245</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=super-init-not-called,too-many-arguments,too-many-locals</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l252">
+                  <tt><i>252</i>         <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l253">
+                  <tt><i>253</i>         <span class="n">select_best_candidate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l254">
+                  <tt><i>254</i>         <span class="n">complementary_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l256">
+                  <tt><i>256</i>         <span class="n">extend_using_preferred</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;extend_using_preferred&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l257">
+                  <tt><i>257</i>         <span class="n">extend_using_automatic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;extend_using_automatic&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l258">
+                  <tt><i>258</i>         <span class="n">induce_using_preferred</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induce_using_preferred&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l259">
+                  <tt><i>259</i>         <span class="n">induce_using_automatic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induce_using_automatic&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l270">
+                  <tt><i>270</i> <span class="sd">            a minimum number (or fraction, if value &lt; 1.0) of previously uncovered examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (101 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l271">
+                  <tt><i>271</i> <span class="sd">             to be covered by a new rule (positive examples for classification problems); default: 5,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l273">
+                  <tt><i>273</i> <span class="sd">            name of column containing survival time data (use when data passed to model is pandas</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l276">
+                  <tt><i>276</i> <span class="sd">            non-negative integer representing maximum number of conditions which can be added to</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l277">
+                  <tt><i>277</i> <span class="sd">            the rule in the growing phase (use this parameter for large datasets if execution time</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l282">
+                  <tt><i>282</i> <span class="sd">            boolean telling whether missing values should be ignored (by default, a missing value</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l283">
+                  <tt><i>283</i> <span class="sd">            of given attribute is always considered as not fulfilling the condition build upon that</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l286">
+                  <tt><i>286</i> <span class="sd">            Floating-point number from [0,1] interval representing maximum fraction of examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l289">
+                  <tt><i>289</i> <span class="sd">            Flag determining if best candidate should be selected from growing phase;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l292">
+                  <tt><i>292</i> <span class="sd">            If enabled, complementary conditions in the form a = !{value} for nominal attributes</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l295">
+                  <tt><i>295</i> <span class="sd">            Maximum number of rules to be generated (for classification data sets it applies</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l299">
+                  <tt><i>299</i> <span class="sd">            boolean indicating whether initial rules should be extended with a use of preferred</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l302">
+                  <tt><i>302</i> <span class="sd">            boolean indicating whether initial rules should be extended with a use of automatic</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l305">
+                  <tt><i>305</i> <span class="sd">            boolean indicating whether new rules should be induced with a use of preferred</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l308">
+                  <tt><i>308</i> <span class="sd">            boolean indicating whether new rules should be induced with a use of automatic</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l311">
+                  <tt><i>311</i> <span class="sd">            maximum number of preferred conditions per rule; default: unlimited,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l313">
+                  <tt><i>313</i> <span class="sd">            maximum number of preferred attributes per rule; default: unlimited.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l363">
+                  <tt><i>363</i> <span class="sd">            data about survival time. Could be omitted when *survival_time_attr* parameter was</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l367">
+                  <tt><i>367</i> <span class="sd">            set of initial rules, either passed as a list of strings representing rules or as list</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l371">
+                  <tt><i>371</i> <span class="sd">            multiset of preferred conditions (used also for specifying preferred attributes by</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l372">
+                  <tt><i>372</i> <span class="sd">             using special value Any). Either passed as a list of strings representing rules or as</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l373">
+                  <tt><i>373</i> <span class="sd">            list of tuples where first element is name of the rule and second one is rule string.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l375">
+                  <tt><i>375</i> <span class="sd">            set of forbidden conditions (used also for specifying forbidden attributes by using</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l376">
+                  <tt><i>376</i> <span class="sd">             special valye Any). Either passed as a list of strings representing rules or as list</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l377">
+                  <tt><i>377</i> <span class="sd">            of tuples where first element is name of the rule and second one is rule string.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l396">
+                  <tt><i>396</i>         <span class="k">return</span> <span class="n">PredictionResultMapper</span><span class="o">.</span><span class="n">map_survival</span><span class="p">(</span><span class="n">ExpertKnowledgeOperator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (83 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l402">
+                  <tt><i>402</i> <span class="k">class</span> <span class="nc">SurvivalContrastSetModelParams</span><span class="p">(</span><span class="n">ContrastSetModelParams</span><span class="p">,</span> <span class="n">SurvivalModelsParams</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l426">
+                  <tt><i>426</i>         <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l427">
+                  <tt><i>427</i>         <span class="n">select_best_candidate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l428">
+                  <tt><i>428</i>         <span class="n">complementary_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l435">
+                  <tt><i>435</i> <span class="sd">            a minimum positive support of a contrast set (p/P). When multiple values are specified,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l436">
+                  <tt><i>436</i> <span class="sd">            a metainduction is performed; Default and recommended sequence is: 0.8, 0.5, 0.2, 0.1</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l438">
+                  <tt><i>438</i> <span class="sd">            a maximum ratio of negative to positive supports (nP/pN); Default is 0.5</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l440">
+                  <tt><i>440</i> <span class="sd">            a maximum number of sequential covering passes for a single minsupp-all; Default is 5</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l444">
+                  <tt><i>444</i> <span class="sd">            the value of p_new / P at which penalty reward saturates; Default is 0.2.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l446">
+                  <tt><i>446</i> <span class="sd">            name of column containing survival time data (use when data passed to model is pandas</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l449">
+                  <tt><i>449</i> <span class="sd">            a minimum number (or fraction, if value &lt; 1.0) of previously uncovered examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (101 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l450">
+                  <tt><i>450</i> <span class="sd">             to be covered by a new rule (positive examples for classification problems); default: 5,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l452">
+                  <tt><i>452</i> <span class="sd">            non-negative integer representing maximum number of conditions which can be added to</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l453">
+                  <tt><i>453</i> <span class="sd">             the rule in the growing phase (use this parameter for large datasets if execution time</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l458">
+                  <tt><i>458</i> <span class="sd">            boolean telling whether missing values should be ignored (by default, a missing value</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (100 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l459">
+                  <tt><i>459</i> <span class="sd">             of given attribute is always considered as not fulfilling the condition build upon that</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l462">
+                  <tt><i>462</i> <span class="sd">            Floating-point number from [0,1] interval representing maximum fraction of examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l465">
+                  <tt><i>465</i> <span class="sd">            Flag determining if best candidate should be selected from growing phase;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l468">
+                  <tt><i>468</i> <span class="sd">            If enabled, complementary conditions in the form a = !{value} for nominal attributes</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l471">
+                  <tt><i>471</i> <span class="sd">            Maximum number of rules to be generated (for classification data sets it applies</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l497">
+                  <tt><i>497</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set models hyperparameters. Parameters are the same as in constructor.&quot;&quot;&quot;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l520">
+                  <tt><i>520</i> <span class="sd">            data about survival time. Could be omitted when *survival_time_attr* parameter</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (112 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l527">
+                  <tt><i>527</i>         <span class="n">survival_time_attribute</span> <span class="o">=</span> <span class="n">SurvivalRules</span><span class="o">.</span><span class="n">_prepare_survival_attribute</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l537">
+                  <tt><i>537</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform prediction and return estimated survival function for each example.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l547">
+                  <tt><i>547</i> <span class="sd">            Each row represent single example from dataset and contains estimated survival function</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l548">
+                  <tt><i>548</i> <span class="sd">            for that example. Estimated survival function is returned as a dictionary containing</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l553">
+                  <tt><i>553</i>     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">survival_time</span><span class="p">:</span> <span class="n">Data</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l557">
+                  <tt><i>557</i> <span class="sd">        Integrated Brier Score (IBS) - the Brier score (BS) represents the squared difference</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l558">
+                  <tt><i>558</i> <span class="sd">        between true event status at time T and predicted event status at that time;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l559">
+                  <tt><i>559</i> <span class="sd">         the Integrated Brier score summarizes the prediction error over all observations and</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l569">
+                  <tt><i>569</i> <span class="sd">            data about survival time. Could be omitted when *survival_time_attr* parameter was</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.survival.source.html#l577">
+                  <tt><i>577</i>         <span class="k">return</span> <span class="n">SurvivalRules</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">survival_time</span><span class="o">=</span><span class="n">survival_time</span><span class="p">)</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

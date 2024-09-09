@@ -3,3 +3,4 @@ autopep8
 genbadge[all]
 coverage
 junitxml
+flake8

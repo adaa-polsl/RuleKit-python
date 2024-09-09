@@ -1,0 +1,7 @@
+#!C:\Users\cezar\OneDrive\Pulpit\EMAG\GIT\PythonRulekit\docs\doc_env\Scripts\python.exe
+
+"""Script to run unit tests under junitxml."""
+
+if __name__ == '__main__':
+    import junitxml.main
+    junitxml.main.main()

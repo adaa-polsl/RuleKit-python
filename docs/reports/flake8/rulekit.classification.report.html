@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: rulekit\classification.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="rulekit.classification.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               rulekit\classification.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  126
+               </span>
+               <strong>E501:</strong> line too long (87 > 79 characters)
+               
+                  (and 21 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l40">
+                  <tt><i>40</i>     <span class="n">control_apriori_precision</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;control_apriori_precision&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l42">
+                  <tt><i>42</i>     <span class="n">approximate_bins_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_bins_count&#39;</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l49">
+                  <tt><i>49</i>         <span class="bp">self</span><span class="o">.</span><span class="n">_ClassificationRulesPerformance</span><span class="p">:</span> <span class="n">JClass</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=invalid-name</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l50">
+                  <tt><i>50</i>         <span class="bp">self</span><span class="o">.</span><span class="n">_NegativeVotingConflictsPerformance</span><span class="p">:</span> <span class="n">JClass</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=invalid-name</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l60">
+                  <tt><i>60</i>         <span class="bp">self</span><span class="o">.</span><span class="n">_ClassificationRulesPerformance</span> <span class="o">=</span> <span class="n">JClass</span><span class="p">(</span>  <span class="c1"># pylint: disable=invalid-name</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (83 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l61">
+                  <tt><i>61</i>             <span class="s1">&#39;adaa.analytics.rules.logic.performance.ClassificationRulesPerformance&#39;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l64">
+                  <tt><i>64</i>     <span class="k">def</span> <span class="nf">_calculate_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example_set</span><span class="p">:</span> <span class="n">JObject</span><span class="p">,</span> <span class="n">metric_type</span><span class="p">:</span> <span class="n">MetricTypes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l70">
+                  <tt><i>70</i>     <span class="k">def</span> <span class="nf">_calculate_prediction_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClassificationPredictionMetrics</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l89">
+                  <tt><i>89</i>         <span class="n">induction_measure</span><span class="p">:</span> <span class="n">Measures</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induction_measure&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l96">
+                  <tt><i>96</i>         <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l97">
+                  <tt><i>97</i>         <span class="n">select_best_candidate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l98">
+                  <tt><i>98</i>         <span class="n">complementary_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l99">
+                  <tt><i>99</i>         <span class="n">control_apriori_precision</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;control_apriori_precision&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l101">
+                  <tt><i>101</i>         <span class="n">approximate_induction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_induction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l102">
+                  <tt><i>102</i>         <span class="n">approximate_bins_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_bins_count&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l108">
+                  <tt><i>108</i> <span class="sd">            a minimum number (or fraction, if value &lt; 1.0) of previously uncovered examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (89 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l109">
+                  <tt><i>109</i> <span class="sd">             to be covered by a new rule (positive examples for classification problems);</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l111">
+                  <tt><i>111</i> <span class="sd">        induction_measure : :class:`rulekit.params.Measures` = :class:`rulekit.params.\</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l116">
+                  <tt><i>116</i> <span class="sd">            measure used during pruning. Could be user defined (string), for example</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l122">
+                  <tt><i>122</i> <span class="sd">            non-negative integer representing maximum number of conditions which can be added</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l123">
+                  <tt><i>123</i> <span class="sd">            to the rule in the growing phase (use this parameter for large datasets if execution</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l128">
+                  <tt><i>128</i> <span class="sd">            boolean telling whether missing values should be ignored (by default, a missing value</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l129">
+                  <tt><i>129</i> <span class="sd">            of given attribute is always cconsidered as not fulfilling the condition build upon</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l132">
+                  <tt><i>132</i> <span class="sd">            Floating-point number from [0,1] interval representing maximum fraction of examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l135">
+                  <tt><i>135</i> <span class="sd">            Flag determining if best candidate should be selected from growing phase; default:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l138">
+                  <tt><i>138</i> <span class="sd">            If enabled, complementary conditions in the form a = !{value} for nominal attributes</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l141">
+                  <tt><i>141</i> <span class="sd">            When inducing classification rules, verify if candidate precision is higher than</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l144">
+                  <tt><i>144</i> <span class="sd">            Maximum number of rules to be generated (for classification data sets it applies</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l147">
+                  <tt><i>147</i> <span class="sd">            Use an approximate induction heuristic which does not check all possible splits;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l148">
+                  <tt><i>148</i> <span class="sd">            note: this is an experimental feature and currently works only for classification</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l151">
+                  <tt><i>151</i> <span class="sd">            maximum number of bins for an attribute evaluated in the approximate induction.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l194">
+                  <tt><i>194</i>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_unique_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_unique_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l208">
+                  <tt><i>208</i>                 <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">labels</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;bool&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (100 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l216">
+                  <tt><i>216</i>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RuleClassifier</span><span class="p">:</span>  <span class="c1"># pylint: disable=arguments-differ</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l247">
+                  <tt><i>247</i> <span class="sd">            Optional flag. If set to *True* method will calculate some additional model metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (118 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l252">
+                  <tt><i>252</i> <span class="sd">        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l253">
+                  <tt><i>253</i> <span class="sd">            If *return_metrics* flag wasn&#39;t set it will return just prediction, otherwise a tuple</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l254">
+                  <tt><i>254</i> <span class="sd">             will be returned with first element being prediction and second one being metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l259">
+                  <tt><i>259</i>             <span class="n">metrics_values</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">BaseClassifier</span><span class="o">.</span><span class="n">_calculate_prediction_metrics</span><span class="p">(</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l277">
+                  <tt><i>277</i> <span class="sd">            Optional flag. If set to *True* method will calculate some additional model metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (118 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l282">
+                  <tt><i>282</i> <span class="sd">        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l283">
+                  <tt><i>283</i> <span class="sd">            If *return_metrics* flag wasn&#39;t set it will return just probabilities matrix, otherwise</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (102 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l284">
+                  <tt><i>284</i> <span class="sd">            a tuple will be returned with first element being prediction and second one being metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l289">
+                  <tt><i>289</i>             <span class="n">metrics_values</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">BaseClassifier</span><span class="o">.</span><span class="n">_calculate_prediction_metrics</span><span class="p">(</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l336">
+                  <tt><i>336</i>         <span class="n">induction_measure</span><span class="p">:</span> <span class="n">Measures</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induction_measure&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l343">
+                  <tt><i>343</i>         <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l344">
+                  <tt><i>344</i>         <span class="n">select_best_candidate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l345">
+                  <tt><i>345</i>         <span class="n">complementary_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l346">
+                  <tt><i>346</i>         <span class="n">control_apriori_precision</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;control_apriori_precision&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l348">
+                  <tt><i>348</i>         <span class="n">approximate_induction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_induction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l349">
+                  <tt><i>349</i>         <span class="n">approximate_bins_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_bins_count&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l351">
+                  <tt><i>351</i>         <span class="n">extend_using_preferred</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;extend_using_preferred&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l352">
+                  <tt><i>352</i>         <span class="n">extend_using_automatic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;extend_using_automatic&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l353">
+                  <tt><i>353</i>         <span class="n">induce_using_preferred</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induce_using_preferred&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l354">
+                  <tt><i>354</i>         <span class="n">induce_using_automatic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induce_using_automatic&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (86 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l355">
+                  <tt><i>355</i>         <span class="n">consider_other_classes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;consider_other_classes&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l365">
+                  <tt><i>365</i> <span class="sd">            a minimum number (or fraction, if value &lt; 1.0) of previously uncovered examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (101 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l366">
+                  <tt><i>366</i> <span class="sd">             to be covered by a new rule (positive examples for classification problems); default: 5,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l372">
+                  <tt><i>372</i> <span class="sd">            measure used during pruning. Could be user defined (string), for example</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l378">
+                  <tt><i>378</i> <span class="sd">            non-negative integer representing maximum number of conditions which can be added to</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l379">
+                  <tt><i>379</i> <span class="sd">            the rule in the growing phase (use this parameter for large datasets if execution time</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l384">
+                  <tt><i>384</i> <span class="sd">            boolean telling whether missing values should be ignored (by default, a missing value</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l385">
+                  <tt><i>385</i> <span class="sd">            of given attribute is always considered as not fulfilling the condition build upon</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l388">
+                  <tt><i>388</i> <span class="sd">            Floating-point number from [0,1] interval representing maximum fraction of examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l391">
+                  <tt><i>391</i> <span class="sd">            Flag determining if best candidate should be selected from growing phase; default:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l394">
+                  <tt><i>394</i> <span class="sd">            If enabled, complementary conditions in the form a = !{value} for nominal attributes</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l397">
+                  <tt><i>397</i> <span class="sd">            When inducing classification rules, verify if candidate precision is higher than</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l400">
+                  <tt><i>400</i> <span class="sd">            Maximum number of rules to be generated (for classification data sets it applies</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l403">
+                  <tt><i>403</i> <span class="sd">            Use an approximate induction heuristic which does not check all possible splits;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l404">
+                  <tt><i>404</i> <span class="sd">            note: this is an experimental feature and currently works only for classification</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l407">
+                  <tt><i>407</i> <span class="sd">            maximum number of bins for an attribute evaluated in the approximate induction.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l410">
+                  <tt><i>410</i> <span class="sd">            boolean indicating whether initial rules should be extended with a use of preferred</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l413">
+                  <tt><i>413</i> <span class="sd">            boolean indicating whether initial rules should be extended with a use of automatic</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l416">
+                  <tt><i>416</i> <span class="sd">            boolean indicating whether new rules should be induced with a use of preferred</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l419">
+                  <tt><i>419</i> <span class="sd">            boolean indicating whether new rules should be induced with a use of automatic</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l422">
+                  <tt><i>422</i> <span class="sd">            boolean indicating whether automatic induction should be performed for classes for</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l423">
+                  <tt><i>423</i> <span class="sd">              which no user&#39;s knowledge has been defined (classification only); default is False.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l425">
+                  <tt><i>425</i> <span class="sd">            maximum number of preferred conditions per rule; default: unlimited,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l427">
+                  <tt><i>427</i> <span class="sd">            maximum number of preferred attributes per rule; default: unlimited.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l491">
+                  <tt><i>491</i> <span class="sd">            set of initial rules, either passed as a list of strings representing rules or as list</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l492">
+                  <tt><i>492</i> <span class="sd">            of tuples where first element is name of the rule and second one is rule string.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l494">
+                  <tt><i>494</i> <span class="sd">            multiset of preferred conditions (used also for specifying preferred attributes by</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l495">
+                  <tt><i>495</i> <span class="sd">            using special value Any). Either passed as a list of strings representing rules or as</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l496">
+                  <tt><i>496</i> <span class="sd">            list of tuples where first element is name of the rule and second one is rule string.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l498">
+                  <tt><i>498</i> <span class="sd">            set of forbidden conditions (used also for specifying forbidden attributes by using</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l499">
+                  <tt><i>499</i> <span class="sd">             special valye Any). Either passed as a list of strings representing rules or as list</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l500">
+                  <tt><i>500</i> <span class="sd">            of tuples where first element is name of the rule and second one is rule string.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (80 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l559">
+                  <tt><i>559</i>         <span class="n">induction_measure</span><span class="p">:</span> <span class="n">Measures</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;induction_measure&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (87 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l566">
+                  <tt><i>566</i>         <span class="n">max_uncovered_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;max_uncovered_fraction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l567">
+                  <tt><i>567</i>         <span class="n">select_best_candidate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;select_best_candidate&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (90 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l568">
+                  <tt><i>568</i>         <span class="n">complementary_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;complementary_conditions&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l569">
+                  <tt><i>569</i>         <span class="n">control_apriori_precision</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;control_apriori_precision&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l571">
+                  <tt><i>571</i>         <span class="n">approximate_induction</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_induction&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l572">
+                  <tt><i>572</i>         <span class="n">approximate_bins_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s1">&#39;approximate_bins_count&#39;</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l578">
+                  <tt><i>578</i> <span class="sd">            a minimum positive support of a contrast set (p/P). When multiple values are specified,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l579">
+                  <tt><i>579</i> <span class="sd">            a metainduction is performed; Default and recommended sequence is: 0.8, 0.5, 0.2, 0.1</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l581">
+                  <tt><i>581</i> <span class="sd">            a maximum ratio of negative to positive supports (nP/pN); Default is 0.5</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l583">
+                  <tt><i>583</i> <span class="sd">            a maximum number of sequential covering passes for a single minsupp-all; Default is 5</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l587">
+                  <tt><i>587</i> <span class="sd">            the value of p_new / P at which penalty reward saturates; Default is 0.2.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l589">
+                  <tt><i>589</i> <span class="sd">            a minimum number (or fraction, if value &lt; 1.0) of previously uncovered examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (101 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l590">
+                  <tt><i>590</i> <span class="sd">             to be covered by a new rule (positive examples for classification problems); default: 5,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l596">
+                  <tt><i>596</i> <span class="sd">            measure used during pruning. Could be user defined (string), for example</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l602">
+                  <tt><i>602</i> <span class="sd">            non-negative integer representing maximum number of conditions which can be added to</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (98 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l603">
+                  <tt><i>603</i> <span class="sd">            the rule in the growing phase (use this parameter for large datasets if execution time</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l608">
+                  <tt><i>608</i> <span class="sd">            boolean telling whether missing values should be ignored (by default, a missing value</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l609">
+                  <tt><i>609</i> <span class="sd">            of given attribute is always considered as not fulfilling the condition build upon</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (95 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l612">
+                  <tt><i>612</i> <span class="sd">            Floating-point number from [0,1] interval representing maximum fraction of examples</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (85 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l615">
+                  <tt><i>615</i> <span class="sd">            Flag determining if best candidate should be selected from growing phase;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l618">
+                  <tt><i>618</i> <span class="sd">            If enabled, complementary conditions in the form a = !{value} for nominal attributes</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l621">
+                  <tt><i>621</i> <span class="sd">            When inducing classification rules, verify if candidate precision is higher than</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l624">
+                  <tt><i>624</i> <span class="sd">            Maximum number of rules to be generated (for classification data sets it applies</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l627">
+                  <tt><i>627</i> <span class="sd">            Use an approximate induction heuristic which does not check all possible splits;</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l628">
+                  <tt><i>628</i> <span class="sd">            note: this is an experimental feature and currently works only for classification</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (91 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l631">
+                  <tt><i>631</i> <span class="sd">            maximum number of bins for an attribute evaluated in the approximate induction.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l675">
+                  <tt><i>675</i>         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_unique_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_unique_values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (136 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l679">
+                  <tt><i>679</i>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">contrast_attribute</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContrastSetRuleClassifier</span><span class="p">:</span>  <span class="c1"># pylint: disable=arguments-differ</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (84 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l694">
+                  <tt><i>694</i>         <span class="n">RuleClassifier</span><span class="o">.</span><span class="n">_get_unique_label_values</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (92 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l697">
+                  <tt><i>697</i>         <span class="n">RuleClassifier</span><span class="o">.</span><span class="n">_prepare_labels</span><span class="p">(</span>  <span class="c1"># pylint: disable=protected-access,protected-access</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l720">
+                  <tt><i>720</i> <span class="sd">            Optional flag. If set to *True* method will calculate some additional model metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (118 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l725">
+                  <tt><i>725</i> <span class="sd">        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (97 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l726">
+                  <tt><i>726</i> <span class="sd">            If *return_metrics* flag wasn&#39;t set it will return just prediction, otherwise a tuple</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (94 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l727">
+                  <tt><i>727</i> <span class="sd">            will be returned with first element being prediction and second one being metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (96 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l744">
+                  <tt><i>744</i> <span class="sd">            Optional flag. If set to *True* method will calculate some additional model metrics.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (118 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l749">
+                  <tt><i>749</i> <span class="sd">        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (99 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l750">
+                  <tt><i>750</i> <span class="sd">            If *return_metrics* flag wasn&#39;t set it will return just probabilities matrix, otherwise</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (93 > 79 characters):</p>
+               
+               <a href="rulekit.classification.source.html#l751">
+                  <tt><i>751</i> <span class="sd">            a tuple will be returned with first element being prediction and second one being</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

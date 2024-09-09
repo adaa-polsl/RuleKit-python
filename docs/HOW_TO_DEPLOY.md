@@ -39,23 +39,23 @@ In repo root directory:
 1. Update coverage badge
 ```bash
 python -m coverage run -m unittest discover ./tests 
-python -m coverage xml -o ./reports/coverage/coverage.xml  
-python -m coverage html -d ./reports/coverage/
-genbadge coverage -i ./reports/coverage/coverage.xml  -o ./badges/coverage-badge.svg
+python -m coverage xml -o ./docs/reports/coverage/coverage.xml  
+python -m coverage html -d ./docs/reports/coverage/
+genbadge coverage -i ./docs/reports/coverage/coverage.xml  -o ./docs/badges/coverage-badge.svg
 ```
 
 2. Update test badge
 
 ```bash
-mkdir ./reports/junit
-python -m junitxml.main --o ./reports/junit/junit.xml
-
-genbadge tests -o ./badges/test-badge.svg
+rm -r ./docs/reports/junit
+mkdir ./docs/reports/junit
+python -m junitxml.main --o ./docs/reports/junit/junit.xml
+genbadge tests -i ./docs/reports/junit/junit.xml -o ./docs/badges/test-badge.svg
 ```
 
 3. Update flake8 badge
 
 ```bash
-flake8 ./rulekit --exit-zero --format=html --htmldir ./reports/flake8 --statistics --tee --output-file ./reports/flake8/flake8stats.txt
-genbadge flake -o ./badges/flake8-badge.svg
+flake8 ./rulekit --exit-zero --format=html --htmldir ./docs/reports/flake8 --statistics --tee --output-file ./docs/reports/flake8/flake8stats.txt
+genbadge flake8 -i ./docs/reports/flake8/flake8stats.txt -o ./docs/badges/flake8-badge.svg
 ```
