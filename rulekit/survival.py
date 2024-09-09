@@ -11,15 +11,15 @@ import pandas as pd
 from jpype import JClass
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
-from ._helpers import ExampleSetFactory
-from ._helpers import PredictionResultMapper
-from ._operator import BaseOperator
-from ._operator import Data
-from ._operator import ExpertKnowledgeOperator
-from ._problem_types import ProblemType
-from .params import ContrastSetModelParams
-from .params import DEFAULT_PARAMS_VALUE
-from .rules import RuleSet
+from rulekit._helpers import ExampleSetFactory
+from rulekit._helpers import PredictionResultMapper
+from rulekit._operator import BaseOperator
+from rulekit._operator import Data
+from rulekit._operator import ExpertKnowledgeOperator
+from rulekit._problem_types import ProblemType
+from rulekit.params import ContrastSetModelParams
+from rulekit.params import DEFAULT_PARAMS_VALUE
+from rulekit.rules import RuleSet
 
 _DEFAULT_SURVIVAL_TIME_ATTR: str = 'survival_time'
 

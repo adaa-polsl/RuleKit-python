@@ -4,9 +4,9 @@ from typing import Union
 
 import numpy as np
 
-from .params import Measures
-from .stats import RuleSetStatistics
-from .stats import RuleStatistics
+from rulekit.params import Measures
+from rulekit.stats import RuleSetStatistics
+from rulekit.stats import RuleStatistics
 
 
 class Rule:

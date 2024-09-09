@@ -14,15 +14,15 @@ from jpype import JClass
 from jpype import JObject
 from sklearn import metrics
 
-from ._helpers import PredictionResultMapper
-from ._operator import BaseOperator
-from ._operator import Data
-from ._operator import ExpertKnowledgeOperator
-from ._problem_types import ProblemType
-from .params import ContrastSetModelParams
-from .params import DEFAULT_PARAMS_VALUE
-from .params import Measures
-from .params import ModelsParams
+from rulekit._helpers import PredictionResultMapper
+from rulekit._operator import BaseOperator
+from rulekit._operator import Data
+from rulekit._operator import ExpertKnowledgeOperator
+from rulekit._problem_types import ProblemType
+from rulekit.params import ContrastSetModelParams
+from rulekit.params import DEFAULT_PARAMS_VALUE
+from rulekit.params import Measures
+from rulekit.params import ModelsParams
 
 
 class ClassificationPredictionMetrics(TypedDict):

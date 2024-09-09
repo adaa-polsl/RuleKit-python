@@ -1,5 +1,4 @@
 """Module containing classes for handling exceptions."""
-import json
 from typing import Any
 
 from jpype import JException

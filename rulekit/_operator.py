@@ -12,17 +12,17 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
-from ._helpers import ExampleSetFactory
-from ._helpers import get_rule_generator
-from ._helpers import ModelSerializer
-from ._helpers import PredictionResultMapper
-from ._helpers import RuleGeneratorConfigurator
-from ._problem_types import ProblemType
-from .events import command_listener_factory
-from .events import RuleInductionProgressListener
-from .main import RuleKit
-from .rules import Rule
-from .rules import RuleSet
+from rulekit._helpers import ExampleSetFactory
+from rulekit._helpers import get_rule_generator
+from rulekit._helpers import ModelSerializer
+from rulekit._helpers import PredictionResultMapper
+from rulekit._helpers import RuleGeneratorConfigurator
+from rulekit._problem_types import ProblemType
+from rulekit.events import command_listener_factory
+from rulekit.events import RuleInductionProgressListener
+from rulekit.main import RuleKit
+from rulekit.rules import Rule
+from rulekit.rules import RuleSet
 
 Data = Union[np.ndarray, pd.DataFrame, list]
 

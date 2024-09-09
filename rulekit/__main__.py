@@ -4,8 +4,8 @@ import os
 import sys
 import warnings
 
-from . import RuleKit
-from ._experiment import _ExperimentRunner
+from rulekit import RuleKit
+from rulekit._experiment import _ExperimentRunner
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 

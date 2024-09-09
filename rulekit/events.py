@@ -5,7 +5,7 @@ from typing import Any
 from jpype import JImplements
 from jpype import JOverride
 
-from .rules import Rule
+from rulekit.rules import Rule
 
 
 class RuleInductionProgressListener:
