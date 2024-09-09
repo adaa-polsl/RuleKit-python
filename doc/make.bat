@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=python -m sphinx.cmd.build
 )
 set SOURCEDIR=source
-set BUILDDIR=build
+set BUILDDIR=./serve/%1
 
 if "%1" == "help" goto help
 

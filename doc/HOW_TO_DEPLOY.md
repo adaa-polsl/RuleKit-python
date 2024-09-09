@@ -24,7 +24,11 @@ python -m twine upload  dist/*
 
 In `doc` directory call call:
 ```bash
-make.bat`
+make.bat <VERSION>
+```
+e.g. 
+```bash
+make.bat 2.18.0.0
 ```
 1. Rename directory `/doc/build/html` to `/doc/build/v{CURRENT_VERSION}`.
 
