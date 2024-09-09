@@ -4,3 +4,4 @@ genbadge[all]
 coverage
 junitxml
 flake8
+junit2html

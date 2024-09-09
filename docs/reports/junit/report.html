@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>junit.xml</title>
+    <style type="text/css">
+        body {
+    background-color: white;
+    padding-bottom: 20em;
+    margin: 0;
+    min-height: 15cm;
+}
+
+h1, h2, h3, h4, h5, h6, h7 {
+    font-family: sans-serif;
+}
+
+h1 {
+    background-color: #007acc;
+    color: white;
+    padding: 3mm;
+    margin-top: 0;
+    margin-bottom: 1mm;
+}
+
+.footer {
+    font-style: italic;
+    font-size: small;
+    text-align: right;
+    padding: 1em;
+}
+
+.testsuite {
+    padding-bottom: 2em;
+    margin-left: 1em;
+}
+
+.proplist {
+    width: 100%;
+    margin-bottom: 2em;
+    border-collapse: collapse;
+    border: 1px solid grey;
+}
+
+.proplist th {
+    background-color: silver;
+    width: 5em;
+    padding: 2px;
+    padding-right: 1em;
+    text-align: left;
+}
+
+.proplist td {
+    padding: 2px;
+    word-break: break-all;
+}
+
+.index-table {
+    width: 90%;
+    margin-left: 1em;
+}
+
+.index-table td {
+    vertical-align: top;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.failure-index {
+
+}
+
+.toc {
+    margin-bottom: 2em;
+    font-family: monospace;
+}
+
+.stdio, pre {
+    min-height: 1em;
+    background-color: #1e1e1e;
+    color: silver;
+    padding: 0.5em;
+}
+.tdpre {
+    background-color: #1e1e1e;
+}
+
+.test {
+    margin-left: 0.5cm;
+}
+
+.toc {
+    list-style: none;
+}
+
+.toc li.outcome {
+    list-style: none;
+}
+
+.toc li.outcome::before {
+    content: "\2022";
+    color: black;
+    font-weight: bold;
+    display: inline-block;
+    width: 1.27em;
+    margin-left: -1.27em;
+    font-size: 1.2em;
+}
+
+.toc li.outcome-failed {
+    background-color: lightcoral;
+}
+
+.toc li.outcome-failed::before {
+    color: red;
+}
+
+.toc li.outcome-passed::before {
+    color: green;
+}
+
+.toc li.outcome-skipped::before {
+    color: orange;
+}
+
+.testcases .outcome {
+    border-left: 1em;
+    padding: 2px;
+}
+
+.testcases .outcome-failed {
+    border-left: 1em solid lightcoral;
+}
+
+
+.outcome-passed {
+    border-left: 1em solid lightgreen;
+}
+
+.outcome-skipped {
+    border-left: 1em dotted silver;
+}
+
+.testcases .outcome-passed {
+    border-left: 1em solid lightgreen;
+}
+
+.testcases .outcome-skipped {
+    border-left: 1em solid #FED8B1;
+}
+
+.stats-table {
+}
+
+.stats-table td {
+    min-width: 4em;
+    text-align: right;
+}
+
+.stats-table .failed {
+    background-color: lightcoral;
+}
+
+.stats-table .passed {
+    background-color: lightgreen;
+}
+
+.matrix-table {
+    table-layout: fixed;
+    border-spacing: 0;
+    width: available;
+    margin-left: 1em;
+}
+
+.matrix-table td {
+    vertical-align: center;
+}
+
+.matrix-table td:last-child {
+    width: 0;
+}
+
+.matrix-table tr:hover {
+    background-color: yellow;
+}
+
+.matrix-axis-name {
+    white-space: nowrap;
+    padding-right: 0.5em;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    text-align: right;
+}
+
+.matrix-axis-line {
+    border-left: 1px solid black;
+    width: 0.5em;
+}
+
+.matrix-classname {
+    text-align: left;
+    width: 100%;
+    border-top: 2px solid grey;
+    border-bottom: 1px solid silver;
+}
+
+.matrix-casename {
+    text-align: left;
+    font-weight: normal;
+    font-style: italic;
+    padding-left: 1em;
+    border-bottom: 1px solid silver;
+}
+
+.matrix-result {
+    display: block;
+    width: 1em;
+    text-align: center;
+    padding: 1mm;
+    margin: 0;
+}
+
+.matrix-result-combined {
+    white-space: nowrap;
+    padding-right: 0.2em;
+    text-align: right;
+}
+
+.matrix-result-failed {
+    background-color: lightcoral;
+}
+
+.matrix-result-passed {
+    background-color: lightgreen;
+}
+
+.matrix-result-skipped {
+    background-color: lightyellow;
+}
+
+.matrix-even {
+    background-color: lightgray;
+}
+    </style>
+</head>
+<body>
+    
+<h1>
+    Test Report : junit.xml
+</h1>
+
+
+<a id="toc"></a>
+<table class="index-table">
+    <tr>
+        <td>
+            <ul class="toc">
+            
+                
+                <li>tests.test_classifier.TestClassifier
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#856c67e1-af5f-47a7-a1c5-2bbc36d8683d">test_classification_accuracy_on_iris</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#dbb57420-2589-4d57-9f8b-6d269c287910">test_classification_metrics</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#a992fbdf-2ab2-464b-b002-7ead003aac45">test_classification_predict_proba</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#a0d2df3b-1762-4e0f-9f7f-9e5962b76549">test_compare_with_java_results</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#f759d123-751d-4cc5-890c-6c12149691c6">test_fit_and_predict_on_boolean_columns</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#606f6750-b69b-4e30-b23f-71e066b93831">test_getting_examples_coverage</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#cd5abc4e-5fb9-489c-8120-3945b20180fb">test_induction_progress_listener</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#fa4b10c8-8fd3-436d-906b-176678fd5cac">test_predict_proba</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#dff18c38-0318-4b92-acc6-9dee8ff32ae4">test_prediction_on_nominal_values</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#0e53b548-6447-4c05-a3b4-d24990608a96">test_prediction_results_mapping</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_classifier.TestExperClassifier
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#f68742c2-c8da-4b5a-ac9f-ddc1ca81902e">test_compare_with_java_results</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#9e9794cc-db47-4c36-8372-8a7e48df89fa">test_left_open_intervals_in_expert_induction</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#3f156719-debb-4f10-a649-f9eb3fe1294e">test_predict_proba</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_regression.TestExpertRegressor
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#07b124eb-d662-4e24-ad0c-c655cf966dfa">test_compare_with_java_results</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_regression.TestRegressor
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#14822757-b5f8-41f0-9c07-a3e041c0be67">test_cholesterol</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#4d0cd4de-ab61-47ff-9edc-471356364c20">test_compare_with_java_results</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#a95e71ea-49d9-41ce-b52a-545477c27687">test_fit_and_predict_on_boolean_columns</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#540ad358-f605-4c82-a403-e7a15a1c2628">test_induction_progress_listener</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_rulekit.TestRuleKitMainClass
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#4a6384fd-95e9-443f-b8a4-f1986f252b50">test_loading_rulekit_class</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#12f89c15-c435-43a3-81fa-c8c0a239cf89">test_reading_version</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_serialization.TestModelSerialization
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#fd9c1576-de17-429e-8fe4-18cc5f88f24e">test_classifier_serialization</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#4c262f83-e95d-47d6-8a17-d2b037b5061c">test_expert_classifier_serialization</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#18e2150c-ca50-4a99-a1ff-196613bc7467">test_expert_regressor_serialization</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#be16cc1c-a12a-4724-95a7-0075b291e180">test_expert_survival_serialization</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#1225c350-8a21-4ed3-a57c-5801aac41558">test_multiple_serialization</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#3d6e6a00-aac1-41f2-a0ca-c207d5a69c93">test_regressor_serialization</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#4e97e50e-d7df-448f-a295-cfaf523ce564">test_survival_serialization</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_sklearn_metrics.TestMetrics
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#8f08f03c-e3b0-47b7-8a11-8a09e00fcf27">test_classification_accuracy_on_iris</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_statistics.TestRuleClassifier
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#aea63c54-e7e7-40ab-afd5-a3c1e9f358e0">test_classification_accuracy_on_iris</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_survival.TestExpertSurvivalLogRankTree
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#dcdfbfd9-80e3-45c6-a3c5-f6e771f32ac4">test_compare_with_java_results</a></li>
+                    
+                </ul>
+                </li>
+                
+                <li>tests.test_survival.TestSurvivalLogRankTree
+                <ul>
+                    
+                    <li class="outcome outcome-passed"><a href="#96629f53-3899-4c1f-a556-0083046ae3c2">test_compare_with_java_results</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#c7b9de5a-6c82-4c8c-bc73-a161f08db23d">test_fit_and_predict_on_boolean_columns</a></li>
+                    
+                    <li class="outcome outcome-passed"><a href="#a4f087cf-da88-4a14-a2bc-e2a66caf18f2">test_induction_progress_listener</a></li>
+                    
+                </ul>
+                </li>
+                
+            
+            </ul>
+        </td>
+        <td class="failure-index">
+            <ul class="toc">
+            
+                
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                
+            
+            </ul>
+        </td>
+    </tr>
+</table>
+
+
+
+    <div class="testsuite">
+        <h2>Test Suite: </h2>
+        <a id="9b4a05fe-cd85-4ccf-8a5f-b1783f9d9dab"></a>
+        
+        
+        <h3>Results</h3>
+        <table class="proplist">
+            <tr>
+                <th>Duration</th><td>20.189 sec</td>
+            </tr>
+            <tr>
+                <th>Tests</th><td>33</td>
+            </tr>
+            <tr>
+                <th>Failures</th><td>0</td>
+            </tr>
+        </table>
+
+        <div class="testclasses">
+            <h3>Tests</h3>
+            
+            <div class="testclass">
+                <h4>tests.test_classifier.TestClassifier</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="856c67e1-af5f-47a7-a1c5-2bbc36d8683d"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_classification_accuracy_on_iris</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.982 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="dbb57420-2589-4d57-9f8b-6d269c287910"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_classification_metrics</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.042 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="a992fbdf-2ab2-464b-b002-7ead003aac45"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_classification_predict_proba</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.02 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="a0d2df3b-1762-4e0f-9f7f-9e5962b76549"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_compare_with_java_results</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.538 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="f759d123-751d-4cc5-890c-6c12149691c6"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_fit_and_predict_on_boolean_columns</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.169 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="606f6750-b69b-4e30-b23f-71e066b93831"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_getting_examples_coverage</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.072 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="cd5abc4e-5fb9-489c-8120-3945b20180fb"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_induction_progress_listener</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.067 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="fa4b10c8-8fd3-436d-906b-176678fd5cac"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_predict_proba</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.186 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="dff18c38-0318-4b92-acc6-9dee8ff32ae4"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_prediction_on_nominal_values</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.006 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="0e53b548-6447-4c05-a3b4-d24990608a96"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_prediction_results_mapping</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.006 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_classifier.TestExperClassifier</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="f68742c2-c8da-4b5a-ac9f-ddc1ca81902e"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_compare_with_java_results</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.733 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="9e9794cc-db47-4c36-8372-8a7e48df89fa"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_left_open_intervals_in_expert_induction</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.049 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="3f156719-debb-4f10-a649-f9eb3fe1294e"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_predict_proba</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.063 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_regression.TestExpertRegressor</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="07b124eb-d662-4e24-ad0c-c655cf966dfa"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_compare_with_java_results</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>1.43 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_regression.TestRegressor</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="14822757-b5f8-41f0-9c07-a3e041c0be67"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_cholesterol</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>3.27 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="4d0cd4de-ab61-47ff-9edc-471356364c20"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_compare_with_java_results</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.309 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="a95e71ea-49d9-41ce-b52a-545477c27687"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_fit_and_predict_on_boolean_columns</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.611 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="540ad358-f605-4c82-a403-e7a15a1c2628"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_induction_progress_listener</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.033 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_rulekit.TestRuleKitMainClass</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="4a6384fd-95e9-443f-b8a4-f1986f252b50"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_loading_rulekit_class</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.0 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="12f89c15-c435-43a3-81fa-c8c0a239cf89"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_reading_version</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.0 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_serialization.TestModelSerialization</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="fd9c1576-de17-429e-8fe4-18cc5f88f24e"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_classifier_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.104 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="4c262f83-e95d-47d6-8a17-d2b037b5061c"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_expert_classifier_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.024 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="18e2150c-ca50-4a99-a1ff-196613bc7467"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_expert_regressor_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.16 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="be16cc1c-a12a-4724-95a7-0075b291e180"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_expert_survival_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.045 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="1225c350-8a21-4ed3-a57c-5801aac41558"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_multiple_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.031 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="3d6e6a00-aac1-41f2-a0ca-c207d5a69c93"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_regressor_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>3.741 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="4e97e50e-d7df-448f-a295-cfaf523ce564"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_survival_serialization</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.273 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_sklearn_metrics.TestMetrics</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="8f08f03c-e3b0-47b7-8a11-8a09e00fcf27"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_classification_accuracy_on_iris</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.023 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_statistics.TestRuleClassifier</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="aea63c54-e7e7-40ab-afd5-a3c1e9f358e0"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_classification_accuracy_on_iris</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.012 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_survival.TestExpertSurvivalLogRankTree</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="dcdfbfd9-80e3-45c6-a3c5-f6e771f32ac4"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_compare_with_java_results</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>1.416 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+            <div class="testclass">
+                <h4>tests.test_survival.TestSurvivalLogRankTree</h4>
+                <div class="testcases">
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="96629f53-3899-4c1f-a556-0083046ae3c2"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_compare_with_java_results</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>1.567 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="c7b9de5a-6c82-4c8c-bc73-a161f08db23d"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_fit_and_predict_on_boolean_columns</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>3.226 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                    <div class="test outcome outcome-passed">
+                        <a id="a4f087cf-da88-4a14-a2bc-e2a66caf18f2"></a>
+                        <table class="proplist">
+                            <tr><th>Test case:</th><td><b>test_induction_progress_listener</b></td></tr>
+                            <tr><th>Outcome:</th><td>Passed</td></tr>
+                            <tr><th>Duration:</th><td>0.981 sec</td></tr>
+                        
+                        
+                        </table>
+
+                        
+                        
+
+                        
+                        
+                        
+                    </div>
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+
+
+
+<p class="footer">
+    Generated by junit2html
+</p>
+</body>
+</html>

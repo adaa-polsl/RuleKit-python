@@ -50,6 +50,7 @@ genbadge coverage -i ./docs/reports/coverage/coverage.xml  -o ./docs/badges/cove
 rm -r ./docs/reports/junit
 mkdir ./docs/reports/junit
 python -m junitxml.main --o ./docs/reports/junit/junit.xml
+python -m junit2htmlreport ./docs/reports/junit/junit.xml ./docs/reports/junit/report.html
 genbadge tests -i ./docs/reports/junit/junit.xml -o ./docs/badges/test-badge.svg
 ```
 
