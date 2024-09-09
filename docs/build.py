@@ -1,25 +1,32 @@
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 
+curr_dir_path: str = os.path.dirname(os.path.realpath(__file__))
 
-def build_docs(version_number: str):
-    """Build docs for specific version number
 
-    Args:
-        version_number (str): version number without "v" prefix
-    """
+def build_docs_using_sphinx(version_number: str):
     print(f"Building docs for version v{version_number}")
     if version_number[0] == 'v':
         raise ValueError(
             'Please provide version number without "v" prefix')
-    curr_dir_path: str = os.path.dirname(os.path.realpath(__file__))
+
     python_path: str = sys.executable
+    output_path: str = f'{curr_dir_path}/serve/v{version_number}'
     output = subprocess.check_output(
-        f"{python_path} -m sphinx.cmd.build -M html source {curr_dir_path}/serve/v{version_number}"
+        f"{python_path} -m sphinx.cmd.build -M html source {output_path}"
     )
     print(output.decode())
+
+    tmp_path: str = f'{output_path}@'
+    shutil.move(output_path, tmp_path)
+    shutil.move(os.path.join(tmp_path, 'html'), output_path)
+    shutil.rmtree(tmp_path)
+
+
+def update_index_html(version_number: str):
     with open(os.path.join(curr_dir_path, 'serve', 'index.html'), 'r', encoding='utf-8') as index_html:
         content: str = index_html.read()
         content = content.replace('(latest)', '')
@@ -36,7 +43,6 @@ def build_docs(version_number: str):
         )
     with open(os.path.join(curr_dir_path, 'serve', 'index.html'), 'w', encoding='utf-8') as index_html:
         index_html.write(content)
-    exit(1)
 
 
 def main():
@@ -45,7 +51,9 @@ def main():
     )
     parser.add_argument('version_number')
     args = parser.parse_args()
-    build_docs(args.version_number)
+
+    build_docs_using_sphinx(args.version_number)
+    update_index_html(args.version_number)
 
 
 if __name__ == "__main__":
