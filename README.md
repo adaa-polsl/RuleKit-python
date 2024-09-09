@@ -1,6 +1,6 @@
-[![Coverage Status](https://raw.githubusercontent.com/adaa-polsl/RuleKit-python/main/docs/badges/coverage-badge.svg?dummy=8484744)](https://raw.githubusercontent.com/adaa-polsl/RuleKit-python/main/docs/reports/coverage/index.html)
-[![Tests Status](https://raw.githubusercontent.com/adaa-polsl/RuleKit-python/main/docs/badges/test-badge.svg?dummy=8484744)](https://raw.githubusercontent.com/adaa-polsl/RuleKit-python/main/docs/reports/junit/report.html)
-[![Flake8 Status](https://raw.githubusercontent.com/adaa-polsl/RuleKit-python/main/docs/badges/flake8-badge.svg?dummy=8484744)](https://raw.githubusercontent.com/adaa-polsl/RuleKit-python/main/docs/reports/flake8/index.html)
+[![Coverage Status](https://adaa-polsl.github.io/RuleKit-python/badges/coverage-badge.svg?dummy=8484744)](https://adaa-polsl.github.io/RuleKit-python/reports/coverage/index.html)
+[![Tests Status](https://adaa-polsl.github.io/RuleKit-python/badges/test-badge.svg?dummy=8484744)](https://adaa-polsl.github.io/RuleKit-python/reports/junit/report.html)
+[![Flake8 Status](https://adaa-polsl.github.io/RuleKit-python/badges/flake8-badge.svg?dummy=8484744)](https://adaa-polsl.github.io/RuleKit-python/reports/flake8/index.html)
 ![PyPI](https://img.shields.io/pypi/v/rulekit?label=pypi%20package)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/rulekit)
 
