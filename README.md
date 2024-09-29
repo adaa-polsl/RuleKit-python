@@ -14,7 +14,7 @@ Based on a sequential covering induction algorithm, it is suitable for classific
 ## Installation
  
 > **NOTE**: 
-This package is a wrapper for Java library, it requires Java Development Kit in version 8 (version 1.8.0 tested) to be installed on the computer. Both Open JDK and Oracle implementations are supported.
+This package is a wrapper for Java library, and requires Java Development Kit version 8 or later to be installed on the computer. Both Open JDK and Oracle implementations are supported.
 ## 
  
 ```bash
