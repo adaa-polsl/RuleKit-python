@@ -3,7 +3,7 @@ name: Run unit tests on pull request
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   test:
