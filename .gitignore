@@ -135,8 +135,6 @@ __pycache__/
 # C extensions
 *.so
 
-**/jar/*-all.jar
-
 # Distribution / packaging
 .Python
 build/
