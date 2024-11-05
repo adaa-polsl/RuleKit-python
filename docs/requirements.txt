@@ -1,10 +1,14 @@
-Jinja2<3.1
 Sphinx==7.2.6
 sphinx-rtd-theme==2.0.0
 nbsphinx==0.9.3
 sphinx-copybutton==0.5.2
 ipykernel==5.5.0
 pandoc~=2.3
+coverage~=7.6.4
 ipython_genutils~=0.2.0
+flake8
+junitxml==0.7
+junit2html~=31.0.2
+genbadge[all]~=1.1.1
 ../ 
 
