@@ -28,6 +28,7 @@ jobs:
 
     - name: Download test resources
       run: |
+        pip install requests
         python ./tests/resources.py download
 
     - name: Run tests
