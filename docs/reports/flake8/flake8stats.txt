@@ -9,3 +9,5 @@
 1     E713 test for membership should be 'not in'
 408   E501 line too long (98 > 79 characters)
 1     E713 test for membership should be 'not in'
+408   E501 line too long (98 > 79 characters)
+1     E713 test for membership should be 'not in'

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expert Rules &mdash; rulekit v2.1.18.0 2.1.18.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=fa6651ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Code documentation" href="../autodoc.html" />
+    <link rel="prev" title="Survival analysis" href="survival.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v2.1.18.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">Whats new</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="classification.html">Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="survival.html">Survival</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Expert Rules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Import-RuleKit">Import RuleKit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Classification">Classification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Prepare-dataset">Prepare dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Define-rules-and-conditions">Define rules and conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Rule-induction">Rule induction</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Regression">Regression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Prepare dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Define rules and conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Rule induction</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Survival">Survival</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Prepare dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Define rules and conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Rule induction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v2.1.18.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Expert Rules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/tutorials/expert_rules.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Expert-Rules">
+<h1>Expert Rules<a class="headerlink" href="#Expert-Rules" title="Link to this heading"></a></h1>
+<div class="line-block">
+<div class="line">This notebook presents example usage of user-guided rule induction which follows the scheme introduced by the <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0950705119300802?dgcid=coauthor">GuideR</a> algorithm (Sikora et al, 2019).</div>
+<div class="line">Each problem (classification, regression, survival) in addition to the basic class has an expert class, i.e. RuleClassifier and ExpertRuleClassifier. Expert classes allow you to define set of initial rules, preferred conditions and forbidden conditions.</div>
+<div class="line">This tutorial will show you how to define rules and conditions</div>
+</div>
+<section id="Import-RuleKit">
+<h2>Import RuleKit<a class="headerlink" href="#Import-RuleKit" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit</span> <span class="kn">import</span> <span class="n">RuleKit</span>
+<span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Classification">
+<h2>Classification<a class="headerlink" href="#Classification" title="Link to this heading"></a></h2>
+<section id="Prepare-dataset">
+<h3>Prepare dataset<a class="headerlink" href="#Prepare-dataset" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">arff</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arff</span><span class="o">.</span><span class="n">loadarff</span><span class="p">(</span><span class="s2">&quot;seismic-bumps.arff&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;class&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Define-rules-and-conditions">
+<h3>Define rules and conditions<a class="headerlink" href="#Define-rules-and-conditions" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expert_rules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;rule-0&#39;</span><span class="p">,</span> <span class="s1">&#39;IF [[gimpuls = &lt;-inf, 750)]] THEN class = </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;rule-1&#39;</span><span class="p">,</span> <span class="s1">&#39;IF [[gimpuls = &lt;750, inf)]] THEN class = </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">expert_preferred_conditions</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;preferred-condition-0&#39;</span><span class="p">,</span> <span class="s1">&#39;1: IF [[seismic = </span><span class="si">{a}</span><span class="s1">]] THEN class = </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="p">),</span> <span class="p">(</span>
+    <span class="s1">&#39;preferred-attribute-0&#39;</span><span class="p">,</span> <span class="s1">&#39;1: IF [[gimpuls = Any]] THEN class = </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="p">)]</span>
+
+<span class="n">expert_forbidden_conditions</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;forb-attribute-0&#39;</span><span class="p">,</span> <span class="s1">&#39;1: IF [[seismoacoustic  = Any]] THEN class = </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="p">),</span> <span class="p">(</span>
+    <span class="s1">&#39;forb-attribute-1&#39;</span><span class="p">,</span> <span class="s1">&#39;inf: IF [[ghazard  = Any]] THEN class = </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Rule-induction">
+<h3>Rule induction<a class="headerlink" href="#Rule-induction" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">ExpertRuleClassifier</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">ExpertRuleClassifier</span><span class="p">(</span>
+    <span class="n">minsupp_new</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+    <span class="n">max_growing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">extend_using_preferred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">extend_using_automatic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">induce_using_preferred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">induce_using_automatic</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">expert_rules</span><span class="o">=</span><span class="n">expert_rules</span><span class="p">,</span>
+    <span class="n">expert_preferred_conditions</span><span class="o">=</span><span class="n">expert_preferred_conditions</span><span class="p">,</span>
+    <span class="n">expert_forbidden_conditions</span><span class="o">=</span><span class="n">expert_forbidden_conditions</span>
+<span class="p">)</span>
+<span class="n">ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF [[gimpuls = &lt;-inf, 750)]] AND [seismic = {a}] AND nbumps4 = (-inf, 0.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1252.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1427.50) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1653.50) AND genergy = (-inf, 1006585) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1752) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 2733) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = &lt;2965, inf) AND genergy = &lt;634250, inf) AND nbumps = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1331) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1655.50) AND genergy = (-inf, 386010) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1686) AND goimpuls = (-inf, 312) AND nbumps5 = (-inf, 0.50) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 2892) AND genergy = (-inf, 386010) AND goimpuls = (-inf, 312) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 2068.50) AND goimpuls = (-inf, 312) AND genergy = (-inf, 1004565) AND nbumps = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 2184.50) AND nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 901) AND goimpuls = (-inf, 96.50) AND senergy = (-inf, 3850) AND nbumps = (-inf, 3.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND goimpuls = (-inf, 312) AND senergy = (-inf, 9600) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND goimpuls = (-inf, 312) AND senergy = (-inf, 8100) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF ghazard = {a} AND goenergy = &lt;-40.50, 68.50) AND maxenergy = (-inf, 5500) AND gimpuls = (-inf, 901) AND goimpuls = &lt;-39.50, inf) AND senergy = &lt;1150, inf) AND nbumps2 = &lt;1.50, inf) THEN class = {0}
+IF goenergy = &lt;-48.50, inf) AND gimpuls = (-inf, 695.50) AND maxenergy = &lt;2500, inf) AND goimpuls = &lt;-54.50, inf) AND genergy = &lt;10915, inf) AND nbumps3 = (-inf, 3.50) AND senergy = &lt;3950, inf) AND nbumps2 = (-inf, 1.50) AND nbumps = (-inf, 6.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 5.50) THEN class = {0}
+IF maxenergy = (-inf, 75000) AND gimpuls = (-inf, 901) AND genergy = (-inf, 378500) AND nbumps3 = (-inf, 3.50) AND nbumps4 = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1139.50) AND goimpuls = (-inf, 312) AND senergy = (-inf, 85450) THEN class = {0}
+IF gimpuls = &lt;1150.50, inf) AND goimpuls = &lt;-35.50, inf) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 0.50) AND nbumps = &lt;1.50, inf) THEN class = {0}
+IF goenergy = &lt;-18.50, inf) AND gimpuls = &lt;927, inf) AND genergy = (-inf, 508210) AND senergy = (-inf, 5750) AND nbumps2 = &lt;1.50, inf) THEN class = {0}
+IF senergy = (-inf, 5750) THEN class = {0}
+IF gimpuls = (-inf, 2489.50) AND genergy = (-inf, 318735) AND nbumps3 = (-inf, 2.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF goenergy = &lt;-36.50, inf) AND goimpuls = (-inf, 6.50) AND genergy = &lt;392530, inf) AND senergy = &lt;6750, inf) AND nbumps2 = (-inf, 1.50) THEN class = {0}
+IF gimpuls = (-inf, 3881.50) AND nbumps = (-inf, 4.50) AND nbumps2 = (-inf, 2.50) THEN class = {0}
+IF [[gimpuls = &lt;750, inf)]] AND goenergy = (-inf, 11) AND maxenergy = &lt;1500, inf) AND genergy = &lt;61250, 662435) AND nbumps3 = &lt;0.50, inf) AND seismoacoustic = {a} AND senergy = (-inf, 31200) AND nbumps2 = &lt;0.50, inf) AND nbumps = (-inf, 7.50) THEN class = {1}
+IF [gimpuls = &lt;1253.50, inf)] AND goenergy = &lt;-40.50, 87) AND maxenergy = (-inf, 7500) AND genergy = &lt;96260, 673155) AND seismic = {b} AND seismoacoustic = {a} AND senergy = (-inf, 10000) AND nbumps = (-inf, 3.50) THEN class = {1}
+IF goenergy = (-inf, 96) AND maxenergy = &lt;1500, inf) AND gimpuls = &lt;538.50, 1959) AND genergy = &lt;61250, 662435) AND goimpuls = &lt;-34, 95) AND senergy = (-inf, 36050) AND nbumps3 = &lt;0.50, 4.50) AND nbumps2 = &lt;0.50, inf) AND nbumps = (-inf, 6.50) THEN class = {1}
+IF goenergy = (-inf, 186) AND maxenergy = &lt;1500, inf) AND gimpuls = &lt;538.50, inf) AND genergy = &lt;58310, 934630) AND goimpuls = &lt;-55, inf) AND senergy = (-inf, 40650) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF gimpuls = &lt;521.50, inf) AND genergy = &lt;58310, 799855) AND goimpuls = &lt;-39, 64.50) AND senergy = &lt;850, inf) AND nbumps3 = (-inf, 2.50) AND nbumps4 = (-inf, 1.50) AND nbumps = &lt;1.50, 4.50) AND nbumps2 = &lt;0.50, 3.50) THEN class = {1}
+IF goenergy = (-inf, 186) AND gimpuls = &lt;521.50, inf) AND maxenergy = &lt;450, 45000) AND genergy = &lt;34360, 1161025) AND nbumps3 = (-inf, 6) AND nbumps = &lt;1.50, inf) AND nbumps2 = &lt;0.50, 4.50) THEN class = {1}
+IF goenergy = (-inf, 135.50) AND gimpuls = &lt;281.50, inf) AND genergy = &lt;34880, inf) AND nbumps = &lt;1.50, inf) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF goenergy = (-inf, 106.50) AND gimpuls = &lt;153.50, 498) AND genergy = &lt;18870, 33010) AND senergy = (-inf, 40500) AND nbumps3 = (-inf, 1.50) AND nbumps = &lt;1.50, inf) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF goenergy = (-inf, 131) AND gimpuls = &lt;176, inf) AND nbumps = &lt;1.50, inf) THEN class = {1}
+IF goenergy = (-inf, 131.50) AND gimpuls = &lt;1253.50, inf) AND genergy = &lt;54930, 1062020) AND goimpuls = &lt;-60.50, 109) AND shift = {W} AND senergy = (-inf, 36050) AND nbumps2 = (-inf, 2.50) THEN class = {1}
+IF gimpuls = &lt;98.50, inf) AND maxenergy = &lt;550, inf) AND goimpuls = &lt;-70.50, inf) AND nbumps2 = &lt;0.50, inf) THEN class = {1}
+IF goenergy = &lt;-78.50, inf) AND gimpuls = &lt;32.50, inf) AND goimpuls = &lt;-74.50, inf) AND senergy = &lt;850, inf) THEN class = {1}
+IF goenergy = (-inf, 176.50) AND gimpuls = &lt;131, inf) AND genergy = &lt;48545, inf) THEN class = {1}
+IF goenergy = &lt;-4, inf) AND gimpuls = &lt;396, 1445.50) AND genergy = &lt;32795, 49585) AND goimpuls = &lt;-19, inf) AND shift = {W} AND senergy = (-inf, 350) THEN class = {1}
+IF goenergy = &lt;-37.50, inf) AND gimpuls = &lt;537.50, 796) AND genergy = &lt;16805, 32020) AND goimpuls = &lt;-36.50, inf) AND senergy = (-inf, 250) THEN class = {1}
+IF goenergy = &lt;-37.50, 181) AND gimpuls = &lt;240, 470.50) AND genergy = &lt;19670, 40735) AND goimpuls = &lt;-42.50, inf) AND shift = {W} THEN class = {1}
+IF gimpuls = &lt;54.50, inf) AND goimpuls = &lt;-74.50, inf) AND genergy = &lt;1510, inf) AND senergy = (-inf, 115450) THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Regression">
+<h2>Regression<a class="headerlink" href="#Regression" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>Prepare dataset<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">arff</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arff</span><span class="o">.</span><span class="n">loadarff</span><span class="p">(</span><span class="s2">&quot;methane-train.arff&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;MM116_pred&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;MM116_pred&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MM31</th>
+      <th>MM116</th>
+      <th>AS038</th>
+      <th>PG072</th>
+      <th>PD</th>
+      <th>BA13</th>
+      <th>DMM116</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.46</td>
+      <td>1.3</td>
+      <td>2.4</td>
+      <td>2.0</td>
+      <td>1.0</td>
+      <td>1076.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.46</td>
+      <td>1.3</td>
+      <td>2.2</td>
+      <td>1.9</td>
+      <td>1.0</td>
+      <td>1076.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.49</td>
+      <td>1.3</td>
+      <td>2.2</td>
+      <td>1.9</td>
+      <td>1.0</td>
+      <td>1076.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.50</td>
+      <td>1.3</td>
+      <td>2.3</td>
+      <td>1.9</td>
+      <td>1.0</td>
+      <td>1076.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.54</td>
+      <td>1.3</td>
+      <td>2.3</td>
+      <td>1.9</td>
+      <td>1.0</td>
+      <td>1076.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>13363</th>
+      <td>0.64</td>
+      <td>1.2</td>
+      <td>2.4</td>
+      <td>1.8</td>
+      <td>1.0</td>
+      <td>1077.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>13364</th>
+      <td>0.59</td>
+      <td>1.2</td>
+      <td>2.4</td>
+      <td>1.8</td>
+      <td>1.0</td>
+      <td>1077.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>13365</th>
+      <td>0.60</td>
+      <td>1.1</td>
+      <td>2.2</td>
+      <td>1.8</td>
+      <td>1.0</td>
+      <td>1077.0</td>
+      <td>-0.1</td>
+    </tr>
+    <tr>
+      <th>13366</th>
+      <td>0.64</td>
+      <td>1.1</td>
+      <td>2.2</td>
+      <td>1.8</td>
+      <td>1.0</td>
+      <td>1077.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>13367</th>
+      <td>0.65</td>
+      <td>1.2</td>
+      <td>2.2</td>
+      <td>1.7</td>
+      <td>0.0</td>
+      <td>1077.0</td>
+      <td>0.1</td>
+    </tr>
+  </tbody>
+</table>
+<p>13368 rows × 7 columns</p>
+</div></div>
+</div>
+</section>
+<section id="id2">
+<h3>Define rules and conditions<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expert_rules</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">expert_preferred_conditions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>
+        <span class="s1">&#39;preferred-condition-0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;3: IF PD = &lt;0.5, inf) THEN MM116_pred = </span><span class="si">{NaN}</span><span class="s1">&#39;</span>
+    <span class="p">),</span>
+    <span class="p">(</span>
+        <span class="s1">&#39;preferred-condition-1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;5: IF PD = &lt;0.5, inf) AND MM116 = (-inf, 1.0) THEN MM116_pred = </span><span class="si">{NaN}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">expert_forbidden_conditions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;forb-attribute-0&#39;</span><span class="p">,</span> <span class="s1">&#39;inf: IF DMM116 = Any THEN MM116_pred = </span><span class="si">{NaN}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h3>Rule induction<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit.regression</span> <span class="kn">import</span> <span class="n">ExpertRuleRegressor</span>
+
+<span class="n">reg</span> <span class="o">=</span> <span class="n">ExpertRuleRegressor</span><span class="p">(</span>
+    <span class="n">minsupp_new</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">max_growing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">mean_based_regression</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">extend_using_preferred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">extend_using_automatic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">induce_using_preferred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">induce_using_automatic</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">expert_rules</span><span class="o">=</span><span class="n">expert_rules</span><span class="p">,</span>
+    <span class="n">expert_preferred_conditions</span><span class="o">=</span><span class="n">expert_preferred_conditions</span><span class="p">,</span>
+    <span class="n">expert_forbidden_conditions</span><span class="o">=</span><span class="n">expert_forbidden_conditions</span>
+<span class="p">)</span>
+<span class="n">ruleset</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF [PD = &lt;0.50, inf)] AND PG072 = (-inf, 2.05) THEN MM116_pred = {1.01} [0.77,1.25]
+IF [PD = &lt;0.50, inf)] THEN MM116_pred = {1.01} [0.77,1.25]
+IF MM31 = (-inf, 0.23) THEN MM116_pred = {0.40} [0.39,0.41]
+IF MM116 = (-inf, 0.45) AND MM31 = &lt;0.18, 0.24) THEN MM116_pred = {0.40} [0.38,0.42]
+IF MM31 = (-inf, 0.25) THEN MM116_pred = {0.44} [0.37,0.51]
+IF PD = (-inf, 0.50) AND MM116 = &lt;0.25, inf) AND AS038 = &lt;2, 2.45) AND MM31 = &lt;0.23, inf) AND PG072 = (-inf, 1.95) AND BA13 = (-inf, 1075.50) THEN MM116_pred = {0.71} [0.50,0.93]
+IF PD = (-inf, 0.50) AND MM116 = (-inf, 0.25) AND AS038 = &lt;2.35, 2.45) AND MM31 = &lt;0.19, inf) AND PG072 = &lt;1.75, 1.95) AND BA13 = (-inf, 1075.50) THEN MM116_pred = {0.25} [0.20,0.30]
+IF MM116 = (-inf, 0.45) AND MM31 = &lt;0.18, inf) AND BA13 = (-inf, 1077.50) THEN MM116_pred = {0.40} [0.37,0.43]
+IF MM116 = (-inf, 0.55) AND MM31 = (-inf, 0.32) THEN MM116_pred = {0.45} [0.39,0.51]
+IF MM116 = &lt;0.45, 0.65) THEN MM116_pred = {0.55} [0.49,0.61]
+IF MM116 = (-inf, 0.75) AND MM31 = &lt;0.18, 0.27) THEN MM116_pred = {0.46} [0.39,0.53]
+IF MM116 = &lt;0.45, 0.85) AND MM31 = &lt;0.25, inf) THEN MM116_pred = {0.70} [0.56,0.84]
+IF MM116 = &lt;0.75, inf) THEN MM116_pred = {1.01} [0.82,1.19]
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Survival">
+<h2>Survival<a class="headerlink" href="#Survival" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>Prepare dataset<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">arff</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arff</span><span class="o">.</span><span class="n">loadarff</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;bmt.arff&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;cp1252&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># code to fix the problem with encoding of the file</span>
+<span class="n">tmp_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">([</span><span class="nb">object</span><span class="p">])</span>
+<span class="n">tmp_df</span> <span class="o">=</span> <span class="n">tmp_df</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;cp1252&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp_df</span><span class="p">:</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+<span class="n">data_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;?&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;survival_status&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;survival_status&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h3>Define rules and conditions<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expert_rules</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>
+        <span class="s1">&#39;rule-0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;IF [[CD34kgx10d6 = (-inf, 10.0)]] AND [[extcGvHD = </span><span class="si">{0}</span><span class="s1">]] THEN survival_status = </span><span class="si">{NaN}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">expert_preferred_conditions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span>
+        <span class="s1">&#39;attr-preferred-0&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;inf: IF [CD34kgx10d6 = Any] THEN survival_status = </span><span class="si">{NaN}</span><span class="s1">&#39;</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+
+
+<span class="n">expert_forbidden_conditions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;attr-forbidden-0&#39;</span><span class="p">,</span> <span class="s1">&#39;IF [ANCrecovery = Any] THEN survival_status = </span><span class="si">{NaN}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id6">
+<h3>Rule induction<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit.survival</span> <span class="kn">import</span> <span class="n">ExpertSurvivalRules</span>
+
+<span class="n">srv</span> <span class="o">=</span> <span class="n">ExpertSurvivalRules</span><span class="p">(</span>
+    <span class="n">survival_time_attr</span><span class="o">=</span><span class="s1">&#39;survival_time&#39;</span><span class="p">,</span>
+    <span class="n">minsupp_new</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">max_growing</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">extend_using_preferred</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">extend_using_automatic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">induce_using_preferred</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">induce_using_automatic</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">srv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">expert_rules</span><span class="o">=</span><span class="n">expert_rules</span><span class="p">,</span>
+    <span class="n">expert_preferred_conditions</span><span class="o">=</span><span class="n">expert_preferred_conditions</span><span class="p">,</span>
+    <span class="n">expert_forbidden_conditions</span><span class="o">=</span><span class="n">expert_forbidden_conditions</span>
+<span class="p">)</span>
+<span class="n">ruleset</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">model</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF [[CD34kgx10d6 = (-inf, 10)]] AND [[extcGvHD = {0}]] THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND PLTrecovery = &lt;500142.50, inf) THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND RecipientRh = {1} AND Recipientage = &lt;17.85, inf) THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND Relapse = {0} AND PLTrecovery = &lt;26, inf) AND Recipientage = &lt;14.30, inf) THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND Donorage = (-inf, 40.64) AND Gendermatch = {0} AND PLTrecovery = &lt;26, inf) AND Recipientage = &lt;12, 18.85) THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND Donorage = (-inf, 49.19) AND extcGvHD = {1} AND PLTrecovery = (-inf, 500142.50) AND Txpostrelapse = {0} AND CD3dCD34 = (-inf, 10.97) THEN
+IF [CD34kgx10d6 = &lt;11.86, inf)] AND Relapse = {0} THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND RecipientRh = {1} AND CD3dCD34 = &lt;6.64, inf) THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND Donorage = &lt;36.03, inf) AND Recipientageint = {2} AND CD3dCD34 = &lt;0.94, inf) THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND PLTrecovery = &lt;22.50, inf) THEN
+IF [CD34kgx10d6 = &lt;11.86, inf)] THEN
+IF [CD34kgx10d6 = (-inf, 11.86)] AND Stemcellsource = {1} AND PLTrecovery = (-inf, 22.50) AND CD3dCD34 = &lt;0.89, inf) AND Rbodymass = &lt;36.50, inf) AND Recipientage = &lt;9.20, inf) AND IIIV = {1} THEN
+</pre></div></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="survival.html" class="btn btn-neutral float-left" title="Survival analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../autodoc.html" class="btn btn-neutral float-right" title="Code documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

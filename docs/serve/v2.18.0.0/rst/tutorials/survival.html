@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survival analysis &mdash; rulekit v2.1.18.0 2.1.18.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=fa6651ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Expert Rules" href="expert_rules.html" />
+    <link rel="prev" title="Regression" href="regression.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v2.1.18.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">Whats new</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="classification.html">Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Survival</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Summary-of-the-dataset">Summary of the dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Survival-curve-for-the-entire-set-(Kaplan-Meier-curve)">Survival curve for the entire set (Kaplan Meier curve)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Import-RuleKit">Import RuleKit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Helper-function-for-creating-ruleset-characteristics-dataframe">Helper function for creating ruleset characteristics dataframe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Rule-induction-on-full-dataset">Rule induction on full dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Generated-rules">Generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Rules-evaluation-on-full-set">Rules evaluation on full set</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Stratified-K-Folds-cross-validation">Stratified K-Folds cross-validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Hyperparameters-tuning">Hyperparameters tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Building-model-with-tuned-hyperparameters">Building model with tuned hyperparameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Split-dataset-to-train-and-test-(80%/20%)">Split dataset to train and test (80%/20%)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Validate-model-on-test-dataset">Validate model on test dataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="expert_rules.html">Expert Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v2.1.18.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Survival analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/tutorials/survival.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Survival-analysis">
+<h1>Survival analysis<a class="headerlink" href="#Survival-analysis" title="Link to this heading"></a></h1>
+<p>This notebook presents example usage of package for solving survival problem on <code class="docutils literal notranslate"><span class="pre">bmt</span></code> dataset. You can download dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/bmt/bmt.arff">here</a></p>
+<div class="line-block">
+<div class="line">This tutorial will cover topics such as:</div>
+<div class="line">- training model</div>
+<div class="line">- changing model hyperparameters</div>
+<div class="line">- hyperparameters tuning</div>
+<div class="line">- calculating metrics for model</div>
+<div class="line">- getting RuleKit inbuilt</div>
+</div>
+<section id="Summary-of-the-dataset">
+<h2>Summary of the dataset<a class="headerlink" href="#Summary-of-the-dataset" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">arff</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">datasets_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;bmt.arff&#39;</span>
+
+<span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arff</span><span class="o">.</span><span class="n">loadarff</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">datasets_path</span> <span class="o">+</span> <span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;cp1252&quot;</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># code to fix the problem with encoding of the file</span>
+<span class="n">tmp_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">([</span><span class="nb">object</span><span class="p">])</span>
+<span class="n">tmp_df</span> <span class="o">=</span> <span class="n">tmp_df</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;cp1252&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">tmp_df</span><span class="p">:</span>
+    <span class="n">data_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+
+<span class="n">data_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;?&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_df</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Recipientgender</th>
+      <th>Stemcellsource</th>
+      <th>Donorage</th>
+      <th>Donorage35</th>
+      <th>IIIV</th>
+      <th>Gendermatch</th>
+      <th>DonorABO</th>
+      <th>RecipientABO</th>
+      <th>RecipientRh</th>
+      <th>ABOmatch</th>
+      <th>...</th>
+      <th>extcGvHD</th>
+      <th>CD34kgx10d6</th>
+      <th>CD3dCD34</th>
+      <th>CD3dkgx10d8</th>
+      <th>Rbodymass</th>
+      <th>ANCrecovery</th>
+      <th>PLTrecovery</th>
+      <th>time_to_aGvHD_III_IV</th>
+      <th>survival_time</th>
+      <th>survival_status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>22.830137</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>7.20</td>
+      <td>1.338760</td>
+      <td>5.38</td>
+      <td>35.0</td>
+      <td>19.0</td>
+      <td>51.0</td>
+      <td>32.0</td>
+      <td>999.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0</td>
+      <td>23.342466</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>4.50</td>
+      <td>11.078295</td>
+      <td>0.41</td>
+      <td>20.6</td>
+      <td>16.0</td>
+      <td>37.0</td>
+      <td>1000000.0</td>
+      <td>163.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0</td>
+      <td>26.394521</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>7.94</td>
+      <td>19.013230</td>
+      <td>0.42</td>
+      <td>23.4</td>
+      <td>23.0</td>
+      <td>20.0</td>
+      <td>1000000.0</td>
+      <td>435.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>39.684932</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>None</td>
+      <td>4.25</td>
+      <td>29.481647</td>
+      <td>0.14</td>
+      <td>50.0</td>
+      <td>23.0</td>
+      <td>29.0</td>
+      <td>19.0</td>
+      <td>53.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>1</td>
+      <td>33.358904</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>51.85</td>
+      <td>3.972255</td>
+      <td>13.05</td>
+      <td>9.0</td>
+      <td>14.0</td>
+      <td>14.0</td>
+      <td>1000000.0</td>
+      <td>2043.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>182</th>
+      <td>1</td>
+      <td>1</td>
+      <td>37.575342</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>11.08</td>
+      <td>2.522750</td>
+      <td>4.39</td>
+      <td>44.0</td>
+      <td>15.0</td>
+      <td>22.0</td>
+      <td>16.0</td>
+      <td>385.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>183</th>
+      <td>0</td>
+      <td>1</td>
+      <td>22.895890</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>4.64</td>
+      <td>1.038858</td>
+      <td>4.47</td>
+      <td>44.5</td>
+      <td>12.0</td>
+      <td>30.0</td>
+      <td>1000000.0</td>
+      <td>634.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>184</th>
+      <td>0</td>
+      <td>1</td>
+      <td>27.347945</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>7.73</td>
+      <td>1.635559</td>
+      <td>4.73</td>
+      <td>33.0</td>
+      <td>16.0</td>
+      <td>16.0</td>
+      <td>1000000.0</td>
+      <td>1895.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>185</th>
+      <td>1</td>
+      <td>1</td>
+      <td>27.780822</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>15.41</td>
+      <td>8.077770</td>
+      <td>1.91</td>
+      <td>24.0</td>
+      <td>13.0</td>
+      <td>14.0</td>
+      <td>54.0</td>
+      <td>382.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>186</th>
+      <td>1</td>
+      <td>1</td>
+      <td>55.553425</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>9.91</td>
+      <td>0.948135</td>
+      <td>10.45</td>
+      <td>37.0</td>
+      <td>18.0</td>
+      <td>20.0</td>
+      <td>1000000.0</td>
+      <td>1109.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>187 rows × 37 columns</p>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset overview:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Objects number: </span><span class="si">{</span><span class="n">data_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">; Attributes number: </span><span class="si">{</span><span class="n">data_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Basic attribute statistics:&quot;</span><span class="p">)</span>
+<span class="n">data_df</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Dataset overview:
+Name: bmt.arff
+Objects number: 187; Attributes number: 37
+Basic attribute statistics:
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Donorage</th>
+      <th>Recipientage</th>
+      <th>CD34kgx10d6</th>
+      <th>CD3dCD34</th>
+      <th>CD3dkgx10d8</th>
+      <th>Rbodymass</th>
+      <th>ANCrecovery</th>
+      <th>PLTrecovery</th>
+      <th>time_to_aGvHD_III_IV</th>
+      <th>survival_time</th>
+      <th>survival_status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>187.000000</td>
+      <td>187.000000</td>
+      <td>187.000000</td>
+      <td>182.000000</td>
+      <td>182.000000</td>
+      <td>185.000000</td>
+      <td>187.000000</td>
+      <td>187.000000</td>
+      <td>187.000000</td>
+      <td>187.000000</td>
+      <td>187.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>33.472068</td>
+      <td>9.931551</td>
+      <td>11.891781</td>
+      <td>5.385096</td>
+      <td>4.745714</td>
+      <td>35.801081</td>
+      <td>26752.866310</td>
+      <td>90937.919786</td>
+      <td>775408.042781</td>
+      <td>938.743316</td>
+      <td>0.454545</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>8.271826</td>
+      <td>5.305639</td>
+      <td>9.914386</td>
+      <td>9.598716</td>
+      <td>3.859128</td>
+      <td>19.650922</td>
+      <td>161747.200525</td>
+      <td>288242.407688</td>
+      <td>418425.252689</td>
+      <td>849.589495</td>
+      <td>0.499266</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>18.646575</td>
+      <td>0.600000</td>
+      <td>0.790000</td>
+      <td>0.204132</td>
+      <td>0.040000</td>
+      <td>6.000000</td>
+      <td>9.000000</td>
+      <td>9.000000</td>
+      <td>10.000000</td>
+      <td>6.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>27.039726</td>
+      <td>5.050000</td>
+      <td>5.350000</td>
+      <td>1.786683</td>
+      <td>1.687500</td>
+      <td>19.000000</td>
+      <td>13.000000</td>
+      <td>16.000000</td>
+      <td>1000000.000000</td>
+      <td>168.500000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>33.550685</td>
+      <td>9.600000</td>
+      <td>9.720000</td>
+      <td>2.734462</td>
+      <td>4.325000</td>
+      <td>33.000000</td>
+      <td>15.000000</td>
+      <td>21.000000</td>
+      <td>1000000.000000</td>
+      <td>676.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>40.117809</td>
+      <td>14.050000</td>
+      <td>15.415000</td>
+      <td>5.823565</td>
+      <td>6.785000</td>
+      <td>50.600000</td>
+      <td>17.000000</td>
+      <td>37.000000</td>
+      <td>1000000.000000</td>
+      <td>1604.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>55.553425</td>
+      <td>20.200000</td>
+      <td>57.780000</td>
+      <td>99.560970</td>
+      <td>20.020000</td>
+      <td>103.400000</td>
+      <td>1000000.000000</td>
+      <td>1000000.000000</td>
+      <td>1000000.000000</td>
+      <td>3364.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="Survival-curve-for-the-entire-set-(Kaplan-Meier-curve)">
+<h3>Survival curve for the entire set (Kaplan Meier curve)<a class="headerlink" href="#Survival-curve-for-the-entire-set-(Kaplan-Meier-curve)" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">lifelines</span> <span class="kn">import</span> <span class="n">KaplanMeierFitter</span>
+
+<span class="c1"># create a kmf object</span>
+<span class="n">kmf</span> <span class="o">=</span> <span class="n">KaplanMeierFitter</span><span class="p">()</span>
+
+<span class="c1"># Fit the data into the model</span>
+<span class="n">kmf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;survival_time&#39;</span><span class="p">],</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;survival_status&#39;</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Kaplan Meier Estimate&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create an estimate</span>
+<span class="n">kmf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ci_show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Axes: xlabel=&#39;timeline&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/rst_tutorials_survival_7_1.png" src="../../_images/rst_tutorials_survival_7_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Import-RuleKit">
+<h2>Import RuleKit<a class="headerlink" href="#Import-RuleKit" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit.survival</span> <span class="kn">import</span> <span class="n">SurvivalRules</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Helper-function-for-creating-ruleset-characteristics-dataframe">
+<h2>Helper function for creating ruleset characteristics dataframe<a class="headerlink" href="#Helper-function-for-creating-ruleset-characteristics-dataframe" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_ruleset_stats</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="vm">__dict__</span>
+    <span class="k">del</span> <span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;_java_object&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([{</span><span class="o">**</span><span class="n">tmp</span><span class="p">,</span> <span class="o">**</span><span class="n">model</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">}])</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Rule-induction-on-full-dataset">
+<h2>Rule induction on full dataset<a class="headerlink" href="#Rule-induction-on-full-dataset" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;survival_status&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;survival_status&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">srv</span> <span class="o">=</span> <span class="n">SurvivalRules</span><span class="p">(</span>
+    <span class="n">survival_time_attr</span> <span class="o">=</span> <span class="s1">&#39;survival_time&#39;</span>
+<span class="p">)</span>
+<span class="n">srv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">ruleset</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">model</span>
+<span class="n">predictions</span>  <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">ruleset_stats</span> <span class="o">=</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="n">ruleset</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">ruleset_stats</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>minimum_covered</th>
+      <th>maximum_uncovered_fraction</th>
+      <th>ignore_missing</th>
+      <th>pruning_enabled</th>
+      <th>max_growing_condition</th>
+      <th>time_total_s</th>
+      <th>time_growing_s</th>
+      <th>time_pruning_s</th>
+      <th>rules_count</th>
+      <th>conditions_per_rule</th>
+      <th>induced_conditions_per_rule</th>
+      <th>avg_rule_coverage</th>
+      <th>avg_rule_precision</th>
+      <th>avg_rule_quality</th>
+      <th>pvalue</th>
+      <th>FDR_pvalue</th>
+      <th>FWER_pvalue</th>
+      <th>fraction_significant</th>
+      <th>fraction_FDR_significant</th>
+      <th>fraction_FWER_significant</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.0</td>
+      <td>2.245832</td>
+      <td>1.209875</td>
+      <td>1.013907</td>
+      <td>5</td>
+      <td>2.4</td>
+      <td>72.4</td>
+      <td>0.407487</td>
+      <td>1.0</td>
+      <td>0.999742</td>
+      <td>0.000258</td>
+      <td>0.00029</td>
+      <td>0.000384</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;times&quot;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;probabilities&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x238cf43a910&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/rst_tutorials_survival_15_1.png" src="../../_images/rst_tutorials_survival_15_1.png" />
+</div>
+</div>
+<section id="Generated-rules">
+<h3>Generated rules<a class="headerlink" href="#Generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF Relapse = {0} AND Donorage = (-inf, 45.16) AND Recipientage = (-inf, 17.45) THEN
+IF HLAmismatch = {0} AND Donorage = &lt;33.34, 42.14) AND Gendermatch = {0} AND RecipientRh = {1} AND Recipientage = &lt;3.30, inf) THEN
+IF Relapse = {1} AND PLTrecovery = &lt;15.50, inf) THEN
+IF PLTrecovery = (-inf, 266) THEN
+IF PLTrecovery = &lt;266, inf) THEN
+</pre></div></div>
+</div>
+</section>
+<section id="Rules-evaluation-on-full-set">
+<h3>Rules evaluation on full set<a class="headerlink" href="#Rules-evaluation-on-full-set" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">integrated_brier_score</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Integrated Brier Score: </span><span class="si">{</span><span class="n">integrated_brier_score</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Integrated Brier Score: 0.19431881630173065
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Stratified-K-Folds-cross-validation">
+<h2>Stratified K-Folds cross-validation<a class="headerlink" href="#Stratified-K-Folds-cross-validation" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">rulekit.exceptions</span> <span class="kn">import</span> <span class="n">RuleKitJavaException</span>
+<span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ruleset_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">survival_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+
+    <span class="n">srv</span> <span class="o">=</span> <span class="n">SurvivalRules</span><span class="p">(</span>
+        <span class="n">survival_time_attr</span> <span class="o">=</span> <span class="s1">&#39;survival_time&#39;</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">srv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">RuleKitJavaException</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">print_java_stack_trace</span><span class="p">())</span>
+    <span class="n">ruleset</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">model</span>
+
+    <span class="n">ibs</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+    <span class="n">survival_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ibs</span><span class="p">)</span>
+    <span class="n">ruleset_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">ruleset_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="n">ruleset</span><span class="p">)])</span>
+<br/></pre></div>
+</div>
+</div>
+<p>Ruleset characteristics (average)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">ruleset_stats</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+minimum_covered                 5.000000
+maximum_uncovered_fraction      0.000000
+ignore_missing                  0.000000
+pruning_enabled                 1.000000
+max_growing_condition           0.000000
+time_total_s                    1.273897
+time_growing_s                  0.482035
+time_pruning_s                  0.790854
+rules_count                     5.100000
+conditions_per_rule             2.535119
+induced_conditions_per_rule    69.852381
+avg_rule_coverage               0.438761
+avg_rule_precision              1.000000
+avg_rule_quality                0.992375
+pvalue                          0.007625
+FDR_pvalue                      0.007751
+FWER_pvalue                     0.008209
+fraction_significant            0.948214
+fraction_FDR_significant        0.948214
+fraction_FWER_significant       0.948214
+dtype: float64
+</pre></div></div>
+</div>
+<p>Rules evaluation on dataset (average)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Integrated Brier Score: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">survival_metrics</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Integrated Brier Score: 0.2057312271821908
+</pre></div></div>
+</div>
+</section>
+<section id="Hyperparameters-tuning">
+<h2>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Link to this heading"></a></h2>
+<p>This one gonna take a while…</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">scorer</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">estimator</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define models and parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SurvivalRules</span><span class="p">()</span>
+
+<span class="c1"># define grid search</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;survival_time_attr&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;survival_time&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;minsupp_new&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scorer</span><span class="p">)</span>
+<span class="n">grid_result</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># summarize results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best Integrated Brier Score: </span><span class="si">%f</span><span class="s2"> using </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">grid_result</span><span class="o">.</span><span class="n">best_score_</span><span class="p">,</span> <span class="n">grid_result</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best Integrated Brier Score: 0.214374 using {&#39;minsupp_new&#39;: 3, &#39;survival_time_attr&#39;: &#39;survival_time&#39;}
+</pre></div></div>
+</div>
+</section>
+<section id="Building-model-with-tuned-hyperparameters">
+<h2>Building model with tuned hyperparameters<a class="headerlink" href="#Building-model-with-tuned-hyperparameters" title="Link to this heading"></a></h2>
+<section id="Split-dataset-to-train-and-test-(80%/20%)">
+<h3>Split dataset to train and test (80%/20%)<a class="headerlink" href="#Split-dataset-to-train-and-test-(80%/20%)" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">srv</span> <span class="o">=</span> <span class="n">SurvivalRules</span><span class="p">(</span>
+    <span class="n">survival_time_attr</span><span class="o">=</span><span class="s1">&#39;survival_time&#39;</span><span class="p">,</span>
+    <span class="n">minsupp_new</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+<span class="n">srv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">ruleset</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">model</span>
+<span class="n">ruleset_stats</span> <span class="o">=</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="n">ruleset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Rules evaluation</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">ruleset_stats</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+minimum_covered                     5.0
+maximum_uncovered_fraction          0.0
+ignore_missing                    False
+pruning_enabled                    True
+max_growing_condition               0.0
+time_total_s                   0.625197
+time_growing_s                 0.259452
+time_pruning_s                 0.364996
+rules_count                           5
+conditions_per_rule                 3.2
+induced_conditions_per_rule        61.0
+avg_rule_coverage              0.430872
+avg_rule_precision                  1.0
+avg_rule_quality               0.999995
+pvalue                         0.000005
+FDR_pvalue                     0.000005
+FWER_pvalue                    0.000005
+fraction_significant                1.0
+fraction_FDR_significant            1.0
+fraction_FWER_significant           1.0
+Name: 0, dtype: object
+</pre></div></div>
+</div>
+</section>
+<section id="Validate-model-on-test-dataset">
+<h3>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">integrated_brier_score</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Integrated Brier Score: </span><span class="si">{</span><span class="n">integrated_brier_score</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Integrated Brier Score: 0.22981693833242725
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;times&quot;</span><span class="p">],</span> <span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;probabilities&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x238d0326fd0&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/rst_tutorials_survival_37_1.png" src="../../_images/rst_tutorials_survival_37_1.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="regression.html" class="btn btn-neutral float-left" title="Regression" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="expert_rules.html" class="btn btn-neutral float-right" title="Expert Rules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
