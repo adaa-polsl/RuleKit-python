@@ -294,3 +294,4 @@ classification_tabular_datasets/
 .coverage
 junit.xml
 a.ipynb
+java.logs
