@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 jobs:
   release-build:
     runs-on: ubuntu-latest
@@ -11,23 +14,29 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Build documentation
+      - name: Download test resources
+        run: |
+          pip install requests
+          python ./tests/resources.py download
+
+      - name: Build documentation and update badges
         run: |
           python -m pip install --upgrade pip
           pip install -r ./docs/requirements.txt
+          pip install .
           python ./docs/build.py ${{ github.event.release.name }}
-
-      - name: Update README.md badges
-        run: |
           python ./docs/generate_readme_badges.py
 
       - name: Commit updated documentation and badges
         uses: "stefanzweifel    /git-auto-commit-action@v5"
         with:
           commit_message: Documentation for version ${{ github.event.release.name }}
+          branch: main

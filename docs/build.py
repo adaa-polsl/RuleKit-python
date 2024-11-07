@@ -11,10 +11,12 @@ curr_dir_path: str = pathlib.Path(os.path.realpath(__file__)).parent
 
 def build_docs_using_sphinx(version_number: str):
     print(f"Building docs for version v{version_number}")
-    python_path: str = sys.executable
     output_path: str = f'{curr_dir_path}/serve/v{version_number}'
-    run_command(
-        f"{python_path} -m sphinx.cmd.build -M html source {output_path}"
+    run_command([
+        sys.executable, '-m', 'sphinx.cmd.build', '-M', 'html', 'source', output_path,
+    ],
+        cwd=curr_dir_path,
+        raise_on_error=False
     )
     tmp_path: str = f'{output_path}@'
     shutil.move(output_path, tmp_path)
