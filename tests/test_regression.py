@@ -17,23 +17,6 @@ from tests.utils import dir_path
 from tests.utils import get_test_cases
 
 
-def print_rulekit_rules_from_jar_result(file):
-    lines = file.readlines()
-    tmp = []
-    start = False
-    for line in lines:
-        if start:
-            tmp.append(line)
-        if line.strip() == 'Rules:':
-            start = True
-        if line.strip() == 'Attribute ranking (by count):':
-            break
-
-    print('\nRuleKit jar rules:')
-    for rule in tmp:
-        print(rule.strip())
-
-
 class TestRegressor(unittest.TestCase):
 
     @classmethod

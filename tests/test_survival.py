@@ -84,7 +84,6 @@ class TestSurvivalLogRankTree(unittest.TestCase):
         y = pd.Series(y)
         clf.fit(X, y)
         p = clf.predict(X)
-        print(p)
 
 
 class TestExpertSurvivalLogRankTree(unittest.TestCase):
