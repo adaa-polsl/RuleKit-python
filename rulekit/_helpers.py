@@ -49,6 +49,7 @@ class RuleGeneratorConfigurator:
     _MEASURES_PARAMETERS: list[str] = [
         'induction_measure', 'pruning_measure', 'voting_measure',
     ]
+    _USER_DEFINED_MEASURE_VALUE: str = 'UserDefined'
 
     def __init__(self, rule_generator):
         self.rule_generator = rule_generator
@@ -104,13 +105,17 @@ class RuleGeneratorConfigurator:
             if isinstance(param_value, Callable):
                 self._configure_user_defined_measure_parameter(
                     param_name, param_value)
-                self.rule_generator.setParameter(param_name, 'UserDefined')
-                self.rule_generator.setParameter(param_name, param_value)
 
     def _configure_user_defined_measure_parameter(self, param_name: str, param_value: Any):
-        if param_value is not None:
-            self.rule_generator.setParameter(param_name, 'UserDefined')
-            self.rule_generator.setParameter(param_name, param_value)
+        from rulekit.params import _user_defined_measure_factory
+        user_defined_measure = _user_defined_measure_factory(param_value)
+        {
+            'induction_measure': self.rule_generator.setUserMeasureInductionObject,
+            'pruning_measure': self.rule_generator.setUserMeasurePurningObject,
+            'voting_measure': self.rule_generator.setUserMeasureVotingObject,
+        }[param_name](user_defined_measure)
+        self.rule_generator.setParameter(
+            param_name, self._USER_DEFINED_MEASURE_VALUE)
 
     def _configure_rule_generator(self, **kwargs: dict[str, Any]):
         if any([kwargs.get(param_name) == Measures.LogRank for param_name in self._MEASURES_PARAMETERS]):
@@ -135,6 +140,15 @@ class RuleGeneratorConfigurator:
             ValueError: If failed to retrieve RuleGenerator parameters JSON
             RuleKitMisconfigurationException: If Java and Python parameters do not match
         """
+        def are_params_equal(java_params: dict[str, Any], python_params: dict[str, Any]):
+            if java_params.keys() != python_params.keys():
+                return False
+            for key in java_params.keys():
+                skip_check: bool = isinstance(python_params[key], Callable)
+                if java_params[key] != python_params[key] and not skip_check:
+                    return False
+            return True
+
         python_parameters = dict(python_parameters)
         for param_name, param_value in python_parameters.items():
             # convert measures to strings values for comparison
@@ -162,7 +176,7 @@ class RuleGeneratorConfigurator:
             param_name: str(java_params[param_name])
             for param_name in python_parameters.keys()
         }
-        if java_params != python_parameters:
+        if not are_params_equal(java_params, python_parameters):
             raise RuleKitMisconfigurationException(
                 java_parameters=java_params,
                 python_parameters=python_parameters
