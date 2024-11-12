@@ -6,4 +6,4 @@ What's new
     :maxdepth: 1
     :caption: Table of contents:
 
-    v2.1.18.0 <./whats_new/v2.1.18.0.ipynb>
+    v2.1.18.0 <./whats_new/Changes in this version.ipynb>

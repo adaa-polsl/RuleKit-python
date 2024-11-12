@@ -56,7 +56,9 @@ class RuleKitMisconfigurationException(Exception):
         python_parameters: dict[str, Any]
     ) -> None:
 
-        super().__init__(self._prepare_message(java_parameters, python_parameters))
+        super().__init__(
+            self._prepare_message(java_parameters, python_parameters)
+        )
         self._java_parameters: dict[str, Any] = java_parameters
         self._python_parameters: dict[str, Any] = python_parameters
 
@@ -79,7 +81,8 @@ class RuleKitMisconfigurationException(Exception):
             params_lines.append(line)
         message: str = (
             'RuleKit parameters configuration error' +
-            'RuleGenerator parameters configured in Java do not match with given parameters\n\n' +
+            'RuleGenerator parameters configured in Java do not' +
+            'match with given parameters\n\n' +
             'Parameters (first value is in Java, second is in Python):\n{\n' +
             '\n'.join(params_lines) +
             '\n}'

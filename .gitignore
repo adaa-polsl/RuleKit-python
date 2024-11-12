@@ -295,3 +295,5 @@ classification_tabular_datasets/
 junit.xml
 a.ipynb
 java.logs
+do_arta/
+tutorials_env/

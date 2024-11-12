@@ -3,9 +3,12 @@
 from typing import Any
 
 from jpype import JImplements
+from jpype import JInt
+from jpype import JObject
 from jpype import JOverride
 
-from rulekit.rules import Rule
+from rulekit.rules import _rule_factory
+from rulekit.rules import BaseRule
 
 
 class RuleInductionProgressListener:
@@ -14,11 +17,11 @@ class RuleInductionProgressListener:
      `add_event_listener` method of the operator.
     """
 
-    def on_new_rule(self, rule: Rule):
+    def on_new_rule(self, rule: BaseRule):
         """Called when new rule is induced
 
         Args:
-            rule (Rule): Newly induced rule
+            rule (BaseRule): Newly induced rule
         """
 
     def on_progress(
@@ -31,14 +34,18 @@ class RuleInductionProgressListener:
         This method is best suited to monitor progress of rule induction.
 
         Args:
-            total_examples_count (int): Total number of examples in training dataset
-            uncovered_examples_count (int): Number of examples that are not covered by any rule
+            total_examples_count (int): Total number of examples in
+            training dataset
+
+            uncovered_examples_count (int): Number of examples that
+            are not covered by any rule
         """
 
     def should_stop(self) -> bool:
-        """Method which allows to stop rule induction process at given moment. This method is
-         called each time a ruleset coverage changed. If it returns `True`, rule induction process
-        will be stopped if it return `False` it will continue.
+        """Method which allows to stop rule induction process at given
+        moment. This method is called each time a ruleset coverage changed.
+        If it returns `True`, rule induction process will be stopped if it
+        return `False` it will continue.
 
         Returns:
             bool: whether to stop rule induction or not
@@ -46,20 +53,21 @@ class RuleInductionProgressListener:
         return False
 
 
-def command_listener_factory(listener: RuleInductionProgressListener) -> Any:
+def _command_listener_factory(listener: RuleInductionProgressListener) -> Any:
     from adaa.analytics.rules.logic.rulegenerator import \
-        ICommandListener  # pylint: disable=import-outside-toplevel,import-error
+        ICommandListener  # pylint: disable=import-outside-toplevel,import-error,line-too-long
 
     @JImplements(ICommandListener)
-    class _CommandListener:  # pylint: disable=invalid-name,missing-function-docstring
+    class _CommandListener:  # pylint: disable=invalid-name,missing-function-docstring,line-too-long
 
         @JOverride
-        def onNewRule(self, rule):
-            return listener.on_new_rule(Rule(rule))
+        def onNewRule(self, rule: JObject):
+            rule: BaseRule = _rule_factory(rule)
+            return listener.on_new_rule(rule)
 
         @JOverride
-        def onProgress(self, totalRules: int, uncoveredRules: int):
-            return listener.on_progress(totalRules, uncoveredRules)
+        def onProgress(self, totalRules: JInt, uncoveredRules: JInt):
+            return listener.on_progress(int(totalRules), int(uncoveredRules))
 
         @JOverride
         def isRequestStop(self) -> bool:

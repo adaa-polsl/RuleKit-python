@@ -14,10 +14,12 @@ def _main():
     if len(sys.argv) > 1 and sys.argv[1] == 'download_jar':
         warnings.warn(
             (
-                'This command is deprecated. From major version 2, RuleKit jar file is already ' +
-                'packed with this package distribution and there is no need to download it in ' +
-                ' additional step. \n\n' +
-                'Currently this command will do nothing. It will be completely removed in the next major version.'
+                'This command is deprecated. From major version 2, '
+                'RuleKit jar file is already packed with this package '
+                'distribution and there is no need to download it in '
+                'additional step. \n\n Currently this command will do '
+                'nothing. It will be completely removed in the next '
+                'major version.'
             ),
             DeprecationWarning,
             stacklevel=2

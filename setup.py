@@ -39,6 +39,7 @@ setuptools.setup(
         'scikit-learn>=1.1',
         'JPype1>=1.5.0',
         'pydantic>=2.0',
+        'requests>=2.32.3',
     ],
     test_suite="tests",
     project_urls={

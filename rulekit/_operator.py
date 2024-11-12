@@ -18,10 +18,10 @@ from rulekit._helpers import ModelSerializer
 from rulekit._helpers import PredictionResultMapper
 from rulekit._helpers import RuleGeneratorConfigurator
 from rulekit._problem_types import ProblemType
-from rulekit.events import command_listener_factory
+from rulekit.events import _command_listener_factory
 from rulekit.events import RuleInductionProgressListener
 from rulekit.main import RuleKit
-from rulekit.rules import Rule
+from rulekit.rules import BaseRule
 from rulekit.rules import RuleSet
 
 Data = Union[np.ndarray, pd.DataFrame, list]
@@ -38,7 +38,7 @@ class BaseOperator(ABC):
         self._params = None
         self._rule_generator = None
         self.set_params(**kwargs)
-        self.model: RuleSet = None
+        self.model: RuleSet[BaseRule] = None
 
     def _initialize_rulekit(self):
         if not RuleKit.initialized:
@@ -77,7 +77,7 @@ class BaseOperator(ABC):
         self._validate_contrast_attribute(example_set, contrast_attribute)
 
         java_model = self._rule_generator.learn(example_set)
-        self.model = RuleSet(java_model)
+        self.model = RuleSet[BaseRule](java_model)
         return self.model
 
     def predict(self, values: Data) -> np.ndarray:  # pylint: disable=missing-function-docstring
@@ -175,7 +175,7 @@ class BaseOperator(ABC):
         Args:
             listener (RuleInductionProgressListener): listener object
         """
-        command_listener = command_listener_factory(listener)
+        command_listener = _command_listener_factory(listener)
         self._rule_generator.addOperatorListener(command_listener)
 
     def __getstate__(self) -> dict:
@@ -210,9 +210,9 @@ class ExpertKnowledgeOperator(BaseOperator, ABC):
         survival_time_attribute: str = None,
         contrast_attribute: str = None,
 
-        expert_rules: list[Union[str, Rule]] = None,
-        expert_preferred_conditions: list[Union[str, Rule]] = None,
-        expert_forbidden_conditions: list[Union[str, Rule]] = None
+        expert_rules: list[Union[str, BaseRule]] = None,
+        expert_preferred_conditions: list[Union[str, BaseRule]] = None,
+        expert_forbidden_conditions: list[Union[str, BaseRule]] = None
     ) -> ExpertKnowledgeOperator:
         example_set = ExampleSetFactory(self._get_problem_type()).make(
             values,
@@ -235,9 +235,9 @@ class ExpertKnowledgeOperator(BaseOperator, ABC):
 
     def _configure_expert_parameters(
         self,
-        expert_rules: Optional[list[Union[str, Rule]]] = None,
-        expert_preferred_conditions: Optional[list[Union[str, Rule]]] = None,
-        expert_forbidden_conditions: Optional[list[Union[str, Rule]]] = None
+        expert_rules: Optional[list[Union[str, BaseRule]]] = None,
+        expert_preferred_conditions: Optional[list[Union[str, BaseRule]]] = None,
+        expert_forbidden_conditions: Optional[list[Union[str, BaseRule]]] = None
     ) -> None:
         if expert_rules is None:
             expert_rules = []

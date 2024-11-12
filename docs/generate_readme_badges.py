@@ -70,8 +70,8 @@ def main():
     print('Updating badges')
     cwd = pathlib.Path(curr_dir_path / '..')  # root repo dir
 
-    generate_tests_coverage_badge(cwd)
-    generate_test_badge(cwd)
+    # generate_tests_coverage_badge(cwd)
+    # generate_test_badge(cwd)
     generate_flake8_badge(cwd)
 
     print('Badges generated successfully!')

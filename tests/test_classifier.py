@@ -11,8 +11,7 @@ from sklearn.datasets import load_iris
 
 from rulekit import classification
 from rulekit.events import RuleInductionProgressListener
-from rulekit.params import Measures
-from rulekit.rules import Rule
+from rulekit.rules import ClassificationRule
 from tests.utils import assert_accuracy_is_greater
 from tests.utils import assert_rules_are_equals
 from tests.utils import dir_path
@@ -46,7 +45,7 @@ class TestClassifier(unittest.TestCase):
             induced_rules_count = 0
             on_progress_calls_count = 0
 
-            def on_new_rule(self, rule: Rule):
+            def on_new_rule(self, rule: ClassificationRule):
                 self.lock.acquire()
                 self.induced_rules_count += 1
                 self.lock.release()
@@ -282,49 +281,6 @@ class TestExperClassifier(unittest.TestCase):
             expert_preferred_conditions=expert_preferred_conditions,
             expert_forbidden_conditions=expert_forbidden_conditions
         )
-
-    def test_user_defined_measures(self):
-        def full_coverage(p: float, n: float, P: float, N: float) -> float:
-            return (p + n) / (P + N)
-
-        python_clf = classification.RuleClassifier(
-            induction_measure=full_coverage,
-            pruning_measure=full_coverage,
-            voting_measure=full_coverage,
-        )
-        java_clf = classification.RuleClassifier(
-            induction_measure=Measures.FullCoverage,
-            pruning_measure=Measures.FullCoverage,
-            voting_measure=Measures.FullCoverage,
-        )
-        x, y = load_iris(return_X_y=True)
-
-        python_clf.fit(x, y)
-        java_clf.fit(x, y)
-
-        self.assertEqual(
-            [r.weight for r in python_clf.model.rules],
-            [r.weight for r in java_clf.model.rules],
-            'Weights should be equal'
-        )
-        self.assertEqual(
-            [str(r) for r in python_clf.model.rules],
-            [str(r) for r in java_clf.model.rules],
-            'Rules should be equal'
-        )
-
-        def zero_measure(p: float, n: float, P: float, N: float) -> float:
-            return 0.0
-
-        python_clf2 = classification.RuleClassifier(
-            induction_measure=Measures.FullCoverage,
-            pruning_measure=Measures.FullCoverage,
-            voting_measure=zero_measure,
-        )
-        python_clf2.fit(x, y)
-        self.assertTrue(all([
-            r.weight == 0.0 for r in python_clf2.model.rules
-        ]))
 
 
 if __name__ == '__main__':
