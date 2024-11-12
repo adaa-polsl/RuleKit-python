@@ -73,3 +73,5 @@
 1     E713 test for membership should be 'not in'
 3     W291 trailing whitespace
 1     W293 blank line contains whitespace
+393   E501 line too long (82 > 79 characters)
+1     E713 test for membership should be 'not in'
