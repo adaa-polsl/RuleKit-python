@@ -1,5 +1,6 @@
 """Module containing classes for handling exceptions."""
 from typing import Any
+from typing import Callable
 
 from jpype import JException
 
@@ -73,7 +74,9 @@ class RuleKitMisconfigurationException(Exception):
             java_value = java_parameters.get(key)
             python_value = python_parameters.get(key)
             line: str = f'  {key}: ({java_value},  {python_value}),'
-            if java_value != python_value:
+            # skip check for user defined measures
+            skip_check: bool = isinstance(python_value, Callable)
+            if java_value != python_value and not skip_check:
                 line = f'{line} <-- **DIFFERENT**'
             params_lines.append(line)
         message: str = (

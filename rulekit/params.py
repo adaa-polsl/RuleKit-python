@@ -1,12 +1,35 @@
 """Contains constants and classes for specyfing models parameters
 """
 from enum import Enum
+from typing import Callable
 from typing import Optional
 from typing import Tuple
+from typing import Union
 
+from jpype import JImplements
+from jpype import JOverride
+from jpype.types import JDouble
 from pydantic import BaseModel  # pylint: disable=no-name-in-module
 
 MAX_INT: int = 2147483647  # max integer value in Java
+
+_UserDefinedMeasure = Callable[[float, float, float, float], float]
+
+
+def _user_defined_measure_factory(measure_function: _UserDefinedMeasure):
+    from adaa.analytics.rules.logic.quality import \
+        IUserMeasure  # pylint: disable=import-outside-toplevel,import-error
+
+    @JImplements(IUserMeasure)
+    class _UserMeasure:  # pylint: disable=invalid-name,missing-function-docstring
+
+        @JOverride
+        def getResult(self, p: JDouble, n: JDouble, P: JDouble, N: JDouble) -> float:
+            return measure_function(
+                float(p), float(n), float(P), float(N)
+            )
+
+    return _UserMeasure()
 
 
 class Measures(Enum):
@@ -92,14 +115,16 @@ DEFAULT_PARAMS_VALUE = {
     'penalty_saturation': 0.2,
 }
 
+_QualityMeasure = Union[Measures, _UserDefinedMeasure]
+
 
 class ModelsParams(BaseModel):
     """Model for validating models hyperparameters
     """
     minsupp_new: Optional[float] = DEFAULT_PARAMS_VALUE['minsupp_new']
-    induction_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['induction_measure']
-    pruning_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['pruning_measure']
-    voting_measure: Optional[Measures] = DEFAULT_PARAMS_VALUE['voting_measure']
+    induction_measure: Optional[_QualityMeasure] = DEFAULT_PARAMS_VALUE['induction_measure']
+    pruning_measure: Optional[_QualityMeasure] = DEFAULT_PARAMS_VALUE['pruning_measure']
+    voting_measure: Optional[_QualityMeasure] = DEFAULT_PARAMS_VALUE['voting_measure']
     max_growing: Optional[float] = DEFAULT_PARAMS_VALUE['max_growing']
     enable_pruning: Optional[bool] = DEFAULT_PARAMS_VALUE['enable_pruning']
     ignore_missing: Optional[bool] = DEFAULT_PARAMS_VALUE['ignore_missing']
