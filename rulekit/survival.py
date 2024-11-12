@@ -17,16 +17,17 @@ from rulekit._operator import BaseOperator
 from rulekit._operator import Data
 from rulekit._operator import ExpertKnowledgeOperator
 from rulekit._problem_types import ProblemType
+from rulekit.kaplan_meier import KaplanMeierEstimator
 from rulekit.params import ContrastSetModelParams
 from rulekit.params import DEFAULT_PARAMS_VALUE
+from rulekit.params import ExpertModelParams
 from rulekit.rules import RuleSet
+from rulekit.rules import SurvivalRule
 
 _DEFAULT_SURVIVAL_TIME_ATTR: str = 'survival_time'
 
 
-class SurvivalModelsParams(BaseModel):
-    """Model for validating survival models hyperparameters
-    """
+class _SurvivalModelsParams(BaseModel):
     survival_time_attr: Optional[str]
     minsupp_new: Optional[float] = DEFAULT_PARAMS_VALUE['minsupp_new']
     max_growing: Optional[float] = DEFAULT_PARAMS_VALUE['max_growing']
@@ -36,19 +37,30 @@ class SurvivalModelsParams(BaseModel):
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
 
-    extend_using_preferred: Optional[bool] = DEFAULT_PARAMS_VALUE['extend_using_preferred']
-    extend_using_automatic: Optional[bool] = DEFAULT_PARAMS_VALUE['extend_using_automatic']
-    induce_using_preferred: Optional[bool] = DEFAULT_PARAMS_VALUE['induce_using_preferred']
-    induce_using_automatic: Optional[bool] = DEFAULT_PARAMS_VALUE['induce_using_automatic']
-    consider_other_classes: Optional[bool] = DEFAULT_PARAMS_VALUE['consider_other_classes']
-    preferred_conditions_per_rule: Optional[int] = DEFAULT_PARAMS_VALUE['preferred_conditions_per_rule']
-    preferred_attributes_per_rule: Optional[int] = DEFAULT_PARAMS_VALUE['preferred_attributes_per_rule']
+
+class _SurvivalExpertModelParams(_SurvivalModelsParams, ExpertModelParams):
+    pass
 
 
-class SurvivalRules(BaseOperator):
+class _BaseSurvivalRulesModel:
+
+    model: RuleSet[SurvivalRule]
+
+    def get_train_set_kaplan_meier(self) -> KaplanMeierEstimator:
+        """Returns train set KaplanMeier estimator
+
+        Returns:
+            KaplanMeierEstimator: estimator
+        """
+        return KaplanMeierEstimator(
+            self.model._java_object.getTrainingEstimator()  # pylint: disable=protected-access
+        )
+
+
+class SurvivalRules(BaseOperator, _BaseSurvivalRulesModel):
     """Survival model."""
 
-    __params_class__ = SurvivalModelsParams
+    __params_class__ = _SurvivalModelsParams
 
     def __init__(  # pylint: disable=super-init-not-called,too-many-arguments
         self,
@@ -97,6 +109,7 @@ class SurvivalRules(BaseOperator):
         self._params = None
         self._rule_generator = None
         self._configurator = None
+        self._initialize_rulekit()
         self.set_params(
             survival_time_attr=survival_time_attr,
             minsupp_new=minsupp_new,
@@ -108,7 +121,7 @@ class SurvivalRules(BaseOperator):
             complementary_conditions=complementary_conditions,
             max_rule_count=max_rule_count
         )
-        self.model: RuleSet = None
+        self.model: RuleSet[SurvivalRule] = None
 
     def set_params(
         self,
@@ -240,7 +253,7 @@ class SurvivalRules(BaseOperator):
 class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
     """Expert Survival model."""
 
-    __params_class__ = SurvivalModelsParams
+    __params_class__ = _SurvivalExpertModelParams
 
     def __init__(  # pylint: disable=super-init-not-called,too-many-arguments,too-many-locals
         self,
@@ -315,6 +328,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         self._params = None
         self._rule_generator = None
         self._configurator = None
+        self._initialize_rulekit()
         self.set_params(
             survival_time_attr=survival_time_attr,
             minsupp_new=minsupp_new,
@@ -332,7 +346,7 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
             complementary_conditions=complementary_conditions,
             max_rule_count=max_rule_count
         )
-        self.model: RuleSet = None
+        self.model: RuleSet[SurvivalRule] = None
 
     def set_params(  # pylint: disable=arguments-differ
         self,
@@ -399,15 +413,14 @@ class ExpertSurvivalRules(ExpertKnowledgeOperator, SurvivalRules):
         return ProblemType.SURVIVAL
 
 
-class SurvivalContrastSetModelParams(ContrastSetModelParams, SurvivalModelsParams):
-    """Model for validating survival contrast sets models hyperparameters
-     """
+class _SurvivalContrastSetModelParams(ContrastSetModelParams, _SurvivalModelsParams):
+    pass
 
 
-class ContrastSetSurvivalRules(BaseOperator):
+class ContrastSetSurvivalRules(BaseOperator, _BaseSurvivalRulesModel):
     """Contrast set survival model."""
 
-    __params_class__ = SurvivalContrastSetModelParams
+    __params_class__ = _SurvivalContrastSetModelParams
 
     def __init__(  # pylint: disable=super-init-not-called,too-many-arguments
         self,
@@ -475,6 +488,7 @@ class ContrastSetSurvivalRules(BaseOperator):
         self._rule_generator = None
         self._configurator = None
         self.contrast_attribute: str = None
+        self._initialize_rulekit()
         self.set_params(
             minsupp_all=minsupp_all,
             max_neg2pos=max_neg2pos,
@@ -491,7 +505,7 @@ class ContrastSetSurvivalRules(BaseOperator):
             complementary_conditions=complementary_conditions,
             max_rule_count=max_rule_count
         )
-        self.model: RuleSet = None
+        self.model: RuleSet[SurvivalRule] = None
 
     def set_params(self, **kwargs) -> object:
         """Set models hyperparameters. Parameters are the same as in constructor."""

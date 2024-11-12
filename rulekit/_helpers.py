@@ -20,7 +20,7 @@ from rulekit._problem_types import ProblemType
 from rulekit.exceptions import RuleKitMisconfigurationException
 from rulekit.main import RuleKit
 from rulekit.params import Measures
-from rulekit.rules import Rule
+from rulekit.rules import BaseRule
 
 
 def get_rule_generator(expert: bool = False) -> Any:
@@ -33,7 +33,6 @@ def get_rule_generator(expert: bool = False) -> Any:
     Returns:
         Any: RuleGenerator instance
     """
-    RuleKit.init()
     RuleGenerator = JClass(  # pylint: disable=invalid-name
         'adaa.analytics.rules.logic.rulegenerator.RuleGenerator'
     )
@@ -70,7 +69,7 @@ class RuleGeneratorConfigurator:
                     rule_name = f'{param_name[:-1]}-{index}'
                     rules_list.add(
                         JObject([rule_name, rule], JArray('java.lang.String', 1)))
-            elif isinstance(param_value[0], Rule):
+            elif isinstance(param_value[0], BaseRule):
                 for index, rule in enumerate(param_value):
                     rule_name = f'{param_name[:-1]}-{index}'
                     rules_list.add(
@@ -486,6 +485,8 @@ class ModelSerializer:
         Returns:
             object: deserialized Java ruleset object
         """
+        if not RuleKit.initialized:
+            RuleKit.init()
         in_memory_file = io.BytesIO(serialized_bytes)
         model = JUnpickler(in_memory_file).load()
         in_memory_file.close()

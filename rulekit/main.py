@@ -102,8 +102,10 @@ class RuleKit:
         RuleKit._jar_dir_path = f"{current_path}/jar"
         class_path_separator = os.pathsep
         try:
-            jar_file_name: str = f'rulekit-{
-                __RULEKIT_RELEASE_VERSION__}-all.jar'
+            jar_file_name: str = (
+                'rulekit-' +
+                f'{__RULEKIT_RELEASE_VERSION__}-all.jar'
+            )
             RuleKit._rulekit_jar_file_path = os.path.join(
                 RuleKit._jar_dir_path, jar_file_name)
             jars_paths: list[str] = [RuleKit._rulekit_jar_file_path]
@@ -111,8 +113,9 @@ class RuleKit:
                 jars_paths.remove(RuleKit._rulekit_jar_file_path)
                 jars_paths.append(rulekit_jar_file_path)
                 RuleKit._rulekit_jar_file_path = rulekit_jar_file_path
-            RuleKit._class_path = f'{
-                str.join(class_path_separator, jars_paths)}'
+            RuleKit._class_path = (
+                f'{str.join(class_path_separator, jars_paths)}'
+            )
         except IndexError as error:
             RuleKit._logger.error('Failed to load jar files')
             raise RuntimeError(f'''\n

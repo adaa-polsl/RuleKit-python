@@ -10,7 +10,7 @@ from rulekit.arff import read_arff
 from rulekit.events import RuleInductionProgressListener
 from rulekit.main import RuleKit
 from rulekit.params import Measures
-from rulekit.rules import Rule
+from rulekit.rules import RegressionRule
 from tests.utils import assert_rules_are_equals
 from tests.utils import assert_score_is_greater
 from tests.utils import dir_path
@@ -36,7 +36,7 @@ class TestRegressor(unittest.TestCase):
             induced_rules_count = 0
             on_progress_calls_count = 0
 
-            def on_new_rule(self, rule: Rule):
+            def on_new_rule(self, rule: RegressionRule):
                 self.lock.acquire()
                 self.induced_rules_count += 1
                 self.lock.release()

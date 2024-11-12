@@ -11,7 +11,7 @@ from sklearn.datasets import load_iris
 
 from rulekit import classification
 from rulekit.events import RuleInductionProgressListener
-from rulekit.rules import Rule
+from rulekit.rules import ClassificationRule
 from tests.utils import assert_accuracy_is_greater
 from tests.utils import assert_rules_are_equals
 from tests.utils import dir_path
@@ -45,7 +45,7 @@ class TestClassifier(unittest.TestCase):
             induced_rules_count = 0
             on_progress_calls_count = 0
 
-            def on_new_rule(self, rule: Rule):
+            def on_new_rule(self, rule: ClassificationRule):
                 self.lock.acquire()
                 self.induced_rules_count += 1
                 self.lock.release()

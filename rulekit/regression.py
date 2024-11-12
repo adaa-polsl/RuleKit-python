@@ -17,18 +17,25 @@ from rulekit._operator import ExpertKnowledgeOperator
 from rulekit._problem_types import ProblemType
 from rulekit.params import ContrastSetModelParams
 from rulekit.params import DEFAULT_PARAMS_VALUE
+from rulekit.params import ExpertModelParams
 from rulekit.params import Measures
 from rulekit.params import ModelsParams
+from rulekit.rules import RegressionRule
+from rulekit.rules import RuleSet
 
 
-class _RegressionParams(ModelsParams):
+class _RegressionModelParams(ModelsParams):
     mean_based_regression: bool = DEFAULT_PARAMS_VALUE['mean_based_regression']
+
+
+class _RegressionExpertModelParams(_RegressionModelParams, ExpertModelParams):
+    pass
 
 
 class RuleRegressor(BaseOperator):
     """Regression model."""
 
-    __params_class__ = _RegressionParams
+    __params_class__ = _RegressionModelParams
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -101,6 +108,7 @@ class RuleRegressor(BaseOperator):
             mean_based_regression=mean_based_regression,
             max_rule_count=max_rule_count,
         )
+        self.model: RuleSet[RegressionRule] = None
 
     def _validate_labels(self, labels: Data):
         if isinstance(labels, (pd.DataFrame, pd.Series)):
@@ -172,7 +180,7 @@ class RuleRegressor(BaseOperator):
 class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
     """Expert Regression model."""
 
-    __params_class__ = _RegressionParams
+    __params_class__ = _RegressionExpertModelParams
 
     def __init__(   # pylint: disable=too-many-arguments,too-many-locals
         self,
@@ -293,6 +301,7 @@ class ExpertRuleRegressor(ExpertKnowledgeOperator, RuleRegressor):
             mean_based_regression=mean_based_regression,
             max_rule_count=max_rule_count,
         )
+        self.model: RuleSet[RegressionRule] = None
 
     def fit(  # pylint: disable=arguments-differ,too-many-arguments
         self,
@@ -444,6 +453,7 @@ class ContrastSetRuleRegressor(BaseOperator):
             max_rule_count=max_rule_count,
         )
         self.contrast_attribute: str = None
+        self.model: RuleSet[RegressionRule] = None
 
     def fit(self, values: Data, labels: Data, contrast_attribute: str) -> ContrastSetRuleRegressor:  # pylint: disable=arguments-differ
         """Train model on given dataset.

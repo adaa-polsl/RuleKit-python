@@ -107,9 +107,11 @@ class ModelsParams(BaseModel):
     select_best_candidate: Optional[bool] = DEFAULT_PARAMS_VALUE['select_best_candidate']
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE['complementary_conditions']
     max_rule_count: int = DEFAULT_PARAMS_VALUE['max_rule_count']
-    minsupp_all: Tuple[float, float, float,
-                       float] = DEFAULT_PARAMS_VALUE['minsupp_all']
 
+
+class ExpertModelParams(ModelsParams):
+    """Model for validating expert models hyperparameters
+    """
     extend_using_preferred: Optional[bool] = DEFAULT_PARAMS_VALUE['extend_using_preferred']
     extend_using_automatic: Optional[bool] = DEFAULT_PARAMS_VALUE['extend_using_automatic']
     induce_using_preferred: Optional[bool] = DEFAULT_PARAMS_VALUE['induce_using_preferred']
@@ -122,8 +124,9 @@ class ModelsParams(BaseModel):
 class ContrastSetModelParams(ModelsParams):
     """Model for validating contrast set models hyperparameters
     """
-    minsupp_all: Tuple[float, float, float,
-                       float] = DEFAULT_PARAMS_VALUE['minsupp_all']
+    minsupp_all: Tuple[
+        float, float, float, float
+    ] = DEFAULT_PARAMS_VALUE['minsupp_all']
     max_neg2pos: Optional[float] = DEFAULT_PARAMS_VALUE['max_neg2pos']
     max_passes_count: Optional[int] = DEFAULT_PARAMS_VALUE['max_passes_count']
     penalty_strength: Optional[float] = DEFAULT_PARAMS_VALUE['penalty_strength']

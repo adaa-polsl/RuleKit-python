@@ -11,8 +11,9 @@ def run_command(command: list[str], cwd: Optional[str] = None, raise_on_error: b
     )
     output, error = process.communicate()
     if process.returncode != 0 and raise_on_error:
-        raise Exception("File handling failed %d %s %s" %
-                        (process.returncode, output, error)
+        print(error.decode())
+        raise Exception("Command run failed %d %s" %
+                        (process.returncode, error)
                         )
 
     print(output.decode())

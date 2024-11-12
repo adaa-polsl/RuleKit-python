@@ -6,17 +6,53 @@ import pandas as pd
 
 from rulekit import survival
 from rulekit.events import RuleInductionProgressListener
+from rulekit.kaplan_meier import KaplanMeierEstimator
 from rulekit.main import RuleKit
-from rulekit.rules import Rule
+from rulekit.rules import SurvivalRule
 from tests.utils import assert_rules_are_equals
 from tests.utils import get_test_cases
 
 
-class TestSurvivalLogRankTree(unittest.TestCase):
+class TestKaplanMeierEstimator(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        RuleKit.init()
+    survival_rules: survival.SurvivalRules
+
+    def setUp(self):
+        test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
+
+        self.survival_rules = survival.SurvivalRules(
+            survival_time_attr=test_case.survival_time)
+        example_set = test_case.example_set
+        self.survival_rules.fit(
+            example_set.values,
+            example_set.labels,
+        )
+        self.km: KaplanMeierEstimator = self.survival_rules.model.rules[0].kaplan_meier_estimator
+
+    def test_accessing_probabilities(self):
+        self.assertTrue(all([
+            p >= 0.0 and p <= 1.0
+            for p in self.km.probabilities
+        ]), 'All probabilities should be in range [0, 1]')
+        self.assertTrue(all([
+            isinstance(p, float)
+            for p in self.km.probabilities
+        ]), 'All probabilities should be Pythonic floats')
+
+    def test_accessing_events_count(self):
+        self.assertTrue(all([
+            isinstance(p, np.int_)
+            for p in self.km.events_count
+        ]), 'All event counts should be Pythonic integers')
+
+    def test_accessing_at_risk_count(self):
+        self.assertTrue(all([
+            isinstance(p, np.int_)
+            for p in self.km.at_risk_count
+        ]), 'All risk count should be Pythonic integers')
+
+
+class TestSurvivalRules(unittest.TestCase):
 
     def test_induction_progress_listener(self):
         test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
@@ -31,7 +67,7 @@ class TestSurvivalLogRankTree(unittest.TestCase):
             induced_rules_count = 0
             on_progress_calls_count = 0
 
-            def on_new_rule(self, rule: Rule):
+            def on_new_rule(self, rule: SurvivalRule):
                 self.lock.acquire()
                 self.induced_rules_count += 1
                 self.lock.release()
@@ -88,7 +124,7 @@ class TestSurvivalLogRankTree(unittest.TestCase):
 
 class TestExpertSurvivalLogRankTree(unittest.TestCase):
 
-    @classmethod
+    @ classmethod
     def setUpClass(cls):
         RuleKit.init()
 

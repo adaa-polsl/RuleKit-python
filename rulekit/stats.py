@@ -33,7 +33,7 @@ class RuleStatistics:
     def __str__(self):
         """Returns string representation of the object."""
         return f'(p = {self.p}, n = {self.n}, P = {self.P}, ' + \
-               f'N = {self.N}, weight = {self.weight}, pvalue = {self.pvalue})'
+            f'N = {self.N}, weight = {self.weight}, pvalue = {self.pvalue})'
 
 
 class RuleSetStatistics:  # pylint: disable=too-many-instance-attributes
@@ -72,11 +72,11 @@ class RuleSetStatistics:  # pylint: disable=too-many-instance-attributes
     fraction_significant : float
         Fraction of rules significant at assumed level
     fraction_FDR_significant : float
-        Fraction of rules significant, set with false discovery rate correction,
-        at assumed level.
+        Fraction of rules significant, set with false \
+        discovery rate correction, at assumed level.
     fraction_FWER_significant : float
-        Fraction of rules significant, set with familiy-wise error rate correction,
-        at assumed level.
+        Fraction of rules significant, set with familiy-wise \
+        error rate correction, at assumed level.
     """
     SIGNIFICANCE_LEVEL = 0.05
 
@@ -88,7 +88,8 @@ class RuleSetStatistics:  # pylint: disable=too-many-instance-attributes
 
         self.rules_count = len(ruleset.rules)
         self.conditions_per_rule = ruleset.calculate_conditions_count()
-        self.induced_conditions_per_rule = ruleset.calculate_induced_conditions_count()
+        self.induced_conditions_per_rule = ruleset. \
+            calculate_induced_conditions_count()
 
         self.avg_rule_coverage = ruleset.calculate_avg_rule_coverage()
         self.avg_rule_precision = ruleset.calculate_avg_rule_precision()
@@ -118,7 +119,8 @@ class RuleSetStatistics:  # pylint: disable=too-many-instance-attributes
             '\n' +
             f'Rules count: {self.rules_count}\n' +
             f'Conditions per rule: {self.conditions_per_rule}\n' +
-            f'Induced conditions per rule: {self.induced_conditions_per_rule}\n' +
+            'Induced conditions per rule: ' +
+            f'{self.induced_conditions_per_rule}\n'
             '\n' +
             f'Average rule coverage: {self.avg_rule_coverage}\n' +
             f'Average rule precision: {self.avg_rule_precision}\n' +

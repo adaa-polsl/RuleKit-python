@@ -21,8 +21,11 @@ from rulekit._operator import ExpertKnowledgeOperator
 from rulekit._problem_types import ProblemType
 from rulekit.params import ContrastSetModelParams
 from rulekit.params import DEFAULT_PARAMS_VALUE
+from rulekit.params import ExpertModelParams
 from rulekit.params import Measures
 from rulekit.params import ModelsParams
+from rulekit.rules import ClassificationRule
+from rulekit.rules import RuleSet
 
 
 class ClassificationPredictionMetrics(TypedDict):
@@ -40,6 +43,10 @@ class _ClassificationParams(ModelsParams):
     control_apriori_precision: bool = DEFAULT_PARAMS_VALUE['control_apriori_precision']
     approximate_induction: bool = DEFAULT_PARAMS_VALUE['approximate_induction']
     approximate_bins_count: int = DEFAULT_PARAMS_VALUE['approximate_bins_count']
+
+
+class _ClassificationExpertParams(_ClassificationParams, ExpertModelParams):
+    pass
 
 
 class BaseClassifier:
@@ -170,6 +177,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
         BaseClassifier.__init__(self)
         self._remap_to_numeric = False
         self.label_unique_values = []
+        self.model: RuleSet[ClassificationRule] = None
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
         prediction: np.ndarray
@@ -249,9 +257,12 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
-            If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple
-             will be returned with first element being prediction and second one being metrics.
+        result : Union[
+            np.ndarray,
+            tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]
+        ]
+        If *return_metrics* flag wasn't set it will return just prediction, otherwise a tuple
+        will be returned with first element being prediction and second one being metrics.
         """
         result_example_set = BaseOperator.predict(self, values)
         y_pred = self._map_result(result_example_set)
@@ -279,9 +290,13 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
-            If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
-            a tuple will be returned with first element being prediction and second one being metrics.
+        result :
+        Union[
+            np.ndarray,
+            tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]
+        ]
+        If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
+        a tuple will be returned with first element being prediction and second one being metrics.
         """
         result_example_set = BaseOperator.predict(self, values)
         mapped_result_example_set = self._map_confidence(result_example_set)
@@ -328,7 +343,7 @@ class RuleClassifier(BaseOperator, BaseClassifier):
 class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
     """Classification model using expert knowledge."""
 
-    __params_class__ = _ClassificationParams
+    __params_class__ = _ClassificationExpertParams
 
     def __init__(  # pylint: disable=too-many-arguments,too-many-locals
         self,
@@ -362,8 +377,10 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
         Parameters
         ----------
         minsupp_new : float = 5.0
-            a minimum number (or fraction, if value < 1.0) of previously uncovered examples
-             to be covered by a new rule (positive examples for classification problems); default: 5,
+        a minimum number (or fraction, if value < 1.0) of previously uncovered examples
+        to be covered by a new rule (positive examples for classification problems);
+        default: 5,
+
         induction_measure : :class:`rulekit.params.Measures` = \
             :class:`rulekit.params.Measures.Correlation`
             measure used during induction; default measure is correlation
@@ -468,6 +485,7 @@ class ExpertRuleClassifier(ExpertKnowledgeOperator, RuleClassifier):
             approximate_induction=approximate_induction,
             approximate_bins_count=approximate_bins_count,
         )
+        self.model: RuleSet[ClassificationRule] = None
 
     def fit(  # pylint: disable=arguments-differ,too-many-arguments
         self,
@@ -656,6 +674,7 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
         self.contrast_attribute: str = None
         self._remap_to_numeric = False
         self.label_unique_values = []
+        self.model: RuleSet[ClassificationRule] = None
 
     def _map_result(self, predicted_example_set) -> np.ndarray:
         prediction: np.ndarray
@@ -746,10 +765,13 @@ class ContrastSetRuleClassifier(BaseOperator, BaseClassifier):
 
         Returns
         -------
-        result : Union[np.ndarray, tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`]]
-            If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise
-            a tuple will be returned with first element being prediction and second one being
-            metrics.
+        result : Union[ \
+            np.ndarray,  \
+            tuple[np.ndarray, :class:`rulekit.classification.ClassificationPredictionMetrics`] \
+        ] \
+        If *return_metrics* flag wasn't set it will return just probabilities matrix, otherwise \
+        a tuple will be returned with first element being prediction and second one being \
+        metrics.
         """
         return RuleClassifier.predict_proba(self, values, return_metrics)
 
