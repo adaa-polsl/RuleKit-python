@@ -3,9 +3,21 @@ Quick start
 ========================================
 
 .. warning::
-   This package is python wrapper for java library called RuleKit. This means it **requires** java JRE in version **1.8.0** to
-   be installed to run. You also need *JAVA_HOME* environmental variable to be set. Package should work fine with both Oracle and
-   Open JDK.
+    This package is a wrapper for Java library, and requires Java Development Kit version 8 
+    or later to be installed on the computer. Both Open JDK and Oracle implementations are supported.
+
+    If you don't have JDK installed on your computer you can quickly set it up using 
+    :ref:`install-jdk<https://pypi.org/project/install-jdk/>` package.
+
+    .. code-block:: bash
+        
+        pip install install-jdk
+
+    .. code-block:: python
+
+        import jdk
+
+        jdk.install('11', jre=True)
 
 Installation
 -------------
