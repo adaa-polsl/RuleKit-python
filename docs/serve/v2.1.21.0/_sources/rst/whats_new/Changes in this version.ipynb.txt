@@ -7,7 +7,46 @@
     "# What's new in RuleKit version 2.1.21.0?\n",
     "\n",
     "\n",
-    "### 1. Reading arff files from url via HTTP/HTTPS.\n",
+    "### 1. Ability to use user-defined quality measures during rule induction, pruning, and voting phases.\n",
+    "\n",
+    "Users can now define custom quality measures function and use them for: growing, pruning and voting. Defining quality measure function is easy and straightforward, see example below.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from rulekit.classification import RuleClassifier\n",
+    "\n",
+    "def my_induction_measure(p: float, n: float, P: float, N: float) -> float:\n",
+    "    # do anything you want here and return a single float...\n",
+    "    return (p + n) / (P + N)\n",
+    "\n",
+    "def my_pruning_measure(p: float, n: float, P: float, N: float) -> float:\n",
+    "    return p - n\n",
+    "\n",
+    "def my_voting_measure(p: float, n: float, P: float, N: float) -> float:\n",
+    "    return (p + 1) / (p + n + 2)\n",
+    "\n",
+    "python_clf = RuleClassifier(\n",
+    "    induction_measure=my_induction_measure,\n",
+    "    pruning_measure=my_pruning_measure,\n",
+    "    voting_measure=my_voting_measure,\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This function was available long ago in the original Java library, but there were some technical problems that prevented its implementation in that package. Now, with the release of RuleKit v2, it is finally available.\n",
+    "\n",
+    "> ⚠️ Using this feature comes at a price. Using the original set of quality measures from `rulekit.params.Measures` provides an optimized and much faster implementation of these quality functions in Java. Using a custom Python function **will certainly slow down the model learning process**. For example, learning rules on the Iris dataset using the FullCoverage measure went from 1.8 seconds to 10.9 seconds after switching to using the Python implementation of the same measure.\n",
+    "\n",
+    "\n",
+    "### 2. Reading arff files from url via HTTP/HTTPS.\n",
     "\n",
     "In the last version of the package, a new function for reading arff files was added. It made it possible to read an arff file by accepting the file path or a file-like object as an argument. As of this version, the function also accepts URLs, giving it the ability to read an arff dataset directly from some servers via HTTP/HTTPS. "
    ]
@@ -32,13 +71,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "### 2. Improves rules API\n",
+    "### 3. Improves rules API\n",
     "\n",
     "Access to some basic rule information was often quite cumbersome in earlier versions of this package. For example, there was no easy way to access information about the decision class of a classification rule. \n",
     "\n",
     "In this version, rule classes and rule sets have been refactored and improved. Below is a list of some operations that are now much easier. \n",
     "\n",
-    "#### 2.1 For classification rules\n",
+    "#### 3.1 For classification rules\n",
     "\n",
     "You can now access rules decision class via `rulekit.rules.ClassificationRule.decision_class` field. Example below:"
    ]
@@ -83,7 +122,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### 2.2 For regression rules\n",
+    "#### 3.2 For regression rules\n",
     "\n",
     "You can now access rules decision attribute value via `rulekit.rules.RegressionRule.conclusion_value` field. Example below:"
    ]
@@ -127,7 +166,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "#### 2.3 For survival rules\n",
+    "#### 3.3 For survival rules\n",
     "\n",
     "More changes have been made for survival rules. \n",
     "\n",
@@ -201,6 +240,78 @@
     "    label='Training dataset'\n",
     ")\n",
     "plt.legend(title='Kaplan-Meier curves:')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### 4. Changes in expert rules induction for regression and survival `❗BREAKING CHANGES`\n",
+    "\n",
+    "> Note that those changes will likely be reverted on the next version and are caused by a known bug in the original RuleKit library. Fixing it is beyond the scope of this package, which is merely a wrapper for it. \n",
+    "\n",
+    "Since this version, there has been a change in the way expert rules and conditions for regression and survival problems are communicated. All you have to do is remove conclusion part of those rules (everything after **THEN**).\n",
+    "\n",
+    "Expert rules before:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "expert_rules = [\n",
+    "    (\n",
+    "        'rule-0',\n",
+    "        'IF [[CD34kgx10d6 = (-inf, 10.0)]] AND [[extcGvHD = {0}]] THEN survival_status = {NaN}'\n",
+    "    )\n",
+    "]\n",
+    "\n",
+    "expert_preferred_conditions = [\n",
+    "    (\n",
+    "        'attr-preferred-0',\n",
+    "        'inf: IF [CD34kgx10d6 = Any] THEN survival_status = {NaN}'\n",
+    "    )\n",
+    "]\n",
+    "\n",
+    "\n",
+    "expert_forbidden_conditions = [\n",
+    "    ('attr-forbidden-0', 'IF [ANCrecovery = Any] THEN survival_status = {NaN}')\n",
+    "]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "And now:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "expert_rules = [\n",
+    "    (\n",
+    "        'rule-0',\n",
+    "        'IF [[CD34kgx10d6 = (-inf, 10.0)]] AND [[extcGvHD = {0}]] THEN'\n",
+    "    )\n",
+    "]\n",
+    "\n",
+    "expert_preferred_conditions = [\n",
+    "    (\n",
+    "        'attr-preferred-0',\n",
+    "        'inf: IF [CD34kgx10d6 = Any] THEN'\n",
+    "    )\n",
+    "]\n",
+    "\n",
+    "\n",
+    "expert_forbidden_conditions = [\n",
+    "    ('attr-forbidden-0', 'IF [ANCrecovery = Any] THEN')\n",
+    "]"
    ]
   },
   {
