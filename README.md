@@ -6,19 +6,26 @@
 
 # Rulekit
 
-
 This package is python wrapper for [RuleKit](https://github.com/adaa-polsl/RuleKit) library - a versatile tool for rule learning. 
  
 Based on a sequential covering induction algorithm, it is suitable for classification, regression, and survival problems.
  
 ## Installation
  
-> **NOTE**: 
-This package is a wrapper for Java library, and requires Java Development Kit version 8 or later to be installed on the computer. Both Open JDK and Oracle implementations are supported.
-## 
- 
 ```bash
 pip install rulekit
+```
+
+> **NOTE**: 
+This package is a wrapper for Java library, and requires Java Development Kit version 8 or later to be installed on the computer. Both Open JDK and Oracle implementations are supported.
+
+If you don’t have JDK installed on your computer you can quickly set it up using install-jdk package.
+```
+pip install install-jdk
+```
+```python
+import jdk
+jdk.install('11', jre=True)
 ```
  
 ## Running tests
