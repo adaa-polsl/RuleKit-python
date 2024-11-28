@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classification &mdash; rulekit v2.1.24.0 f documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=62e1ab09"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Regression" href="regression.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v2.1.24.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new/Changes%20in%20this%20version.html">Whats new</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Classification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Install-dependencies">Install dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Summary-of-the-dataset">Summary of the dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Decision-class-distribution">Decision class distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Helper-function-for-calculating-metrics">Helper function for calculating metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Rule-induction-on-full-dataset">Rule induction on full dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#C2-Measure-generated-rules">C2 Measure generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Correlation-Measure-generated-rules">Correlation Measure generated rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#RSS-Measure-generated-rules">RSS Measure generated rules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Stratified-K-Folds-cross-validation">Stratified K-Folds cross-validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Hyperparameters-tuning">Hyperparameters tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Building-model-with-tuned-hyperparameters">Building model with tuned hyperparameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Split-dataset-to-train-and-test-(80%/20%).">Split dataset to train and test (80%/20%).</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Validate-model-on-test-dataset">Validate model on test dataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="survival.html">Survival</a></li>
+<li class="toctree-l2"><a class="reference internal" href="expert_rules.html">Expert Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../autodoc.html">Code documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v2.1.24.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Classification</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/tutorials/classification.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Classification">
+<h1>Classification<a class="headerlink" href="#Classification" title="Link to this heading"></a></h1>
+<p>This notebook presents example usage of package for solving classification problem on <code class="docutils literal notranslate"><span class="pre">seismic-bumps</span></code> dataset. You can access dataset <a class="reference external" href="https://raw.githubusercontent.com/adaa-polsl/RuleKit/master/data/seismic-bumps/seismic-bumps.arff">here</a>.</p>
+<div class="line-block">
+<div class="line">This tutorial will cover topics such as:</div>
+<div class="line">- training model</div>
+<div class="line">- changing model hyperparameters</div>
+<div class="line">- hyperparameters tuning</div>
+<div class="line">- calculating metrics for model</div>
+<div class="line">- getting RuleKit inbuilt</div>
+</div>
+<section id="Install-dependencies">
+<h2>Install dependencies<a class="headerlink" href="#Install-dependencies" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install matplotlib
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Summary-of-the-dataset">
+<h2>Summary of the dataset<a class="headerlink" href="#Summary-of-the-dataset" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">rulekit.arff</span> <span class="kn">import</span> <span class="n">read_arff</span>
+
+<span class="n">DATASET_URL</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;https://raw.githubusercontent.com/&#39;</span>
+    <span class="s1">&#39;adaa-polsl/RuleKit/refs/heads/master/data/seismic-bumps/&#39;</span>
+    <span class="s1">&#39;seismic-bumps.arff&#39;</span>
+<span class="p">)</span>
+
+<span class="n">df_full</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">read_arff</span><span class="p">(</span><span class="n">DATASET_URL</span><span class="p">)</span>
+<span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df_full</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>genergy</th>
+      <th>gimpuls</th>
+      <th>goenergy</th>
+      <th>goimpuls</th>
+      <th>nbumps</th>
+      <th>nbumps2</th>
+      <th>nbumps3</th>
+      <th>nbumps4</th>
+      <th>nbumps5</th>
+      <th>nbumps6</th>
+      <th>nbumps7</th>
+      <th>nbumps89</th>
+      <th>senergy</th>
+      <th>maxenergy</th>
+      <th>class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>2.584000e+03</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.0</td>
+      <td>2584.0</td>
+      <td>2584.0</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+      <td>2584.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>9.024252e+04</td>
+      <td>538.579334</td>
+      <td>12.375774</td>
+      <td>4.508901</td>
+      <td>0.859520</td>
+      <td>0.393576</td>
+      <td>0.392802</td>
+      <td>0.067724</td>
+      <td>0.004644</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>4975.270898</td>
+      <td>4278.850619</td>
+      <td>0.065789</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>2.292005e+05</td>
+      <td>562.652536</td>
+      <td>80.319051</td>
+      <td>63.166556</td>
+      <td>1.364616</td>
+      <td>0.783772</td>
+      <td>0.769710</td>
+      <td>0.279059</td>
+      <td>0.068001</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>20450.833222</td>
+      <td>19357.454882</td>
+      <td>0.247962</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>1.000000e+02</td>
+      <td>2.000000</td>
+      <td>-96.000000</td>
+      <td>-96.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>1.166000e+04</td>
+      <td>190.000000</td>
+      <td>-37.000000</td>
+      <td>-36.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>2.548500e+04</td>
+      <td>379.000000</td>
+      <td>-6.000000</td>
+      <td>-6.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>5.283250e+04</td>
+      <td>669.000000</td>
+      <td>38.000000</td>
+      <td>30.250000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>2600.000000</td>
+      <td>2000.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.595650e+06</td>
+      <td>4518.000000</td>
+      <td>1245.000000</td>
+      <td>838.000000</td>
+      <td>9.000000</td>
+      <td>8.000000</td>
+      <td>7.000000</td>
+      <td>3.000000</td>
+      <td>1.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>402000.000000</td>
+      <td>400000.000000</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="Decision-class-distribution">
+<h3>Decision class distribution<a class="headerlink" href="#Decision-class-distribution" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">groups</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/rst_tutorials_classification_7_0.png" src="../../_images/rst_tutorials_classification_7_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Helper-function-for-calculating-metrics">
+<h2>Helper function for calculating metrics<a class="headerlink" href="#Helper-function-for-calculating-metrics" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
+
+
+<span class="n">X</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">df_full</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;class&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span> <span class="o">=</span> <span class="n">df_full</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">get_prediction_metrics</span><span class="p">(</span>
+    <span class="n">measure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">y_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y_true</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">classification_metrics</span><span class="p">:</span> <span class="nb">dict</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="n">confusion_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">sensitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span>
+    <span class="n">specificity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span>
+    <span class="n">npv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">tn</span> <span class="o">/</span> <span class="p">(</span><span class="n">tn</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span>
+    <span class="n">ppv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">)</span>
+
+    <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Measure&#39;</span><span class="p">:</span> <span class="n">measure</span><span class="p">,</span>
+        <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;MAE&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Kappa&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">cohen_kappa_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Balanced accuracy&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">balanced_accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Logistic loss&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Precision&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;Sensitivity&#39;</span><span class="p">:</span> <span class="n">sensitivity</span><span class="p">,</span>
+        <span class="s1">&#39;Specificity&#39;</span><span class="p">:</span> <span class="n">specificity</span><span class="p">,</span>
+        <span class="s1">&#39;NPV&#39;</span><span class="p">:</span> <span class="n">npv</span><span class="p">,</span>
+        <span class="s1">&#39;PPV&#39;</span><span class="p">:</span> <span class="n">ppv</span><span class="p">,</span>
+        <span class="s1">&#39;psep&#39;</span><span class="p">:</span> <span class="n">ppv</span> <span class="o">+</span> <span class="n">npv</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;Fall-out&#39;</span><span class="p">:</span> <span class="n">fp</span> <span class="o">/</span> <span class="p">(</span><span class="n">fp</span> <span class="o">+</span> <span class="n">tn</span><span class="p">),</span>
+        <span class="s2">&quot;Youden&#39;s J statistic&quot;</span><span class="p">:</span> <span class="n">sensitivity</span> <span class="o">+</span> <span class="n">specificity</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;Lift&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span><span class="p">))</span> <span class="o">/</span> <span class="p">((</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">tn</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">)),</span>
+        <span class="s1">&#39;F-measure&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">fn</span><span class="p">),</span>
+        <span class="s1">&#39;Fowlkes-Mallows index&#39;</span><span class="p">:</span> <span class="n">metrics</span><span class="o">.</span><span class="n">fowlkes_mallows_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+        <span class="s1">&#39;False positive&#39;</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span>
+        <span class="s1">&#39;False negative&#39;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span>
+        <span class="s1">&#39;True positive&#39;</span><span class="p">:</span> <span class="n">tp</span><span class="p">,</span>
+        <span class="s1">&#39;True negative&#39;</span><span class="p">:</span> <span class="n">tn</span><span class="p">,</span>
+        <span class="s1">&#39;Rules per example&#39;</span><span class="p">:</span> <span class="n">classification_metrics</span><span class="p">[</span><span class="s1">&#39;rules_per_example&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;Voting conflicts&#39;</span><span class="p">:</span> <span class="n">classification_metrics</span><span class="p">[</span><span class="s1">&#39;voting_conflicts&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;Geometric mean&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">specificity</span> <span class="o">*</span> <span class="n">sensitivity</span><span class="p">),</span>
+        <span class="s1">&#39;Geometric mean&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">specificity</span> <span class="o">*</span> <span class="n">sensitivity</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span><span class="n">dictionary</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Measure&#39;</span><span class="p">),</span> <span class="n">confusion_matrix</span>
+
+
+<span class="k">def</span> <span class="nf">get_ruleset_stats</span><span class="p">(</span>
+    <span class="n">measure</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">RuleClassifier</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span>
+        <span class="p">[{</span><span class="s1">&#39;Measure&#39;</span><span class="p">:</span> <span class="n">measure</span><span class="p">,</span> <span class="o">**</span><span class="n">model</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">}],</span>
+        <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Measure&#39;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Rule-induction-on-full-dataset">
+<h2>Rule induction on full dataset<a class="headerlink" href="#Rule-induction-on-full-dataset" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rulekit.classification</span> <span class="kn">import</span> <span class="n">RuleClassifier</span>
+<span class="kn">from</span> <span class="nn">rulekit.rules</span> <span class="kn">import</span> <span class="n">RuleSet</span><span class="p">,</span> <span class="n">ClassificationRule</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+<span class="c1"># C2</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+    <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+    <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+    <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">c2_ruleset</span><span class="p">:</span> <span class="n">RuleSet</span><span class="p">[</span><span class="n">ClassificationRule</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">prediction_metric</span><span class="p">,</span> <span class="n">c2_confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+<span class="n">model_stats</span> <span class="o">=</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Correlation</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+    <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span>
+    <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span>
+    <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">corr_ruleset</span><span class="p">:</span> <span class="n">RuleSet</span><span class="p">[</span><span class="n">ClassificationRule</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">tmp</span><span class="p">,</span> <span class="n">corr_confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;Correlation&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+<span class="n">prediction_metric</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">prediction_metric</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+<span class="n">model_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">model_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;Correlation&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="p">)])</span>
+
+<span class="c1"># RSS</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+    <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span>
+    <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span>
+    <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">rss_ruleset</span><span class="p">:</span> <span class="n">RuleSet</span><span class="p">[</span><span class="n">ClassificationRule</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">rss_confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;RSS&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+<span class="n">prediction_metric</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">prediction_metric</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+<span class="n">model_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">model_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;RSS&#39;</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span><span class="p">)])</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">model_stats</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">prediction_metric</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion matrix - C2&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">c2_confusion_matrix</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion matrix - Correlation&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">corr_confusion_matrix</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion matrix - RSS&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rss_confusion_matrix</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time_total_s</th>
+      <th>time_growing_s</th>
+      <th>time_pruning_s</th>
+      <th>rules_count</th>
+      <th>conditions_per_rule</th>
+      <th>induced_conditions_per_rule</th>
+      <th>avg_rule_coverage</th>
+      <th>avg_rule_precision</th>
+      <th>avg_rule_quality</th>
+      <th>pvalue</th>
+      <th>FDR_pvalue</th>
+      <th>FWER_pvalue</th>
+      <th>fraction_significant</th>
+      <th>fraction_FDR_significant</th>
+      <th>fraction_FWER_significant</th>
+    </tr>
+    <tr>
+      <th>Measure</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C2</th>
+      <td>1.218550</td>
+      <td>1.036229</td>
+      <td>0.111458</td>
+      <td>35</td>
+      <td>4.742857</td>
+      <td>22.142857</td>
+      <td>0.259410</td>
+      <td>0.670793</td>
+      <td>0.322125</td>
+      <td>0.005729</td>
+      <td>0.005879</td>
+      <td>0.010640</td>
+      <td>0.971429</td>
+      <td>0.971429</td>
+      <td>0.885714</td>
+    </tr>
+    <tr>
+      <th>Correlation</th>
+      <td>0.471475</td>
+      <td>0.339709</td>
+      <td>0.123223</td>
+      <td>21</td>
+      <td>5.142857</td>
+      <td>51.666667</td>
+      <td>0.306612</td>
+      <td>0.469157</td>
+      <td>0.201772</td>
+      <td>0.016841</td>
+      <td>0.017345</td>
+      <td>0.026655</td>
+      <td>0.904762</td>
+      <td>0.904762</td>
+      <td>0.857143</td>
+    </tr>
+    <tr>
+      <th>RSS</th>
+      <td>1.514044</td>
+      <td>1.327209</td>
+      <td>0.171176</td>
+      <td>14</td>
+      <td>3.714286</td>
+      <td>64.428571</td>
+      <td>0.473795</td>
+      <td>0.484564</td>
+      <td>0.253249</td>
+      <td>0.041892</td>
+      <td>0.044068</td>
+      <td>0.068063</td>
+      <td>0.785714</td>
+      <td>0.785714</td>
+      <td>0.714286</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Accuracy</th>
+      <th>MAE</th>
+      <th>Kappa</th>
+      <th>Balanced accuracy</th>
+      <th>Logistic loss</th>
+      <th>Precision</th>
+      <th>Sensitivity</th>
+      <th>Specificity</th>
+      <th>NPV</th>
+      <th>PPV</th>
+      <th>...</th>
+      <th>Lift</th>
+      <th>F-measure</th>
+      <th>Fowlkes-Mallows index</th>
+      <th>False positive</th>
+      <th>False negative</th>
+      <th>True positive</th>
+      <th>True negative</th>
+      <th>Rules per example</th>
+      <th>Voting conflicts</th>
+      <th>Geometric mean</th>
+    </tr>
+    <tr>
+      <th>Measure</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>C2</th>
+      <td>0.932663</td>
+      <td>0.067337</td>
+      <td>0.433613</td>
+      <td>0.709693</td>
+      <td>2.427088</td>
+      <td>2.427088</td>
+      <td>0.452941</td>
+      <td>0.966446</td>
+      <td>0.961665</td>
+      <td>0.487342</td>
+      <td>...</td>
+      <td>7.407595</td>
+      <td>0.469512</td>
+      <td>0.928703</td>
+      <td>81</td>
+      <td>93</td>
+      <td>77</td>
+      <td>2333</td>
+      <td>9.079334</td>
+      <td>2146.0</td>
+      <td>0.661622</td>
+    </tr>
+    <tr>
+      <th>Correlation</th>
+      <td>0.827399</td>
+      <td>0.172601</td>
+      <td>0.246689</td>
+      <td>0.729909</td>
+      <td>6.221157</td>
+      <td>6.221157</td>
+      <td>0.617647</td>
+      <td>0.842171</td>
+      <td>0.969018</td>
+      <td>0.216049</td>
+      <td>...</td>
+      <td>3.283951</td>
+      <td>0.320122</td>
+      <td>0.823757</td>
+      <td>381</td>
+      <td>65</td>
+      <td>105</td>
+      <td>2033</td>
+      <td>6.438854</td>
+      <td>1993.0</td>
+      <td>0.721224</td>
+    </tr>
+    <tr>
+      <th>RSS</th>
+      <td>0.788313</td>
+      <td>0.211687</td>
+      <td>0.207458</td>
+      <td>0.725394</td>
+      <td>7.629984</td>
+      <td>7.629984</td>
+      <td>0.652941</td>
+      <td>0.797846</td>
+      <td>0.970277</td>
+      <td>0.185309</td>
+      <td>...</td>
+      <td>2.816694</td>
+      <td>0.288687</td>
+      <td>0.789800</td>
+      <td>488</td>
+      <td>59</td>
+      <td>111</td>
+      <td>1926</td>
+      <td>6.633127</td>
+      <td>2085.0</td>
+      <td>0.721766</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 23 columns</p>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Confusion matrix - C2
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2333</td>
+      <td>81</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>93</td>
+      <td>77</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Confusion matrix - Correlation
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2033</td>
+      <td>381</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>65</td>
+      <td>105</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Confusion matrix - RSS
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1926</td>
+      <td>488</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>59</td>
+      <td>111</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<section id="C2-Measure-generated-rules">
+<h3>C2 Measure generated rules<a class="headerlink" href="#C2-Measure-generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">c2_ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF gimpuls = (-inf, 32.50) THEN class = {0}
+IF nbumps = (-inf, 0.50) AND goenergy = &lt;-84.50, inf) AND goimpuls = (-inf, -0.50) AND genergy = (-inf, 13675) THEN class = {0}
+IF genergy = (-inf, 17640) AND nbumps = (-inf, 0.50) AND goenergy = &lt;-84.50, inf) THEN class = {0}
+IF genergy = &lt;1625, 17640) AND maxenergy = (-inf, 3500) AND gimpuls = (-inf, 772.50) THEN class = {0}
+IF shift = {N} AND nbumps = (-inf, 0.50) AND goenergy = &lt;-73.50, inf) THEN class = {0}
+IF shift = {N} AND senergy = (-inf, 6150) AND genergy = &lt;1865, inf) AND goimpuls = (-inf, 230.50) THEN class = {0}
+IF senergy = (-inf, 550) AND gimpuls = (-inf, 380.50) AND goimpuls = (-inf, 96.50) AND goenergy = (-inf, 118) THEN class = {0}
+IF senergy = (-inf, 550) AND genergy = (-inf, 31790) AND goenergy = &lt;-84.50, 114.50) THEN class = {0}
+IF senergy = (-inf, 550) AND goenergy = &lt;-84.50, 87.50) AND gimpuls = (-inf, 1342.50) AND goimpuls = (-inf, 96) THEN class = {0}
+IF senergy = (-inf, 550) AND goimpuls = (-inf, 233.50) THEN class = {0}
+IF genergy = &lt;1865, 28515) AND goenergy = (-inf, 105.50) AND nbumps = (-inf, 4.50) THEN class = {0}
+IF nbumps = &lt;0.50, 1.50) AND gimpuls = (-inf, 1210) AND goimpuls = (-inf, 233.50) AND goenergy = &lt;-72.50, inf) AND genergy = &lt;12550, inf) THEN class = {0}
+IF gimpuls = (-inf, 514.50) AND nbumps = (-inf, 6.50) AND goimpuls = (-inf, 96.50) AND goenergy = &lt;-84.50, inf) THEN class = {0}
+IF nbumps = (-inf, 2.50) AND gimpuls = (-inf, 1832.50) AND goimpuls = (-inf, 312) THEN class = {0}
+IF nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 6.50) AND goenergy = &lt;-88.50, inf) THEN class = {0}
+IF genergy = (-inf, 748755) AND goimpuls = (-inf, 95.50) AND maxenergy = (-inf, 55000) AND gimpuls = (-inf, 3096) THEN class = {0}
+IF nbumps3 = &lt;3.50, inf) AND gimpuls = &lt;364, 1459.50) AND senergy = &lt;10150, inf) THEN class = {1}
+IF gimpuls = &lt;2208.50, inf) AND genergy = &lt;513615, 1005720) AND nbumps2 = &lt;0.50, inf) AND nbumps = (-inf, 3.50) THEN class = {1}
+IF gimpuls = &lt;1328, inf) AND goenergy = (-inf, -29.50) AND goimpuls = &lt;-31.50, -14.50) AND nbumps4 = (-inf, 1.50) THEN class = {1}
+IF gimpuls = &lt;1328, 2109) AND goimpuls = (-inf, -5.50) AND senergy = &lt;350, 36350) AND genergy = &lt;159155, 586025) AND nbumps2 = (-inf, 3.50) AND goenergy = &lt;-41.50, inf) THEN class = {1}
+IF nbumps3 = &lt;0.50, 1.50) AND gimpuls = &lt;1408, 1959) AND goimpuls = &lt;-20.50, 13.50) AND senergy = (-inf, 54950) THEN class = {1}
+IF senergy = &lt;750, 38250) AND genergy = &lt;254130, 1133675) AND goenergy = &lt;-16.50, inf) AND gimpuls = &lt;1438.50, inf) AND goimpuls = &lt;-5, inf) THEN class = {1}
+IF nbumps = &lt;4.50, inf) AND nbumps3 = &lt;1.50, 4.50) AND gimpuls = &lt;203.50, inf) AND senergy = &lt;4300, 131700) AND goenergy = &lt;-41.50, inf) THEN class = {1}
+IF nbumps = &lt;2.50, 4.50) AND gimpuls = &lt;740.50, inf) AND genergy = &lt;38935, 127440) AND senergy = (-inf, 14750) AND goimpuls = (-inf, 68.50) THEN class = {1}
+IF nbumps = &lt;2.50, inf) AND gimpuls = &lt;379, 1742) AND senergy = (-inf, 31100) AND genergy = (-inf, 211170) AND goenergy = (-inf, 123.50) AND goimpuls = (-inf, 19.50) THEN class = {1}
+IF gimpuls = &lt;1139.50, inf) AND goimpuls = &lt;-46, 116.50) AND senergy = (-inf, 38250) AND genergy = &lt;46580, 1877915) AND goenergy = (-inf, 183) AND shift = {W} AND nbumps3 = (-inf, 1.50) AND nbumps2 = (-inf, 2.50) THEN class = {1}
+IF nbumps = &lt;1.50, 3.50) AND gimpuls = &lt;521.50, 2344.50) AND nbumps2 = &lt;0.50, inf) AND genergy = &lt;34605, 656965) AND goenergy = (-inf, 137) AND goimpuls = &lt;-39, 41.50) AND maxenergy = &lt;450, inf) THEN class = {1}
+IF nbumps = &lt;1.50, 3.50) AND nbumps2 = &lt;0.50, inf) AND genergy = &lt;18870, inf) AND nbumps3 = (-inf, 1.50) AND gimpuls = &lt;160, inf) AND senergy = &lt;550, inf) AND goimpuls = &lt;-62.50, 8.50) AND goenergy = (-inf, -1.50) THEN class = {1}
+IF nbumps = &lt;1.50, inf) AND gimpuls = &lt;95, 1603.50) AND goenergy = (-inf, 131) AND goimpuls = &lt;-70.50, 119) AND nbumps2 = (-inf, 4.50) AND nbumps3 = &lt;0.50, inf) AND genergy = (-inf, 614380) AND maxenergy = (-inf, 25000) AND senergy = &lt;2250, inf) THEN class = {1}
+IF goenergy = &lt;-59.50, 186) AND genergy = &lt;12415, 129940) AND gimpuls = &lt;121.50, 793) AND senergy = &lt;150, 1350) AND ghazard = {a} AND goimpuls = &lt;-53.50, inf) THEN class = {1}
+IF genergy = &lt;42215, 94300) AND gimpuls = &lt;133.50, 813.50) AND ghazard = {a} AND goenergy = &lt;-74.50, 160) AND senergy = (-inf, 11100) AND nbumps = (-inf, 3.50) AND nbumps3 = (-inf, 0.50) THEN class = {1}
+IF gimpuls = &lt;537.50, 796) AND shift = {W} AND genergy = &lt;17635, 36470) AND goimpuls = &lt;-36.50, inf) AND goenergy = &lt;-37.50, inf) AND nbumps = (-inf, 0.50) THEN class = {1}
+IF genergy = &lt;18800, 52205) AND shift = {W} AND ghazard = {a} AND goimpuls = &lt;-28.50, inf) AND goenergy = (-inf, 181) AND gimpuls = &lt;380.50, 524.50) AND nbumps = (-inf, 0.50) THEN class = {1}
+IF gimpuls = &lt;184.50, inf) AND goenergy = &lt;-55.50, 128.50) AND genergy = &lt;7265, inf) AND goimpuls = &lt;-60.50, 37.50) AND nbumps = (-inf, 7.50) AND nbumps2 = (-inf, 4.50) AND maxenergy = (-inf, 25000) AND senergy = (-inf, 31350) THEN class = {1}
+IF gimpuls = &lt;32.50, inf) AND goimpuls = &lt;-74.50, inf) AND ghazard = {a} AND genergy = &lt;1510, inf) AND goenergy = &lt;-89.50, 124.50) THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+<section id="Correlation-Measure-generated-rules">
+<h3>Correlation Measure generated rules<a class="headerlink" href="#Correlation-Measure-generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">corr_ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF nbumps = (-inf, 1.50) AND gimpuls = (-inf, 1252.50) THEN class = {0}
+IF nbumps = (-inf, 2.50) AND gimpuls = (-inf, 1331) AND goimpuls = (-inf, 312) AND nbumps5 = (-inf, 0.50) THEN class = {0}
+IF nbumps = (-inf, 2.50) THEN class = {0}
+IF gimpuls = (-inf, 1253.50) AND nbumps3 = (-inf, 2.50) AND nbumps = (-inf, 7) THEN class = {0}
+IF nbumps4 = (-inf, 2.50) THEN class = {0}
+IF nbumps2 = &lt;0.50, 2.50) AND maxenergy = &lt;1500, inf) AND senergy = (-inf, 36050) AND nbumps3 = &lt;0.50, 4.50) AND goimpuls = &lt;-34, 95) AND genergy = (-inf, 662435) AND gimpuls = &lt;994.50, 1959) THEN class = {1}
+IF nbumps2 = &lt;0.50, inf) AND maxenergy = &lt;1500, inf) AND goimpuls = &lt;-55, 95) AND nbumps = (-inf, 6.50) AND genergy = &lt;61250, 662435) AND goenergy = (-inf, 96) AND nbumps3 = &lt;0.50, inf) AND gimpuls = &lt;712, 2257.50) AND senergy = (-inf, 31100) THEN class = {1}
+IF nbumps2 = &lt;0.50, inf) AND genergy = &lt;58310, 934630) AND goenergy = (-inf, 186) AND senergy = (-inf, 40650) AND maxenergy = &lt;1500, inf) AND gimpuls = &lt;538.50, inf) AND goimpuls = &lt;-55, inf) THEN class = {1}
+IF nbumps = &lt;1.50, inf) AND nbumps2 = &lt;0.50, inf) AND gimpuls = &lt;521.50, 2374) AND genergy = &lt;58310, 799855) AND senergy = &lt;650, 36050) AND goimpuls = &lt;-71, 58.50) AND ghazard = {a} THEN class = {1}
+IF nbumps = &lt;1.50, 6.50) AND nbumps2 = &lt;0.50, inf) AND gimpuls = &lt;521.50, 2374) AND genergy = &lt;34360, inf) AND maxenergy = &lt;350, inf) AND goimpuls = &lt;-55, 95) AND senergy = &lt;550, inf) AND nbumps4 = (-inf, 1.50) THEN class = {1}
+IF nbumps = &lt;1.50, inf) AND gimpuls = &lt;306, inf) AND genergy = &lt;28325, inf) AND goimpuls = (-inf, 19.50) THEN class = {1}
+IF nbumps = &lt;1.50, inf) AND nbumps2 = &lt;0.50, inf) AND gimpuls = &lt;153.50, 321) AND genergy = &lt;14295, 36250) AND goimpuls = &lt;-60.50, inf) AND senergy = (-inf, 40500) AND nbumps3 = (-inf, 3.50) THEN class = {1}
+IF genergy = &lt;96260, 1062020) AND goimpuls = &lt;-29, inf) AND senergy = &lt;850, 7500) AND nbumps3 = (-inf, 1.50) AND gimpuls = &lt;1404, 2965.50) AND nbumps = (-inf, 3.50) AND goenergy = (-inf, 69.50) THEN class = {1}
+IF gimpuls = &lt;1253.50, inf) AND goenergy = &lt;-50.50, 131.50) AND genergy = &lt;46580, 1789250) AND nbumps = (-inf, 7.50) AND shift = {W} AND goimpuls = &lt;-60.50, 118) AND senergy = (-inf, 95850) AND ghazard = {a} THEN class = {1}
+IF senergy = &lt;550, inf) AND shift = {W} AND genergy = &lt;10495, inf) AND gimpuls = &lt;160, inf) AND goenergy = (-inf, 126) THEN class = {1}
+IF senergy = &lt;350, inf) AND goimpuls = &lt;-74.50, inf) AND gimpuls = &lt;32.50, inf) AND goenergy = &lt;-78.50, inf) AND maxenergy = &lt;250, inf) THEN class = {1}
+IF genergy = &lt;43150, inf) AND gimpuls = &lt;133.50, inf) AND goenergy = (-inf, 176.50) THEN class = {1}
+IF shift = {W} AND genergy = &lt;31760, 49585) AND gimpuls = &lt;362.50, 771) AND goimpuls = &lt;-27.50, inf) AND goenergy = &lt;-3.50, inf) AND maxenergy = (-inf, 650) THEN class = {1}
+IF shift = {W} AND genergy = &lt;20485, 43280) AND gimpuls = &lt;380.50, 796) AND goimpuls = &lt;-37, 142.50) AND goenergy = &lt;-37.50, 181) AND nbumps = (-inf, 0.50) THEN class = {1}
+IF gimpuls = &lt;177.50, inf) AND genergy = &lt;7265, inf) AND goimpuls = (-inf, 241.50) AND goenergy = (-inf, 124.50) THEN class = {1}
+IF gimpuls = &lt;54.50, 90) AND genergy = &lt;1510, 4905) AND goimpuls = &lt;-72.50, 28.50) AND seismoacoustic = {a} THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+<section id="RSS-Measure-generated-rules">
+<h3>RSS Measure generated rules<a class="headerlink" href="#RSS-Measure-generated-rules" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rss_ruleset</span><span class="o">.</span><span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IF nbumps = (-inf, 1.50) AND genergy = (-inf, 126350) THEN class = {0}
+IF nbumps = (-inf, 1.50) AND gimpuls = (-inf, 2168) AND goimpuls = (-inf, 96.50) THEN class = {0}
+IF genergy = (-inf, 44750) AND nbumps3 = (-inf, 2.50) AND goenergy = (-inf, 105.50) THEN class = {0}
+IF gimpuls = (-inf, 725.50) AND nbumps3 = (-inf, 3.50) AND nbumps4 = (-inf, 2.50) AND goimpuls = (-inf, 117) AND goenergy = &lt;-88.50, inf) THEN class = {0}
+IF nbumps2 = (-inf, 1.50) AND nbumps = (-inf, 4.50) THEN class = {0}
+IF goimpuls = (-inf, 312) AND nbumps5 = (-inf, 0.50) AND goenergy = &lt;-88.50, inf) THEN class = {0}
+IF gimpuls = &lt;521.50, inf) AND genergy = &lt;57680, inf) THEN class = {1}
+IF nbumps = &lt;1.50, inf) THEN class = {1}
+IF senergy = &lt;550, inf) AND shift = {W} AND genergy = &lt;10495, inf) THEN class = {1}
+IF nbumps = &lt;0.50, inf) AND goimpuls = &lt;-74.50, inf) AND gimpuls = &lt;32.50, inf) AND goenergy = &lt;-78.50, 124.50) THEN class = {1}
+IF genergy = &lt;34315, 49585) AND ghazard = {a} AND gimpuls = &lt;396, 1445.50) AND goenergy = &lt;7, inf) AND goimpuls = &lt;-19, inf) AND senergy = (-inf, 350) THEN class = {1}
+IF genergy = &lt;26200, 78890) AND gimpuls = &lt;133.50, 813.50) AND goenergy = &lt;-74.50, 297.50) AND goimpuls = &lt;-71, inf) AND nbumps = (-inf, 3.50) AND senergy = (-inf, 1850) THEN class = {1}
+IF genergy = &lt;18585, 25305) AND shift = {W} AND gimpuls = &lt;240, 588.50) AND goimpuls = &lt;-42.50, 133) AND goenergy = &lt;-45.50, inf) AND senergy = (-inf, 450) THEN class = {1}
+IF gimpuls = &lt;54.50, inf) AND goimpuls = &lt;-74.50, 28.50) AND genergy = &lt;1510, inf) AND ghazard = {a} AND nbumps4 = (-inf, 1.50) AND senergy = (-inf, 92850) THEN class = {1}
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Stratified-K-Folds-cross-validation">
+<h2>Stratified K-Folds cross-validation<a class="headerlink" href="#Stratified-K-Folds-cross-validation" title="Link to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+
+<span class="n">N_SPLITS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c2_ruleset_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">c2_prediction_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">c2_confusion_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+
+<span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+
+    <span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span>
+        <span class="n">induction_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+        <span class="n">pruning_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+        <span class="n">voting_measure</span><span class="o">=</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">c2_ruleset</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+    <span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tmp</span><span class="p">,</span> <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+
+    <span class="n">c2_prediction_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">c2_prediction_metrics</span><span class="p">,</span> <span class="n">tmp</span><span class="p">])</span>
+    <span class="n">c2_ruleset_stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">c2_ruleset_stats</span><span class="p">,</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">c2_ruleset</span><span class="p">)])</span>
+    <span class="n">c2_confusion_matrix</span> <span class="o">+=</span> <span class="n">confusion_matrix</span>
+
+<span class="n">c2_confusion_matrix</span> <span class="o">/=</span> <span class="n">N_SPLITS</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\cezar\AppData\Local\Temp\ipykernel_13196\4002598548.py:22: RuntimeWarning: invalid value encountered in scalar divide
+  ppv: float = tp / (tp + fp)
+C:\Users\cezar\AppData\Local\Temp\ipykernel_13196\4002598548.py:39: RuntimeWarning: invalid value encountered in scalar divide
+  &#39;Lift&#39;: (tp / (tp + fp)) / ((tp + fn) / (tp + tn + fp + fn)),
+C:\Users\cezar\AppData\Local\Temp\ipykernel_13196\4002598548.py:22: RuntimeWarning: invalid value encountered in scalar divide
+  ppv: float = tp / (tp + fp)
+C:\Users\cezar\AppData\Local\Temp\ipykernel_13196\4002598548.py:39: RuntimeWarning: invalid value encountered in scalar divide
+  &#39;Lift&#39;: (tp / (tp + fp)) / ((tp + fn) / (tp + tn + fp + fn)),
+</pre></div></div>
+</div>
+<p>Rules characteristics</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c2_ruleset_stats</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+time_total_s                    0.292132
+time_growing_s                  0.227262
+time_pruning_s                  0.047455
+rules_count                    34.200000
+conditions_per_rule             4.720378
+induced_conditions_per_rule    21.124536
+avg_rule_coverage               0.239541
+avg_rule_precision              0.690010
+avg_rule_quality                0.337021
+pvalue                          0.014757
+FDR_pvalue                      0.015234
+FWER_pvalue                     0.030014
+fraction_significant            0.909792
+fraction_FDR_significant        0.909792
+fraction_FWER_significant       0.872710
+dtype: float64
+</pre></div></div>
+</div>
+<p>Rules evaluation (average)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c2_prediction_metrics</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy                   0.855063
+MAE                        0.144937
+Kappa                      0.107556
+Balanced accuracy          0.567020
+Logistic loss              5.224070
+Precision                  5.224070
+Sensitivity                0.235294
+Specificity                0.898747
+NPV                        0.945594
+PPV                        0.495355
+psep                       0.443788
+Fall-out                   0.101253
+Youden&#39;s J statistic       0.134041
+Lift                       7.520255
+F-measure                  0.145015
+Fowlkes-Mallows index      0.870605
+False positive            24.500000
+False negative            13.000000
+True positive              4.000000
+True negative            216.900000
+Rules per example          7.871479
+Voting conflicts         179.000000
+Geometric mean             0.344832
+dtype: float64
+</pre></div></div>
+</div>
+<p>Confusion matrix (average)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">c2_confusion_matrix</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>216.9</td>
+      <td>24.5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>13.0</td>
+      <td>4.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+<section id="Hyperparameters-tuning">
+<h2>Hyperparameters tuning<a class="headerlink" href="#Hyperparameters-tuning" title="Link to this heading"></a></h2>
+<p>This one gonna take a while…</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span>
+
+<span class="n">N_SPLITS</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># define models and parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">()</span>
+<span class="n">minsupp_new</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">measures_choice</span> <span class="o">=</span> <span class="p">[</span><span class="n">Measures</span><span class="o">.</span><span class="n">C2</span><span class="p">,</span> <span class="n">Measures</span><span class="o">.</span><span class="n">RSS</span><span class="p">,</span> <span class="n">Measures</span><span class="o">.</span><span class="n">WeightedLaplace</span><span class="p">,</span> <span class="n">Measures</span><span class="o">.</span><span class="n">Correlation</span><span class="p">]</span>
+
+<span class="c1"># define grid search</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;minsupp_new&#39;</span><span class="p">:</span> <span class="n">minsupp_new</span><span class="p">,</span>
+    <span class="s1">&#39;induction_measure&#39;</span><span class="p">:</span> <span class="n">measures_choice</span><span class="p">,</span>
+    <span class="s1">&#39;pruning_measure&#39;</span><span class="p">:</span> <span class="n">measures_choice</span><span class="p">,</span>
+    <span class="s1">&#39;voting_measure&#39;</span><span class="p">:</span> <span class="n">measures_choice</span>
+<span class="p">}</span>
+<span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">N_SPLITS</span><span class="p">)</span>
+<span class="n">grid_search</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;balanced_accuracy&#39;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+<span class="n">grid_result</span> <span class="o">=</span> <span class="n">grid_search</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># summarize results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best BAC: </span><span class="si">%f</span><span class="s2"> using </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">grid_result</span><span class="o">.</span><span class="n">best_score_</span><span class="p">,</span> <span class="n">grid_result</span><span class="o">.</span><span class="n">best_params_</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Best BAC: 0.626780 using {&#39;induction_measure&#39;: &lt;Measures.WeightedLaplace: &#39;WeightedLaplace&#39;&gt;, &#39;minsupp_new&#39;: 5, &#39;pruning_measure&#39;: &lt;Measures.RSS: &#39;RSS&#39;&gt;, &#39;voting_measure&#39;: &lt;Measures.WeightedLaplace: &#39;WeightedLaplace&#39;&gt;}
+</pre></div></div>
+</div>
+</section>
+<section id="Building-model-with-tuned-hyperparameters">
+<h2>Building model with tuned hyperparameters<a class="headerlink" href="#Building-model-with-tuned-hyperparameters" title="Link to this heading"></a></h2>
+<section id="Split-dataset-to-train-and-test-(80%/20%).">
+<h3>Split dataset to train and test (80%/20%).<a class="headerlink" href="#Split-dataset-to-train-and-test-(80%/20%)." title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">RuleClassifier</span><span class="p">(</span><span class="o">**</span><span class="n">grid_result</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">ruleset</span><span class="p">:</span> <span class="n">RuleSet</span><span class="p">[</span><span class="n">ClassificationRule</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">model</span>
+<span class="n">ruleset_stats</span> <span class="o">=</span> <span class="n">get_ruleset_stats</span><span class="p">(</span><span class="s1">&#39;Best&#39;</span><span class="p">,</span> <span class="n">ruleset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Rules evaluation</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">ruleset_stats</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+time_total_s                    0.173054
+time_growing_s                  0.120460
+time_pruning_s                  0.029986
+rules_count                    29.000000
+conditions_per_rule             2.689655
+induced_conditions_per_rule    15.310345
+avg_rule_coverage               0.491183
+avg_rule_precision              0.736226
+avg_rule_quality                1.309334
+pvalue                          0.019831
+FDR_pvalue                      0.019993
+FWER_pvalue                     0.024284
+fraction_significant            0.931034
+fraction_FDR_significant        0.931034
+fraction_FWER_significant       0.931034
+dtype: float64
+</pre></div></div>
+</div>
+</section>
+<section id="Validate-model-on-test-dataset">
+<h3>Validate model on test dataset<a class="headerlink" href="#Validate-model-on-test-dataset" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span><span class="p">,</span> <span class="n">classification_metrics</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">return_metrics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">prediction_metrics</span><span class="p">,</span> <span class="n">confusion_matrix</span> <span class="o">=</span> <span class="n">get_prediction_metrics</span><span class="p">(</span><span class="s1">&#39;Best&#39;</span><span class="p">,</span> <span class="n">prediction</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">classification_metrics</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">prediction_metrics</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy                   0.808511
+MAE                        0.191489
+Kappa                      0.170010
+Balanced accuracy          0.679398
+Logistic loss              6.901976
+Precision                  6.901976
+Sensitivity                0.533333
+Specificity                0.825462
+NPV                        0.966346
+PPV                        0.158416
+psep                       0.124762
+Fall-out                   0.174538
+Youden&#39;s J statistic       0.358795
+Lift                       2.730033
+F-measure                  0.244275
+Fowlkes-Mallows index      0.809997
+False positive            85.000000
+False negative            14.000000
+True positive             16.000000
+True negative            402.000000
+Rules per example         14.034816
+Voting conflicts         360.000000
+Geometric mean             0.663511
+dtype: float64
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>402</td>
+      <td>85</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>14</td>
+      <td>16</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="regression.html" class="btn btn-neutral float-right" title="Regression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
