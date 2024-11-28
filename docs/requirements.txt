@@ -10,5 +10,5 @@ flake8
 junitxml==0.7
 junit2html~=31.0.2
 genbadge[all]~=1.1.1
-../ 
+./
 

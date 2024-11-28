@@ -27,7 +27,7 @@ Use previously created tag for it.
 In root repository directory:
 ```
 rm -r ./dist
-python -m build
+python setup.py sdist
 python -m twine check dist/*
 python -m twine upload  dist/*
 ```
