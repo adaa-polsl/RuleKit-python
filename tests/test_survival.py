@@ -1,3 +1,4 @@
+import os
 import threading
 import unittest
 
@@ -5,11 +6,13 @@ import numpy as np
 import pandas as pd
 
 from rulekit import survival
+from rulekit.arff import read_arff
 from rulekit.events import RuleInductionProgressListener
 from rulekit.kaplan_meier import KaplanMeierEstimator
 from rulekit.main import RuleKit
 from rulekit.rules import SurvivalRule
 from tests.utils import assert_rules_are_equals
+from tests.utils import dir_path
 from tests.utils import get_test_cases
 
 
@@ -18,44 +21,47 @@ class TestKaplanMeierEstimator(unittest.TestCase):
     survival_rules: survival.SurvivalRules
 
     def setUp(self):
-        test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
+        test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
 
         self.survival_rules = survival.SurvivalRules(
-            survival_time_attr=test_case.survival_time)
+            survival_time_attr=test_case.survival_time
+        )
         example_set = test_case.example_set
         self.survival_rules.fit(
             example_set.values,
             example_set.labels,
         )
-        self.km: KaplanMeierEstimator = self.survival_rules.model.rules[0].kaplan_meier_estimator
+        self.km: KaplanMeierEstimator = self.survival_rules.model.rules[
+            0
+        ].kaplan_meier_estimator
 
     def test_accessing_probabilities(self):
-        self.assertTrue(all([
-            p >= 0.0 and p <= 1.0
-            for p in self.km.probabilities
-        ]), 'All probabilities should be in range [0, 1]')
-        self.assertTrue(all([
-            isinstance(p, float)
-            for p in self.km.probabilities
-        ]), 'All probabilities should be Pythonic floats')
+        self.assertTrue(
+            all([p >= 0.0 and p <= 1.0 for p in self.km.probabilities]),
+            "All probabilities should be in range [0, 1]",
+        )
+        self.assertTrue(
+            all([isinstance(p, float) for p in self.km.probabilities]),
+            "All probabilities should be Pythonic floats",
+        )
 
     def test_accessing_events_count(self):
-        self.assertTrue(all([
-            isinstance(p, np.int_)
-            for p in self.km.events_count
-        ]), 'All event counts should be Pythonic integers')
+        self.assertTrue(
+            all([isinstance(p, np.int_) for p in self.km.events_count]),
+            "All event counts should be Pythonic integers",
+        )
 
     def test_accessing_at_risk_count(self):
-        self.assertTrue(all([
-            isinstance(p, np.int_)
-            for p in self.km.at_risk_count
-        ]), 'All risk count should be Pythonic integers')
+        self.assertTrue(
+            all([isinstance(p, np.int_) for p in self.km.at_risk_count]),
+            "All risk count should be Pythonic integers",
+        )
 
 
 class TestSurvivalRules(unittest.TestCase):
 
     def test_induction_progress_listener(self):
-        test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
+        test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
 
         surv = survival.SurvivalRules(
             survival_time_attr=test_case.survival_time)
@@ -73,9 +79,7 @@ class TestSurvivalRules(unittest.TestCase):
                 self.lock.release()
 
             def on_progress(
-                self,
-                total_examples_count: int,
-                uncovered_examples_count: int
+                self, total_examples_count: int, uncovered_examples_count: int
             ):
                 self.lock.acquire()
                 self.on_progress_calls_count += 1
@@ -92,12 +96,13 @@ class TestSurvivalRules(unittest.TestCase):
         self.assertEqual(rules_count, listener.on_progress_calls_count)
 
     def test_compare_with_java_results(self):
-        test_cases = get_test_cases('SurvivalLogRankSnCTest')
+        test_cases = get_test_cases("SurvivalLogRankSnCTest")
 
         for test_case in test_cases:
             params = test_case.induction_params
             tree = survival.SurvivalRules(
-                **params, survival_time_attr=test_case.survival_time)
+                **params, survival_time_attr=test_case.survival_time
+            )
             example_set = test_case.example_set
             tree.fit(example_set.values, example_set.labels)
             model = tree.model
@@ -106,46 +111,90 @@ class TestSurvivalRules(unittest.TestCase):
             assert_rules_are_equals(expected, actual)
 
     def test_fit_and_predict_on_boolean_columns(self):
-        test_case = get_test_cases('SurvivalLogRankSnCTest')[0]
+        test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
         params = test_case.induction_params
         clf = survival.SurvivalRules(
             **params, survival_time_attr=test_case.survival_time
         )
         X, y = test_case.example_set.values, test_case.example_set.labels
-        X['boolean_column'] = np.random.randint(
-            low=0, high=2, size=X.shape[0]).astype(bool)
+        X["boolean_column"] = np.random.randint(low=0, high=2, size=X.shape[0]).astype(
+            bool
+        )
         clf.fit(X, y)
         clf.predict(X)
 
         y = pd.Series(y)
         clf.fit(X, y)
-        p = clf.predict(X)
+        clf.predict(X)
 
 
-class TestExpertSurvivalLogRankTree(unittest.TestCase):
+class TestExpertSurvivalRules(unittest.TestCase):
 
-    @ classmethod
+    @classmethod
     def setUpClass(cls):
         RuleKit.init()
 
     def test_compare_with_java_results(self):
-        test_cases = get_test_cases('SurvivalLogRankExpertSnCTest')
+        test_cases = get_test_cases("SurvivalLogRankExpertSnCTest")
 
         for test_case in test_cases:
             params = test_case.induction_params
-            tree = survival.ExpertSurvivalRules(
-                **params, ignore_missing=True, survival_time_attr=test_case.survival_time)
+            surv = survival.ExpertSurvivalRules(
+                **params,
+                ignore_missing=True,
+                survival_time_attr=test_case.survival_time
+            )
             example_set = test_case.example_set
-            tree.fit(example_set.values,
-                     example_set.labels,
-                     expert_rules=test_case.knowledge.expert_rules,
-                     expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
-                     expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions)
-            model = tree.model
+            surv.fit(
+                example_set.values,
+                example_set.labels,
+                expert_rules=test_case.knowledge.expert_rules,
+                expert_preferred_conditions=test_case.knowledge.expert_preferred_conditions,
+                expert_forbidden_conditions=test_case.knowledge.expert_forbidden_conditions,
+            )
+            model = surv.model
             expected = test_case.reference_report.rules
             actual = list(map(str, model.rules))
             assert_rules_are_equals(expected, actual)
 
+    def test_refining_conditions_for_nominal_attributes(self):
+        df: pd.DataFrame = read_arff(
+            os.path.join(dir_path, "resources", "data", "bmt-train-0.arff")
+        )
+        X, y = df.drop("survival_status", axis=1), df["survival_status"]
 
-if __name__ == '__main__':
+        # Run experiment using python API
+        clf = survival.ExpertSurvivalRules(
+            complementary_conditions=True,
+            extend_using_preferred=False,
+            extend_using_automatic=False,
+            induce_using_preferred=False,
+            induce_using_automatic=False,
+            preferred_conditions_per_rule=0,
+            preferred_attributes_per_rule=0,
+            survival_time_attr='survival_time'
+        )
+        clf.fit(X, y, expert_rules=[
+                ("expert_rules-1", "IF CMVstatus @= {1} THEN")])
+        r = [str(r) for r in clf.model.rules]
+
+        self.assertEqual(
+            ["IF [[CMVstatus = {1}]] THEN "],
+            [str(r) for r in clf.model.rules],
+            "Ruleset should contain only a single rule configured by expert",
+        )
+
+        clf.fit(X, y, expert_rules=[
+                ("expert_rules-1", "IF CMVstatus @= Any THEN")])
+        self.assertEqual(
+            ["IF [[CMVstatus = !{1}]] THEN "],
+            [str(r) for r in clf.model.rules],
+            (
+                "Ruleset should contain only a single rule configured by expert with "
+                "a refined condition"
+            ),
+        )
+
+
+if __name__ == "__main__":
     unittest.main()

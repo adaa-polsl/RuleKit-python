@@ -265,7 +265,8 @@ class TestCaseFactory:
         self._fix_params_typing(params)
         self._fix_deprecated_params(params)
         test_case.induction_params = params
-        test_case.data_set_file_path = f'{DATA_IN_DIRECTORY_PATH}/{data_set_config.train_file_name}'
+        test_case.data_set_file_path = f'{
+            DATA_IN_DIRECTORY_PATH}/{data_set_config.train_file_name}'
         test_case.label_attribute = data_set_config.label_attribute
         test_case.name = test_case_name
         test_case.param_config = params
@@ -299,7 +300,8 @@ class TestCaseFactory:
             for config_name in test_config.parameter_configs.keys():
                 for data_set_config in test_config.datasets:
                     params = test_config.parameter_configs[config_name]
-                    test_case_name = f'{key}.{config_name}.{data_set_config.name}'
+                    test_case_name = f'{key}.{
+                        config_name}.{data_set_config.name}'
                     test_config.parameter_configs[config_name].pop(
                         'use_expert', None)
                     expert_rules = test_config.parameter_configs[config_name].pop(
@@ -452,7 +454,8 @@ def assert_accuracy_is_greater(prediction, expected, threshold: float):
     labels = expected.to_numpy().astype(str)
     acc = metrics.accuracy_score(labels, prediction)
     if acc <= threshold:
-        raise AssertionError(f'Accuracy should be greater than {threshold}')
+        raise AssertionError(f'Accuracy should be greater than {
+                             threshold} (was {acc})')
 
 
 def assert_score_is_greater(prediction, expected, threshold: float):
