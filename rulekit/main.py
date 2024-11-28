@@ -14,18 +14,20 @@ import jpype.imports
 
 from rulekit._logging import _RuleKitJavaLoggerConfig
 
-__RULEKIT_RELEASE_VERSION__ = '2.1.24'
-__VERSION__ = f'{__RULEKIT_RELEASE_VERSION__}.0'
+__RULEKIT_RELEASE_VERSION__ = "2.1.24"
+__VERSION__ = f"{__RULEKIT_RELEASE_VERSION__}.0"
 
 
 class JRE_Type(Enum):  # pylint: disable=invalid-name
     """:meta private:"""
-    OPEN_JDK = 'open_jdk'
-    ORACLE = 'oracle'
+
+    OPEN_JDK = "open_jdk"
+    ORACLE = "oracle"
 
 
 class RuleKit:
-    """Class used for initializing RuleKit. It starts JVM underhood and setups it with jars.
+    """Class used for initializing RuleKit. It starts JVM underhood and setups it
+    with jars.
 
     .. note:: Since version 1.7.0 there is no need to manually initialize RuleKit.
     You may just skip the **RuleKit.init()** line. However in certain scenarios when
@@ -38,6 +40,7 @@ class RuleKit:
     version : str
         version of RuleKit jar used by wrapper (not equal to python package version).
     """
+
     version: str
     _logger: logging.Logger = None
     _jar_dir_path: str
@@ -52,28 +55,28 @@ class RuleKit:
         try:
             with Popen(["java", "-version"], stderr=STDOUT, stdout=PIPE) as output:
                 output = str(output.communicate()[0])
-                if 'openjdk' in output:
+                if "openjdk" in output:
                     RuleKit._jre_type = JRE_Type.OPEN_JDK
                 else:
                     RuleKit._jre_type = JRE_Type.ORACLE
         except FileNotFoundError as error:
             raise RuntimeError(
-                'RuletKit requires java JRE to be installed (version 1.8.0 recommended)'
+                "RuletKit requires java JRE to be installed (version 1.8.0 recommended)"
             ) from error
 
     @staticmethod
     def init(
         initial_heap_size: int = None,
         max_heap_size: int = None,
-        rulekit_jar_file_path: str = None
+        rulekit_jar_file_path: str = None,
     ):
         """Initialize package.
 
         This method configure and starts JVM and load RuleKit jar file.
 
-        .. note:: Since version 1.7.0 it don't have to be called before using any operator class.
-        However in certain scenarios when you want use a custom RuleKit jar file or modify Java VM
-        parameters, this method can be used.
+        .. note:: Since version 1.7.0 it don't have to be called before using any
+        operator class. However in certain scenarios when you want use a custom RuleKit
+        jar file or modify Java VM parameters, this method can be used.
 
         Parameters
         ----------
@@ -102,28 +105,28 @@ class RuleKit:
         RuleKit._jar_dir_path = f"{current_path}/jar"
         class_path_separator = os.pathsep
         try:
-            jar_file_name: str = (
-                'rulekit-' +
-                f'{__RULEKIT_RELEASE_VERSION__}-all.jar'
-            )
+            jar_file_name: str = "rulekit-" + f"{__RULEKIT_RELEASE_VERSION__}-all.jar"
             RuleKit._rulekit_jar_file_path = os.path.join(
-                RuleKit._jar_dir_path, jar_file_name)
+                RuleKit._jar_dir_path, jar_file_name
+            )
             jars_paths: list[str] = [RuleKit._rulekit_jar_file_path]
             if rulekit_jar_file_path is not None:
                 jars_paths.remove(RuleKit._rulekit_jar_file_path)
                 jars_paths.append(rulekit_jar_file_path)
                 RuleKit._rulekit_jar_file_path = rulekit_jar_file_path
-            RuleKit._class_path = (
-                f'{str.join(class_path_separator, jars_paths)}'
-            )
+            RuleKit._class_path = f"{str.join(class_path_separator, jars_paths)}"
         except IndexError as error:
-            RuleKit._logger.error('Failed to load jar files')
-            raise RuntimeError(f'''\n
-Failed to load RuleKit jar file. Check if valid rulekit jar file is present in "{RuleKit._jar_dir_path}" directory.
+            RuleKit._logger.error("Failed to load jar files")
+            raise RuntimeError(
+                f"""\n
+Failed to load RuleKit jar file. Check if valid rulekit jar file is present in
+"{RuleKit._jar_dir_path}" directory.
 
-If you're running this package for the first time you need to download RuleKit jar file by running:
+If you're running this package for the first time you need to download RuleKit jar
+file by running:
     python -m rulekit download_jar
-        ''') from error
+        """
+            ) from error
         RuleKit._read_versions()
         RuleKit._launch_jvm(initial_heap_size, max_heap_size)
         RuleKit.initialized = True
@@ -131,36 +134,36 @@ If you're running this package for the first time you need to download RuleKit j
     @staticmethod
     def _setup_logger():
         logging.basicConfig()
-        RuleKit._logger = logging.getLogger('RuleKit')
+        RuleKit._logger = logging.getLogger("RuleKit")
 
     @staticmethod
     def _read_versions():
-        with zipfile.ZipFile(RuleKit._rulekit_jar_file_path, 'r') as jar_archive:
+        with zipfile.ZipFile(RuleKit._rulekit_jar_file_path, "r") as jar_archive:
             try:
                 manifest_file_content: str = jar_archive.read(
-                    'META-INF/MANIFEST.MF').decode('utf-8')
+                    "META-INF/MANIFEST.MF"
+                ).decode("utf-8")
                 RuleKit.version = re.findall(
-                    r'Implementation-Version: \S+\r', manifest_file_content)[0].split(' ')[1]
+                    r"Implementation-Version: \S+\r", manifest_file_content
+                )[0].split(" ")[1]
             except Exception as error:
-                RuleKit._logger.error(
-                    'Failed to read RuleKit versions from jar file')
+                RuleKit._logger.error("Failed to read RuleKit versions from jar file")
                 RuleKit._logger.error(error)
                 raise error
 
     @staticmethod
     def _launch_jvm(initial_heap_size: int, max_heap_size: int):
         if jpype.isJVMStarted():
-            RuleKit._logger.info('JVM already running')
+            RuleKit._logger.info("JVM already running")
         else:
             params = [
-                f'-Djava.class.path={RuleKit._class_path}',
+                f"-Djava.class.path={RuleKit._class_path}",
             ]
             if initial_heap_size is not None:
-                params.append(f'-Xms{initial_heap_size}m')
+                params.append(f"-Xms{initial_heap_size}m")
             if max_heap_size is not None:
-                params.append(f'-Xmx{max_heap_size}m')
-            jpype.startJVM(jpype.getDefaultJVMPath(), *
-                           params, convertStrings=False)
+                params.append(f"-Xmx{max_heap_size}m")
+            jpype.startJVM(jpype.getDefaultJVMPath(), *params, convertStrings=False)
 
     @staticmethod
     def configure_java_logger(
@@ -178,14 +181,13 @@ If you're running this package for the first time you need to download RuleKit j
                 Minimum value is 1, maximum value is 2, default value is 1.
         """
         RuleKit._java_logger_config = _RuleKitJavaLoggerConfig(
-            verbosity_level=verbosity_level,
-            log_file_path=log_file_path
+            verbosity_level=verbosity_level, log_file_path=log_file_path
         )
 
     @staticmethod
     def get_java_logger_config() -> Optional[_RuleKitJavaLoggerConfig]:
-        """Returns the Java logger configuration configured using `configure_java_logger`
-        method
+        """Returns the Java logger configuration configured using
+        `configure_java_logger` method
 
         Returns:
             Optional[_RuleKitJavaLoggerConfig]: Java logger configuration

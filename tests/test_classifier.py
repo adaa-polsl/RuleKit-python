@@ -8,6 +8,7 @@ import sklearn.tree as scikit
 from scipy.io import arff
 from sklearn import metrics
 from sklearn.datasets import load_iris
+from sklearn.preprocessing import LabelEncoder
 
 from rulekit import classification
 from rulekit.events import RuleInductionProgressListener
@@ -100,6 +101,36 @@ class TestClassifier(unittest.TestCase):
             m["voting_conflicts"], "rules_per_example should be calculated"
         )
 
+    def test_score(self):
+        clf = classification.RuleClassifier()
+        X, y = load_iris(return_X_y=True)
+
+        clf.fit(X, y)
+        rulekit_acc: float = clf.score(X, y)
+        sklearn_acc: float = metrics.accuracy_score(y, clf.predict(X))
+
+        self.assertAlmostEqual(
+            rulekit_acc, sklearn_acc, places=3, msg="Accuracy should be the same"
+        )
+
+    def test_fit_on_integer_labels(self):
+        clf1 = classification.RuleClassifier()
+        clf2 = classification.RuleClassifier()
+        X, y_num = load_iris(return_X_y=True)
+        y_str: np.ndarray = y_num.astype(str)
+
+        clf1.fit(X, y_num)
+        clf2.fit(X, y_str)
+
+        self.assertTrue(
+            isinstance(clf1.predict(X)[0], float),
+            "Predictions should be of the same type as labels in the training set",
+        )
+        self.assertTrue(
+            isinstance(clf2.predict(X)[0], str),
+            "Predictions should be of the same type as labels in the training set",
+        )
+
     def test_classification_predict_proba(self):
         clf = classification.RuleClassifier()
         x, y = load_iris(return_X_y=True)
@@ -110,8 +141,7 @@ class TestClassifier(unittest.TestCase):
             sum = 0
             for col in row:
                 sum += col
-            self.assertAlmostEqual(
-                sum, 1, 3, "Confidence matrix rows should sum to 1")
+            self.assertAlmostEqual(sum, 1, 3, "Confidence matrix rows should sum to 1")
 
     def test_prediction_results_mapping(self):
         """
@@ -268,17 +298,13 @@ class TestExperClassifier(unittest.TestCase):
         ]
 
         expert_preferred_conditions = [
-            ("preferred-condition-0",
-             "1: IF [[seismic = {a}]] THEN class = {0}"),
-            ("preferred-attribute-0",
-             "1: IF [[gimpuls = Any]] THEN class = {1}"),
+            ("preferred-condition-0", "1: IF [[seismic = {a}]] THEN class = {0}"),
+            ("preferred-attribute-0", "1: IF [[gimpuls = Any]] THEN class = {1}"),
         ]
 
         expert_forbidden_conditions = [
-            ("forb-attribute-0",
-             "1: IF [[seismoacoustic  = Any]] THEN class = {0}"),
-            ("forb-attribute-1",
-             "inf: IF [[ghazard  = Any]] THEN class = {1}"),
+            ("forb-attribute-0", "1: IF [[seismoacoustic  = Any]] THEN class = {0}"),
+            ("forb-attribute-1", "inf: IF [[ghazard  = Any]] THEN class = {1}"),
         ]
         clf = classification.ExpertRuleClassifier(
             minsupp_new=8,

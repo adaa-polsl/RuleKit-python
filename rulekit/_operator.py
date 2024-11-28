@@ -28,8 +28,7 @@ Data = Union[np.ndarray, pd.DataFrame, list]
 
 
 class BaseOperator(ABC):
-    """Base class for rule induction operator
-    """
+    """Base class for rule induction operator"""
 
     __params_class__: type = None
 
@@ -48,17 +47,17 @@ class BaseOperator(ABC):
         return PredictionResultMapper.map(predicted_example_set)
 
     def _validate_contrast_attribute(
-        self,
-        example_set,
-        contrast_attribute: Optional[str]
+        self, example_set, contrast_attribute: Optional[str]
     ) -> None:
         if contrast_attribute is None:
             return
-        contrast_attribute_instance = example_set.getAttributes().get(contrast_attribute)
+        contrast_attribute_instance = example_set.getAttributes().get(
+            contrast_attribute
+        )
         if contrast_attribute_instance.isNumerical():
             raise ValueError(
-                'Contrast set attributes must be a nominal attribute while ' +
-                f'"{contrast_attribute}" is a numerical one.'
+                "Contrast set attributes must be a nominal attribute while "
+                + f'"{contrast_attribute}" is a numerical one.'
             )
 
     def fit(  # pylint: disable=missing-function-docstring
@@ -72,7 +71,7 @@ class BaseOperator(ABC):
             values,
             labels,
             survival_time_attribute=survival_time_attribute,
-            contrast_attribute=contrast_attribute
+            contrast_attribute=contrast_attribute,
         )
         self._validate_contrast_attribute(example_set, contrast_attribute)
 
@@ -80,14 +79,19 @@ class BaseOperator(ABC):
         self.model = RuleSet[BaseRule](java_model)
         return self.model
 
-    def predict(self, values: Data) -> np.ndarray:  # pylint: disable=missing-function-docstring
+    def predict(
+        self, values: Data
+    ) -> np.ndarray:  # pylint: disable=missing-function-docstring
         if self.model is None:
-            raise ValueError(
-                '"fit" method must be called before calling this method')
+            raise ValueError('"fit" method must be called before calling this method')
         example_set = ExampleSetFactory(self._get_problem_type()).make(values)
-        return self.model._java_object.apply(example_set)  # pylint: disable=protected-access
+        return self.model._java_object.apply(  # pylint: disable=protected-access
+            example_set
+        )
 
-    def get_params(self, deep: bool = True) -> dict[str, Any]:  # pylint: disable=unused-argument
+    def get_params(
+        self, deep: bool = True  # pylint: disable=unused-argument
+    ) -> dict[str, Any]:
         """
         Parameters
         ----------
@@ -105,11 +109,11 @@ class BaseOperator(ABC):
         """Set models hyperparameters. Parameters are the same as in constructor."""
         self._rule_generator = self._get_rule_generator()
         params: BaseModel = self.__params_class__(  # pylint: disable=not-callable
-            **kwargs)
+            **kwargs
+        )
         params_dict: dict = params.model_dump()
         self._params = {
-            key: value for key, value in params_dict.items()
-            if value is not None
+            key: value for key, value in params_dict.items() if value is not None
         }
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         self._rule_generator = configurator.configure(**params_dict)
@@ -122,9 +126,7 @@ class BaseOperator(ABC):
         Raises:
             NotImplementedError: _description_
         """
-        raise NotImplementedError(
-            'Scikit-learn metadata routing is not supported yet.'
-        )
+        raise NotImplementedError("Scikit-learn metadata routing is not supported yet.")
 
     def get_coverage_matrix(self, values: Data) -> np.ndarray:
         """Calculates coverage matrix for ruleset.
@@ -137,13 +139,12 @@ class BaseOperator(ABC):
         Returns
         -------
         coverage_matrix : np.ndarray
-            Each row of the matrix represent single example from dataset and every column represent
-            on rule from rule set. Value 1 in the matrix cell means that rule covered certain
-             example, value 0 means that it doesn't.
+            Each row of the matrix represent single example from dataset and every
+            column represent on rule from rule set. Value 1 in the matrix cell means
+            that rule covered certain example, value 0 means that it doesn't.
         """
         if self.model is None:
-            raise ValueError(
-                '"fit" method must be called before calling this method')
+            raise ValueError('"fit" method must be called before calling this method')
         example_set = ExampleSetFactory(self._get_problem_type()).make(values)
         covering_info = self.model.covering(example_set)
         if isinstance(values, (pd.Series, pd.DataFrame)):
@@ -151,8 +152,7 @@ class BaseOperator(ABC):
         result = []
         for i in range(len(values)):
             row_result: list[int] = [
-                0 if item is None or not i in item else 1
-                for item in covering_info
+                0 if item is None or i not in item else 1 for item in covering_info
             ]
             result.append(np.array(row_result))
         return np.array(result)
@@ -180,16 +180,13 @@ class BaseOperator(ABC):
 
     def __getstate__(self) -> dict:
         state = self.__dict__.copy()
-        state.pop('_rule_generator')
-        return {
-            '_params': self._params,
-            'model': ModelSerializer.serialize(self.model)
-        }
+        state.pop("_rule_generator")
+        return {"_params": self._params, "model": ModelSerializer.serialize(self.model)}
 
     def __setstate__(self, state: dict):
-        self.model = ModelSerializer.deserialize(state['model'])
+        self.model = ModelSerializer.deserialize(state["model"])
         self._rule_generator = get_rule_generator()
-        self.set_params(**state['_params'])
+        self.set_params(**state["_params"])
 
     def _get_rule_generator(self) -> RuleGeneratorConfigurator:
         return get_rule_generator()
@@ -200,8 +197,7 @@ class BaseOperator(ABC):
 
 
 class ExpertKnowledgeOperator(BaseOperator, ABC):
-    """Base class for expert rule induction operator
-    """
+    """Base class for expert rule induction operator"""
 
     def fit(  # pylint: disable=missing-function-docstring,too-many-arguments
         self,
@@ -209,16 +205,15 @@ class ExpertKnowledgeOperator(BaseOperator, ABC):
         labels: Data,
         survival_time_attribute: str = None,
         contrast_attribute: str = None,
-
         expert_rules: list[Union[str, BaseRule]] = None,
         expert_preferred_conditions: list[Union[str, BaseRule]] = None,
-        expert_forbidden_conditions: list[Union[str, BaseRule]] = None
+        expert_forbidden_conditions: list[Union[str, BaseRule]] = None,
     ) -> ExpertKnowledgeOperator:
         example_set = ExampleSetFactory(self._get_problem_type()).make(
             values,
             labels,
             survival_time_attribute=survival_time_attribute,
-            contrast_attribute=contrast_attribute
+            contrast_attribute=contrast_attribute,
         )
         self._validate_contrast_attribute(example_set, contrast_attribute)
         self._configure_expert_parameters(
@@ -237,7 +232,7 @@ class ExpertKnowledgeOperator(BaseOperator, ABC):
         self,
         expert_rules: Optional[list[Union[str, BaseRule]]] = None,
         expert_preferred_conditions: Optional[list[Union[str, BaseRule]]] = None,
-        expert_forbidden_conditions: Optional[list[Union[str, BaseRule]]] = None
+        expert_forbidden_conditions: Optional[list[Union[str, BaseRule]]] = None,
     ) -> None:
         if expert_rules is None:
             expert_rules = []
@@ -248,23 +243,22 @@ class ExpertKnowledgeOperator(BaseOperator, ABC):
 
         configurator = RuleGeneratorConfigurator(self._rule_generator)
         configurator._configure_simple_parameter(  # pylint: disable=protected-access
-            'use_expert', True)
-        configurator._configure_expert_parameter(  # pylint: disable=protected-access
-            'expert_preferred_conditions',
-            self._sanitize_expert_parameter(expert_preferred_conditions)
+            "use_expert", True
         )
         configurator._configure_expert_parameter(  # pylint: disable=protected-access
-            'expert_forbidden_conditions',
-            self._sanitize_expert_parameter(expert_forbidden_conditions)
+            "expert_preferred_conditions",
+            self._sanitize_expert_parameter(expert_preferred_conditions),
         )
         configurator._configure_expert_parameter(  # pylint: disable=protected-access
-            'expert_rules',
-            self._sanitize_expert_parameter(expert_rules)
+            "expert_forbidden_conditions",
+            self._sanitize_expert_parameter(expert_forbidden_conditions),
+        )
+        configurator._configure_expert_parameter(  # pylint: disable=protected-access
+            "expert_rules", self._sanitize_expert_parameter(expert_rules)
         )
 
     def _sanitize_expert_parameter(
-        self,
-        expert_parameter: Optional[list[tuple[str, str]]]
+        self, expert_parameter: Optional[list[tuple[str, str]]]
     ) -> list[tuple[str, str]]:
         if expert_parameter is None:
             return None

@@ -63,8 +63,7 @@ class TestSurvivalRules(unittest.TestCase):
     def test_induction_progress_listener(self):
         test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
 
-        surv = survival.SurvivalRules(
-            survival_time_attr=test_case.survival_time)
+        surv = survival.SurvivalRules(survival_time_attr=test_case.survival_time)
         example_set = test_case.example_set
 
         class EventListener(RuleInductionProgressListener):
@@ -127,6 +126,65 @@ class TestSurvivalRules(unittest.TestCase):
         clf.fit(X, y)
         clf.predict(X)
 
+    def test_passing_survival_time_column_to_fit_method(self):
+        test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
+        params = test_case.induction_params
+        surv1 = survival.SurvivalRules(**params)
+        surv2 = survival.SurvivalRules(
+            **params, survival_time_attr=test_case.survival_time
+        )
+        X, y = test_case.example_set.values, test_case.example_set.labels
+        survival_time_col: pd.Series = X[test_case.survival_time]
+        X_without_time_col: pd.DataFrame = X.drop(
+            columns=[test_case.survival_time], axis=1
+        )
+        surv1.fit(X_without_time_col, y, survival_time=survival_time_col)
+        surv2.fit(X, y)
+
+        assert_rules_are_equals(
+            [str(r) for r in surv1.model.rules],
+            [str(r) for r in surv2.model.rules],
+        )
+
+    def test_ibs_calculation(self):
+        test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
+        params = test_case.induction_params
+        surv = survival.SurvivalRules(
+            **params, survival_time_attr=test_case.survival_time
+        )
+        X, y = test_case.example_set.values, test_case.example_set.labels
+        survival_time_col: pd.Series = X[test_case.survival_time]
+        X_without_time_col: pd.DataFrame = X.drop(
+            columns=[test_case.survival_time], axis=1
+        )
+        surv.fit(X, y)
+
+        ibs: float = surv.score(X, y)
+        ibs2: float = surv.score(X_without_time_col, y, survival_time=survival_time_col)
+
+        self.assertEqual(ibs, ibs2)
+
+    def test_getting_training_dataset_kaplan_meier_estimator(self):
+        test_case = get_test_cases("SurvivalLogRankSnCTest")[0]
+        params = test_case.induction_params
+        surv = survival.SurvivalRules(
+            **params, survival_time_attr=test_case.survival_time
+        )
+        example_set = test_case.example_set
+        unique_times_counts: int = example_set.values[test_case.survival_time].nunique()
+        surv.fit(example_set.values, example_set.labels)
+
+        training_km: KaplanMeierEstimator = surv.get_train_set_kaplan_meier()
+        self.assertTrue(
+            training_km is not None and isinstance(training_km, KaplanMeierEstimator),
+            "Should return KaplanMeierEstimator instance fitted on whole training set",
+        )
+        self.assertEqual(
+            len(training_km.times),
+            unique_times_counts,
+            "Estimator should contain probabilities for each unique time from the dataset",
+        )
+
 
 class TestExpertSurvivalRules(unittest.TestCase):
 
@@ -172,10 +230,9 @@ class TestExpertSurvivalRules(unittest.TestCase):
             induce_using_automatic=False,
             preferred_conditions_per_rule=0,
             preferred_attributes_per_rule=0,
-            survival_time_attr='survival_time'
+            survival_time_attr="survival_time",
         )
-        clf.fit(X, y, expert_rules=[
-                ("expert_rules-1", "IF CMVstatus @= {1} THEN")])
+        clf.fit(X, y, expert_rules=[("expert_rules-1", "IF CMVstatus @= {1} THEN")])
         r = [str(r) for r in clf.model.rules]
 
         self.assertEqual(
@@ -184,8 +241,7 @@ class TestExpertSurvivalRules(unittest.TestCase):
             "Ruleset should contain only a single rule configured by expert",
         )
 
-        clf.fit(X, y, expert_rules=[
-                ("expert_rules-1", "IF CMVstatus @= Any THEN")])
+        clf.fit(X, y, expert_rules=[("expert_rules-1", "IF CMVstatus @= Any THEN")])
         self.assertEqual(
             ["IF [[CMVstatus = !{1}]] THEN "],
             [str(r) for r in clf.model.rules],
