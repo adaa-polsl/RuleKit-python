@@ -28,7 +28,7 @@ In root repository directory:
 ```
 rm -r ./dist
 python setup.py sdist
-python -m twine check dist/*
-python -m twine upload  dist/*
+python -m twine check ./dist/*
+python -m twine upload  ./dist/*
 ```
 > For the last command use `__token__` as username and your token value as password when prompted.
