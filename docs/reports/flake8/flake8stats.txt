@@ -32,3 +32,4 @@
 2     W291 trailing whitespace
 9     E501 line too long (92 > 88 characters)
 7     E501 line too long (92 > 88 characters)
+7     E501 line too long (92 > 88 characters)
