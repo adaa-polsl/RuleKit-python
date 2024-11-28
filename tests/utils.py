@@ -433,8 +433,8 @@ def assert_rules_are_equals(expected: list[str], actual: list[str]):
 
     if len(expected) != len(actual):
         raise AssertionError(
-            f"Rulesets have different number of rules, actual: {len(actual)}, expected: {
-                len(expected)}"
+            "Rulesets have different number of rules, actual: "
+            f'{len(actual)}, expected: {len(expected)}'
         )
     dictionary = {}
     for rule in expected:
