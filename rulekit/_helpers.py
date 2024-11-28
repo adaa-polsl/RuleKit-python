@@ -35,20 +35,21 @@ def get_rule_generator(expert: bool = False) -> Any:
         Any: RuleGenerator instance
     """
     RuleGenerator = JClass(  # pylint: disable=invalid-name
-        'adaa.analytics.rules.logic.rulegenerator.RuleGenerator'
+        "adaa.analytics.rules.logic.rulegenerator.RuleGenerator"
     )
     rule_generator = RuleGenerator(expert)
     return rule_generator
 
 
 class RuleGeneratorConfigurator:
-    """Class for configuring rule induction parameters
-    """
+    """Class for configuring rule induction parameters"""
 
     _MEASURES_PARAMETERS: list[str] = [
-        'induction_measure', 'pruning_measure', 'voting_measure',
+        "induction_measure",
+        "pruning_measure",
+        "voting_measure",
     ]
-    _USER_DEFINED_MEASURE_VALUE: str = 'UserDefined'
+    _USER_DEFINED_MEASURE_VALUE: str = "UserDefined"
 
     def __init__(self, rule_generator):
         self.rule_generator = rule_generator
@@ -72,18 +73,21 @@ class RuleGeneratorConfigurator:
         if isinstance(param_value, list) and len(param_value) > 0:
             if isinstance(param_value[0], str):
                 for index, rule in enumerate(param_value):
-                    rule_name = f'{param_name[:-1]}-{index}'
+                    rule_name = f"{param_name[:-1]}-{index}"
                     rules_list.add(
-                        JObject([rule_name, rule], JArray('java.lang.String', 1)))
+                        JObject([rule_name, rule], JArray("java.lang.String", 1))
+                    )
             elif isinstance(param_value[0], BaseRule):
                 for index, rule in enumerate(param_value):
-                    rule_name = f'{param_name[:-1]}-{index}'
+                    rule_name = f"{param_name[:-1]}-{index}"
                     rules_list.add(
-                        JObject([rule_name, str(rule)], JArray('java.lang.String', 1)))
+                        JObject([rule_name, str(rule)], JArray("java.lang.String", 1))
+                    )
             elif isinstance(param_value[0], tuple):
                 for index, rule in enumerate(param_value):
                     rules_list.add(
-                        JObject([rule[0], rule[1]], JArray('java.lang.String', 1)))
+                        JObject([rule[0], rule[1]], JArray("java.lang.String", 1))
+                    )
         self.rule_generator.setListParameter(param_name, rules_list)
 
     def _configure_simple_parameter(self, param_name: str, param_value: Any):
@@ -91,39 +95,44 @@ class RuleGeneratorConfigurator:
             if isinstance(param_value, bool):
                 param_value = (str(param_value)).lower()
             elif isinstance(param_value, tuple):
-                param_value = ' '.join(list(map(str, param_value)))
+                param_value = " ".join(list(map(str, param_value)))
             elif not isinstance(param_value, str):
                 param_value = str(param_value)
             self.rule_generator.setParameter(param_name, param_value)
 
-    def _configure_measure_parameter(self, param_name: str, param_value: Union[str, Measures]):
+    def _configure_measure_parameter(
+        self, param_name: str, param_value: Union[str, Measures]
+    ):
         if param_value is not None:
             if isinstance(param_value, Measures):
-                self.rule_generator.setParameter(
-                    param_name, param_value.value)
+                self.rule_generator.setParameter(param_name, param_value.value)
             if isinstance(param_value, Callable):
-                self._configure_user_defined_measure_parameter(
-                    param_name, param_value)
+                self._configure_user_defined_measure_parameter(param_name, param_value)
 
-    def _configure_user_defined_measure_parameter(self, param_name: str, param_value: Any):
+    def _configure_user_defined_measure_parameter(
+        self, param_name: str, param_value: Any
+    ):
         from rulekit.params import _user_defined_measure_factory
+
         user_defined_measure = _user_defined_measure_factory(param_value)
         {
-            'induction_measure': self.rule_generator.setUserMeasureInductionObject,
-            'pruning_measure': self.rule_generator.setUserMeasurePurningObject,
-            'voting_measure': self.rule_generator.setUserMeasureVotingObject,
+            "induction_measure": self.rule_generator.setUserMeasureInductionObject,
+            "pruning_measure": self.rule_generator.setUserMeasurePurningObject,
+            "voting_measure": self.rule_generator.setUserMeasureVotingObject,
         }[param_name](user_defined_measure)
-        self.rule_generator.setParameter(
-            param_name, self._USER_DEFINED_MEASURE_VALUE)
+        self.rule_generator.setParameter(param_name, self._USER_DEFINED_MEASURE_VALUE)
 
     def _configure_rule_generator(self, **kwargs: dict[str, Any]):
-        if any([kwargs.get(param_name) == Measures.LogRank for param_name in self._MEASURES_PARAMETERS]):
-            self.LogRank = JClass('adaa.analytics.rules.logic.quality.LogRank')
+        if any(
+            [
+                kwargs.get(param_name) == Measures.LogRank
+                for param_name in self._MEASURES_PARAMETERS
+            ]
+        ):
+            self.LogRank = JClass("adaa.analytics.rules.logic.quality.LogRank")
         for measure_param_name in self._MEASURES_PARAMETERS:
-            measure_param_value: Measures = kwargs.pop(
-                measure_param_name, None)
-            self._configure_measure_parameter(
-                measure_param_name, measure_param_value)
+            measure_param_value: Measures = kwargs.pop(measure_param_name, None)
+            self._configure_measure_parameter(measure_param_name, measure_param_value)
         for param_name, param_value in kwargs.items():
             self._configure_simple_parameter(param_name, param_value)
 
@@ -139,12 +148,21 @@ class RuleGeneratorConfigurator:
             ValueError: If failed to retrieve RuleGenerator parameters JSON
             RuleKitMisconfigurationException: If Java and Python parameters do not match
         """
-        def are_params_equal(java_params: dict[str, Any], python_params: dict[str, Any]):
+
+        def are_params_equal(
+            java_params: dict[str, Any], python_params: dict[str, Any]
+        ):
             if java_params.keys() != python_params.keys():
                 return False
             for key in java_params.keys():
-                skip_check: bool = isinstance(python_params[key], Callable)
-                if java_params[key] != python_params[key] and not skip_check:
+                java_value = java_params.get(key)
+                python_value = python_params.get(key)
+                skip_check: bool = isinstance(python_value, Callable)
+                if java_value == 'None':
+                    java_value = None
+                if java_value is None and python_value is None:
+                    continue
+                if java_value != python_value and not skip_check:
                     return False
             return True
 
@@ -158,45 +176,44 @@ class RuleGeneratorConfigurator:
                 python_parameters[param_name] = str(param_value).lower()
             # normalize tuples to strings for comparison
             elif isinstance(param_value, tuple):
-                value = ' '.join(list(map(str, param_value)))
+                value = " ".join(list(map(str, param_value)))
                 python_parameters[param_name] = value
             # convert numbers to strings for comparison
             elif isinstance(param_value, (int, float)):
                 python_parameters[param_name] = str(param_value)
-        java_params_json: str = str(
-            self.rule_generator.getParamsAsJsonString())
+        java_params_json: str = str(self.rule_generator.getParamsAsJsonString())
         try:
             java_params: dict[str, Any] = json.loads(java_params_json)
         except json.JSONDecodeError as error:
             raise ValueError(
-                'Failed to decode RuleGenerator parameters JSON') from error
+                "Failed to decode RuleGenerator parameters JSON"
+            ) from error
         # select only values that are used by Python wrapper
         java_params = {
-            param_name: str(java_params[param_name])
+            param_name: str(java_params.get(param_name))
             for param_name in python_parameters.keys()
         }
         if not are_params_equal(java_params, python_parameters):
             raise RuleKitMisconfigurationException(
-                java_parameters=java_params,
-                python_parameters=python_parameters
+                java_parameters=java_params, python_parameters=python_parameters
             )
 
     def _configure_java_logging(self):
-        logger_config: Optional[_RuleKitJavaLoggerConfig] = RuleKit.get_java_logger_config(
+        logger_config: Optional[_RuleKitJavaLoggerConfig] = (
+            RuleKit.get_java_logger_config()
         )
         if logger_config is None:
             return
         self.rule_generator.configureLogger(
-            logger_config.log_file_path,
-            logger_config.verbosity_level
+            logger_config.log_file_path, logger_config.verbosity_level
         )
 
 
-class ExampleSetFactory():
-    """ Creates ExampleSet object from given data"""
+class ExampleSetFactory:
+    """Creates ExampleSet object from given data"""
 
-    DEFAULT_LABEL_ATTRIBUTE_NAME: str = 'label'
-    AUTOMATIC_ATTRIBUTES_NAMES_PREFIX: str = 'att'
+    DEFAULT_LABEL_ATTRIBUTE_NAME: str = "label"
+    AUTOMATIC_ATTRIBUTES_NAMES_PREFIX: str = "att"
 
     def __init__(self, problem_type: ProblemType) -> None:
         self._problem_type: ProblemType = problem_type
@@ -219,9 +236,10 @@ class ExampleSetFactory():
         Args:
             X (Union[pd.DataFrame, np.ndarray]): Data
             y (Union[pd.Series, np.ndarray], optional): Labels. Defaults to None.
-            survival_time_attribute (str, optional): Name of survival time attribute.
-             Defaults to None.
-            contrast_attribute (str, optional): Name of contrast attribute. Defaults to None.
+                survival_time_attribute (str, optional): Name of survival time
+                attribute. Defaults to None.
+            contrast_attribute (str, optional): Name of contrast attribute.
+                Defaults to None.
 
         Returns:
             JObject: ExampleSet object
@@ -235,10 +253,7 @@ class ExampleSetFactory():
         self._validate_y()
         return self._create_example_set()
 
-    def _sanitize_y(
-        self,
-        y: Union[pd.Series, np.ndarray, list]
-    ):
+    def _sanitize_y(self, y: Union[pd.Series, np.ndarray, list]):
         if y is None:
             return
         elif isinstance(y, pd.Series):
@@ -255,8 +270,9 @@ class ExampleSetFactory():
             self._y = y
         else:
             raise ValueError(
-                f'Invalid y type: {str(type(y))}. ' +
-                'Supported types are: 1 dimensional numpy array or pandas Series object.'
+                f"Invalid y type: {str(type(y))}. "
+                "Supported types are: 1 dimensional numpy array or pandas "
+                "Series object."
             )
 
     def _sanitize_X(
@@ -270,28 +286,29 @@ class ExampleSetFactory():
             self._X = X.to_numpy()
         elif isinstance(X, np.ndarray):
             self._attributes_names = [
-                f'{self.AUTOMATIC_ATTRIBUTES_NAMES_PREFIX}{index + 1}'
+                f"{self.AUTOMATIC_ATTRIBUTES_NAMES_PREFIX}{index + 1}"
                 for index in range(X.shape[1])
             ]
             self._X = X
         else:
             raise ValueError(
-                f'Invalid X type: {str(type(X))}. ' +
-                'Supported types are: 2 dimensional numpy array or pandas DataFrame object.'
+                f"Invalid X type: {str(type(X))}. "
+                "Supported types are: 2 dimensional numpy array or pandas DataFrame "
+                "object."
             )
 
     def _validate_X(self):
         if len(self._X.shape) != 2:
             raise ValueError(
-                'X must be a 2 dimensional numpy array or pandas DataFrame object. ' +
-                f'Its current shape is: {str(self._X.shape)}'
+                "X must be a 2 dimensional numpy array or pandas DataFrame object. "
+                + f"Its current shape is: {str(self._X.shape)}"
             )
 
     def _validate_y(self):
         if self._y is not None and len(self._y.shape) != 1:
             raise ValueError(
-                'y must be a 1 dimensional numpy array or pandas DataFrame object. ' +
-                f'Its current shape is: {str(self._y.shape)}'
+                "y must be a 1 dimensional numpy array or pandas DataFrame object. "
+                + f"Its current shape is: {str(self._y.shape)}"
             )
 
     def _create_example_set(self) -> JObject:
@@ -301,16 +318,18 @@ class ExampleSetFactory():
             self._attributes_names,
             self._label_name,
             self._survival_time_attribute,
-            self._contrast_attribute
+            self._contrast_attribute,
         ]
         DataTable = JClass(  # pylint: disable=invalid-name
-            'adaa.analytics.rules.data.DataTable'
+            "adaa.analytics.rules.data.DataTable"
         )
         try:
             table = DataTable(*args)
-            if (self._y is not None):
+            if self._y is not None:
                 ExampleSetFactory = JClass(
-                    'adaa.analytics.rules.logic.representation.exampleset.ExampleSetFactory')
+                    'adaa.analytics.rules.logic.representation.'
+                    'exampleset.ExampleSetFactory'
+                )
                 factory = ExampleSetFactory(2)
                 example_set = factory.create(table)
                 return example_set
@@ -318,13 +337,16 @@ class ExampleSetFactory():
                 return table
         except Exception as error:
             from rulekit.exceptions import RuleKitJavaException
+
             RuleKitJavaException(error).print_java_stack_trace()
             raise error
 
     def _wrap_training_example_set(self, example_set: JObject) -> JObject:
-        # training dataset must be wrapped in additional classes for rule induction to work properly
+        # training dataset must be wrapped in additional classes for rule induction
+        # to work properly
         ExampleSetFactory = JClass(
-            'adaa.analytics.rules.logic.representation.exampleset.ExampleSetFactory')
+            "adaa.analytics.rules.logic.representation.exampleset.ExampleSetFactory"
+        )
         factory: JObject = ExampleSetFactory(self._problem_type.value)
         return factory.create(example_set)
 
@@ -333,22 +355,18 @@ class ExampleSetFactory():
             data = self._X
         else:
             data = np.hstack((self._X.astype(object), self._y.reshape(-1, 1)))
-        java_data = JObject(data, JArray('java.lang.Object', 2))
+        java_data = JObject(data, JArray("java.lang.Object", 2))
         return java_data
 
 
 class PredictionResultMapper:
-    """Maps prediction results to numpy array
-    """
+    """Maps prediction results to numpy array"""
 
-    PREDICTION_COLUMN_ROLE: str = 'prediction'
-    CONFIDENCE_COLUMN_ROLE: str = 'confidence'
+    PREDICTION_COLUMN_ROLE: str = "prediction"
+    CONFIDENCE_COLUMN_ROLE: str = "confidence"
 
     @staticmethod
-    def map_confidence(
-        predicted_example_set,
-        label_unique_values: list
-    ) -> np.ndarray:
+    def map_confidence(predicted_example_set, label_unique_values: list) -> np.ndarray:
         """Maps models confidence values to numpy array
 
         Args:
@@ -362,12 +380,11 @@ class PredictionResultMapper:
         for label_value in label_unique_values:
             confidence_col: JObject = PredictionResultMapper._get_column_by_role(
                 predicted_example_set,
-                f'{PredictionResultMapper.CONFIDENCE_COLUMN_ROLE}_{label_value}'
+                f"{PredictionResultMapper.CONFIDENCE_COLUMN_ROLE}_{label_value}",
             )
 
             confidence_values = [
-                float(predicted_example_set.getExample(
-                    i).getValue(confidence_col))
+                float(predicted_example_set.getExample(i).getValue(confidence_col))
                 for i in range(predicted_example_set.size())
             ]
 
@@ -385,8 +402,7 @@ class PredictionResultMapper:
             np.ndarray: numpy array containing predictions
         """
         prediction_col: JObject = PredictionResultMapper._get_column_by_role(
-            predicted_example_set,
-            PredictionResultMapper.PREDICTION_COLUMN_ROLE
+            predicted_example_set, PredictionResultMapper.PREDICTION_COLUMN_ROLE
         )
         if prediction_col.isNominal():
             return PredictionResultMapper.map_to_nominal(predicted_example_set)
@@ -403,18 +419,21 @@ class PredictionResultMapper:
             np.ndarray: numpy array containing predictions
         """
         prediction_col: JObject = PredictionResultMapper._get_column_by_role(
-            predicted_example_set,
-            PredictionResultMapper.PREDICTION_COLUMN_ROLE
+            predicted_example_set, PredictionResultMapper.PREDICTION_COLUMN_ROLE
         )
 
-        return np.array([
-            str(predicted_example_set.getExample(
-                i).getNominalValue(prediction_col))
-            for i in range(predicted_example_set.size())
-        ], dtype=str)
+        return np.array(
+            [
+                str(predicted_example_set.getExample(i).getNominalValue(prediction_col))
+                for i in range(predicted_example_set.size())
+            ],
+            dtype=str,
+        )
 
     @staticmethod
-    def map_to_numerical(predicted_example_set: JObject, remap: bool = True) -> np.ndarray:
+    def map_to_numerical(
+        predicted_example_set: JObject, remap: bool = True
+    ) -> np.ndarray:
         """Maps models predictions to numerical numpy array
 
         Args:
@@ -424,31 +443,29 @@ class PredictionResultMapper:
             np.ndarray: numpy array containing predictions
         """
         prediction_col: JObject = PredictionResultMapper._get_column_by_role(
-            predicted_example_set,
-            PredictionResultMapper.PREDICTION_COLUMN_ROLE
+            predicted_example_set, PredictionResultMapper.PREDICTION_COLUMN_ROLE
         )
         label_mapping = predicted_example_set.getAttributes().getLabel().getMapping()
         if remap:
             predictions: list = [
-                label_mapping.mapIndex(int(
-                    predicted_example_set.getExample(
-                        i).getValue(prediction_col)
-                ))
+                label_mapping.mapIndex(
+                    int(predicted_example_set.getExample(i).getValue(prediction_col))
+                )
                 for i in range(predicted_example_set.size())
             ]
             predictions = list(map(lambda x: float(str(x)), predictions))
             return np.array(predictions)
-        return np.array([
-            float(
-                predicted_example_set.getExample(i).getValue(prediction_col)
-            )
-            for i in range(predicted_example_set.size())
-        ])
+        return np.array(
+            [
+                float(predicted_example_set.getExample(i).getValue(prediction_col))
+                for i in range(predicted_example_set.size())
+            ]
+        )
 
     @staticmethod
     def map_survival(predicted_example_set) -> np.ndarray:
-        """Maps survival models predictions to numpy array. Used as alternative to `map` method
-        used in survival analysis
+        """Maps survival models predictions to numpy array. Used as alternative to
+        `map` method used in survival analysis
 
         Args:
             predicted_example_set (_type_): ExampleSet with predictions
@@ -463,17 +480,18 @@ class PredictionResultMapper:
             example = example_set_iterator.next()
             example_estimator = str(example.getValueAsString(attribute))
             example_estimator = example_estimator.split(" ")
-            _, example_estimator[0] = example_estimator[0].split(
-                ":")
+            _, example_estimator[0] = example_estimator[0].split(":")
             times = [
                 float(example_estimator[i])
-                for i in range(len(example_estimator) - 1) if i % 2 == 0
+                for i in range(len(example_estimator) - 1)
+                if i % 2 == 0
             ]
             probabilities = [
                 float(example_estimator[i])
-                for i in range(len(example_estimator)) if i % 2 != 0
+                for i in range(len(example_estimator))
+                if i % 2 != 0
             ]
-            estimator = {'times': times, 'probabilities': probabilities}
+            estimator = {"times": times, "probabilities": probabilities}
             estimators.append(estimator)
         return np.array(estimators)
 
@@ -483,8 +501,7 @@ class PredictionResultMapper:
 
 
 class ModelSerializer:
-    """Class for serializing models
-    """
+    """Class for serializing models"""
 
     @staticmethod
     def serialize(real_model: object) -> bytes:
