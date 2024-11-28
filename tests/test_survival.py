@@ -233,7 +233,6 @@ class TestExpertSurvivalRules(unittest.TestCase):
             survival_time_attr="survival_time",
         )
         clf.fit(X, y, expert_rules=[("expert_rules-1", "IF CMVstatus @= {1} THEN")])
-        r = [str(r) for r in clf.model.rules]
 
         self.assertEqual(
             ["IF [[CMVstatus = {1}]] THEN "],
@@ -244,6 +243,33 @@ class TestExpertSurvivalRules(unittest.TestCase):
         clf.fit(X, y, expert_rules=[("expert_rules-1", "IF CMVstatus @= Any THEN")])
         self.assertEqual(
             ["IF [[CMVstatus = !{1}]] THEN "],
+            [str(r) for r in clf.model.rules],
+            (
+                "Ruleset should contain only a single rule configured by expert with "
+                "a refined condition"
+            ),
+        )
+
+    def test_refining_conditions_for_numerical_attributes(self):
+        df: pd.DataFrame = read_arff(
+            os.path.join(dir_path, "resources", "data", "bmt-train-0.arff")
+        )
+        X, y = df.drop("survival_status", axis=1), df["survival_status"]
+
+        # Run experiment using python API
+        clf = survival.ExpertSurvivalRules(
+            complementary_conditions=True,
+            extend_using_preferred=False,
+            extend_using_automatic=False,
+            induce_using_preferred=False,
+            induce_using_automatic=False,
+            preferred_conditions_per_rule=0,
+            preferred_attributes_per_rule=0,
+            survival_time_attr="survival_time",
+        )
+        clf.fit(X, y, expert_rules=[("expert_rules-1", "IF CD34kgx10d6 @= Any THEN")])
+        self.assertEqual(
+            ["IF [[CD34kgx10d6 = (-inf, 11.86)]] THEN "],
             [str(r) for r in clf.model.rules],
             (
                 "Ruleset should contain only a single rule configured by expert with "
