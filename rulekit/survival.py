@@ -42,6 +42,7 @@ class _SurvivalModelsParams(BaseModel):
     complementary_conditions: Optional[bool] = DEFAULT_PARAMS_VALUE[
         "complementary_conditions"
     ]
+    max_rule_count: int = DEFAULT_PARAMS_VALUE["max_rule_count"]
 
 
 class _SurvivalExpertModelParams(_SurvivalModelsParams, ExpertModelParams):
