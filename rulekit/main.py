@@ -15,7 +15,7 @@ import jpype.imports
 from rulekit._logging import _RuleKitJavaLoggerConfig
 
 __RULEKIT_RELEASE_VERSION__ = "2.1.24"
-__VERSION__ = f"{__RULEKIT_RELEASE_VERSION__}.0"
+__VERSION__ = f"{__RULEKIT_RELEASE_VERSION__}.1"
 
 
 class JRE_Type(Enum):  # pylint: disable=invalid-name
