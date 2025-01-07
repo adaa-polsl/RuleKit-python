@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title>rulekit\classification.py - flake8 annotated source</title>
+      <title>rulekit/classification.py - flake8 annotated source</title>
       <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
       <link rel="stylesheet" href="styles.css">
    </head>
@@ -11,7 +11,7 @@
          <h1>
             <a href="rulekit.classification.report.html">
                <img src="back.svg" alt="&#x2B05;">
-               rulekit\classification.py source
+               rulekit/classification.py source
             </a>
          </h1>
 
@@ -23,82 +23,82 @@
                class="code sev- "><tt><i>2</i> <span class="sd">&quot;&quot;&quot;</span></tt>
             </div>
             <div id="l3"
-               class="code sev- "><tt><i>3</i> <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span></tt>
+               class="code sev- "><tt><i>3</i> <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span></tt>
             </div>
             <div id="l4"
                class="code sev- "><tt><i>4</i> &nbsp;</tt>
             </div>
             <div id="l5"
-               class="code sev- "><tt><i>5</i> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span></tt>
+               class="code sev- "><tt><i>5</i> <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span></tt>
             </div>
             <div id="l6"
-               class="code sev- "><tt><i>6</i> <span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span></tt>
+               class="code sev- "><tt><i>6</i> <span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span></tt>
             </div>
             <div id="l7"
-               class="code sev- "><tt><i>7</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span></tt>
+               class="code sev- "><tt><i>7</i> <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span></tt>
             </div>
             <div id="l8"
-               class="code sev- "><tt><i>8</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypedDict</span></tt>
+               class="code sev- "><tt><i>8</i> <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span></tt>
             </div>
             <div id="l9"
-               class="code sev- "><tt><i>9</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span></tt>
+               class="code sev- "><tt><i>9</i> <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span></tt>
             </div>
             <div id="l10"
                class="code sev- "><tt><i>10</i> &nbsp;</tt>
             </div>
             <div id="l11"
-               class="code sev- "><tt><i>11</i> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span></tt>
+               class="code sev- "><tt><i>11</i> <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span></tt>
             </div>
             <div id="l12"
-               class="code sev- "><tt><i>12</i> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span></tt>
+               class="code sev- "><tt><i>12</i> <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span></tt>
             </div>
             <div id="l13"
-               class="code sev- "><tt><i>13</i> <span class="kn">from</span> <span class="nn">jpype</span> <span class="kn">import</span> <span class="n">JClass</span></tt>
+               class="code sev- "><tt><i>13</i> <span class="kn">from</span><span class="w"> </span><span class="nn">jpype</span><span class="w"> </span><span class="kn">import</span> <span class="n">JClass</span></tt>
             </div>
             <div id="l14"
-               class="code sev- "><tt><i>14</i> <span class="kn">from</span> <span class="nn">jpype</span> <span class="kn">import</span> <span class="n">JObject</span></tt>
+               class="code sev- "><tt><i>14</i> <span class="kn">from</span><span class="w"> </span><span class="nn">jpype</span><span class="w"> </span><span class="kn">import</span> <span class="n">JObject</span></tt>
             </div>
             <div id="l15"
-               class="code sev- "><tt><i>15</i> <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span></tt>
+               class="code sev- "><tt><i>15</i> <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span></tt>
             </div>
             <div id="l16"
                class="code sev- "><tt><i>16</i> &nbsp;</tt>
             </div>
             <div id="l17"
-               class="code sev- "><tt><i>17</i> <span class="kn">from</span> <span class="nn">rulekit._helpers</span> <span class="kn">import</span> <span class="n">PredictionResultMapper</span></tt>
+               class="code sev- "><tt><i>17</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit._helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PredictionResultMapper</span></tt>
             </div>
             <div id="l18"
-               class="code sev- "><tt><i>18</i> <span class="kn">from</span> <span class="nn">rulekit._operator</span> <span class="kn">import</span> <span class="n">BaseOperator</span></tt>
+               class="code sev- "><tt><i>18</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit._operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseOperator</span></tt>
             </div>
             <div id="l19"
-               class="code sev- "><tt><i>19</i> <span class="kn">from</span> <span class="nn">rulekit._operator</span> <span class="kn">import</span> <span class="n">Data</span></tt>
+               class="code sev- "><tt><i>19</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit._operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Data</span></tt>
             </div>
             <div id="l20"
-               class="code sev- "><tt><i>20</i> <span class="kn">from</span> <span class="nn">rulekit._operator</span> <span class="kn">import</span> <span class="n">ExpertKnowledgeOperator</span></tt>
+               class="code sev- "><tt><i>20</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit._operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExpertKnowledgeOperator</span></tt>
             </div>
             <div id="l21"
-               class="code sev- "><tt><i>21</i> <span class="kn">from</span> <span class="nn">rulekit._problem_types</span> <span class="kn">import</span> <span class="n">ProblemType</span></tt>
+               class="code sev- "><tt><i>21</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit._problem_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProblemType</span></tt>
             </div>
             <div id="l22"
-               class="code sev- "><tt><i>22</i> <span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">ContrastSetModelParams</span></tt>
+               class="code sev- "><tt><i>22</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContrastSetModelParams</span></tt>
             </div>
             <div id="l23"
-               class="code sev- "><tt><i>23</i> <span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">DEFAULT_PARAMS_VALUE</span></tt>
+               class="code sev- "><tt><i>23</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_PARAMS_VALUE</span></tt>
             </div>
             <div id="l24"
-               class="code sev- "><tt><i>24</i> <span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">ExpertModelParams</span></tt>
+               class="code sev- "><tt><i>24</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExpertModelParams</span></tt>
             </div>
             <div id="l25"
-               class="code sev- "><tt><i>25</i> <span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">Measures</span></tt>
+               class="code sev- "><tt><i>25</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">Measures</span></tt>
             </div>
             <div id="l26"
-               class="code sev- "><tt><i>26</i> <span class="kn">from</span> <span class="nn">rulekit.params</span> <span class="kn">import</span> <span class="n">ModelsParams</span></tt>
+               class="code sev- "><tt><i>26</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelsParams</span></tt>
             </div>
             <div id="l27"
-               class="code sev- "><tt><i>27</i> <span class="kn">from</span> <span class="nn">rulekit.rules</span> <span class="kn">import</span> <span class="n">ClassificationRule</span></tt>
+               class="code sev- "><tt><i>27</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassificationRule</span></tt>
             </div>
             <div id="l28"
-               class="code sev- "><tt><i>28</i> <span class="kn">from</span> <span class="nn">rulekit.rules</span> <span class="kn">import</span> <span class="n">RuleSet</span></tt>
+               class="code sev- "><tt><i>28</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">RuleSet</span></tt>
             </div>
             <div id="l29"
                class="code sev- "><tt><i>29</i> &nbsp;</tt>
@@ -107,7 +107,7 @@
                class="code sev- "><tt><i>30</i> &nbsp;</tt>
             </div>
             <div id="l31"
-               class="code sev- "><tt><i>31</i> <span class="k">class</span> <span class="nc">ClassificationPredictionMetrics</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>31</i> <span class="k">class</span><span class="w"> </span><span class="nc">ClassificationPredictionMetrics</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span></tt>
             </div>
             <div id="l32"
                class="code sev- "><tt><i>32</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores additional metrics for classification prediction.</span></tt>
@@ -143,7 +143,7 @@
                class="code sev- "><tt><i>42</i> &nbsp;</tt>
             </div>
             <div id="l43"
-               class="code sev- "><tt><i>43</i> <span class="k">class</span> <span class="nc">_ClassificationParams</span><span class="p">(</span><span class="n">ModelsParams</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>43</i> <span class="k">class</span><span class="w"> </span><span class="nc">_ClassificationParams</span><span class="p">(</span><span class="n">ModelsParams</span><span class="p">):</span></tt>
             </div>
             <div id="l44"
                class="code sev- "><tt><i>44</i>     <span class="n">control_apriori_precision</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">DEFAULT_PARAMS_VALUE</span><span class="p">[</span><span class="s2">&quot;control_apriori_precision&quot;</span><span class="p">]</span></tt>
@@ -161,7 +161,7 @@
                class="code sev- "><tt><i>48</i> &nbsp;</tt>
             </div>
             <div id="l49"
-               class="code sev- "><tt><i>49</i> <span class="k">class</span> <span class="nc">_ClassificationExpertParams</span><span class="p">(</span><span class="n">_ClassificationParams</span><span class="p">,</span> <span class="n">ExpertModelParams</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>49</i> <span class="k">class</span><span class="w"> </span><span class="nc">_ClassificationExpertParams</span><span class="p">(</span><span class="n">_ClassificationParams</span><span class="p">,</span> <span class="n">ExpertModelParams</span><span class="p">):</span></tt>
             </div>
             <div id="l50"
                class="code sev- "><tt><i>50</i>     <span class="k">pass</span></tt>
@@ -173,7 +173,7 @@
                class="code sev- "><tt><i>52</i> &nbsp;</tt>
             </div>
             <div id="l53"
-               class="code sev- "><tt><i>53</i> <span class="k">class</span> <span class="nc">BaseClassifier</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>53</i> <span class="k">class</span><span class="w"> </span><span class="nc">BaseClassifier</span><span class="p">:</span></tt>
             </div>
             <div id="l54"
                class="code sev- "><tt><i>54</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;:meta private:&quot;&quot;&quot;</span></tt>
@@ -182,7 +182,7 @@
                class="code sev- "><tt><i>55</i> &nbsp;</tt>
             </div>
             <div id="l56"
-               class="code sev- "><tt><i>56</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>56</i>     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
             </div>
             <div id="l57"
                class="code sev- "><tt><i>57</i>         <span class="bp">self</span><span class="o">.</span><span class="n">_ClassificationRulesPerformance</span><span class="p">:</span> <span class="n">JClass</span> <span class="o">=</span> <span class="p">(</span></tt>
@@ -209,7 +209,7 @@
                class="code sev- "><tt><i>64</i> &nbsp;</tt>
             </div>
             <div id="l65"
-               class="code sev- "><tt><i>65</i>     <span class="k">class</span> <span class="nc">MetricTypes</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>65</i>     <span class="k">class</span><span class="w"> </span><span class="nc">MetricTypes</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span></tt>
             </div>
             <div id="l66"
                class="code sev- "><tt><i>66</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;:meta private:&quot;&quot;&quot;</span></tt>
@@ -230,7 +230,7 @@
                class="code sev- "><tt><i>71</i> &nbsp;</tt>
             </div>
             <div id="l72"
-               class="code sev- "><tt><i>72</i>     <span class="k">def</span> <span class="nf">_init_classification_rule_performance_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>72</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_init_classification_rule_performance_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
             </div>
             <div id="l73"
                class="code sev- "><tt><i>73</i>         <span class="bp">self</span><span class="o">.</span><span class="n">_ClassificationRulesPerformance</span> <span class="o">=</span> <span class="n">JClass</span><span class="p">(</span>  <span class="c1"># pylint: disable=invalid-name</span></tt>
@@ -245,7 +245,7 @@
                class="code sev- "><tt><i>76</i> &nbsp;</tt>
             </div>
             <div id="l77"
-               class="code sev- "><tt><i>77</i>     <span class="k">def</span> <span class="nf">_calculate_metric</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>77</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_metric</span><span class="p">(</span></tt>
             </div>
             <div id="l78"
                class="code sev- "><tt><i>78</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">example_set</span><span class="p">:</span> <span class="n">JObject</span><span class="p">,</span> <span class="n">metric_type</span><span class="p">:</span> <span class="n">MetricTypes</span></tt>
@@ -266,7 +266,7 @@
                class="code sev- "><tt><i>83</i> &nbsp;</tt>
             </div>
             <div id="l84"
-               class="code sev- "><tt><i>84</i>     <span class="k">def</span> <span class="nf">_calculate_prediction_metrics</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>84</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_prediction_metrics</span><span class="p">(</span></tt>
             </div>
             <div id="l85"
                class="code sev- "><tt><i>85</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">example_set</span></tt>
@@ -305,7 +305,7 @@
                class="code sev- "><tt><i>96</i> &nbsp;</tt>
             </div>
             <div id="l97"
-               class="code sev- "><tt><i>97</i> <span class="k">class</span> <span class="nc">RuleClassifier</span><span class="p">(</span><span class="n">BaseOperator</span><span class="p">,</span> <span class="n">BaseClassifier</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>97</i> <span class="k">class</span><span class="w"> </span><span class="nc">RuleClassifier</span><span class="p">(</span><span class="n">BaseOperator</span><span class="p">,</span> <span class="n">BaseClassifier</span><span class="p">):</span></tt>
             </div>
             <div id="l98"
                class="code sev- "><tt><i>98</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Classification model.&quot;&quot;&quot;</span></tt>
@@ -320,7 +320,7 @@
                class="code sev- "><tt><i>101</i> &nbsp;</tt>
             </div>
             <div id="l102"
-               class="code sev- "><tt><i>102</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span></tt>
+               class="code sev- "><tt><i>102</i>     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span></tt>
             </div>
             <div id="l103"
                class="code sev- "><tt><i>103</i>         <span class="bp">self</span><span class="p">,</span></tt>
@@ -599,7 +599,7 @@
                class="code sev- "><tt><i>194</i> &nbsp;</tt>
             </div>
             <div id="l195"
-               class="code sev- "><tt><i>195</i>     <span class="k">def</span> <span class="nf">_map_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicted_example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>195</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_map_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicted_example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
             </div>
             <div id="l196"
                class="code sev- "><tt><i>196</i>         <span class="n">prediction</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></tt>
@@ -623,7 +623,7 @@
                class="code sev- "><tt><i>202</i> &nbsp;</tt>
             </div>
             <div id="l203"
-               class="code sev- "><tt><i>203</i>     <span class="k">def</span> <span class="nf">_map_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicted_example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>203</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_map_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicted_example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
             </div>
             <div id="l204"
                class="code sev- "><tt><i>204</i>         <span class="k">return</span> <span class="n">PredictionResultMapper</span><span class="o">.</span><span class="n">map_confidence</span><span class="p">(</span></tt>
@@ -638,7 +638,7 @@
                class="code sev- "><tt><i>207</i> &nbsp;</tt>
             </div>
             <div id="l208"
-               class="code sev- "><tt><i>208</i>     <span class="k">def</span> <span class="nf">_get_unique_label_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>208</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_get_unique_label_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">):</span></tt>
             </div>
             <div id="l209"
                class="code sev- "><tt><i>209</i>         <span class="n">tmp</span> <span class="o">=</span> <span class="p">{}</span></tt>
@@ -674,7 +674,7 @@
                class="code sev- "><tt><i>219</i> &nbsp;</tt>
             </div>
             <div id="l220"
-               class="code sev- "><tt><i>220</i>     <span class="k">def</span> <span class="nf">_prepare_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>220</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span></tt>
             </div>
             <div id="l221"
                class="code sev- "><tt><i>221</i>         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)):</span></tt>
@@ -725,7 +725,7 @@
                class="code sev- "><tt><i>236</i> &nbsp;</tt>
             </div>
             <div id="l237"
-               class="code sev- "><tt><i>237</i>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>237</i>     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span></tt>
             </div>
             <div id="l238"
                class="code sev- "><tt><i>238</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span></tt>
@@ -785,7 +785,7 @@
                class="code sev- "><tt><i>256</i> &nbsp;</tt>
             </div>
             <div id="l257"
-               class="code sev- "><tt><i>257</i>     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>257</i>     <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span></tt>
             </div>
             <div id="l258"
                class="code sev- "><tt><i>258</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">return_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></tt>
@@ -878,7 +878,7 @@
                class="code sev- "><tt><i>287</i> &nbsp;</tt>
             </div>
             <div id="l288"
-               class="code sev- "><tt><i>288</i>     <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>288</i>     <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span></tt>
             </div>
             <div id="l289"
                class="code sev- "><tt><i>289</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">return_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></tt>
@@ -971,7 +971,7 @@
                class="code sev- "><tt><i>318</i> &nbsp;</tt>
             </div>
             <div id="l319"
-               class="code sev- "><tt><i>319</i>     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>319</i>     <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
             </div>
             <div id="l320"
                class="code sev- "><tt><i>320</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the accuracy on the given test data and labels.</span></tt>
@@ -1025,7 +1025,7 @@
                class="code sev- "><tt><i>336</i> &nbsp;</tt>
             </div>
             <div id="l337"
-               class="code sev- "><tt><i>337</i>     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>337</i>     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span></tt>
             </div>
             <div id="l338"
                class="code sev- "><tt><i>338</i>         <span class="k">return</span> <span class="p">{</span></tt>
@@ -1052,7 +1052,7 @@
                class="code sev- "><tt><i>345</i> &nbsp;</tt>
             </div>
             <div id="l346"
-               class="code sev- "><tt><i>346</i>     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>346</i>     <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span></tt>
             </div>
             <div id="l347"
                class="code sev- "><tt><i>347</i>         <span class="n">BaseOperator</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></tt>
@@ -1070,7 +1070,7 @@
                class="code sev- "><tt><i>351</i> &nbsp;</tt>
             </div>
             <div id="l352"
-               class="code sev- "><tt><i>352</i>     <span class="k">def</span> <span class="nf">_get_problem_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProblemType</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>352</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_get_problem_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProblemType</span><span class="p">:</span></tt>
             </div>
             <div id="l353"
                class="code sev- "><tt><i>353</i>         <span class="k">return</span> <span class="n">ProblemType</span><span class="o">.</span><span class="n">CLASSIFICATION</span></tt>
@@ -1082,7 +1082,7 @@
                class="code sev- "><tt><i>355</i> &nbsp;</tt>
             </div>
             <div id="l356"
-               class="code sev- "><tt><i>356</i> <span class="k">class</span> <span class="nc">ExpertRuleClassifier</span><span class="p">(</span><span class="n">ExpertKnowledgeOperator</span><span class="p">,</span> <span class="n">RuleClassifier</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>356</i> <span class="k">class</span><span class="w"> </span><span class="nc">ExpertRuleClassifier</span><span class="p">(</span><span class="n">ExpertKnowledgeOperator</span><span class="p">,</span> <span class="n">RuleClassifier</span><span class="p">):</span></tt>
             </div>
             <div id="l357"
                class="code sev- "><tt><i>357</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Classification model using expert knowledge.&quot;&quot;&quot;</span></tt>
@@ -1097,7 +1097,7 @@
                class="code sev- "><tt><i>360</i> &nbsp;</tt>
             </div>
             <div id="l361"
-               class="code sev- "><tt><i>361</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span></tt>
+               class="code sev- "><tt><i>361</i>     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span></tt>
             </div>
             <div id="l362"
                class="code sev- "><tt><i>362</i>         <span class="bp">self</span><span class="p">,</span></tt>
@@ -1544,7 +1544,7 @@
                class="code sev- "><tt><i>509</i> &nbsp;</tt>
             </div>
             <div id="l510"
-               class="code sev- "><tt><i>510</i>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>  <span class="c1"># pylint: disable=arguments-differ,too-many-arguments</span></tt>
+               class="code sev- "><tt><i>510</i>     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>  <span class="c1"># pylint: disable=arguments-differ,too-many-arguments</span></tt>
             </div>
             <div id="l511"
                class="code sev- "><tt><i>511</i>         <span class="bp">self</span><span class="p">,</span></tt>
@@ -1706,7 +1706,7 @@
                class="code sev- "><tt><i>563</i> &nbsp;</tt>
             </div>
             <div id="l564"
-               class="code sev- "><tt><i>564</i>     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>564</i>     <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span></tt>
             </div>
             <div id="l565"
                class="code sev- "><tt><i>565</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">return_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></tt>
@@ -1721,7 +1721,7 @@
                class="code sev- "><tt><i>568</i> &nbsp;</tt>
             </div>
             <div id="l569"
-               class="code sev- "><tt><i>569</i>     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>569</i>     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span></tt>
             </div>
             <div id="l570"
                class="code sev- "><tt><i>570</i>         <span class="k">return</span> <span class="p">{</span></tt>
@@ -1739,7 +1739,7 @@
                class="code sev- "><tt><i>574</i> &nbsp;</tt>
             </div>
             <div id="l575"
-               class="code sev- "><tt><i>575</i>     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>575</i>     <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span></tt>
             </div>
             <div id="l576"
                class="code sev- "><tt><i>576</i>         <span class="n">BaseOperator</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></tt>
@@ -1751,7 +1751,7 @@
                class="code sev- "><tt><i>578</i> &nbsp;</tt>
             </div>
             <div id="l579"
-               class="code sev- "><tt><i>579</i>     <span class="k">def</span> <span class="nf">_get_problem_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProblemType</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>579</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_get_problem_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProblemType</span><span class="p">:</span></tt>
             </div>
             <div id="l580"
                class="code sev- "><tt><i>580</i>         <span class="k">return</span> <span class="n">ProblemType</span><span class="o">.</span><span class="n">CLASSIFICATION</span></tt>
@@ -1763,7 +1763,7 @@
                class="code sev- "><tt><i>582</i> &nbsp;</tt>
             </div>
             <div id="l583"
-               class="code sev- "><tt><i>583</i> <span class="k">class</span> <span class="nc">ContrastSetRuleClassifier</span><span class="p">(</span><span class="n">BaseOperator</span><span class="p">,</span> <span class="n">BaseClassifier</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>583</i> <span class="k">class</span><span class="w"> </span><span class="nc">ContrastSetRuleClassifier</span><span class="p">(</span><span class="n">BaseOperator</span><span class="p">,</span> <span class="n">BaseClassifier</span><span class="p">):</span></tt>
             </div>
             <div id="l584"
                class="code sev- "><tt><i>584</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contrast set classification model.&quot;&quot;&quot;</span></tt>
@@ -1778,7 +1778,7 @@
                class="code sev- "><tt><i>587</i> &nbsp;</tt>
             </div>
             <div id="l588"
-               class="code sev- "><tt><i>588</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span></tt>
+               class="code sev- "><tt><i>588</i>     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span></tt>
             </div>
             <div id="l589"
                class="code sev- "><tt><i>589</i>         <span class="bp">self</span><span class="p">,</span></tt>
@@ -2135,7 +2135,7 @@
                class="code sev- "><tt><i>706</i> &nbsp;</tt>
             </div>
             <div id="l707"
-               class="code sev- "><tt><i>707</i>     <span class="k">def</span> <span class="nf">_map_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicted_example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>707</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_map_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicted_example_set</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span></tt>
             </div>
             <div id="l708"
                class="code sev- "><tt><i>708</i>         <span class="n">prediction</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span></tt>
@@ -2159,7 +2159,7 @@
                class="code sev- "><tt><i>714</i> &nbsp;</tt>
             </div>
             <div id="l715"
-               class="code sev- "><tt><i>715</i>     <span class="k">def</span> <span class="nf">_get_unique_label_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>715</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_get_unique_label_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">):</span></tt>
             </div>
             <div id="l716"
                class="code sev- "><tt><i>716</i>         <span class="n">tmp</span> <span class="o">=</span> <span class="p">{}</span></tt>
@@ -2195,7 +2195,7 @@
                class="code sev- "><tt><i>726</i> &nbsp;</tt>
             </div>
             <div id="l727"
-               class="code sev- "><tt><i>727</i>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>727</i>     <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span></tt>
             </div>
             <div id="l728"
                class="code sev- "><tt><i>728</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">contrast_attribute</span><span class="p">:</span> <span class="nb">str</span></tt>
@@ -2285,7 +2285,7 @@
                class="code sev- "><tt><i>753</i> &nbsp;</tt>
             </div>
             <div id="l754"
-               class="code sev- "><tt><i>754</i>     <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>754</i>     <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span></tt>
             </div>
             <div id="l755"
                class="code sev- "><tt><i>755</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">return_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></tt>
@@ -2357,7 +2357,7 @@
                class="code sev- "><tt><i>777</i> &nbsp;</tt>
             </div>
             <div id="l778"
-               class="code sev- "><tt><i>778</i>     <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>778</i>     <span class="k">def</span><span class="w"> </span><span class="nf">predict_proba</span><span class="p">(</span></tt>
             </div>
             <div id="l779"
                class="code sev- "><tt><i>779</i>         <span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">return_metrics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></tt>
@@ -2429,7 +2429,7 @@
                class="code sev- "><tt><i>801</i> &nbsp;</tt>
             </div>
             <div id="l802"
-               class="code sev- "><tt><i>802</i>     <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>802</i>     <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span></tt>
             </div>
             <div id="l803"
                class="code sev- "><tt><i>803</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the accuracy on the given test data and labels.</span></tt>
@@ -2480,7 +2480,7 @@
                class="code sev- "><tt><i>818</i> &nbsp;</tt>
             </div>
             <div id="l819"
-               class="code sev- "><tt><i>819</i>     <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>819</i>     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span></tt>
             </div>
             <div id="l820"
                class="code sev- "><tt><i>820</i>         <span class="k">return</span> <span class="p">{</span></tt>
@@ -2510,7 +2510,7 @@
                class="code sev- "><tt><i>828</i> &nbsp;</tt>
             </div>
             <div id="l829"
-               class="code sev- "><tt><i>829</i>     <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>829</i>     <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span></tt>
             </div>
             <div id="l830"
                class="code sev- "><tt><i>830</i>         <span class="n">BaseOperator</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></tt>
@@ -2531,7 +2531,7 @@
                class="code sev- "><tt><i>835</i> &nbsp;</tt>
             </div>
             <div id="l836"
-               class="code sev- "><tt><i>836</i>     <span class="k">def</span> <span class="nf">_get_problem_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProblemType</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>836</i>     <span class="k">def</span><span class="w"> </span><span class="nf">_get_problem_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProblemType</span><span class="p">:</span></tt>
             </div>
             <div id="l837"
                class="code sev- "><tt><i>837</i>         <span class="k">return</span> <span class="n">ProblemType</span><span class="o">.</span><span class="n">CONTRAST_CLASSIFICATION</span></tt>

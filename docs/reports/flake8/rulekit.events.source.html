@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title>rulekit\events.py - flake8 annotated source</title>
+      <title>rulekit/events.py - flake8 annotated source</title>
       <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
       <link rel="stylesheet" href="styles.css">
    </head>
@@ -11,7 +11,7 @@
          <h1>
             <a href="rulekit.events.report.html">
                <img src="back.svg" alt="&#x2B05;">
-               rulekit\events.py source
+               rulekit/events.py source
             </a>
          </h1>
 
@@ -23,31 +23,31 @@
                class="code sev- "><tt><i>2</i> <span class="sd">&quot;&quot;&quot;</span></tt>
             </div>
             <div id="l3"
-               class="code sev- "><tt><i>3</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span></tt>
+               class="code sev- "><tt><i>3</i> <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span></tt>
             </div>
             <div id="l4"
                class="code sev- "><tt><i>4</i> &nbsp;</tt>
             </div>
             <div id="l5"
-               class="code sev- "><tt><i>5</i> <span class="kn">from</span> <span class="nn">jpype</span> <span class="kn">import</span> <span class="n">JImplements</span></tt>
+               class="code sev- "><tt><i>5</i> <span class="kn">from</span><span class="w"> </span><span class="nn">jpype</span><span class="w"> </span><span class="kn">import</span> <span class="n">JImplements</span></tt>
             </div>
             <div id="l6"
-               class="code sev- "><tt><i>6</i> <span class="kn">from</span> <span class="nn">jpype</span> <span class="kn">import</span> <span class="n">JInt</span></tt>
+               class="code sev- "><tt><i>6</i> <span class="kn">from</span><span class="w"> </span><span class="nn">jpype</span><span class="w"> </span><span class="kn">import</span> <span class="n">JInt</span></tt>
             </div>
             <div id="l7"
-               class="code sev- "><tt><i>7</i> <span class="kn">from</span> <span class="nn">jpype</span> <span class="kn">import</span> <span class="n">JObject</span></tt>
+               class="code sev- "><tt><i>7</i> <span class="kn">from</span><span class="w"> </span><span class="nn">jpype</span><span class="w"> </span><span class="kn">import</span> <span class="n">JObject</span></tt>
             </div>
             <div id="l8"
-               class="code sev- "><tt><i>8</i> <span class="kn">from</span> <span class="nn">jpype</span> <span class="kn">import</span> <span class="n">JOverride</span></tt>
+               class="code sev- "><tt><i>8</i> <span class="kn">from</span><span class="w"> </span><span class="nn">jpype</span><span class="w"> </span><span class="kn">import</span> <span class="n">JOverride</span></tt>
             </div>
             <div id="l9"
                class="code sev- "><tt><i>9</i> &nbsp;</tt>
             </div>
             <div id="l10"
-               class="code sev- "><tt><i>10</i> <span class="kn">from</span> <span class="nn">rulekit.rules</span> <span class="kn">import</span> <span class="n">_rule_factory</span></tt>
+               class="code sev- "><tt><i>10</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">_rule_factory</span></tt>
             </div>
             <div id="l11"
-               class="code sev- "><tt><i>11</i> <span class="kn">from</span> <span class="nn">rulekit.rules</span> <span class="kn">import</span> <span class="n">BaseRule</span></tt>
+               class="code sev- "><tt><i>11</i> <span class="kn">from</span><span class="w"> </span><span class="nn">rulekit.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseRule</span></tt>
             </div>
             <div id="l12"
                class="code sev- "><tt><i>12</i> &nbsp;</tt>
@@ -56,7 +56,7 @@
                class="code sev- "><tt><i>13</i> &nbsp;</tt>
             </div>
             <div id="l14"
-               class="code sev- "><tt><i>14</i> <span class="k">class</span> <span class="nc">RuleInductionProgressListener</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>14</i> <span class="k">class</span><span class="w"> </span><span class="nc">RuleInductionProgressListener</span><span class="p">:</span></tt>
             </div>
             <div id="l15"
                class="code sev- "><tt><i>15</i> <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for rule induction progress listeners. To use it, subclass it</span></tt>
@@ -74,7 +74,7 @@
                class="code sev- "><tt><i>19</i> &nbsp;</tt>
             </div>
             <div id="l20"
-               class="code sev- "><tt><i>20</i>     <span class="k">def</span> <span class="nf">on_new_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">BaseRule</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>20</i>     <span class="k">def</span><span class="w"> </span><span class="nf">on_new_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">BaseRule</span><span class="p">):</span></tt>
             </div>
             <div id="l21"
                class="code sev- "><tt><i>21</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called when new rule is induced</span></tt>
@@ -95,7 +95,7 @@
                class="code sev- "><tt><i>26</i> &nbsp;</tt>
             </div>
             <div id="l27"
-               class="code sev- "><tt><i>27</i>     <span class="k">def</span> <span class="nf">on_progress</span><span class="p">(</span></tt>
+               class="code sev- "><tt><i>27</i>     <span class="k">def</span><span class="w"> </span><span class="nf">on_progress</span><span class="p">(</span></tt>
             </div>
             <div id="l28"
                class="code sev- "><tt><i>28</i>         <span class="bp">self</span><span class="p">,</span></tt>
@@ -146,7 +146,7 @@
                class="code sev- "><tt><i>43</i> &nbsp;</tt>
             </div>
             <div id="l44"
-               class="code sev- "><tt><i>44</i>     <span class="k">def</span> <span class="nf">should_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>44</i>     <span class="k">def</span><span class="w"> </span><span class="nf">should_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span></tt>
             </div>
             <div id="l45"
                class="code sev- "><tt><i>45</i> <span class="w">        </span><span class="sd">&quot;&quot;&quot;Method which allows to stop rule induction process at given</span></tt>
@@ -182,10 +182,10 @@
                class="code sev- "><tt><i>55</i> &nbsp;</tt>
             </div>
             <div id="l56"
-               class="code sev- "><tt><i>56</i> <span class="k">def</span> <span class="nf">_command_listener_factory</span><span class="p">(</span><span class="n">listener</span><span class="p">:</span> <span class="n">RuleInductionProgressListener</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>56</i> <span class="k">def</span><span class="w"> </span><span class="nf">_command_listener_factory</span><span class="p">(</span><span class="n">listener</span><span class="p">:</span> <span class="n">RuleInductionProgressListener</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span></tt>
             </div>
             <div id="l57"
-               class="code sev- "><tt><i>57</i>     <span class="kn">from</span> <span class="nn">adaa.analytics.rules.logic.rulegenerator</span> <span class="kn">import</span> \</tt>
+               class="code sev- "><tt><i>57</i>     <span class="kn">from</span><span class="w"> </span><span class="nn">adaa.analytics.rules.logic.rulegenerator</span><span class="w"> </span><span class="kn">import</span> \</tt>
             </div>
             <div id="l58"
                class="code sev-2  le">
@@ -215,7 +215,7 @@
                      </span>
                      Line too long (100 > 88 characters)</li>
                
-               </ul><tt><i>61</i>     <span class="k">class</span> <span class="nc">_CommandListener</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name,missing-function-docstring,line-too-long</span></tt>
+               </ul><tt><i>61</i>     <span class="k">class</span><span class="w"> </span><span class="nc">_CommandListener</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name,missing-function-docstring,line-too-long</span></tt>
             </div>
             <div id="l62"
                class="code sev- "><tt><i>62</i> &nbsp;</tt>
@@ -224,7 +224,7 @@
                class="code sev- "><tt><i>63</i>         <span class="nd">@JOverride</span></tt>
             </div>
             <div id="l64"
-               class="code sev- "><tt><i>64</i>         <span class="k">def</span> <span class="nf">onNewRule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">JObject</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>64</i>         <span class="k">def</span><span class="w"> </span><span class="nf">onNewRule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">JObject</span><span class="p">):</span></tt>
             </div>
             <div id="l65"
                class="code sev- "><tt><i>65</i>             <span class="n">rule</span><span class="p">:</span> <span class="n">BaseRule</span> <span class="o">=</span> <span class="n">_rule_factory</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span></tt>
@@ -239,7 +239,7 @@
                class="code sev- "><tt><i>68</i>         <span class="nd">@JOverride</span></tt>
             </div>
             <div id="l69"
-               class="code sev- "><tt><i>69</i>         <span class="k">def</span> <span class="nf">onProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">totalRules</span><span class="p">:</span> <span class="n">JInt</span><span class="p">,</span> <span class="n">uncoveredRules</span><span class="p">:</span> <span class="n">JInt</span><span class="p">):</span></tt>
+               class="code sev- "><tt><i>69</i>         <span class="k">def</span><span class="w"> </span><span class="nf">onProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">totalRules</span><span class="p">:</span> <span class="n">JInt</span><span class="p">,</span> <span class="n">uncoveredRules</span><span class="p">:</span> <span class="n">JInt</span><span class="p">):</span></tt>
             </div>
             <div id="l70"
                class="code sev- "><tt><i>70</i>             <span class="k">return</span> <span class="n">listener</span><span class="o">.</span><span class="n">on_progress</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">totalRules</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">uncoveredRules</span><span class="p">))</span></tt>
@@ -251,7 +251,7 @@
                class="code sev- "><tt><i>72</i>         <span class="nd">@JOverride</span></tt>
             </div>
             <div id="l73"
-               class="code sev- "><tt><i>73</i>         <span class="k">def</span> <span class="nf">isRequestStop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span></tt>
+               class="code sev- "><tt><i>73</i>         <span class="k">def</span><span class="w"> </span><span class="nf">isRequestStop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span></tt>
             </div>
             <div id="l74"
                class="code sev- "><tt><i>74</i>             <span class="k">return</span> <span class="n">listener</span><span class="o">.</span><span class="n">should_stop</span><span class="p">()</span></tt>
