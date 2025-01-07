@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parameters &mdash; rulekit v2.1.24.0 f documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=62e1ab09"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Rules" href="rules.html" />
+    <link rel="prev" title="Survival" href="survival.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            rulekit v2.1.24.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new/Changes%20in%20this%20version.html">Whats new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../autodoc.html">Code documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../autodoc.html#rulekit.main.RuleKit"><code class="docutils literal notranslate"><span class="pre">RuleKit</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html">Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regression.html">Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="survival.html">Survival</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rulekit.operator.Data"><code class="docutils literal notranslate"><span class="pre">rulekit.operator.Data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rulekit.params.Measures"><code class="docutils literal notranslate"><span class="pre">Measures</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Accuracy"><code class="docutils literal notranslate"><span class="pre">Measures.Accuracy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.BinaryEntropy"><code class="docutils literal notranslate"><span class="pre">Measures.BinaryEntropy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.C1"><code class="docutils literal notranslate"><span class="pre">Measures.C1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.C2"><code class="docutils literal notranslate"><span class="pre">Measures.C2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.CFoil"><code class="docutils literal notranslate"><span class="pre">Measures.CFoil</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.CN2Significnce"><code class="docutils literal notranslate"><span class="pre">Measures.CN2Significnce</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Correlation"><code class="docutils literal notranslate"><span class="pre">Measures.Correlation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Coverage"><code class="docutils literal notranslate"><span class="pre">Measures.Coverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.FBayesianConfirmation"><code class="docutils literal notranslate"><span class="pre">Measures.FBayesianConfirmation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.FMeasure"><code class="docutils literal notranslate"><span class="pre">Measures.FMeasure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.FullCoverage"><code class="docutils literal notranslate"><span class="pre">Measures.FullCoverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.GeoRSS"><code class="docutils literal notranslate"><span class="pre">Measures.GeoRSS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.GMeasure"><code class="docutils literal notranslate"><span class="pre">Measures.GMeasure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.InformationGain"><code class="docutils literal notranslate"><span class="pre">Measures.InformationGain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.JMeasure"><code class="docutils literal notranslate"><span class="pre">Measures.JMeasure</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Kappa"><code class="docutils literal notranslate"><span class="pre">Measures.Kappa</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Klosgen"><code class="docutils literal notranslate"><span class="pre">Measures.Klosgen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Laplace"><code class="docutils literal notranslate"><span class="pre">Measures.Laplace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Lift"><code class="docutils literal notranslate"><span class="pre">Measures.Lift</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.LogicalSufficiency"><code class="docutils literal notranslate"><span class="pre">Measures.LogicalSufficiency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.MEstimate"><code class="docutils literal notranslate"><span class="pre">Measures.MEstimate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.MutualSupport"><code class="docutils literal notranslate"><span class="pre">Measures.MutualSupport</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Novelty"><code class="docutils literal notranslate"><span class="pre">Measures.Novelty</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.OddsRatio"><code class="docutils literal notranslate"><span class="pre">Measures.OddsRatio</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.OneWaySupport"><code class="docutils literal notranslate"><span class="pre">Measures.OneWaySupport</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.PawlakDependencyFactor"><code class="docutils literal notranslate"><span class="pre">Measures.PawlakDependencyFactor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Q2"><code class="docutils literal notranslate"><span class="pre">Measures.Q2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Precision"><code class="docutils literal notranslate"><span class="pre">Measures.Precision</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.RelativeRisk"><code class="docutils literal notranslate"><span class="pre">Measures.RelativeRisk</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Ripper"><code class="docutils literal notranslate"><span class="pre">Measures.Ripper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.RuleInterest"><code class="docutils literal notranslate"><span class="pre">Measures.RuleInterest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.RSS"><code class="docutils literal notranslate"><span class="pre">Measures.RSS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.SBayesian"><code class="docutils literal notranslate"><span class="pre">Measures.SBayesian</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Sensitivity"><code class="docutils literal notranslate"><span class="pre">Measures.Sensitivity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.Specificity"><code class="docutils literal notranslate"><span class="pre">Measures.Specificity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.TwoWaySupport"><code class="docutils literal notranslate"><span class="pre">Measures.TwoWaySupport</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.WeightedLaplace"><code class="docutils literal notranslate"><span class="pre">Measures.WeightedLaplace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.WeightedRelativeAccuracy"><code class="docutils literal notranslate"><span class="pre">Measures.WeightedRelativeAccuracy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.YAILS"><code class="docutils literal notranslate"><span class="pre">Measures.YAILS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rulekit.params.Measures.LogRank"><code class="docutils literal notranslate"><span class="pre">Measures.LogRank</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rules.html">Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">Statistics</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">rulekit v2.1.24.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../autodoc.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/rst/autodoc/params.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="rulekit.operator.Data">
+<span class="sig-prename descclassname"><span class="pre">rulekit.operator.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><a class="headerlink" href="#rulekit.operator.Data" title="Link to this definition"></a></dt>
+<dd><p>alias of type Union[numpy.ndarray, pandas.core.frame.DataFrame, List]</p>
+</dd></dl>
+
+<p id="module-rulekit.params">Contains constants and classes for specyfing models parameters</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rulekit.params.Measures">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rulekit.params.</span></span><span class="sig-name descname"><span class="pre">Measures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rulekit.params.Measures" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enum for different measures used during induction, pruning and voting.</p>
+<p>You can ream more about each measure and its implementation
+#41-rule-quality&gt;`_ .
+<a href="#id1"><span class="problematic" id="id2">`</span></a>here &lt;<a class="reference external" href="https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation">https://github.com/adaa-polsl/RuleKit/wiki/4-Quality-and-evaluation</a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Accuracy">
+<span class="sig-name descname"><span class="pre">Accuracy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Accuracy'</span></em><a class="headerlink" href="#rulekit.params.Measures.Accuracy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.BinaryEntropy">
+<span class="sig-name descname"><span class="pre">BinaryEntropy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'BinaryEntropy'</span></em><a class="headerlink" href="#rulekit.params.Measures.BinaryEntropy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.C1">
+<span class="sig-name descname"><span class="pre">C1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C1'</span></em><a class="headerlink" href="#rulekit.params.Measures.C1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.C2">
+<span class="sig-name descname"><span class="pre">C2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C2'</span></em><a class="headerlink" href="#rulekit.params.Measures.C2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.CFoil">
+<span class="sig-name descname"><span class="pre">CFoil</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CFoil'</span></em><a class="headerlink" href="#rulekit.params.Measures.CFoil" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.CN2Significnce">
+<span class="sig-name descname"><span class="pre">CN2Significnce</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CN2Significnce'</span></em><a class="headerlink" href="#rulekit.params.Measures.CN2Significnce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Correlation">
+<span class="sig-name descname"><span class="pre">Correlation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Correlation'</span></em><a class="headerlink" href="#rulekit.params.Measures.Correlation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Coverage">
+<span class="sig-name descname"><span class="pre">Coverage</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Coverage'</span></em><a class="headerlink" href="#rulekit.params.Measures.Coverage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.FBayesianConfirmation">
+<span class="sig-name descname"><span class="pre">FBayesianConfirmation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FBayesianConfirmation'</span></em><a class="headerlink" href="#rulekit.params.Measures.FBayesianConfirmation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.FMeasure">
+<span class="sig-name descname"><span class="pre">FMeasure</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FMeasure'</span></em><a class="headerlink" href="#rulekit.params.Measures.FMeasure" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.FullCoverage">
+<span class="sig-name descname"><span class="pre">FullCoverage</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'FullCoverage'</span></em><a class="headerlink" href="#rulekit.params.Measures.FullCoverage" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.GeoRSS">
+<span class="sig-name descname"><span class="pre">GeoRSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GeoRSS'</span></em><a class="headerlink" href="#rulekit.params.Measures.GeoRSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.GMeasure">
+<span class="sig-name descname"><span class="pre">GMeasure</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'GMeasure'</span></em><a class="headerlink" href="#rulekit.params.Measures.GMeasure" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.InformationGain">
+<span class="sig-name descname"><span class="pre">InformationGain</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'InformationGain'</span></em><a class="headerlink" href="#rulekit.params.Measures.InformationGain" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.JMeasure">
+<span class="sig-name descname"><span class="pre">JMeasure</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'JMeasure'</span></em><a class="headerlink" href="#rulekit.params.Measures.JMeasure" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Kappa">
+<span class="sig-name descname"><span class="pre">Kappa</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Kappa'</span></em><a class="headerlink" href="#rulekit.params.Measures.Kappa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Klosgen">
+<span class="sig-name descname"><span class="pre">Klosgen</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Klosgen'</span></em><a class="headerlink" href="#rulekit.params.Measures.Klosgen" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Laplace">
+<span class="sig-name descname"><span class="pre">Laplace</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Laplace'</span></em><a class="headerlink" href="#rulekit.params.Measures.Laplace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Lift">
+<span class="sig-name descname"><span class="pre">Lift</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Lift'</span></em><a class="headerlink" href="#rulekit.params.Measures.Lift" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.LogicalSufficiency">
+<span class="sig-name descname"><span class="pre">LogicalSufficiency</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LogicalSufficiency'</span></em><a class="headerlink" href="#rulekit.params.Measures.LogicalSufficiency" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.MEstimate">
+<span class="sig-name descname"><span class="pre">MEstimate</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MEstimate'</span></em><a class="headerlink" href="#rulekit.params.Measures.MEstimate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.MutualSupport">
+<span class="sig-name descname"><span class="pre">MutualSupport</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MutualSupport'</span></em><a class="headerlink" href="#rulekit.params.Measures.MutualSupport" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Novelty">
+<span class="sig-name descname"><span class="pre">Novelty</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Novelty'</span></em><a class="headerlink" href="#rulekit.params.Measures.Novelty" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.OddsRatio">
+<span class="sig-name descname"><span class="pre">OddsRatio</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OddsRatio'</span></em><a class="headerlink" href="#rulekit.params.Measures.OddsRatio" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.OneWaySupport">
+<span class="sig-name descname"><span class="pre">OneWaySupport</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OneWaySupport'</span></em><a class="headerlink" href="#rulekit.params.Measures.OneWaySupport" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.PawlakDependencyFactor">
+<span class="sig-name descname"><span class="pre">PawlakDependencyFactor</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PawlakDependencyFactor'</span></em><a class="headerlink" href="#rulekit.params.Measures.PawlakDependencyFactor" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Q2">
+<span class="sig-name descname"><span class="pre">Q2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Q2'</span></em><a class="headerlink" href="#rulekit.params.Measures.Q2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Precision">
+<span class="sig-name descname"><span class="pre">Precision</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Precision'</span></em><a class="headerlink" href="#rulekit.params.Measures.Precision" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.RelativeRisk">
+<span class="sig-name descname"><span class="pre">RelativeRisk</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RelativeRisk'</span></em><a class="headerlink" href="#rulekit.params.Measures.RelativeRisk" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Ripper">
+<span class="sig-name descname"><span class="pre">Ripper</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Ripper'</span></em><a class="headerlink" href="#rulekit.params.Measures.Ripper" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.RuleInterest">
+<span class="sig-name descname"><span class="pre">RuleInterest</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RuleInterest'</span></em><a class="headerlink" href="#rulekit.params.Measures.RuleInterest" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.RSS">
+<span class="sig-name descname"><span class="pre">RSS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RSS'</span></em><a class="headerlink" href="#rulekit.params.Measures.RSS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.SBayesian">
+<span class="sig-name descname"><span class="pre">SBayesian</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SBayesian'</span></em><a class="headerlink" href="#rulekit.params.Measures.SBayesian" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Sensitivity">
+<span class="sig-name descname"><span class="pre">Sensitivity</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Sensitivity'</span></em><a class="headerlink" href="#rulekit.params.Measures.Sensitivity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.Specificity">
+<span class="sig-name descname"><span class="pre">Specificity</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Specificity'</span></em><a class="headerlink" href="#rulekit.params.Measures.Specificity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.TwoWaySupport">
+<span class="sig-name descname"><span class="pre">TwoWaySupport</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TwoWaySupport'</span></em><a class="headerlink" href="#rulekit.params.Measures.TwoWaySupport" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.WeightedLaplace">
+<span class="sig-name descname"><span class="pre">WeightedLaplace</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WeightedLaplace'</span></em><a class="headerlink" href="#rulekit.params.Measures.WeightedLaplace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.WeightedRelativeAccuracy">
+<span class="sig-name descname"><span class="pre">WeightedRelativeAccuracy</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WeightedRelativeAccuracy'</span></em><a class="headerlink" href="#rulekit.params.Measures.WeightedRelativeAccuracy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.YAILS">
+<span class="sig-name descname"><span class="pre">YAILS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'YAILS'</span></em><a class="headerlink" href="#rulekit.params.Measures.YAILS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rulekit.params.Measures.LogRank">
+<span class="sig-name descname"><span class="pre">LogRank</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LogRank'</span></em><a class="headerlink" href="#rulekit.params.Measures.LogRank" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="survival.html" class="btn btn-neutral float-left" title="Survival" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rules.html" class="btn btn-neutral float-right" title="Rules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, ADAA.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
