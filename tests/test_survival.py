@@ -185,6 +185,23 @@ class TestSurvivalRules(unittest.TestCase):
             "Estimator should contain probabilities for each unique time from the dataset",
         )
 
+    def test_max_rule_count(self):
+        MAX_RULE_COUNT = 3
+        df: pd.DataFrame = read_arff(
+            os.path.join(dir_path, "resources", "data", "bmt-train-0.arff")
+        )
+        X, y = df.drop("survival_status", axis=1), df["survival_status"]
+        clf = survival.SurvivalRules(
+            survival_time_attr="survival_time",
+            max_rule_count=MAX_RULE_COUNT,
+        )
+        clf.fit(X, y)
+        self.assertLessEqual(
+            len(clf.model.rules),
+            MAX_RULE_COUNT,
+            f"Ruleset should contain no more than {MAX_RULE_COUNT} rules according to max_rule_count parameter",
+        )
+
 
 class TestExpertSurvivalRules(unittest.TestCase):
 
