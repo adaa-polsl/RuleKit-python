@@ -37,7 +37,7 @@ setuptools.setup(
         'pandas>=1.5',
         'scipy>=1.11',
         'scikit-learn>=1.1',
-        'JPype1>=1.5.0',
+        'JPype1==1.5.2',
         'pydantic>=2.0',
         'requests>=2.32.3',
     ],
