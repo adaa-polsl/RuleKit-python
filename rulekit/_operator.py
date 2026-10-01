@@ -1,5 +1,5 @@
-"""Contains base classes for rule induction operators
-"""
+"""Contains base classes for rule induction operators"""
+
 from __future__ import annotations
 
 from abc import ABC
@@ -79,9 +79,7 @@ class BaseOperator(ABC):
         self.model = RuleSet[BaseRule](java_model)
         return self.model
 
-    def predict(
-        self, values: Data
-    ) -> np.ndarray:  # pylint: disable=missing-function-docstring
+    def predict(self, values: Data) -> np.ndarray:  # pylint: disable=missing-function-docstring
         if self.model is None:
             raise ValueError('"fit" method must be called before calling this method')
         example_set = ExampleSetFactory(self._get_problem_type()).make(values)
@@ -90,7 +88,8 @@ class BaseOperator(ABC):
         )
 
     def get_params(
-        self, deep: bool = True  # pylint: disable=unused-argument
+        self,
+        deep: bool = True,  # pylint: disable=unused-argument
     ) -> dict[str, Any]:
         """
         Parameters
@@ -146,6 +145,17 @@ class BaseOperator(ABC):
         if self.model is None:
             raise ValueError('"fit" method must be called before calling this method')
         example_set = ExampleSetFactory(self._get_problem_type()).make(values)
+
+        # update mapping for nominal attributes
+        header = self.model._java_object.getTrainingHeader()
+        if header is not None:
+            try:
+                example_set = example_set.updateMapping(header)
+            except Exception as e:
+                raise ValueError(
+                    "Error updating mapping. Check if the given set agrees with the training set."
+                ) from e
+
         covering_info = self.model.covering(example_set)
         if isinstance(values, (pd.Series, pd.DataFrame)):
             values = values.to_numpy()
