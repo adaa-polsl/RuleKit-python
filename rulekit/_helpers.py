@@ -24,6 +24,40 @@ from rulekit.params import Measures
 from rulekit.rules import BaseRule
 
 
+def _missing_to_none(value: Any) -> Any:
+    """Map pandas/numpy missing values to None for the Java DataTable.
+
+    Args:
+        value: A single cell value.
+
+    Returns:
+        None if the value is missing, otherwise the original value.
+    """
+    if value is None:
+        return None
+    try:
+        if pd.isna(value):
+            return None
+    except (TypeError, ValueError):
+        pass
+    return value
+
+
+def _to_java_object_array(values: np.ndarray) -> np.ndarray:
+    """Copy an array to dtype=object with missing cells as None.
+
+    Args:
+        values: Array produced from a pandas frame or series.
+
+    Returns:
+        Object array safe to pass through JPype into DataTable.
+    """
+    result = np.empty(values.shape, dtype=object)
+    for index, value in np.ndenumerate(values):
+        result[index] = _missing_to_none(value)
+    return result
+
+
 def get_rule_generator(expert: bool = False) -> Any:
     """Factory for Java RuleGenerator class object
 
@@ -259,7 +293,7 @@ class ExampleSetFactory:
         elif isinstance(y, pd.Series):
             self._label_name = y.name
             self._attributes_names.append(self._label_name)
-            self._y = y.to_numpy()
+            self._y = _to_java_object_array(y.to_numpy())
         elif isinstance(y, list):
             self._label_name = self.DEFAULT_LABEL_ATTRIBUTE_NAME
             self._attributes_names.append(self._label_name)
@@ -281,9 +315,7 @@ class ExampleSetFactory:
     ) -> tuple[np.ndarray, np.ndarray]:
         if isinstance(X, pd.DataFrame):
             self._attributes_names = X.columns.tolist()
-            # replace nan values with None
-            X = X.where(pd.notnull(X), None)
-            self._X = X.to_numpy()
+            self._X = _to_java_object_array(X.astype(object).to_numpy())
         elif isinstance(X, np.ndarray):
             self._attributes_names = [
                 f"{self.AUTOMATIC_ATTRIBUTES_NAMES_PREFIX}{index + 1}"

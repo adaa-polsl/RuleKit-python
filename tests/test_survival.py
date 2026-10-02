@@ -135,9 +135,7 @@ class TestSurvivalRules(unittest.TestCase):
         )
         X, y = test_case.example_set.values, test_case.example_set.labels
         survival_time_col: pd.Series = X[test_case.survival_time]
-        X_without_time_col: pd.DataFrame = X.drop(
-            columns=[test_case.survival_time], axis=1
-        )
+        X_without_time_col: pd.DataFrame = X.drop(columns=[test_case.survival_time])
         surv1.fit(X_without_time_col, y, survival_time=survival_time_col)
         surv2.fit(X, y)
 
@@ -154,9 +152,7 @@ class TestSurvivalRules(unittest.TestCase):
         )
         X, y = test_case.example_set.values, test_case.example_set.labels
         survival_time_col: pd.Series = X[test_case.survival_time]
-        X_without_time_col: pd.DataFrame = X.drop(
-            columns=[test_case.survival_time], axis=1
-        )
+        X_without_time_col: pd.DataFrame = X.drop(columns=[test_case.survival_time])
         surv.fit(X, y)
 
         ibs: float = surv.score(X, y)
