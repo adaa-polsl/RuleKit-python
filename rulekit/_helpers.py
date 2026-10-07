@@ -1,5 +1,5 @@
-"""Contains helper functions and classes
-"""
+"""Contains helper functions and classes"""
+
 import io
 import json
 from typing import Any
@@ -24,25 +24,6 @@ from rulekit.params import Measures
 from rulekit.rules import BaseRule
 
 
-def _missing_to_none(value: Any) -> Any:
-    """Map pandas/numpy missing values to None for the Java DataTable.
-
-    Args:
-        value: A single cell value.
-
-    Returns:
-        None if the value is missing, otherwise the original value.
-    """
-    if value is None:
-        return None
-    try:
-        if pd.isna(value):
-            return None
-    except (TypeError, ValueError):
-        pass
-    return value
-
-
 def _to_java_object_array(values: np.ndarray) -> np.ndarray:
     """Copy an array to dtype=object with missing cells as None.
 
@@ -52,9 +33,8 @@ def _to_java_object_array(values: np.ndarray) -> np.ndarray:
     Returns:
         Object array safe to pass through JPype into DataTable.
     """
-    result = np.empty(values.shape, dtype=object)
-    for index, value in np.ndenumerate(values):
-        result[index] = _missing_to_none(value)
+    result = values.astype(object, copy=True)
+    result[pd.isna(result)] = None
     return result
 
 
@@ -192,7 +172,7 @@ class RuleGeneratorConfigurator:
                 java_value = java_params.get(key)
                 python_value = python_params.get(key)
                 skip_check: bool = isinstance(python_value, Callable)
-                if java_value == 'None':
+                if java_value == "None":
                     java_value = None
                 if java_value is None and python_value is None:
                     continue
@@ -359,8 +339,8 @@ class ExampleSetFactory:
             table = DataTable(*args)
             if self._y is not None:
                 ExampleSetFactory = JClass(
-                    'adaa.analytics.rules.logic.representation.'
-                    'exampleset.ExampleSetFactory'
+                    "adaa.analytics.rules.logic.representation."
+                    "exampleset.ExampleSetFactory"
                 )
                 factory = ExampleSetFactory(2)
                 example_set = factory.create(table)
