@@ -10,7 +10,7 @@ with io.open("README.md", mode="r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="rulekit",
-    version='2.1.24.2',
+    version='2.1.26.1',
     author="Cezary Maszczyk",
     author_email="cezary.maszczyk@gmail.com",
     description="Comprehensive suite for rule-based learning",
@@ -34,7 +34,7 @@ setuptools.setup(
     python_requires='>=3.9',
     install_requires=[
         'numpy>=1.24',
-        'pandas>=1.5',
+        'pandas>=1.5,<=3.0.5',
         'scipy>=1.11',
         'scikit-learn>=1.1',
         'JPype1==1.5.2',

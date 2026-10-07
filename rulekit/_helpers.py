@@ -1,5 +1,5 @@
-"""Contains helper functions and classes
-"""
+"""Contains helper functions and classes"""
+
 import io
 import json
 from typing import Any
@@ -22,6 +22,20 @@ from rulekit.exceptions import RuleKitMisconfigurationException
 from rulekit.main import RuleKit
 from rulekit.params import Measures
 from rulekit.rules import BaseRule
+
+
+def _to_java_object_array(values: np.ndarray) -> np.ndarray:
+    """Copy an array to dtype=object with missing cells as None.
+
+    Args:
+        values: Array produced from a pandas frame or series.
+
+    Returns:
+        Object array safe to pass through JPype into DataTable.
+    """
+    result = values.astype(object, copy=True)
+    result[pd.isna(result)] = None
+    return result
 
 
 def get_rule_generator(expert: bool = False) -> Any:
@@ -158,7 +172,7 @@ class RuleGeneratorConfigurator:
                 java_value = java_params.get(key)
                 python_value = python_params.get(key)
                 skip_check: bool = isinstance(python_value, Callable)
-                if java_value == 'None':
+                if java_value == "None":
                     java_value = None
                 if java_value is None and python_value is None:
                     continue
@@ -259,7 +273,7 @@ class ExampleSetFactory:
         elif isinstance(y, pd.Series):
             self._label_name = y.name
             self._attributes_names.append(self._label_name)
-            self._y = y.to_numpy()
+            self._y = _to_java_object_array(y.to_numpy())
         elif isinstance(y, list):
             self._label_name = self.DEFAULT_LABEL_ATTRIBUTE_NAME
             self._attributes_names.append(self._label_name)
@@ -281,9 +295,7 @@ class ExampleSetFactory:
     ) -> tuple[np.ndarray, np.ndarray]:
         if isinstance(X, pd.DataFrame):
             self._attributes_names = X.columns.tolist()
-            # replace nan values with None
-            X = X.where(pd.notnull(X), None)
-            self._X = X.to_numpy()
+            self._X = _to_java_object_array(X.astype(object).to_numpy())
         elif isinstance(X, np.ndarray):
             self._attributes_names = [
                 f"{self.AUTOMATIC_ATTRIBUTES_NAMES_PREFIX}{index + 1}"
@@ -327,8 +339,8 @@ class ExampleSetFactory:
             table = DataTable(*args)
             if self._y is not None:
                 ExampleSetFactory = JClass(
-                    'adaa.analytics.rules.logic.representation.'
-                    'exampleset.ExampleSetFactory'
+                    "adaa.analytics.rules.logic.representation."
+                    "exampleset.ExampleSetFactory"
                 )
                 factory = ExampleSetFactory(2)
                 example_set = factory.create(table)
